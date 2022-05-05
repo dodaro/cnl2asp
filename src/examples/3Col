@@ -1,0 +1,10 @@
+A node goes from 1 to 3.
+A color is one of red, green, blue.
+
+Node 1 is connected to node X, where X is one of 2, 3.
+Node 2 is connected to node X, where X is one of 1, 3.
+Node 3 is connected to node X, where X is one of 1, 2.
+
+Every node can be assigned to exactly 1 color.
+
+It is required that when node X is connected to node Y then node X is not assigned to color C and also node Y is not assigned to color C.
