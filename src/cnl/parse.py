@@ -426,13 +426,14 @@ class CNLTransformer(Transformer):
         return str(elem)
 
     def enumerative_definition_clause(self, elem):
-        objects_list = [x for x in elem[3:] if type(x) is SubjectClause]
+        objects_list = [x for x in elem[2:] if type(x) is SubjectClause]
         where_clause = [x for x in elem[3:] if type(x) is WhereClause]
         when_part = [x for x in elem[3:] if type(x) is WhenPart]
+        verb = elem[2] if type(elem[2]) is str else elem[1]
 
         where_clause = where_clause[0] if where_clause else []
         when_part = when_part[0].body if when_part else []
-        return EnumerativeDefinitionClause(elem[0], elem[2], objects_list, when_part, where_clause)
+        return EnumerativeDefinitionClause(elem[0], verb, objects_list, when_part, where_clause)
 
     def ranging_clause(self, elem):
         return RangingClause(elem[0], elem[1])

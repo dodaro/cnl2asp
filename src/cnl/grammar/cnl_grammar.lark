@@ -44,9 +44,9 @@ compounded_list: definition_object ("," definition_object)*
 compounded_clause_range: "goes from" range_lhs "to" range_rhs
 constant_definition_clause.1: subject_name "is equal to" (constant | question_mark)
 ordering_definition_clause: subject_clause "comes before" subject_clause ("which comes before" subject_clause)*
-enumerative_definition_clause: subject_clause CNL_COPULA (verb_name | verb_name_with_preposition) (subject_clause ("and" subject_clause)*)? ("when" when_part)? (where_clause)?
+enumerative_definition_clause: subject_clause CNL_COPULA? (verb_name | verb_name_with_preposition) (subject_clause ("and" subject_clause)*)? ("when" when_part)? (where_clause)?
 
-quantified_choice_clause: quantifier subject_clause "can" CNL_COPULA? (verb_name | verb_name_with_preposition) (quantified_exact_quantity_clause | quantified_range_clause)? quantified_object_clause? foreach_clause?
+quantified_choice_clause.1: quantifier subject_clause "can" CNL_COPULA? (verb_name | verb_name_with_preposition) (quantified_exact_quantity_clause | quantified_range_clause)? quantified_object_clause? foreach_clause?
 quantifier: CNL_QUANTIFIER
 quantified_exact_quantity_clause: exact_quantity_operator quantified_exact_quantity
 quantified_exact_quantity: CNL_NUMBER

@@ -151,6 +151,22 @@ def test_enumerative_definition_clause_compiles_to_correct_string():
 
         assert out_file.getvalue() == f'{expected_result}\n'
 
+def test_enumerative_definition_clause_no_copula_compiles_to_correct_string():
+    string_to_compare = 'A waiter goes from 1 to 5.\n' \
+                        'A pub goes from 1 to 5.\n' \
+                        'Waiter 1 works in pub 2.'
+    expected_result = 'waiter(1..5).\n' \
+                      'pub(1..5).\n' \
+                      'work_in(1,2).'
+
+    with io.StringIO(string_to_compare) as in_file, \
+            io.StringIO() as out_file:
+        cnl_file: CNLFile = CNLFile(in_file)
+        cnl_compiler: CNLCompiler = CNLCompiler()
+        cnl_compiler.compile(cnl_file).into(out_file)
+
+        assert out_file.getvalue() == f'{expected_result}\n'
+
 
 def test_enumerative_definition_clause_with_multi_object_compiles_to_correct_string():
     string_to_compare = 'A node goes from 1 to 5.\n' \
