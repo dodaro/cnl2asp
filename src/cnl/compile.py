@@ -7,7 +7,7 @@ import logging
 from typing import TextIO
 
 from lark import Lark
-from cnl.parse import *
+from src.cnl.parse import *
 from dataclasses import *
 
 debug: bool = False

@@ -1,7 +1,7 @@
 import io
 
-from cnl.compile import CNLFile, CNLCompiler
-from tests.fixtures import nurse_definitions_without_constants, nurse_definitions_with_constants, \
+from src.cnl.compile import CNLFile, CNLCompiler
+from src.tests.fixtures import nurse_definitions_without_constants, nurse_definitions_with_constants, \
     nurse_definitions_results_without_constants, nurse_quantified_choice, nurse_quantified_choice_result, \
     max_clique_definitions, max_clique_definitions_results, three_col_definitions, three_col_definitions_results, \
     hampath_definitions, hampath_definitions_results, hampath_quantified_choice, hampath_quantified_choice_result, \
@@ -20,7 +20,7 @@ def test_strong_constraint_active_aggregate_compiles_to_correct_string(monkeypat
                         'maxHours.'
     expected_result = nurse_definitions_results_without_constants + nurse_quantified_choice_result + \
                       ':- nurse(X_15), #sum{X_16,X_17: work_in(X_15,X_17,X_18), shift(_,X_18,X_16)} > 1692.'
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -40,7 +40,7 @@ def test_strong_constraint_passive_aggregate_compiles_to_correct_string(monkeypa
                         'different from 30. '
     expected_result = nurse_definitions_results_without_constants + nurse_quantified_choice_result + \
                       ':- nurse(X_15), #count{X_16: work_in(X_15,X_16,"vacation")} != 30.'
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -64,7 +64,7 @@ def test_strong_constraint_aggregate_with_where_list_compiles_to_correct_string(
                       ':- day(X_16), #count{X_15: work_in(X_15,X_16,"morning")} > 3.\n' \
                       ':- day(X_16), #count{X_15: work_in(X_15,X_16,"afternoon")} > 3.\n' \
                       ':- day(X_16), #count{X_15: work_in(X_15,X_16,"night")} > 2.'
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -86,7 +86,7 @@ def test_strong_constraint_aggregate_with_window_compiles_to_correct_string(monk
     expected_result = nurse_definitions_results_without_constants + nurse_quantified_choice_result + \
                       ':- nurse(X_15), day(X_17), X_17 <= 352, #count{X_16: ' \
                       'work_in(X_15,X_16,"rest"), X_16 >= X_17, X_16 <= X_17+13} < 2.'
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -109,7 +109,7 @@ def test_strong_constraint_simple_with_where_bounds_compiles_to_correct_string(m
                       ':- shift(X_19,X_21,_), shift(X_20,S,_), work_in(X_15,X_16,S), ' \
                       'work_in(X_15,X_16+1,X_21), X_19 < X_20, X_20 >= 1, X_20 <= 3, X_19 >= 1, ' \
                       'X_19 <= 6.'
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -130,7 +130,7 @@ def test_strong_constraint_simple_with_where_condition_compiles_to_correct_strin
                         'also node Y is not chosen, where X is different from Y. '
     expected_result = max_clique_definitions_results + max_clique_quantified_choice_result + \
                       ':- not connected_to(X,Y), chosen(X), chosen(Y), X != Y.'
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -151,7 +151,7 @@ def test_strong_constraint_aggregate_with_where_operation_compiles_to_correct_st
                         'different from X, where X is equal to the sum between 1 and 2. '
     expected_result = nurse_definitions_results_without_constants + nurse_quantified_choice_result + \
                       ':- nurse(X_15), #count{X_16: work_in(X_15,X_16,"vacation")} != X, X = 1 + 2.'
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -173,7 +173,7 @@ def test_strong_constraint_simple_with_object_consecution_compiles_to_correct_st
     expected_result = nurse_definitions_results_without_constants + nurse_quantified_choice_result + \
                       ':- day(X_17), #count{X_16: work_in(X_15,X_16,"night"), X_16 >= X_17, X_16 <= ' \
                       'X_17+1} = 2, not work_in(X_15,X_17+2,"specrest"), nurse(X_15).'
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -195,7 +195,7 @@ def test_strong_constraint_simple_with_subject_consecution_compiles_to_correct_s
     expected_result = nurse_definitions_results_without_constants + nurse_quantified_choice_result + \
                       ':- work_in(X_15,X_16,"specrest"), day(X_16), #count{X_18: ' \
                       'work_in(X_15,X_18,"night"), X_18 >= X_16-2, X_18 <= X_16-1} != 2.'
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -218,7 +218,7 @@ def test_strong_constraint_quantified_compiles_to_correct_string(monkeypatch,
     expected_result = hampath_definitions_results + 'reachable(1).\n' + hampath_quantified_choice_result + \
                       ':- not reachable(X_2), node(X_2).\n' + \
                       'reachable(Y) :- reachable(X), path_to(X,Y).'
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)

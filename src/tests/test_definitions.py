@@ -1,7 +1,7 @@
 import io
 
-from cnl.compile import CNLFile, CNLCompiler
-from tests.fixtures import nurse_definitions_without_constants, nurse_definitions_results_without_constants, \
+from src.cnl.compile import CNLFile, CNLCompiler
+from src.tests.fixtures import nurse_definitions_without_constants, nurse_definitions_results_without_constants, \
     hampath_definitions, hampath_quantified_choice, hampath_definitions_results, hampath_quantified_choice_result
 
 from itertools import count
@@ -211,7 +211,7 @@ def test_conditional_enumerative_definition_clause_compiles_to_correct_string(mo
                       hampath_quantified_choice_result + \
                       'reachable(Y) :- reachable(X), path_to(X,Y).'
 
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -235,7 +235,7 @@ def test_conditional_enumerative_definition_clause_with_where_list_compiles_to_c
                       'reachable(Y) :- reachable(1), path_to(1,Y).\n' \
                       'reachable(Y) :- reachable(2), path_to(2,Y).'
 
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -258,7 +258,7 @@ def test_conditional_enumerative_definition_clause_with_where_bounds_compiles_to
                       hampath_quantified_choice_result + \
                       'reachable(Y) :- reachable(X), path_to(X,Y), X >= 1, X <= 2.'
 
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -281,7 +281,7 @@ def test_conditional_enumerative_definition_clause_with_where_condition_compiles
                       hampath_quantified_choice_result + \
                       'reachable(Y) :- reachable(X), path_to(X,Y), X != Y.'
 
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -304,7 +304,7 @@ def test_conditional_enumerative_definition_clause_with_where_operation_compiles
                       hampath_quantified_choice_result + \
                       'reachable(Y) :- reachable(X), path_to(X,Y), X = 2 + 3.'
 
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -326,7 +326,7 @@ def test_conditional_enumerative_definition_clause_with_multi_object_compiles_to
                       'happy_with(X,Y,Z) :- connected_to(Y,Z).\n' + \
                       hampath_quantified_choice_result
 
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
@@ -351,7 +351,7 @@ def test_conditional_enumerative_definition_clause_with_multi_object_and_where_c
                       'happy_with(X,Y,Z) :- connected_to(Y,Z), connected_to(Z,2).\n' + \
                       hampath_quantified_choice_result
 
-    monkeypatch.setattr("cnl.compile.uuid4", count().__next__)
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
     with io.StringIO(string_to_compare) as in_file, \
             io.StringIO() as out_file:
         cnl_file: CNLFile = CNLFile(in_file)
