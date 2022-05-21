@@ -151,6 +151,31 @@ def test_enumerative_definition_clause_compiles_to_correct_string():
 
         assert out_file.getvalue() == f'{expected_result}\n'
 
+def test_enumerative_definition_clause_no_subject_var_compiles_to_correct_string():
+    string_to_compare = 'John is a waiter.'
+    expected_result = 'waiter(john).'
+
+    with io.StringIO(string_to_compare) as in_file, \
+            io.StringIO() as out_file:
+        cnl_file: CNLFile = CNLFile(in_file)
+        cnl_compiler: CNLCompiler = CNLCompiler()
+        cnl_compiler.compile(cnl_file).into(out_file)
+
+        assert out_file.getvalue() == f'{expected_result}\n'
+
+def test_enumerative_definition_clause_property_compiles_to_correct_string():
+    string_to_compare = 'Start is equal to 1.\n' \
+                        'Node start is reachable.'
+    expected_result = 'reachable(1).'
+
+    with io.StringIO(string_to_compare) as in_file, \
+            io.StringIO() as out_file:
+        cnl_file: CNLFile = CNLFile(in_file)
+        cnl_compiler: CNLCompiler = CNLCompiler()
+        cnl_compiler.compile(cnl_file).into(out_file)
+
+        assert out_file.getvalue() == f'{expected_result}\n'
+
 def test_enumerative_definition_clause_no_copula_compiles_to_correct_string():
     string_to_compare = 'A waiter goes from 1 to 5.\n' \
                         'A pub goes from 1 to 5.\n' \

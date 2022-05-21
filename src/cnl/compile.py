@@ -662,8 +662,11 @@ class CNLCompiler:
         subject_in_clause: Subject = Subject(clause.subject)
         verb_name: str = " ".join([substr.removesuffix("s") for substr in clause.verb_name.split(' ')]).lower()
 
-        objects_list: list[str] = [subject_in_clause.name]
-        objects_values: list[str] = [self.__make_substitution_value(subject_in_clause.variable)]
+        objects_list: list[str] = [subject_in_clause.name if not subject_in_clause.variable.startswith('X_')
+                                   else verb_name]
+        objects_values: list[str] = [self.__make_substitution_value(subject_in_clause.variable)
+                                     if not subject_in_clause.variable.startswith('X_') else
+                                     self.__make_substitution_value(subject_in_clause.name)]
 
         for def_object in clause.object_list:
             objects_list.append(Subject(def_object).name)
