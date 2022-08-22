@@ -226,3 +226,25 @@ def test_strong_constraint_quantified_compiles_to_correct_string(monkeypatch,
         cnl_compiler.compile(cnl_file).into(out_file)
 
         assert out_file.getvalue() == f'{expected_result}\n'
+
+def test_negative_strong_constraint_quantified_compiles_to_correct_string(monkeypatch,
+                                                                 hampath_definitions,
+                                                                 hampath_definitions_results,
+                                                                 hampath_quantified_choice,
+                                                                 hampath_quantified_choice_result):
+    string_to_compare = hampath_definitions + \
+                        hampath_quantified_choice + \
+                        'Node Y is reachable when node X is reachable and also node X has a path to node Y.\n' + \
+                        'Node start is reachable.' + \
+                        'It is prohibited that any node is not reachable.'
+    expected_result = hampath_definitions_results + 'reachable(1).\n' + hampath_quantified_choice_result + \
+                      ':- not reachable(X_2), node(X_2).\n' + \
+                      'reachable(Y) :- reachable(X), path_to(X,Y).'
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
+    with io.StringIO(string_to_compare) as in_file, \
+            io.StringIO() as out_file:
+        cnl_file: CNLFile = CNLFile(in_file)
+        cnl_compiler: CNLCompiler = CNLCompiler()
+        cnl_compiler.compile(cnl_file).into(out_file)
+
+        assert out_file.getvalue() == f'{expected_result}\n'

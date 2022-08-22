@@ -78,3 +78,18 @@ def test_quantified_choice_clause_with_exact_quantity_and_foreach_compiles_to_co
         cnl_compiler.compile(cnl_file).into(out_file)
 
         assert out_file.getvalue() == f'{expected_result}\n'
+
+def test_quantified_choice_clause_with_range_quantity_and_foreach_compiles_to_correct_string(monkeypatch,
+                                                                                             nurse_definitions_without_constants,
+                                                                                             nurse_definitions_results_without_constants):
+    string_to_compare = nurse_definitions_without_constants + 'Every nurse can work in between 1 and 2 shifts for each day.'
+    expected_result = nurse_definitions_results_without_constants + '1 <= {work_in(X_12,X_13,X_14):shift(_,X_14,_)} ' \
+                                                                    '<= 2 :- nurse(X_12), day(X_13).'
+    monkeypatch.setattr("src.cnl.compile.uuid4", count().__next__)
+    with io.StringIO(string_to_compare) as in_file, \
+            io.StringIO() as out_file:
+        cnl_file: CNLFile = CNLFile(in_file)
+        cnl_compiler: CNLCompiler = CNLCompiler()
+        cnl_compiler.compile(cnl_file).into(out_file)
+
+        assert out_file.getvalue() == f'{expected_result}\n'
