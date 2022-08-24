@@ -38,7 +38,7 @@ definition_clause: (compounded_clause | constant_definition_clause | ordering_de
 definition_object: constant
 compounded_clause: ("A " | "An ") subject_clause (compounded_clause_range compounded_clause_granularity? | compounded_clause_match compounded_clause_granularity? compounded_clause_match_tail?)
 compounded_clause_granularity: "and is made of" object_clause ("that are made of" object_clause)*
-compounded_clause_match_tail: "and has" object_clause "that are equal to respectively" compounded_list ("and also" object_clause "that are equal to respectively" compounded_list)*
+compounded_clause_match_tail: "and has" object_clause ("that are equal to respectively" | "that is equal to respectively") compounded_list ("and also" object_clause ("that are equal to respectively" | "that is equal to respectively") compounded_list)*
 compounded_clause_match: "is one of" compounded_list
 compounded_list: definition_object ("," definition_object)*
 compounded_clause_range: "goes from" range_lhs "to" range_rhs
