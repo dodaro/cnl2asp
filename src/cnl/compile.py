@@ -787,6 +787,7 @@ class CNLCompiler:
         verb_atom_in_body: list[Atom] = []
         clause_verb_atom: Atom = Atom(verb_name, dict())
         if clause.object_clause:
+            tmp = ""
             for body_object in clause.object_clause.objects:
                 if type(body_object) is not SimpleClause:
                     objects_in_body.append(Object(body_object))
@@ -801,6 +802,7 @@ class CNLCompiler:
                     clause_verb_atom.set_parameter_variable(verb_object.name, verb_object.variable)
                     old_subject_variable = subject_in_clause.variable
                     subject_in_clause.variable = subject.variable
+                    tmp = verb_object.variable
         clause_subject_atom: Atom = self.__get_atom_from_signature_subject(subject_in_clause.name) \
             .set_parameter_variable(subject_in_clause.name, subject_in_clause.variable)
         clause_foreach_atoms: [Atom] = [self.__get_atom_from_signature_subject(foreach_object.name)
@@ -817,7 +819,7 @@ class CNLCompiler:
             for z in y:
                 clause_verb_atom.set_parameter_variable(x, z)
         if old_subject_variable is not None:
-            clause_subject_atom.set_parameter_variable(subject_in_clause.name, old_subject_variable, force=True)
+            clause_subject_atom.set_parameter_variable(subject_in_clause.name, tmp, force=True)
             clause_verb_atom.set_parameter_variable(subject_in_clause.name, old_subject_variable, force=True)
         for x, y in [(elem.atom_name, elem.atom_parameters[elem.atom_name]) for elem in clause_foreach_atoms]:
             for z in y:
