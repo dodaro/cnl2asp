@@ -12,10 +12,10 @@ The compiler is written in the Python (>= 3.10) programming language.
 
 ## Usage
 
-python3.10 src/main.py input_file [output_file]
+`python3.10 src/main.py input_file [output_file]`
 
 Example:
 
-python3.10 src/main.py src/examples/3Col 3Col.lp
+`python3.10 src/main.py src/examples/3Col 3Col.lp`
 
 If the output_file is not specified a file out.txt will be created.
