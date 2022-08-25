@@ -17,7 +17,7 @@ comparison_relations = {'more than': ">", 'less than': '<', 'different from': '!
 ordering_operators = {'before': '<', 'after': '>'}
 aggregate_operators = {'number': 'count', 'total': 'sum', "highest": "max", "biggest": "max", "lowest": 'min',
                        "smallest": 'min'}
-priority_levels_map = {'low': 3, 'medium': 2, 'high': 1}
+priority_levels_map = {'low': 1, 'medium': 2, 'high': 3}
 condition_operation = {'the sum': '+', 'the difference': '-', 'the product': '*', 'the division': '/'}
 alphabetic_constants_set: set[str] = set()
 ordered_constant_dict: dict[str, int] = {}
@@ -414,7 +414,10 @@ class Subject:
         if not subject_in_clause.subject_variable:
             self.variable = f'X_{str(uuid4()).replace("-", "_")}'
         else:
-            self.variable = subject_in_clause.subject_variable
+            if subject_in_clause.subject_variable.isupper():
+                self.variable = subject_in_clause.subject_variable
+            else:
+                self.variable = subject_in_clause.subject_variable.lower()
         if not subject_in_clause.subject_ordering:
             self.ordering = None
         else:
@@ -437,7 +440,10 @@ class Object:
         if not object_in_clause.object_variable:
             self.variable = f'X_{str(uuid4()).replace("-", "_")}'
         else:
-            self.variable = object_in_clause.object_variable
+            if object_in_clause.object_variable.isupper():
+                self.variable = object_in_clause.object_variable
+            else:
+                self.variable = object_in_clause.object_variable.lower()
         self.name.lower()
 
 
@@ -812,6 +818,7 @@ class CNLCompiler:
                 clause_verb_atom.set_parameter_variable(x, z)
         if old_subject_variable is not None:
             clause_subject_atom.set_parameter_variable(subject_in_clause.name, old_subject_variable, force=True)
+            clause_verb_atom.set_parameter_variable(subject_in_clause.name, old_subject_variable, force=True)
         for x, y in [(elem.atom_name, elem.atom_parameters[elem.atom_name]) for elem in clause_foreach_atoms]:
             for z in y:
                 clause_verb_atom.set_parameter_variable(x, z)

@@ -79,7 +79,7 @@ subject_name: CNL_WORD
 subject_ordering_clause.1: shift_operator consecution_clause?
 consecution_clause: number consecution_operator
 
-verb_clause: verb_negation? verb_name_with_preposition (verb_object_clause | composition_clause | tuple_clause | same_clause)? | verb_negation? verb_name
+verb_clause: verb_negation? (verb_name | verb_name_with_preposition) (verb_object_clause | composition_clause | tuple_clause | same_clause)? | verb_negation? verb_name
 verb_negation: CNL_VERB_NEGATION | CNL_NEGATION
 verb_name: CNL_WORD
 verb_name_with_preposition.1: CNL_WORD CNL_PREPOSITION
