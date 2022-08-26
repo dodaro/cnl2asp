@@ -601,17 +601,27 @@ class CNLCompiler:
         compiled_string: str = ''
         compounded_range: CompoundedClauseRange = clause.definition
         subject_in_clause: Subject = Subject(clause.subject)
+        lhs = None
+        try:
+            lhs = int(compounded_range.compounded_range_lhs)
+        except ValueError:
+            lhs = constant_definitions_dict[compounded_range.compounded_range_lhs.lower()]
+        rhs = None
+        try:
+            rhs = int(compounded_range.compounded_range_rhs)
+        except ValueError:
+            rhs = constant_definitions_dict[compounded_range.compounded_range_rhs.lower()]
         atom: Atom = Atom(subject_in_clause.name,
-                          {f'{subject_in_clause.name}': [f'{compounded_range.compounded_range_lhs}'
-                                                         f'..{compounded_range.compounded_range_rhs}']})
+                          {f'{subject_in_clause.name}': [f'{lhs}'
+                                                         f'..{rhs}']})
         granularity_hierarchy: list[str] = []
         if clause.tail:
             for elem in clause.tail.pop().granularity_hierarchy:
                 granularity_hierarchy.append(Object(elem).name)
 
         self.decl_signatures.append(Signature(subject_in_clause.name, [subject_in_clause.name], granularity_hierarchy,
-                                              {'lower': int(compounded_range.compounded_range_lhs),
-                                               'upper': int(compounded_range.compounded_range_rhs)}))
+                                              {'lower': int(lhs),
+                                               'upper': int(rhs)}))
         compiled_string += str(Rule(head=atom, body=None))
         return compiled_string
 

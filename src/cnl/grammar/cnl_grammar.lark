@@ -114,8 +114,8 @@ constant: CNL_CONSTANT | CNL_NUMBER
 object_clause: "a "? object_name variable?
 number: CNL_NUMBER
 foreach_clause.1: "for each" object_clause ("and" object_clause)*
-range_lhs: CNL_NUMBER
-range_rhs: CNL_NUMBER
+range_lhs: CNL_NUMBER | CNL_CONSTANT
+range_rhs: CNL_NUMBER | CNL_CONSTANT
 question_mark: CNL_QUESTION_MARK
 tuple_operator: CNL_TUPLE_OPERATOR
 composition_operator: CNL_COMPOSITION_OPERATOR
