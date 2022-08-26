@@ -685,8 +685,8 @@ class CNLCompiler:
                                      self.__make_substitution_value(subject_in_clause.name)]
 
         for def_object in clause.object_list:
-            objects_list.append(Subject(def_object).name)
-            objects_values.append(Subject(def_object).variable)
+            objects_list.append(self.__make_substitution_value(Subject(def_object).name))
+            objects_values.append(self.__make_substitution_value(Subject(def_object).variable))
 
         atom: Atom = Atom(verb_name, dict())
         for i, object_name in enumerate(objects_list):
