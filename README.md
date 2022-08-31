@@ -56,9 +56,12 @@ Variables are special because they can be instantiated using **where** clauses, 
 - ranges. E.g.
 
   `..., where X is between 20 and 30 ...`
-- arithmetic operations (the sum of, the difference of, the product of, the division of), even in absolute value. E.g.
+- arithmetic operations (**the sum of**, **the difference of**, **the product of**, **the division of**), even in absolute value. E.g.
 
   `..., where X is equal to the sum in absolute value of 60 and 100 ...`
+- equalities and inequalities (**the same as**, **different from**, **equal to**, **more than**, **greater than**, **less than**, **greater or equal than**, **less or equal than**, **at least**, **at most**)
+
+  `..., where X different that Y ...`
 
 Note that also numeric constants (described below) can be used, and the comma at the start of the clause, although improving the overall legibility, are not mandatory and can be left out.
 
@@ -123,7 +126,7 @@ Quantified choice are also used to specify relationships between elements in sub
 
 Strong constraints introduce conditions that MUST be satisfied, and they come in two flavors: **positive** strong constraints (**It is required that ...**), where you say what you WANT to be true; **negative** strong constraints (**It is prohibited that ...**), where you say what you DON'T WANT to be true (or equivalently, what you want to be false). They differ not only in the starting formula, but also in their body; in fact, positive ones may have a **when** part, where a premise is specified, followed by a **then** part, where the related consequence in specified.
 Strong constraints can either contain a list of simple clauses (i.e of subject-verb-object clauses) or aggregate clauses.
-Aggregate clauses specify an aggregation of elements in subject position that follow the condition specified in their bodies (**number of ...** for counting up and **total of ...** for summing up). Aggregates also support aggregating in windows of a specified length followed by the object of which the windows have to be taken (**occurrences between each** *length* *...*), and **for each** clauses, working in a similar manner as those introduced before, mandatory for aggregates in **active** form, that have a body that follows the structure *subject* **that** *verb* *objects* *for_each*, and optional for those in **passive** form have a body that follows the structure *objects* *for_each* **where** *subject* *verb*. E.g.
+Aggregate clauses specify an aggregation of elements in subject position that follow the condition specified in their bodies (**number of ...** for counting up and **total of ...** for summing up) and confronting it to a specific value using one of the aforementioned equality and inequality operators. Aggregates also support aggregating in windows of a specified length followed by the object of which the windows have to be taken (**occurrences between each** *length* *...*), and **for each** clauses, working in a similar manner as those introduced before, mandatory for aggregates in **active** form, that have a body that follows the structure *subject* **that** *verb* *objects* *for_each*, and optional for those in **passive** form have a body that follows the structure *objects* *for_each* **where** *subject* *verb*. E.g.
 
 `It is prohibited that the number of waiters that work in a day is less than 3.`
 
