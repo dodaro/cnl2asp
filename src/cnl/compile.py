@@ -1032,7 +1032,7 @@ class CNLCompiler:
 
         # <head>, {<variable_list>: <body>}
         if aggregate_body_in_clause.active_form:
-            aggregate_verb_atom: Atom = self.__get_atom_from_signature_subject(verb_in_clause.name)
+            aggregate_verb_atom: Atom = self.__get_atom_from_signature_subject(verb_in_clause.name.removesuffix("d"))
             aggregate_verb_atom.negated = verb_in_clause.is_negated
             aggregate_verb_atom.set_parameter_variable(subject_in_clause.name, subject_in_clause.variable)
             aggregate_variable_list.append(subject_in_clause.variable)

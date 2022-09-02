@@ -159,3 +159,4 @@ Strong constraints introduce conditions that are DESIRABLE to be satisfied. They
 ### Additional notes
 
 - Only plurals and third-person verb forms ending in `s` are supported at the moment
+- Only past tenses ending in `d` are supported at the moment, and only in active aggregate clauses.
