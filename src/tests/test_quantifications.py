@@ -1,9 +1,7 @@
 import io
 
 from src.cnl.compile import CNLFile, CNLCompiler
-from src.tests.fixtures import nurse_definitions_without_constants, nurse_definitions_results_without_constants, \
-    max_clique_definitions, max_clique_definitions_results, three_col_definitions, three_col_definitions_results, \
-    hampath_definitions, hampath_definitions_results
+from tests.fixtures import *
 
 from itertools import count
 

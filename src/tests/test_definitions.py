@@ -1,8 +1,7 @@
 import io
 
 from src.cnl.compile import CNLFile, CNLCompiler
-from src.tests.fixtures import nurse_definitions_without_constants, nurse_definitions_results_without_constants, \
-    hampath_definitions, hampath_quantified_choice, hampath_definitions_results, hampath_quantified_choice_result
+from tests.fixtures import *
 
 from itertools import count
 
