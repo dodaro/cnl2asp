@@ -4,7 +4,7 @@ from uuid import uuid4
 import os.path
 import logging
 
-from typing import TextIO
+from typing import  TextIO
 
 from lark import Lark
 from cnl.parse import *
@@ -21,7 +21,7 @@ priority_levels_map = {'low': 1, 'medium': 2, 'high': 3}
 condition_operation = {'the sum': '+', 'the difference': '-', 'the product': '*', 'the division': '/'}
 alphabetic_constants_set: set[str] = set()
 ordered_constant_dict: dict[str, int] = {}
-constant_definitions_dict: dict[str, str] = {}
+constant_definitions_dict: dict[str, str] = {} # dict of defined constants
 
 
 def get_list_bounds(input_list: list):
@@ -45,7 +45,7 @@ class CNLFile:
         content_tree: CNLContentTree = CNLTransformer().transform(self.cnl_parser.parse(cnl_file.read()))
         self.definitions: list[DefinitionClause] = [content_tree.sentences[i] for i in
                                                     range(len(content_tree.sentences)) if
-                                                    type(content_tree.sentences[i]) is DefinitionClause]
+                                                    type(content_tree.sentences[i]) is DefinitionClause]   
         self.quantifiers: list[QuantifiedChoiceClause] = [content_tree.sentences[i] for i in
                                                           range(len(content_tree.sentences)) if
                                                           type(content_tree.sentences[i]) is QuantifiedChoiceClause]
@@ -82,9 +82,9 @@ class Atom:
 
     def __init__(self, atom_name: str, atom_parameters: dict[str, list[str]], ordering_index: int = None,
                  negated: bool = False):
-        self.atom_name = atom_name.replace(' ', '_')
-        self.atom_parameters = atom_parameters
-        self.ordering_index = ordering_index
+        self.atom_name = atom_name.replace(' ', '_') # predicate 
+        self.atom_parameters = atom_parameters # List of the atom parameters. dict [predicate, value]
+        self.ordering_index = ordering_index # Ordered list index
         self.negated = negated
 
     def copy(self):
@@ -93,24 +93,33 @@ class Atom:
                     copy.deepcopy(self.ordering_index),
                     copy.deepcopy(self.negated))
 
+    # set the parameter variable
     def set_parameter_variable(self, parameter_name: str, new_variable: str, force: bool = False, index: int = None):
+        # If the parameter name is not defined in the atom, add the new name and variable
         if parameter_name not in self.atom_parameters.keys():
             self.atom_parameters[parameter_name] = [new_variable]
         else:
+            # if it is given the index in input, substitute the value of the parameter with the new variable
             if index is not None:
                 self.atom_parameters[parameter_name][index] = new_variable
                 return self
             for i, elem in enumerate(self.atom_parameters[parameter_name]):
+                # if the parameter was '_' replace it with the value of the new variable
                 if (elem == '_' and new_variable != '_') or force:
                     self.atom_parameters[parameter_name][i] = new_variable
                     return self
+            # if none of the obove append the new variable
             self.atom_parameters[parameter_name].append(new_variable)
         return self
 
+    # set the value of a parameter variable
     def set_variable_value(self, variable: str, value: str):
         for parameter, dict_variable_list in self.atom_parameters.items():
             for i, dict_variable in enumerate(dict_variable_list):
                 if dict_variable == variable:
+                    # if the value corresponds force the sobstitution
+                    # this happens when a parameter is initialized with a variable and later on 
+                    # it is given a value to this variable
                     self.set_parameter_variable(parameter, value, force=True, index=i)
                     return True
         return False
@@ -288,7 +297,6 @@ class SimpleDisjunction:
 
         return string
 
-
 @dataclass(frozen=True)
 class Rule:
     head: ShortDisjunction | SimpleDisjunction
@@ -363,7 +371,7 @@ class SubjectOrdering:
             int(subject_ordering_in_clause.consecution_clause.consecution_count)
         self.consecutive = True if subject_ordering_in_clause.consecution_clause else False
 
-    def get_ordering_shift_string(self, from_value: str, ordering_memory: int) -> (str, int):
+    def get_ordering_shift_string(self, from_value: str, ordering_memory: int) -> (str, int): 
         if self.ordering_direction == 'the next':
             return f'{from_value}+{abs(ordering_memory + self.ordering_count)}', self.ordering_count
         else:
@@ -427,7 +435,7 @@ class Subject:
 class Verb:
 
     def __init__(self, verb_in_clause: AggregateVerbClause | VerbClause):
-        self.name = " ".join([substr.removesuffix("s") for substr in verb_in_clause.verb_name.split(' ')])
+        self.name = " ".join([substr.strip().removesuffix("s") for substr in verb_in_clause.verb_name.split(' ')])
         self.name = self.name.lower()
         self.is_negated = verb_in_clause.verb_negated
 
@@ -555,8 +563,9 @@ class CNLCompiler:
 
     def __init__(self):
         self.__compilation_result: str = ""
-        self.decl_signatures: [Signature] = []
+        self.decl_signatures: list[Signature] = []
 
+    # For each definition call the corresponding compile method
     def compile(self, file: CNLFile):
         dependent_definitions = []
         for definition_clause in file.definitions:
@@ -569,8 +578,11 @@ class CNLCompiler:
                 elif type(definition_clause.clause) == EnumerativeDefinitionClause:
                     self.__compilation_result += self.__compile_enumerative_definition_clause(definition_clause.clause)
                 elif type(definition_clause.clause) == ConstantDefinitionClause:
-                    # self.__compilation_result +=
                     self.__compile_constant_definition_clause(definition_clause.clause)
+                elif type(definition_clause.clause) == DomainDefinition:
+                    self.__compile_domain_definition(definition_clause.clause)
+                elif type(definition_clause.clause) == FactDefinition:
+                    self.__compilation_result += self.__compile_fact_definition(definition_clause.clause)
             except IndexError:
                 dependent_definitions.append(definition_clause)
         for quantifier_clause in file.quantifiers:
@@ -590,15 +602,37 @@ class CNLCompiler:
             elif type(definition_clause.clause) == ConstantDefinitionClause:
                 # self.__compilation_result +=
                 self.__compile_constant_definition_clause(definition_clause.clause)
-        # print(self.decl_signatures)
         return self
 
     def into(self, out_file: TextIO):
         out_file.write(self.__compilation_result)
         return self
 
+    # subject is the new atom definition
+    def __compile_domain_definition(self, clause: DomainDefinition):
+        subject_in_clause: Subject = Subject(clause.subject)
+        parameters : list[str] = []
+        for parameter in clause.parameters:
+            parameters.append(parameter.name)
+        self.decl_signatures.append(Signature(subject_in_clause.name, parameters))
+
+    # The object is the atom defined in the domain definition
+    # The subject is a new instance of the object
+    def __compile_fact_definition(self, clause: FactDefinition):
+        subject = clause.subject.subject_name
+        parameters = clause.parameters
+        atom : Atom = self.__get_atom_from_signature_subject(subject)
+        for parameter in parameters:
+            # set the value of the atom fields
+            atom.set_parameter_variable(parameter.parameter_name, parameter.parameter_value)
+        return str(Rule(head=atom, body=None))
+        
+
+    #CompoundedClause: ("A " | "An ") subject_clause (compounded_clause_range compounded_clause_granularity?)
+    # Definition of an atom with a range compound as a definition
     def __compile_compounded_clause_range(self, clause: CompoundedClause):
         compiled_string: str = ''
+        #"CompoundedClauseRange: goes from" range_lhs "to" range_rhs
         compounded_range: CompoundedClauseRange = clause.definition
         subject_in_clause: Subject = Subject(clause.subject)
         lhs = None
@@ -611,26 +645,33 @@ class CNLCompiler:
             rhs = int(compounded_range.compounded_range_rhs)
         except ValueError:
             rhs = constant_definitions_dict[compounded_range.compounded_range_rhs.lower()]
+        # define the atom with parameters
         atom: Atom = Atom(subject_in_clause.name,
                           {f'{subject_in_clause.name}': [f'{lhs}'
                                                          f'..{rhs}']})
+        #compounded_clause_granularity:  "and is made of" object_clause ("that are made of" object_clause)*
         granularity_hierarchy: list[str] = []
         if clause.tail:
             for elem in clause.tail.pop().granularity_hierarchy:
                 granularity_hierarchy.append(Object(elem).name)
-
+        # append the signature of the new atom
         self.decl_signatures.append(Signature(subject_in_clause.name, [subject_in_clause.name], granularity_hierarchy,
                                               {'lower': int(lhs),
                                                'upper': int(rhs)}))
         compiled_string += str(Rule(head=atom, body=None))
         return compiled_string
 
+    # CompoundedClause: ("A " | "An ") subject_clause (compounded_clause_match compounded_clause_granularity? compounded_clause_match_tail?)
+    # Definition of an atom with a match compound as a definition
     def __compile_compounded_clause_match(self, clause: CompoundedClause):
         compiled_string: str = ''
         subject_in_clause: Subject = Subject(clause.subject)
+        #CompoundedClauseMatch: "is one of" compounded_list
         compounded_match: CompoundedClauseMatch = clause.definition
         (lower, upper) = get_list_bounds(compounded_match.compounded_match_list)
+        # CompoundedClauseMatchTail: "and has" object_clause ("that are equal to respectively" | "that is equal to respectively") compounded_list ("and also" object_clause ("that are equal to respectively" | "that is equal to respectively") compounded_list)*
         compounded_match_tail: list[CompoundedClauseMatchTail] = []
+        # compounded_clause_granularity: "and is made of" object_clause ("that are made of" object_clause)*
         granularity_hierarchy: list[str] = []
         if clause.tail:
             compounded_match_tail: list[CompoundedClauseMatchTail] = [tail_elem for tail_elem in clause.tail
@@ -641,9 +682,11 @@ class CNLCompiler:
             if granularity_hierarchy_list:
                 for elem in clause.tail.pop(0).granularity_hierarchy:
                     granularity_hierarchy.append(Object(elem).name)
+        # for each element in the match list define a new atom
         for (i, elem) in enumerate(clause.definition.compounded_match_list):
             def_value: str = f'"{clause.definition.compounded_match_list[i]}"' if not \
                 clause.definition.compounded_match_list[i].isdigit() else clause.definition.compounded_match_list[i]
+            # if the match list element is not a digit, define a new atom and add the match list in the global constants with the order value 
             if not clause.definition.compounded_match_list[i].isdigit():
                 atom: Atom = Atom(f'{subject_in_clause.name}',
                                   {f'{subject_in_clause.name}': [f'{def_value}']}, i)
@@ -652,6 +695,7 @@ class CNLCompiler:
             else:
                 atom: Atom = Atom(f'{subject_in_clause.name}',
                                   {f'{subject_in_clause.name}': [f'{def_value}']})
+            # if has a tail add the elements to the atom parameters
             if compounded_match_tail:
                 for tail_elem in compounded_match_tail:
                     tail_value: str = f'"{tail_elem.definition_list[i]}"' if not \
@@ -662,6 +706,7 @@ class CNLCompiler:
                         alphabetic_constants_set.add(tail_elem.definition_list[i])
                         ordered_constant_dict[tail_elem.definition_list[i]] = i + 1
             compiled_string += str(Rule(head=atom, body=None))
+        # append the signature of the new atom
         self.decl_signatures.append(
             Signature(subject_in_clause.name, [subject_in_clause.name] +
                       [Object(tail_elem.subject).name for tail_elem in compounded_match_tail],
@@ -671,19 +716,17 @@ class CNLCompiler:
                       True))
         return compiled_string
 
+    #EnumerativeDefinitionClause: subject_clause CNL_COPULA? (verb_name | verb_name_with_preposition) (subject_clause ("and" subject_clause)*)? ("when" when_part)? (where_clause)?
     def __compile_enumerative_definition_clause(self, clause: EnumerativeDefinitionClause):
-        # print(clause)
         compiled_string: str = ''
-
         subject_in_clause: Subject = Subject(clause.subject)
-        verb_name: str = " ".join([substr.removesuffix("s") for substr in clause.verb_name.split(' ')]).lower()
+        verb_name: str = " ".join([substr.strip().removesuffix("s") for substr in clause.verb_name.split(' ')]).lower()
 
         objects_list: list[str] = [subject_in_clause.name if not subject_in_clause.variable.startswith('X_')
                                    else verb_name]
         objects_values: list[str] = [self.__make_substitution_value(subject_in_clause.variable)
                                      if not subject_in_clause.variable.startswith('X_') else
                                      self.__make_substitution_value(subject_in_clause.name)]
-
         for def_object in clause.object_list:
             objects_list.append(self.__make_substitution_value(Subject(def_object).name))
             objects_values.append(self.__make_substitution_value(Subject(def_object).variable))
@@ -694,6 +737,7 @@ class CNLCompiler:
 
         self.decl_signatures.append(Signature(verb_name, objects_list))
 
+        #WhereClause: "," " "* "where" (condition_clause | condition_match_group) ("and" condition_clause)*
         where_in_clause: WhereClause = clause.where_clause
         when_in_clause: list = clause.when_part
         head_result = []
@@ -706,6 +750,7 @@ class CNLCompiler:
                 compiled_clause = self.__compile_simple_clause(clause, block_memory)
                 compiled_clauses.append(compiled_clause)
                 block_memory.flush_all(on=compiled_clauses)
+                
 
             # conjunction = Conjunction(compiled_clauses)
             conjunction = Conjunction(compiled_clauses)
@@ -732,10 +777,12 @@ class CNLCompiler:
         if where_in_clause:
             for elem in where_in_clause.conditions:
                 if type(elem) is not ConditionMatchGroup:
+                    #ConditionBoundClause: "between" object_name "and" object_name
                     if type(elem.condition_clause) is ConditionBoundClause:
                         bounded_variable = BoundedVariable(elem.condition_variable, {'lower': elem.condition_clause.bound_lower,
                             'upper': elem.condition_clause.bound_upper})
                         conjunction.body.append(bounded_variable)
+                    # ConditionComparisonClause: condition_negation? condition_operator condition_expression
                     elif type(elem.condition_clause) is ConditionComparisonClause:
                         comparison = None
                         if type(elem.condition_clause.condition_expression[0]) is not ConditionOperation:
@@ -755,6 +802,8 @@ class CNLCompiler:
                                                               ))
                         conjunction.body.append(comparison)
             for elem in where_in_clause.conditions:
+                # ConditionMatchGroup: condition_match_clause ("and" condition_match_clause)*
+                # condition_match_clause: variable CNL_COPULA "one of" "respectively"* compounded_list
                 if type(elem) is ConditionMatchGroup:
                     if not when_in_clause:
                         for i in range(elem.group_list[0].list_len):
@@ -785,11 +834,59 @@ class CNLCompiler:
         # self.decl_signatures.append(Signature(clause.subject, [clause.subject]))
         constant_definitions_dict[clause.subject.lower()] = clause.constant
 
+    def __compile_quantified_choice_disjunction_clause(self, clause: QuantifiedChoiceClause):
+        subject_in_clause: Subject = Subject(clause.subject_clause) 
+        first_verb_name: str = " ".join([substr.strip().removesuffix("s") for substr in clause.verb_name.split(' ')]).lower()
+        second_verb_name: str = [f'{x.name} {x.preposition}'.strip() for x in clause.object_clause.objects if type(x) == VerbName][0]
+        second_verb_name: str = " ".join([substr.strip().removesuffix("s") for substr in second_verb_name.split(' ')]).lower()
+        subject_in_clause_atom: Atom = self.__get_atom_from_signature_subject(subject_in_clause.name)
+        # set a variable for each parameter defined in input
+        for parameter in clause.parameters:
+            variable = f'X_{str(uuid4()).replace("-", "_")}'
+            subject_in_clause_atom.set_parameter_variable(parameter.name, variable)
+        objects_in_foreach: list[Object] = []
+        #foreach_clause: "for each" object_clause ("and" object_clause)*
+        if clause.foreach_clause:
+            for foreach_object in clause.foreach_clause.objects:
+                objects_in_foreach.append(Object(foreach_object))
+        clause_foreach_atoms: list[Atom] = [self.__get_atom_from_signature_subject(foreach_object.name)
+                                            .set_parameter_variable(foreach_object.name,
+                                                                    foreach_object.variable) for
+                                        foreach_object in objects_in_foreach]
+        head_atoms: list[Atom] = []
+        head_atoms.append(Atom(first_verb_name, dict()))
+        head_atoms.append(Atom(second_verb_name, dict()))
+        for x, y in [(elem.atom_name, elem.atom_parameters[elem.atom_name]) for elem in clause_foreach_atoms]:
+            for z in y:
+                for atom in head_atoms:
+                    atom.set_parameter_variable(x, z)                       
+        for parameters in [subject_in_clause_atom.atom_parameters]:
+            for atom in head_atoms:
+                for parameter_name in parameters:
+                    if Parameter(parameter_name) in clause.parameters:
+                        #set parameter value to parameter name
+                        atom.set_parameter_variable(parameter_name, parameters.get(parameter_name)[0])
+                for parameter_definition in clause.parameters_definitions:
+                    atom.set_parameter_variable(parameter_definition.parameter_name, parameter_definition.parameter_value)
+
+        for atom in head_atoms:
+            self.decl_signatures.append(Signature(atom.atom_name.replace("_"," "),
+                                                atom.atom_parameters.keys()))
+
+        rule_body: Conjunction = Conjunction([subject_in_clause_atom] + clause_foreach_atoms)
+        rule_head: SimpleDisjunction = SimpleDisjunction(head_atoms)
+        rule: Rule = Rule(head=rule_head, body=rule_body)
+        return str(rule)
+
+    # QuantifiedChoiceClause: quantifier subject_clause "can" CNL_COPULA? (verb_name | verb_name_with_preposition) (quantified_exact_quantity_clause | quantified_range_clause)? quantified_object_clause? foreach_clause?
     def __compile_quantified_choice_clause(self, clause: QuantifiedChoiceClause):
+        if(type(clause.object_clause) == DisjunctionClause):
+            return self.__compile_quantified_choice_disjunction_clause(clause)
         old_subject_variable: str | None = None
         subject_in_clause: Subject = Subject(clause.subject_clause)
-        verb_name: str = " ".join([substr.removesuffix("s") for substr in clause.verb_name.split(' ')]).lower()
+        verb_name: str = " ".join([substr.strip().removesuffix("s") for substr in clause.verb_name.split(' ')]).lower()
         objects_in_foreach: list[Object] = []
+        #foreach_clause: "for each" object_clause ("and" object_clause)*
         if clause.foreach_clause:
             for foreach_object in clause.foreach_clause.objects:
                 objects_in_foreach.append(Object(foreach_object))
@@ -813,21 +910,41 @@ class CNLCompiler:
                     old_subject_variable = subject_in_clause.variable
                     subject_in_clause.variable = subject.variable
                     tmp = verb_object.variable
-        clause_subject_atom: Atom = self.__get_atom_from_signature_subject(subject_in_clause.name) \
-            .set_parameter_variable(subject_in_clause.name, subject_in_clause.variable)
-        clause_foreach_atoms: [Atom] = [self.__get_atom_from_signature_subject(foreach_object.name)
+        clause_subject_atom: Atom = self.__get_atom_from_signature_subject(subject_in_clause.name)
+        # if no clause parameters just take the atom name as parameter and set the variable
+        if not clause.parameters:
+            clause_subject_atom.set_parameter_variable(subject_in_clause.name, subject_in_clause.variable)
+        else:
+            for parameter in clause.parameters:
+                variable = f'X_{str(uuid4()).replace("-", "_")}'
+                clause_subject_atom.set_parameter_variable(parameter.name, variable)
+            for parameter_definition in clause.parameters_definitions:
+                clause_subject_atom.set_parameter_variable(parameter_definition.parameter_name, parameter_definition.parameter_value)
+
+        clause_foreach_atoms: list[Atom] = [self.__get_atom_from_signature_subject(foreach_object.name)
                                             .set_parameter_variable(foreach_object.name,
                                                                     foreach_object.variable) for
                                         foreach_object in objects_in_foreach]
-        clause_object_variables: [Atom] = [self.__get_atom_from_signature_subject(object_clause_elem.name)
+        clause_object_variables: list[Atom] = [self.__get_atom_from_signature_subject(object_clause_elem.name)
                                                .set_parameter_variable(object_clause_elem.name,
                                                                        object_clause_elem.variable) for
                                            object_clause_elem in objects_in_body if type(object_clause_elem) is Object]
         clause_object_variables_conj: Conjunction = Conjunction(clause_object_variables)
-        for x, y in [(clause_subject_atom.atom_name,
-                      clause_subject_atom.atom_parameters[clause_subject_atom.atom_name])]:
-            for z in y:
-                clause_verb_atom.set_parameter_variable(x, z)
+        if not clause.parameters:
+            # if no clause parameters just take the atom name as parameter and set the variable
+            for x, y in [(clause_subject_atom.atom_name,
+                        clause_subject_atom.atom_parameters[clause_subject_atom.atom_name])]:
+                for z in y:
+                    clause_verb_atom.set_parameter_variable(x, z)
+        else:
+            for parameters in [clause_subject_atom.atom_parameters]:
+                for parameter_name in parameters:
+                    if Parameter(parameter_name) in clause.parameters:
+                        clause_verb_atom.set_parameter_variable(parameter_name, parameters.get(parameter_name)[0])
+                    else:
+                        for paramDef in clause.parameters_definitions:
+                            if(parameter_name == paramDef.parameter_name):
+                                clause_verb_atom.set_parameter_variable(parameter_name, parameters.get(parameter_name)[0])
         if old_subject_variable is not None:
             clause_subject_atom.set_parameter_variable(subject_in_clause.name, tmp, force=True)
             clause_verb_atom.set_parameter_variable(subject_in_clause.name, old_subject_variable, force=True)
@@ -855,7 +972,6 @@ class CNLCompiler:
         return str(rule)
 
     def __compile_strong_constraint_clause(self, constraint: StrongConstraintClause):
-        # print(constraint)
         compiled_string: str = ''
         conjunction: Conjunction | None = None
         block_memory: ClauseBlockMemory = ClauseBlockMemory()
@@ -866,10 +982,12 @@ class CNLCompiler:
                 if type(clause) == SimpleClause:
                     compiled_clause = self.__compile_simple_clause(clause, block_memory)
                 compiled_clauses.append(compiled_clause)
+            # block_memory is used to pass data through the methods
             block_memory.flush_all(on=compiled_clauses)
             conjunction = Conjunction(compiled_clauses)
         elif type(constraint.clauses) == AggregateClause:
             comparison_in_clause: ComparisonClause = constraint.comparison_clause
+            #Aggregate: "the" aggregate_operator "of" (aggregate_active_clause | aggregate_passive_clause) (ranging_clause)?
             aggregate: Aggregate = self.__compile_aggregate_clause(constraint.clauses)
             comparison: Comparison = Comparison(comparison_in_clause.condition_operator, aggregate,
                                                 self.__make_substitution_value(comparison_in_clause.comparison_value))
@@ -908,11 +1026,9 @@ class CNLCompiler:
         for elem in conjunction_list:
             compiled_string += str(Rule(head=None, body=elem))
 
-        # print(compiled_string)
         return compiled_string
 
     def __compile_weak_constraint_clause(self, constraint: WeakConstraintClause):
-        # print(constraint)
         compilation_string: str = ''
 
         body_in_clause: ConditionOperation | AggregateClause = constraint.constraint_body
@@ -1002,8 +1118,6 @@ class CNLCompiler:
 
     def __compile_aggregate_clause(self, aggregate_clause: AggregateClause, in_subject: Subject = None):
         compiled_string: str = ''
-        # print(aggregate_clause)
-
         aggregate_body_in_clause: AggregateBodyClause = aggregate_clause.aggregate_body
         aggregate_ranging_in_clause: RangingClause = aggregate_clause.ranging_clause
         aggregate_operator_in_clause: str = aggregate_clause.aggregate_operator
@@ -1034,7 +1148,10 @@ class CNLCompiler:
         if aggregate_body_in_clause.active_form:
             aggregate_verb_atom: Atom = self.__get_atom_from_signature_subject(verb_in_clause.name)
             aggregate_verb_atom.negated = verb_in_clause.is_negated
-            aggregate_verb_atom.set_parameter_variable(subject_in_clause.name, subject_in_clause.variable)
+            if aggregate_clause.parameter:
+                aggregate_verb_atom.set_parameter_variable(aggregate_clause.parameter[0].name, subject_in_clause.variable)
+            else:
+                aggregate_verb_atom.set_parameter_variable(subject_in_clause.name, subject_in_clause.variable)
             aggregate_variable_list.append(subject_in_clause.variable)
             aggregate_body.append(aggregate_verb_atom)
             if not aggregate_body_in_clause.aggregate_for_clauses:
@@ -1070,7 +1187,6 @@ class CNLCompiler:
                     aggregate_variable_list.append(variable)
                 else:
                     variable = f'"{ag_object.variable}"' if not ag_object.variable.isdigit() else ag_object.variable
-
             join_atom: Atom | None = self.__find_join_atom_from_signature_subject(verb_in_clause.name,
                                                                                   ag_object.name)
             if join_atom is not None:
@@ -1089,6 +1205,7 @@ class CNLCompiler:
 
         return aggregate
 
+    # check if a string is in the global constants otherwise return itself
     def __make_substitution_value(self, string_to_check: str) -> str:
         if string_to_check.lower() in constant_definitions_dict.keys():
             return constant_definitions_dict[string_to_check.lower()]
@@ -1097,15 +1214,18 @@ class CNLCompiler:
         else:
             return string_to_check
 
+    # simple_clause: subject_clause CNL_COPULA? verb_clause
     def __compile_simple_clause(self, clause: SimpleClause, block_memory: ClauseBlockMemory):
-        # print(clause)
         result: Atom | Comparison | None = None
         subject_in_clause: Subject = Subject(clause.subject)
+        # set the current subject into the memory if the memory is empty
         if block_memory.subject_in_block is None:
             block_memory.set_subject_of_block(subject_in_clause)
-
+        # verb_clause: verb_negation? (verb_name | verb_name_with_preposition) (verb_object_clause | composition_clause | tuple_clause | same_clause)? | verb_negation? verb_name
         verb_in_clause: Verb = Verb(clause.verb_clause)
         simple_verb_atom: Atom = self.__get_atom_from_signature_subject(verb_in_clause.name)
+        # the subject in block memory is the true subject
+        # substitute the simple verb atom parameter (initialized to '_') with the corresponding subject variable 
         if subject_in_clause.name != block_memory.subject_in_block.name:
             simple_verb_atom.set_parameter_variable(block_memory.subject_in_block.name,
                                                     self.__make_substitution_value(
@@ -1116,7 +1236,6 @@ class CNLCompiler:
                                                         subject_in_clause.variable))
         simple_verb_atom.negated = verb_in_clause.is_negated
         result = simple_verb_atom
-
         # todo: i soggetti (dopo il primo) possono anche non essere all'interno dei parametri dell'atomo del verbo
         if subject_in_clause.name != block_memory.subject_in_block.name:
             value_for_subject: str = subject_in_clause.variable
@@ -1155,7 +1274,8 @@ class CNLCompiler:
 
             simple_verb_atom.set_parameter_variable(subject_in_clause.name,
                                                     self.__make_substitution_value(value_for_subject))
-
+        # list of object_clauses
+        # object_clause: "a "? object_name variable?
         objects_in_clause: list[VerbObject] = []
         if type(clause.verb_clause.object_clause) == VerbObjectClause:
             objects_in_clause.append(VerbObject(clause.verb_clause.object_clause))
@@ -1164,10 +1284,9 @@ class CNLCompiler:
                                   VerbObject(clause.verb_clause.object_clause.composition_rhs)]
         elif type(clause.verb_clause.object_clause) == TupleClause:
             for elem in clause.verb_clause.object_clause.tuple_objects:
-                objects_in_clause += [VerbObject(elem)]
+                objects_in_clause += [VerbObject(elem)] 
 
         # todo: gli oggetti possono anche non essere all'interno dei parametri dell'atomo del verbo
-
         for cls_object in objects_in_clause:
             value_for_object: str = cls_object.variable
             block_memory.add_time_variable_to_memory(cls_object.name, cls_object.variable)
@@ -1343,6 +1462,7 @@ class CNLCompiler:
         return (atom, first_inequality), second_inequality
 
     # todo: controllare che i riferimenti sono stati effettivamente introdotti nelle definizioni, lanciare un errore altrimenti
+    # return a new atom with all its corresponding parameters initialized to '_'
     def __get_atom_from_signature_subject(self, subject_in_signature: str):
         signature: Signature = self.__get_signature(subject_in_signature)
         atom: Atom = Atom(signature.subject, dict())

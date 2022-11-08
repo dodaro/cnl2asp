@@ -1,6 +1,13 @@
+from ast import Param
+from statistics import variance
 import lark
 from lark import Transformer
 from dataclasses import dataclass
+
+
+
+
+
 
 negation_of_comparison_ops = {'more than': 'at most', 'less than': 'at least', 'different from': 'equal to',
                               'equal to': 'different from', 'at least': 'less than', 'at most': 'more than'}
@@ -11,6 +18,31 @@ negation_of_ordering_ops = {'before': 'after', 'after': 'before'}
 class CNLTransformer(Transformer):
     def start(self, elem):
         return CNLContentTree(elem)
+
+    def domain_definition(self,elem):
+        subject = elem[0]
+        parameters = [x for x in elem[1] if type(x) == Parameter]
+        return DomainDefinition(subject, parameters)
+
+    def fact_definition(self,elem):
+        subject = elem[0]
+        parameters = [x for x in elem[1] if type(x) == ParameterDefinition]
+        return FactDefinition(subject, parameters)
+
+    def parameter_list(self,elem):
+        parameters = [x for idx, x in enumerate(elem) if type(x) == Parameter and ((idx+1 >= len(elem)) or type(elem[idx+1]) == Parameter)]
+        parameters_definition = [ParameterDefinition(x.name, elem[idx+1]) for idx, x in enumerate(elem) if not(idx+1 >= len(elem)) and type(x) == Parameter and type(elem[idx+1]) == str]
+        return parameters+parameters_definition
+
+    def parameter_definition(self,elem):
+        return str(elem[0])
+
+    def value(self,elem):
+        (elem,) = elem
+        return str(elem)
+
+    def parameter(self,elem):
+        return Parameter(str(elem[0]))
 
     def negative_strong_constraint_clause(self, elem):
         simple_clauses = [x for x in elem if type(x) == SimpleClause]
@@ -64,19 +96,21 @@ class CNLTransformer(Transformer):
 
     def quantified_choice_clause(self, elem):
         foreach_clause = [x for x in elem if type(x) == ForeachClause]
+        parameters = [parameter for x in elem if type(x) == list for parameter in x if type(parameter) == Parameter]
+        parametersDefinition = [parameter_definition for x in elem if type(x) == list for parameter_definition in x if type(parameter_definition) == ParameterDefinition]
         quantified_range_clause = [x for x in elem if type(x) == QuantifiedRangeClause]
-        quantified_object_clause = [x for x in elem if type(x) == QuantifiedObjectClause]
+        quantified_object_clause = [x for x in elem if type(x) == QuantifiedObjectClause or type(x) == DisjunctionClause]
         foreach_clause = foreach_clause[0] if foreach_clause else []
 
         quantified_range_clause = quantified_range_clause[0] if quantified_range_clause else []
         quantified_object_clause = quantified_object_clause[0] if quantified_object_clause else []
+        verb_name = [x for x in elem if type(x) == VerbName][0]
+        return QuantifiedChoiceClause(elem[0], elem[1], parameters, parametersDefinition, f'{verb_name.name} {verb_name.preposition}'.strip(), quantified_range_clause, quantified_object_clause,
+                                          foreach_clause)
 
-        if type(elem[2]) is not lark.Token:
-            return QuantifiedChoiceClause(elem[0], elem[1], elem[2], quantified_range_clause, quantified_object_clause,
-                                          foreach_clause)
-        else:
-            return QuantifiedChoiceClause(elem[0], elem[1], elem[3], quantified_range_clause, quantified_object_clause,
-                                          foreach_clause)
+    def disjunction_clause(self, elem):
+        return DisjunctionClause(elem)
+
 
     def property_clause(self, elem):
         return PropertyClause(elem[0], elem[1])
@@ -137,8 +171,8 @@ class CNLTransformer(Transformer):
         return SubjectClause(subject, variable, ordering)
 
     def verb_clause(self, elem):
-        verb_name = elem[0] if 'not' not in elem[0] else elem[1]
-        negated = True if 'not' in elem[0] else False
+        verb_name = f'{elem[0].name} {elem[0].preposition}'.strip() if type(elem[0]) != str else f'{elem[1].name} {elem[1].preposition}'.strip()
+        negated = True if type(elem[0]) == str and 'not' in elem[0] else False
         verb_object_clause = [x for x in elem if type(x) == VerbObjectClause]
         composition_clause = [x for x in elem if type(x) == CompositionClause]
         tuple_clause = [x for x in elem if type(x) == TupleClause]
@@ -186,10 +220,10 @@ class CNLTransformer(Transformer):
         return str(elem)
 
     def verb_name(self, elem):
-        return str(elem[0])
+        return VerbName(str(elem[0]), '')
 
     def verb_name_with_preposition(self, elem):
-        return str(elem[0]) + " " + str(elem[1])
+        return VerbName(str(elem[0]), str(elem[1]))
 
     def object_name(self, elem):
         (elem,) = elem
@@ -220,12 +254,15 @@ class CNLTransformer(Transformer):
         return str(elem)
 
     def aggregate_clause(self, elem):
+        parameter = [x for x in elem if type(x) == Parameter]
+        aggregateBodyClause = [x for x in elem if type(x) == AggregateBodyClause][0]
         ranging_clause = [x for x in elem if type(x) == RangingClause]
         ranging_clause = ranging_clause[0] if ranging_clause else []
-        return AggregateClause(elem[0], elem[1], ranging_clause)
+        return AggregateClause(elem[0], parameter, aggregateBodyClause, ranging_clause)
 
     def aggregate_active_clause(self, elem):
         subject_clause = [x for x in elem if type(x) == SubjectClause][0]
+        parameters = [x for x in elem if type(x) == Parameter]
         verb_clause = [x for x in elem if type(x) == AggregateVerbClause][0]
         object_clause = [x for x in elem if type(x) == VerbObjectClause or type(x) == CompositionClause or
                          type(x) == TupleClause]
@@ -377,10 +414,10 @@ class CNLTransformer(Transformer):
         return ConditionMatchClause(elem[0], elem[2], len(elem[2]))
 
     def aggregate_verb_clause(self, elem):
-        if 'not' in elem[0]:
-            return AggregateVerbClause(elem[1], True) if len(elem) == 2 else AggregateVerbClause(elem[2], True)
+        if type(elem[0]) == str and 'not' in elem[0]:
+            return AggregateVerbClause(f'{elem[1].name} {elem[1].preposition}'.strip(), True) if len(elem) == 2 else AggregateVerbClause(f'{elem[2].name} {elem[2].preposition}'.strip(), True)
         else:
-            return AggregateVerbClause(elem[0], False) if len(elem) == 1 else AggregateVerbClause(elem[1], False)
+            return AggregateVerbClause(f'{elem[0].name} {elem[0].preposition}'.strip(), False) if len(elem) == 1 else AggregateVerbClause(f'{elem[1].name} {elem[1].preposition}'.strip(), False)
 
     def aggregate_determinant(self, elem):
         (elem,) = elem
@@ -429,8 +466,8 @@ class CNLTransformer(Transformer):
         objects_list = [x for x in elem[2:] if type(x) is SubjectClause]
         where_clause = [x for x in elem[3:] if type(x) is WhereClause]
         when_part = [x for x in elem[3:] if type(x) is WhenPart]
-        verb = elem[2] if type(elem[2]) is str else elem[1]
-
+        verb = f'{elem[2].name} {elem[2].preposition}' if type(elem[2]) is VerbName else f'{elem[1].name} {elem[1].preposition}' 
+        verb = verb.strip()
         where_clause = where_clause[0] if where_clause else []
         when_part = when_part[0].body if when_part else []
         return EnumerativeDefinitionClause(elem[0], verb, objects_list, when_part, where_clause)
@@ -444,7 +481,11 @@ class CNLTransformer(Transformer):
     def CNL_END_OF_LINE(self, elem):
         return lark.Discard
 
-
+@dataclass(frozen=True)
+class VerbName:
+    name: str
+    preposition: str
+    
 @dataclass(frozen=True)
 class RangingClause:
     ranging_lhs: str
@@ -466,6 +507,10 @@ class ConditionExpressionOperator:
 class ConditionBoundClause:
     bound_lower: str
     bound_upper: str
+
+@dataclass(frozen=True)
+class Parameter:
+    name: str
 
 
 @dataclass(frozen=True)
@@ -575,7 +620,7 @@ class AggregateForClause:
 @dataclass
 class VerbClause:
     verb_name: str
-    object_clause: [ObjectClause]
+    object_clause: list[ObjectClause]
     verb_negated: bool
 
 
@@ -631,7 +676,7 @@ class SimpleObject:
 
 @dataclass(frozen=True)
 class ForeachClause:
-    objects: [SimpleObject]
+    objects: list[SimpleObject]
 
 
 @dataclass(frozen=True)
@@ -646,6 +691,7 @@ class AggregateBodyClause:
 @dataclass(frozen=True)
 class AggregateClause:
     aggregate_operator: str
+    parameter: Parameter
     aggregate_body: AggregateBodyClause
     ranging_clause: RangingClause
 
@@ -671,7 +717,7 @@ class ConditionClause:
 
 @dataclass(frozen=True)
 class WhereClause:
-    conditions: [ConditionClause]
+    conditions: list[ConditionClause]
 
 
 @dataclass(frozen=True)
@@ -735,11 +781,6 @@ class ConstantDefinitionClause:
 
 
 @dataclass(frozen=True)
-class DefinitionClause:
-    clause: CompoundedClause | ConstantDefinitionClause | EnumerativeDefinitionClause
-
-
-@dataclass(frozen=True)
 class PropertyClause:
     property_subject: str
     property_definition: str
@@ -795,19 +836,45 @@ class QuantifiedRangeClause:
 
 @dataclass(frozen=True)
 class QuantifiedObjectClause:
-    objects: [SimpleObject]
+    objects: list[SimpleObject]
 
+@dataclass(frozen=True)
+class DisjunctionClause:
+    objects: ObjectClause
+
+@dataclass(frozen=True)
+class ParameterDefinition:
+    parameter_name: str
+    parameter_value: str
 
 @dataclass(frozen=True)
 class QuantifiedChoiceClause:
     quantifier: str
     subject_clause: SubjectClause
+    parameters: list[Parameter]
+    parameters_definitions: list[ParameterDefinition]
     verb_name: str
     range: QuantifiedExactQuantity | QuantifiedRangeClause
-    object_clause: QuantifiedObjectClause
+    object_clause: QuantifiedObjectClause | DisjunctionClause
     foreach_clause: ForeachClause
+
+@dataclass(frozen=True)
+class DomainDefinition:
+    subject: SubjectClause
+    parameters: list[Parameter] 
+
+@dataclass(frozen=True)
+class FactDefinition:
+    subject: SubjectClause
+    parameters: ParameterDefinition
 
 
 @dataclass(frozen=True)
+class DefinitionClause:
+    clause: CompoundedClause | ConstantDefinitionClause | EnumerativeDefinitionClause | DomainDefinition | FactDefinition
+
+@dataclass(frozen=True)
 class CNLContentTree:
-    sentences: [StrongConstraintClause | DefinitionClause | QuantifiedChoiceClause | PropertyClause | OrderingClause]
+    sentences: list[ StrongConstraintClause | DefinitionClause | QuantifiedChoiceClause | PropertyClause | OrderingClause]
+
+
