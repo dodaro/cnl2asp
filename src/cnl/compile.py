@@ -1276,8 +1276,7 @@ class CNLCompiler:
 
     def __compile_quantified_choice_disjunction_clause(self, clause: QuantifiedChoiceClause):
         subject_in_clause: Subject = Subject(clause.subject_clause)
-        first_verb_name: str = " ".join(
-            [substr.strip().removesuffix("s") for substr in clause.verb_name.split(' ')]).lower()
+        first_verb_name = f'{clause.verb_name.name} {clause.verb_name.preposition}'.strip()
         second_verb_name: str = \
             [f'{x.name} {x.preposition}'.strip() for x in clause.object_clause.objects if type(x) == VerbName][0]
         second_verb_name: str = " ".join(
@@ -1298,6 +1297,8 @@ class CNLCompiler:
                                             foreach_object in objects_in_foreach]
         head_atoms: list[Atom] = [self.__get_atom_from_signature_subject(first_verb_name),
                                   self.__get_atom_from_signature_subject(second_verb_name)]
+        self.set_parameter_list(head_atoms[0], clause.verb_name.parameters)
+        self.set_parameter_list(head_atoms[1], clause.object_clause.objects[0].parameters)
         for x, y in [(elem.atom_name, elem.atom_parameters[elem.atom_name]) for elem in clause_foreach_atoms]:
             for z in y:
                 for atom in head_atoms:
@@ -1400,7 +1401,7 @@ class CNLCompiler:
             return self.__compile_quantified_choice_disjunction_clause(clause)
         old_subject_variable: str | None = None
         subject_in_clause: Subject = Subject(clause.subject_clause)
-        verb_name: str = " ".join([substr.strip().removesuffix("s") for substr in clause.verb_name.split(' ')]).lower()
+        verb_name: str = f'{clause.verb_name.name} {clause.verb_name.preposition}'.strip()
         objects_in_foreach: list[Object] = []
         # foreach_clause: "for each" object_clause ("and" object_clause)*
         if clause.foreach_clause:
@@ -1675,7 +1676,7 @@ class CNLCompiler:
                     if type(condition_clause.condition_variable.expression_rhs[0]) == str:
                         if not condition_clause.condition_variable.expression_rhs[0] in list(constant_definitions_dict.keys()):
                             raise Exception(f'Constant "{condition_clause.condition_variable.expression_rhs[0]}" not declared.')
-                        factors.append({'name': condition_clause.condition_variable.expression_rhs[0], 'variable': condition_clause.condition_variable.expression_rhs})
+                        factors.append({'name': condition_clause.condition_variable.expression_rhs[0], 'variable': condition_clause.condition_variable.expression_rhs[0]})
                     else:
                         variable = self.newVar()
                         name = ''

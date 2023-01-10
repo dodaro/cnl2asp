@@ -273,7 +273,7 @@ class CNLTransformer(Transformer):
         duration_clause = [x for x in elem if type(x) == DurationClause]
         duration_clause = duration_clause[0] if duration_clause else []
         return QuantifiedChoiceClause(elem[0], elem[1], parameters, parametersDefinition,
-                                      f'{verb_name.name} {verb_name.preposition}'.strip(), quantified_range_clause,
+                                      verb_name, quantified_range_clause,
                                       quantified_object_clause,
                                       duration_clause, foreach_clause)
 
@@ -353,6 +353,7 @@ class CNLTransformer(Transformer):
             elif type(elem[1]) == str:
                 subject = elem[0]
                 variable = elem[1]
+                variable = '' if variable == 'does' else variable
             elif type(elem[1]) == list:
                 subject = elem[0]
                 parameters = elem[1]

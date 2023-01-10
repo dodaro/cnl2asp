@@ -73,7 +73,7 @@ enumerative_definition_clause: subject_clause CNL_COPULA? (verb_name | verb_name
 
 quantified_choice_clause.1: quantifier subject_clause "can" CNL_COPULA? (verb_name | verb_name_with_preposition) (quantified_exact_quantity_clause | quantified_range_clause)? (quantified_object_clause | disjunction_clause)? duration_clause? foreach_clause?
 quantifier.1: CNL_QUANTIFIER
-disjunction_clause.2:  ("a" | "an")? object_clause? "or" (verb_name | verb_name_with_preposition) ("a" | "an")? object_clause?
+disjunction_clause.2:  ("a" | "an")? object_clause? "or" ("a " | "an ")? (verb_name | verb_name_with_preposition) ("a" | "an")? object_clause?
 quantified_exact_quantity_clause.1: exact_quantity_operator quantified_exact_quantity
 quantified_exact_quantity: CNL_NUMBER
 quantified_range_clause: range_operator range_lhs "and" range_rhs
