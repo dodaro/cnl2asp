@@ -1,5 +1,6 @@
 import copy
 import re
+import time
 from uuid import uuid4
 import os.path
 import logging
@@ -699,25 +700,32 @@ class TemporalConcept:
 
     def set_element_list(self, lhs_range, rhs_range):
         elements = dict()
-        counter = 0
+        counter = 1
         if self.type == self.TEMPORAL_TIME:
             start = datetime.strptime(lhs_range, '%I:%M %p')
             end = datetime.strptime(rhs_range, '%I:%M %p')
-            while start != end:
+            elements[0] = start.strftime('%H:%M')
+            start = start + timedelta(minutes=self.step)
+            while datetime.strptime(elements[counter-1], '%H:%M') < end:
+                if start > end: start = end
                 elements[counter] = start.strftime('%H:%M')
                 counter += 1
                 start = start + timedelta(minutes=self.step)
         elif self.type == self.TEMPORAL_DATE:
             start = datetime.strptime(lhs_range, '%d/%m/%Y')
             end = datetime.strptime(rhs_range, '%d/%m/%Y')
-            while start != end:
+            elements[0] = start.strftime('%d/%m/%Y')
+            start = start + timedelta(days=self.step)
+            while datetime.strptime(elements[counter-1], '%d/%m/%Y') < end:
+                if start > end: start = end
                 elements[counter] = start.strftime('%d/%m/%Y')
                 counter += 1
                 start = start + timedelta(days=self.step)
         elif self.type == self.TEMPORAL_STEP:
             start = lhs_range
             end = rhs_range
-            for i in range(int(start), int(end) + 1):
+            elements[0] = start
+            for i in range(int(start)+1, int(end) + 1):
                 elements[counter] = i
                 counter += 1
         return elements
@@ -1163,7 +1171,8 @@ class CNLCompiler:
 
         atom: Atom = Atom(verb_name, dict())
         for i, object_name in enumerate(objects_list):
-            atom.set_parameter_variable(object_name, objects_values[i], newDefinition=True)
+            object_value = f'"{objects_values[i]}"' if objects_values[i].isalpha() and objects_values[i].islower() else objects_values[i]
+            atom.set_parameter_variable(object_name, object_value, newDefinition=True)
         self.decl_signatures.append(Signature(verb_name, objects_list))
 
         # WhereClause: "," " "* "where" (condition_clause | condition_match_group) ("and" condition_clause)*

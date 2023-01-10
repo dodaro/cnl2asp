@@ -714,7 +714,7 @@ class CNLTransformer(Transformer):
         when_part = [x for x in elem[3:] if type(x) is WhenPart]
         verb = f'{elem[2].name} {elem[2].preposition}' if type(
             elem[2]) is VerbName else f'{elem[1].name} {elem[1].preposition}'
-        if(elem[1].value in ["have ", "have a ","have an ", "has ","has a ","has an "]):
+        if type(elem[1]) == lark.Token and elem[1].value in ["have ", "have a ","have an ", "has ","has a ","has an "]:
             verb = verb.replace(' to', '')
         verb = verb.strip()
         where_clause = where_clause[0] if where_clause else []
