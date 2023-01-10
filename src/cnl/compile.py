@@ -141,7 +141,7 @@ class Atom:
     def set_parameter_variable(self, parameter_name: str, new_variable: str, force: bool = False, index: int = None,
                                newDefinition: bool = False):
         if type(new_variable) == str and new_variable.isalpha() and new_variable.islower() and not (new_variable in list(constant_definitions_dict.keys())):
-            raise Exception(f'Constant "{new_variable}" not declared.')
+            new_variable = f'"{new_variable}"'
 
 
         # If the parameter name is not defined in the atom, add the new name and variable
@@ -923,6 +923,9 @@ class CNLCompiler:
     def __compile_quantified_maximum_quantity(self, quantified_maximum_quantity):
             return 0, quantified_maximum_quantity.value
 
+    def __compile_quantified_minimum_quantity(self, quantified_maximum_quantity):
+            return quantified_maximum_quantity.value, None
+
     def __compile_quantified_exact_quantity(self, quantified_exact_quantity):
         return quantified_exact_quantity.quantity, quantified_exact_quantity.quantity
 
@@ -941,6 +944,8 @@ class CNLCompiler:
             return self.__compile_quantified_exact_quantity(cardinality.clause)
         elif type(cardinality.clause) == QuantifiedRangeClause:
             return self.__compile_quantified_range_clause(cardinality.clause)
+        elif type(cardinality.clause) == QuantifiedMinimumQuantity:
+            return self.__compile_quantified_minimum_quantity(cardinality.clause)
 
     def __compile_wheneverThen_clause(self, wheneverThen_clause):
         body: list[Atom] = [] # list of atoms in the rule body
@@ -2514,6 +2519,7 @@ class CNLCompiler:
     # todo: controllare che i riferimenti sono stati effettivamente introdotti nelle definizioni, lanciare un errore altrimenti
     # return a new atom with all its corresponding parameters initialized to '_'
     def __get_atom_from_signature_subject(self, subject_in_signature: str, signature=None):
+        subject_in_signature = subject_in_signature.lower()
         try:
             if not signature:
                 signature: Signature = self.__get_signature(subject_in_signature)

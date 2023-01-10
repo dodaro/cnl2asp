@@ -105,7 +105,7 @@ class CNLTransformer(Transformer):
             if type(x) == VerbName and type(elem[i - 1]) == lark.Token and \
                     elem[i - 1].value in ["have ", "have a ","have an ", "has ","has a ","has an "]:
                 verb_name = VerbName(x.name, '', x.parameters, x.ordering) if x.preposition == 'to' else x
-        verb_name = VerbName(f'{verb_name.name} {verb_name.preposition}'.strip(), verb_name.preposition, verb_name.parameters, verb_name.ordering)
+        verb_name = VerbName(f'{verb_name.name} {verb_name.preposition}'.strip().lower(), verb_name.preposition, verb_name.parameters, verb_name.ordering)
         object_clause = [x for x in elem if type(x) == ObjectClause]
         duration_clause = [x for x in elem if type(x) == DurationClause]
         duration_clause = duration_clause[0] if duration_clause else []
@@ -228,7 +228,7 @@ class CNLTransformer(Transformer):
                 if type(x) == VerbName and type(elem[i - 1]) == lark.Token and \
                         elem[i - 1].value in ["have ", "have a ", "have an ", "has ", "has a ", "has an "]:
                     verb = VerbName(x.name, '', x.parameters) if x.preposition == 'to' else x
-            verb = VerbName(f'{verb.name} {verb.preposition}'.strip(), verb.preposition,
+            verb = VerbName(f'{verb.name} {verb.preposition}'.strip().lower(), verb.preposition,
                                  verb.parameters)
             return WeakConstraintClause(priority_level, '', optimization_operator, '', subject, verb, object, whenever_clause)
         else:
@@ -300,6 +300,9 @@ class CNLTransformer(Transformer):
 
     def quantified_maximum_quantity(self,elem):
         return QuantifiedMaximumQuantity(elem[0])
+
+    def quantified_minimum_quantity(self,elem):
+        return QuantifiedMinimumQuantity(elem[0])
 
     def condition_comparison_clause(self, elem):
         if type(elem[1]) == lark.Token: elem[1] = elem[1].value
@@ -373,6 +376,7 @@ class CNLTransformer(Transformer):
     def verb_clause(self, elem):
         verb_name = f'{elem[0].name} {elem[0].preposition}'.strip() if type(
             elem[0]) != str else f'{elem[1].name} {elem[1].preposition}'.strip()
+        verb_name = verb_name.lower()
         negated = True if type(elem[0]) == str and 'not' in elem[0] else False
         verb_object_clause = [x for x in elem if type(x) == VerbObjectClause]
         composition_clause = [x for x in elem if type(x) == CompositionClause]
@@ -429,7 +433,7 @@ class CNLTransformer(Transformer):
         parameters = parameters[0] if len(parameters) > 0 else []
         temporal_ordering = [x for x in elem if type(x) == TemporalOrdering]
         temporal_ordering = temporal_ordering[0] if len(temporal_ordering) > 0 else []
-        return VerbName(str(elem[0]), '', parameters, temporal_ordering)
+        return VerbName(str(elem[0]).lower(), '', parameters, temporal_ordering)
 
     def temporal_ordering(self,elem):
         return TemporalOrdering(elem[0],'', elem[1].value)
@@ -445,7 +449,7 @@ class CNLTransformer(Transformer):
         if len(elem) == 2:
             name = elem[0].value
             preposition = elem[1].value
-        return VerbName(name, preposition, parameters, '')
+        return VerbName(name.lower(), preposition, parameters, '')
 
     def object_name(self, elem):
         (elem,) = elem
@@ -608,7 +612,7 @@ class CNLTransformer(Transformer):
             return elem
 
     def verb_object_clause(self, elem):
-        name = elem[0]
+        name = elem[0].lower()
         rest = elem[1:]
         variable = [x for x in rest if type(x) == str]
         ob_range = [x for x in rest if type(x) == ObjectRange]
@@ -653,12 +657,12 @@ class CNLTransformer(Transformer):
     def aggregate_verb_clause(self, elem):
         if type(elem[0]) == str and 'not' in elem[0]:
             parameter = elem[1].parameters
-            return AggregateVerbClause(f'{elem[1].name} {elem[1].preposition}'.strip(), True, parameter) if len(
-                elem) == 2 else AggregateVerbClause(f'{elem[2].name} {elem[2].preposition}'.strip(), True, parameter)
+            return AggregateVerbClause(f'{elem[1].name} {elem[1].preposition}'.strip().lower(), True, parameter) if len(
+                elem) == 2 else AggregateVerbClause(f'{elem[2].name} {elem[2].preposition}'.strip().lower(), True, parameter)
         else:
             parameter = elem[0].parameters
-            return AggregateVerbClause(f'{elem[0].name} {elem[0].preposition}'.strip(), False, parameter) if len(
-                elem) == 1 else AggregateVerbClause(f'{elem[1].name} {elem[1].preposition}'.strip(), False, parameter)
+            return AggregateVerbClause(f'{elem[0].name} {elem[0].preposition}'.strip().lower(), False, parameter) if len(
+                elem) == 1 else AggregateVerbClause(f'{elem[1].name} {elem[1].preposition}'.strip().lower(), False, parameter)
 
     def aggregate_determinant(self, elem):
         (elem,) = elem
@@ -717,7 +721,7 @@ class CNLTransformer(Transformer):
             elem[2]) is VerbName else f'{elem[1].name} {elem[1].preposition}'
         if type(elem[1]) == lark.Token and elem[1].value in ["have ", "have a ","have an ", "has ","has a ","has an "]:
             verb = verb.replace(' to', '')
-        verb = verb.strip()
+        verb = verb.strip().lower()
         where_clause = where_clause[0] if where_clause else []
         when_part = when_part[0].body if when_part else []
         return EnumerativeDefinitionClause(elem[0], verb, objects_list, when_part, where_clause)
@@ -1070,6 +1074,10 @@ class QuantifiedMaximumQuantity:
     value: str
 
 @dataclass(frozen=True)
+class QuantifiedMinimumQuantity:
+    value: str
+
+@dataclass(frozen=True)
 class OrderingClause:
     ordering_subject: OrderingElement
     ordering_operator: str
@@ -1147,7 +1155,7 @@ class ParameterList:
 
 @dataclass(frozen=True)
 class Cardinality:
-    clause: QuantifiedMaximumQuantity | QuantifiedExactQuantity | QuantifiedRangeClause
+    clause: QuantifiedMaximumQuantity | QuantifiedMinimumQuantity | QuantifiedExactQuantity | QuantifiedRangeClause
 
 @dataclass(frozen=True)
 class ThenClause:
