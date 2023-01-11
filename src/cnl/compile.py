@@ -14,7 +14,7 @@ from dataclasses import *
 debug: bool = False
 
 comparison_relations = {'more than': ">", 'greater than': ">", 'less than': '<', 'different from': '!=',
-                        'equal to': '=', 'at least': '>=', 'greater than or equal to': ">=", 'less than or equal to': "<=",
+                        'equal to': '==', 'at least': '>=', 'greater than or equal to': ">=", 'less than or equal to': "<=",
                         'at most': '<=', 'not after': '<='}
 negated_relations = {'more than': "<=", 'greater than': "<=", 'less than': '>=', 'different from': '==',
                      'equal to': '!=',
@@ -140,7 +140,7 @@ class Atom:
     # set the parameter variable
     def set_parameter_variable(self, parameter_name: str, new_variable: str, force: bool = False, index: int = None,
                                newDefinition: bool = False):
-        if type(new_variable) == str and new_variable.isalpha() and new_variable.islower() and not (new_variable in list(constant_definitions_dict.keys())):
+        if type(new_variable) == str and new_variable.isalpha() and not new_variable.isupper() and not (new_variable in list(constant_definitions_dict.keys())):
             new_variable = f'"{new_variable}"'
 
 
@@ -1288,9 +1288,10 @@ class CNLCompiler:
             [substr.strip().removesuffix("s") for substr in second_verb_name.split(' ')]).lower()
         subject_in_clause_atom: Atom = self.__get_atom_from_signature_subject(subject_in_clause.name)
         # set a variable for each parameter defined in input
-        for parameter in clause.parameters:
-            variable = f'X_{str(uuid4()).replace("-", "_")}' if parameter.variable == '' else parameter.variable
-            subject_in_clause_atom.set_parameter_variable(parameter.name, variable)
+        # for parameter in clause.parameters:
+        #     variable = f'X_{str(uuid4()).replace("-", "_")}' if parameter.variable == '' else parameter.variable
+        #     subject_in_clause_atom.set_parameter_variable(parameter.name, variable)
+        self.set_parameter_list(subject_in_clause_atom, clause.subject_clause.parameters)
         objects_in_foreach: list[Object] = []
         # foreach_clause: "for each" object_clause ("and" object_clause)*
         if clause.foreach_clause:
@@ -1308,16 +1309,6 @@ class CNLCompiler:
             for z in y:
                 for atom in head_atoms:
                     atom.set_parameter_variable(x, z)
-        for parameters in [subject_in_clause_atom.atom_parameters]:
-            for atom in head_atoms:
-                for parameter_name in parameters:
-                    if [x for x in clause.parameters if x.name == parameter_name]:
-                        atom.set_parameter_variable(parameter_name, parameters.get(parameter_name)[0])
-                        # set parameter value to parameter name
-                for parameter_definition in clause.parameters_definitions:
-                    atom.set_parameter_variable(parameter_definition.parameter_name,
-                                                parameter_definition.parameter_value)
-
         objects = dict()
         if clause.object_clause.objects and [elem for elem in clause.object_clause.objects if
                                              type(elem) == ObjectClause]:
@@ -1513,7 +1504,7 @@ class CNLCompiler:
             elif type(atom2.atom_parameters[parameter_name][0]) == Atom and parameter_name in list(
                     atom1.atom_parameters.keys()) and type(atom1.atom_parameters[parameter_name][0]) == Atom:
                 self.link_two_atoms(atom1.atom_parameters[parameter_name][0], atom2.atom_parameters[parameter_name][0])
-            else:
+            elif parameter_name in list(atom1.atom_parameters.keys()):
                 atom1.set_parameter_variable(parameter_name, var)
                 atom2.set_parameter_variable(parameter_name, var)
 
