@@ -1,3 +1,4 @@
+An assigned to has a node, and a color.
 A node goes from 1 to 3.
 A color is one of red, green, blue.
 Node 1 is connected to node X, where X is one of 2, 3.

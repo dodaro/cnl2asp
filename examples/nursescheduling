@@ -1,3 +1,4 @@
+A work in is identified by a nurse, by a day, and by a shift.
 A nurse goes from 1 to 10.
 A day goes from 1 to 365 and is made of shifts that are made of hours.
 A shift is one of morning, afternoon, night, specrest, rest, vacation and has hours that are equal to respectively 7, 7, 10, 0, 0, 0.
