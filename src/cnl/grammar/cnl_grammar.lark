@@ -31,7 +31,7 @@ cardinality: quantified_exact_quantity_clause | quantified_range_clause | quanti
 quantified_maximum_quantity: "at most" quantified_exact_quantity
 quantified_minimum_quantity: "at least" quantified_exact_quantity
 
-negative_strong_constraint_clause: CNL_PROHIBITION (condition_clause  "," (whenever_clause ","?)+ | simple_clause ("and also" simple_clause)* (where_clause)? ("," (whenever_clause ","?)+)? | aggregate_clause comparison_clause (where_clause)? ("," (whenever_clause ","?)+)? | quantified_constraint (where_clause)? | temporal_constraint "," (whenever_clause ","?)+)
+negative_strong_constraint_clause: CNL_PROHIBITION ( aggregate_clause comparison_clause (where_clause)? ("," (whenever_clause ","?)+)? | quantified_constraint (where_clause)? | condition_clause  "," (whenever_clause ","?)+ | temporal_constraint "," (whenever_clause ","?)+ | simple_clause ("and also" simple_clause)* (where_clause)? ("," (whenever_clause ","?)+)? )
 positive_strong_constraint: CNL_REQUIREMENT (aggregate_clause comparison_clause (where_clause)?  ("," (whenever_clause ","?)+)? | when_then_clause (where_clause)? | quantified_constraint (where_clause)? | condition_clause  "," (whenever_clause ","?)+ | temporal_constraint "," (whenever_clause ","?)+ | simple_clause "," (whenever_clause ","?)+)
 when_then_clause: "when" when_part "then" then_part
 when_part: (simple_clause comparison_clause? | simple_clause ("and also" simple_clause)*)
@@ -54,7 +54,7 @@ atom_key.1: "by" parameter ((", by"|", and by") parameter)*
 parameter_list: "with" parameter parameter_definition? ((", with"|", and with") parameter parameter_definition?)*
 parameter_definition.1: "equal to" (value | CNL_EQUATION)  | CNL_OPERATOR (number parameter? | variable | constant )
 CNL_EQUATION: CNL_OPERATORS* CNL_WORD (CNL_OPERATORS* CNL_WORD?)*
-parameter.-1: temporal_ordering_with_respect_specified | ("a " | "an ")? CNL_PARAMETER_NAME+ parameter_variable? |
+parameter.-1: temporal_ordering_with_respect_specified | ("a " | "an ")? CNL_PARAMETER_NAME+ parameter_variable?
 temporal_ordering_with_respect_specified.1: CNL_SHIFT_OPERATOR CNL_TEMPORAL_TYPE "respect to" parameter_variable
 parameter_variable.1: CNL_VARIABLE (CNL_OPERATORS (CNL_VARIABLE | CNL_NUMBER ))?
 CNL_OPERATORS: "+" | "-" | "*" | "/" | "\\" | "(" | ")" | "|"

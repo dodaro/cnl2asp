@@ -4,7 +4,7 @@ import lark
 from lark import Transformer
 from dataclasses import dataclass
 
-negation_of_comparison_ops = {'more than': 'at most', 'less than': 'at least', 'different from': 'equal to',
+negation_of_comparison_ops = {'more than': 'at most', 'less than': 'at least', 'different from': 'equal to', 'greater than': 'less than',
                               'equal to': 'different from', 'at least': 'less than', 'at most': 'more than'}
 
 negation_of_ordering_ops = {'before': 'after', 'after': 'before'}
@@ -146,6 +146,7 @@ class CNLTransformer(Transformer):
         return str(elem)
 
     def parameter(self, elem):
+        if len(elem) == 0: return []
         if type(elem[0]) == TemporalOrdering: return elem[0]
         if(elem[0].value == 'and'):
             elem.remove(elem[0])
