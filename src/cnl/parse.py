@@ -192,11 +192,18 @@ class CNLTransformer(Transformer):
         comparison_clause = [x for x in elem if type(x) == ComparisonClause]
         where_clause = [x for x in elem if type(x) == WhereClause]
         quantified_constraint = [x for x in elem if type(x) == QuantifiedConstraint]
-
-        simple_clauses += [quantified_constraint[0].body] if quantified_constraint else []
-        clauses = simple_clauses if simple_clauses else aggregate_clause[0]
         comparison_clause = comparison_clause[0] if comparison_clause else []
         where_clause = where_clause[0] if where_clause else []
+        when_then_clause = [x for x in elem if type(x) == WhenThenClause]
+        simple_clauses += [quantified_constraint[0].body] if quantified_constraint else []
+        #clauses = simple_clauses if simple_clauses else aggregate_clause[0]
+        clauses = []
+        if aggregate_clause:
+            clauses = aggregate_clause[0]
+        elif simple_clauses:
+            clauses = simple_clauses
+        else:
+            clauses = when_then_clause[0].clause_body[0] + when_then_clause[0].clause_body[1]
 
         return StrongConstraintClause(clauses, comparison_clause, where_clause, '', '', False)
 
@@ -216,10 +223,10 @@ class CNLTransformer(Transformer):
         comparison_clause = [x for x in elem if type(x) == ComparisonClause]
         where_clause = [x for x in elem if type(x) == WhereClause]
         quantified_constraint = [x for x in elem if type(x) == QuantifiedConstraint]
-
-        clauses = []
         comparison_clause = comparison_clause[0] if comparison_clause else []
         where_clause = where_clause[0] if where_clause else []
+
+        clauses = []
         if aggregate_clause:
             comparison_clause.condition_operator = negation_of_comparison_ops[comparison_clause.condition_operator]
             clauses = aggregate_clause[0]

@@ -286,6 +286,8 @@ class Comparison:
             # check the current operator and replace it
             return f"{lhs} {negated_relations[self.comparison_operator]}" \
                    f" {rhs}"
+        if type(lhs) == str and lhs.isalpha(): lhs = f'"{lhs}"'
+        if type(rhs) == str and rhs.isalpha(): rhs = f'"{rhs}"'
         return f"{lhs} {comparison_relations[self.comparison_operator]}" \
                f" {rhs}"
 
