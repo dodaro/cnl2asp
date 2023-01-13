@@ -494,7 +494,8 @@ class CNLTransformer(Transformer):
 
     def aggregate_clause(self, elem):
         parameter = [x for x in elem if type(x) == Parameter]
-        aggregateBodyClause = [x for x in elem if type(x) == AggregateBodyClause][0]
+        aggregateBodyClause = [x for x in elem if type(x) == AggregateBodyClause]
+        aggregateBodyClause = aggregateBodyClause[0] if aggregateBodyClause else [x for x in elem if type(x) == SubjectClause][0]
         ranging_clause = [x for x in elem if type(x) == RangingClause]
         ranging_clause = ranging_clause[0] if ranging_clause else []
         return AggregateClause(elem[0], parameter, aggregateBodyClause, ranging_clause)

@@ -1355,11 +1355,12 @@ class CNLCompiler:
 
     def __compile_quantified_choice_disjunction_clause(self, clause: QuantifiedChoiceClause):
         subject_in_clause: Subject = Subject(clause.subject_clause)
-        first_verb_name = f'{clause.verb_name.name} {clause.verb_name.preposition}'.strip()
-        second_verb_name: str = \
-            [f'{x.name} {x.preposition}'.strip() for x in clause.object_clause.objects if type(x) == VerbName][0]
-        second_verb_name: str = " ".join(
-            [substr.strip().removesuffix("s") for substr in second_verb_name.split(' ')]).lower()
+        verb_names = [f'{clause.verb_name.name} {clause.verb_name.preposition}'.strip()] #first verb
+        verb_names += \
+            [f'{x.name} {x.preposition}'.strip() for x in clause.object_clause.objects if type(x) == VerbName]
+        for i,verb in enumerate(verb_names):
+            verb_names[i] = " ".join(
+                [substr.strip().removesuffix("s") for substr in verb.split(' ')]).lower()
         subject_in_clause_atom: Atom = self.__get_atom_from_signature_subject(subject_in_clause.name)
         # set a variable for each parameter defined in input
         # for parameter in clause.parameters:
@@ -1375,12 +1376,14 @@ class CNLCompiler:
                                             .set_parameter_variable(foreach_object.name,
                                                                     foreach_object.variable) for
                                             foreach_object in objects_in_foreach]
-        head_atoms: list[Atom] = [Atom(first_verb_name, dict()),
-                                  Atom(second_verb_name, dict()),]
+        head_atoms = []
+        for verb in verb_names:
+            head_atoms.append(Atom(verb, dict()))
         if clause.verb_name.parameters:
             self.set_parameter_list(head_atoms[0], clause.verb_name.parameters, newDefinition=True)
-        if hasattr(clause.object_clause.objects[0], 'parameters'):
-            self.set_parameter_list(head_atoms[1], clause.object_clause.objects[0].parameters, newDefinition=True)
+        for i, head_atom in enumerate(head_atoms[1:]):
+            if hasattr(clause.object_clause.objects[i], 'parameters'):
+                self.set_parameter_list(head_atom, clause.object_clause.objects[i].parameters, newDefinition=True)
         for x, y in [(elem.atom_name, elem.atom_parameters[elem.atom_name]) for elem in clause_foreach_atoms]:
             for z in y:
                 for atom in head_atoms:
@@ -1526,29 +1529,28 @@ class CNLCompiler:
             for x, y in [(clause_subject_atom.atom_name,
                           clause_subject_atom.atom_parameters[clause_subject_atom.atom_name])]:
                 for z in y:
-                    clause_verb_atom.set_parameter_variable(x, z, force=True, newDefinition=True)
+                    clause_verb_atom.set_parameter_variable(x, z, newDefinition=True)
         else:
             # Copy the parameters subject into the verb
             for parameters in [clause_subject_atom.atom_parameters]:
                 for parameter_name in parameters:
                     if [x for x in clause.parameters if x.name == parameter_name]:
-                        clause_verb_atom.set_parameter_variable(parameter_name, parameters.get(parameter_name)[0], force=True, newDefinition=True)
+                        clause_verb_atom.set_parameter_variable(parameter_name, parameters.get(parameter_name)[0], newDefinition=True)
                     else:
                         for paramDef in clause.parameters_definitions:
                             if (parameter_name == paramDef.parameter_name):
                                 clause_verb_atom.set_parameter_variable(parameter_name,
-                                                                        parameters.get(parameter_name)[0], force=True, newDefinition=True)
+                                                                        parameters.get(parameter_name)[0], newDefinition=True)
         if old_subject_variable is not None:
-            clause_subject_atom.set_parameter_variable(subject_in_clause.name, tmp, force=True, newDefinition=True)
-            clause_verb_atom.set_parameter_variable(subject_in_clause.name, old_subject_variable, force=True,
-                                                    newDefinition=True)
+            clause_subject_atom.set_parameter_variable(subject_in_clause.name, tmp, force=True)
+            clause_verb_atom.set_parameter_variable(subject_in_clause.name, old_subject_variable, force=True)
         for x, y in [(elem.atom_name, elem.atom_parameters[elem.atom_name]) for elem in clause_foreach_atoms]:
             for z in y:
-                clause_verb_atom.set_parameter_variable(x, z,force=True, newDefinition=True)
+                clause_verb_atom.set_parameter_variable(x, z, newDefinition=True)
         for x, y in [(elem.atom_name, elem.atom_parameters[elem.atom_name]) for elem in
                      clause_object_variables]:
             for z in y:
-                clause_verb_atom.set_parameter_variable(x, z, force=True, newDefinition=True)
+                clause_verb_atom.set_parameter_variable(x, z, newDefinition=True)
         clause_object_variables += verb_atom_in_body
 
         duration_rules = ''
@@ -1557,7 +1559,8 @@ class CNLCompiler:
                                                              clause.duration_clause)
         self.decl_signatures.append(Signature(verb_name,
                                               clause_verb_atom.atom_parameters.keys()))
-        rule_body: Conjunction = Conjunction([clause_subject_atom] + clause_foreach_atoms)
+        conjunction = [clause_subject_atom]
+        rule_body: Conjunction = Conjunction(conjunction + clause_foreach_atoms)
         rule_head: ShortDisjunction = ShortDisjunction(clause.range.quantified_range_lhs,
                                                        clause.range.quantified_range_rhs,
                                                        {'lower': False, 'upper': False},
@@ -1909,21 +1912,30 @@ class CNLCompiler:
             if constraint.clauses:
                 for clause in constraint.clauses:
                     if type(clause) == AggregateClause:
-                        aggregate_body_atom = self.__get_atom_from_signature_subject(
-                            clause.aggregate_body.aggregate_verb_clause.verb_name)
-                        self.set_parameter_list(aggregate_body_atom, clause.aggregate_body.aggregate_verb_clause.parameters)
-                        for parameter in clause.aggregate_body.aggregate_for_clauses:
-                            aggregate_body_atom.set_parameter_variable(parameter.verb_object_name,
-                                                                       parameter.verb_object_variable)
-                        aggregate_operator = clause.aggregate_operator
-                        aggregate_variable_list = [self.newVar()]
-                        parameter_name = '_'.join([clause.aggregate_body.aggregate_subject_clause.subject_name, clause.aggregate_body.aggregate_subject_clause.subject_variable]) if clause.aggregate_body.aggregate_subject_clause.subject_variable else clause.aggregate_body.aggregate_subject_clause.subject_name
-                        if (aggregate_body_atom.get_parameter_value(parameter_name) != '_'):
-                            aggregate_variable_list = [aggregate_body_atom.get_parameter_value(parameter_name)]
+                        if type(clause.aggregate_body) == SubjectClause:
+                            aggregate_body_atom = self.__get_atom_from_signature_subject(
+                                clause.aggregate_body.subject_name)
+                            self.set_parameter_list(aggregate_body_atom, clause.aggregate_body.parameters)
+                            parameter_name = clause.parameter[0].name
+                            parameter_value = clause.parameter[0].variable if clause.parameter[0].variable else self.newVar()
+                            aggregate_body_atom.set_parameter_variable(parameter_name, parameter_value)
+                            aggregate_variable_list = [parameter_value]
                         else:
-                            aggregate_body_atom.set_parameter_variable(
-                                clause.aggregate_body.aggregate_subject_clause.subject_name,
-                                aggregate_variable_list[0])
+                            aggregate_body_atom = self.__get_atom_from_signature_subject(
+                                clause.aggregate_body.aggregate_verb_clause.verb_name)
+                            self.set_parameter_list(aggregate_body_atom, clause.aggregate_body.aggregate_verb_clause.parameters)
+                            for parameter in clause.aggregate_body.aggregate_for_clauses:
+                                aggregate_body_atom.set_parameter_variable(parameter.verb_object_name,
+                                                                           parameter.verb_object_variable)
+                            aggregate_variable_list = [self.newVar()]
+                            parameter_name = '_'.join([clause.aggregate_body.aggregate_subject_clause.subject_name, clause.aggregate_body.aggregate_subject_clause.subject_variable]) if clause.aggregate_body.aggregate_subject_clause.subject_variable else clause.aggregate_body.aggregate_subject_clause.subject_name
+                            if (aggregate_body_atom.get_parameter_value(parameter_name) != '_'):
+                                aggregate_variable_list = [aggregate_body_atom.get_parameter_value(parameter_name)]
+                            else:
+                                aggregate_body_atom.set_parameter_variable(
+                                    clause.aggregate_body.aggregate_subject_clause.subject_name,
+                                    aggregate_variable_list[0])
+                        aggregate_operator = clause.aggregate_operator
                         aggregate: Aggregate = Aggregate(aggregate_operator, aggregate_variable_list,
                                                          [aggregate_body_atom], body)
                         comparison_aggregate: Comparison = Comparison(
@@ -2236,15 +2248,20 @@ class CNLCompiler:
                     aggregate_objects_in_clause.pop(0)
                     aggregate_head.append(atom)
         else:
-            aggregate_verb_atom: Atom = self.__get_atom_from_signature_subject(verb_in_clause.name)
+            newDefinition = True
+            aggregate_verb_atom = Atom(verb_in_clause.name, dict())
+            if self.__get_atom_from_signature_subject(verb_in_clause.name):
+                newDefinition = False
+                aggregate_verb_atom: Atom = self.__get_atom_from_signature_subject(verb_in_clause.name)
             aggregate_verb_atom.negated = verb_in_clause.is_negated
             aggregate_body.append(aggregate_verb_atom)
             aggregate_subject_atom: Atom = self.__get_atom_from_signature_subject(subject_in_clause.name)
             if aggregate_subject_atom:
                 self.__double_substitution(aggregate_verb_atom, subject_in_clause.name, aggregate_subject_atom,
-                                           subject_in_clause.variable)
+                                           subject_in_clause.variable, newDefinition)
                 aggregate_head.append(aggregate_subject_atom)
-
+            if newDefinition:
+                self.decl_signatures.append(aggregate_verb_atom.compute_signature())
         variable: str = ''
         for ag_object in aggregate_objects_in_clause:
             if ag_object.range is not None:
@@ -2318,17 +2335,21 @@ class CNLCompiler:
             block_memory.set_subject_of_block(subject_in_clause)
         # verb_clause: verb_negation? (verb_name | verb_name_with_preposition) (verb_object_clause | composition_clause | tuple_clause | same_clause)? | verb_negation? verb_name
         verb_in_clause: Verb = Verb(clause.verb_clause)
-        simple_verb_atom: Atom = self.__get_atom_from_signature_subject(verb_in_clause.name)
+        newDefinition = True
+        simple_verb_atom = Atom(verb_in_clause.name, dict())
+        if self.__get_atom_from_signature_subject(verb_in_clause.name):
+            newDefinition = False
+            simple_verb_atom: Atom = self.__get_atom_from_signature_subject(verb_in_clause.name)
         # the subject in block memory is the true subject
         # substitute the simple verb atom parameter (initialized to '_') with the corresponding subject variable 
         if subject_in_clause.name != block_memory.subject_in_block.name:
             simple_verb_atom.set_parameter_variable(block_memory.subject_in_block.name,
                                                     self.__make_substitution_value(
-                                                        block_memory.subject_in_block.variable))
+                                                        block_memory.subject_in_block.variable), newDefinition=newDefinition)
         else:
             simple_verb_atom.set_parameter_variable(subject_in_clause.name,
                                                     self.__make_substitution_value(
-                                                        subject_in_clause.variable))
+                                                        subject_in_clause.variable), newDefinition=newDefinition)
         simple_verb_atom.negated = verb_in_clause.is_negated
         result = simple_verb_atom
         # todo: i soggetti (dopo il primo) possono anche non essere all'interno dei parametri dell'atomo del verbo
@@ -2369,7 +2390,7 @@ class CNLCompiler:
                     block_memory.go_backward_in_time(of=consecution_count, on_time_window_of=subject_in_clause.name)
 
             simple_verb_atom.set_parameter_variable(subject_in_clause.name,
-                                                    self.__make_substitution_value(value_for_subject))
+                                                    self.__make_substitution_value(value_for_subject), newDefinition=newDefinition)
         # list of object_clauses
         # object_clause: "a "? object_name variable?
         objects_in_clause: list[VerbObject] = []
@@ -2524,10 +2545,10 @@ class CNLCompiler:
             second_atom.set_parameter_variable(parameter, variable_value)
 
     def __double_substitution(self, first_atom: Atom, parameter: str, second_atom: Atom,
-                              with_variable_name: str = None):
+                              with_variable_name: str = None, newDefinition=False):
         join_variable: str = parameter.capitalize() if with_variable_name is None else with_variable_name
         if first_atom is not None:
-            first_atom.set_parameter_variable(parameter, join_variable)
+            first_atom.set_parameter_variable(parameter, join_variable, newDefinition=newDefinition)
         if second_atom is not None:
             second_atom.set_parameter_variable(parameter, join_variable)
 
