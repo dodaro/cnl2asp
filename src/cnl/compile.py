@@ -286,8 +286,8 @@ class Comparison:
             # check the current operator and replace it
             return f"{lhs} {negated_relations[self.comparison_operator]}" \
                    f" {rhs}"
-        if type(lhs) == str and lhs.isalpha(): lhs = f'"{lhs}"'
-        if type(rhs) == str and rhs.isalpha(): rhs = f'"{rhs}"'
+        if type(lhs) == str and lhs.isalpha() and not lhs.isupper() and not lhs in list(constant_definitions_dict.keys()): lhs = f'"{lhs}"'
+        if type(rhs) == str and rhs.isalpha() and not lhs.isupper() and not rhs in list(constant_definitions_dict.keys()): rhs = f'"{rhs}"'
         return f"{lhs} {comparison_relations[self.comparison_operator]}" \
                f" {rhs}"
 
@@ -1119,7 +1119,7 @@ class CNLCompiler:
                 rule_head = ShortDisjunction(quantified_range_lhs, quantified_range_rhs, {'lower': False, 'upper': False},
                                             head_atoms[0][0], head_atoms[0][1])
             else:
-                rule_head = Conjunction([head_atoms[0]])
+                rule_head = Conjunction([head_atoms[0][0]])
         rule: Rule = Rule(head=rule_head, body=rule_body)
         return str(rule) + duration_rules
 
