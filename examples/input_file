@@ -31,3 +31,8 @@ It is required that the number of pub where a waiter work in is less than 2.
 It is required that when waiter X works in pub P1 then waiter X does not work in pub P2, where P1 is different from P2.
 It is required that V is equal to 3, whenever there is a movie with id I, and with director equal to spielberg, whenever there is a scoreAssignment with movie id I, and with value V.
 It is required that every waiter is payed.
+It is preferred with low priority that the number of drinks that are serve is maximized.
+//It is preferred as much as possible, with high priority, that the number of drinks that are serve.
+//It is preferred as much as possible, with medium priority, that the scoreAssignment with movie id I, and value V
+//It is preferred, with medium priority, that whenever there is a topMovie with id I, whenever there is a scoreAssignment with movie id I, and with value V, V is maximized.
+//It is preferred as much as possible, with medium priority, that V is equal to 3, whenever there is a topMovie with id I, whenever there is a scoreAssignment with movie id I, and with value V.
