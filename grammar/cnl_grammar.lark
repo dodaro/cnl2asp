@@ -1,0 +1,235 @@
+// imports from common library
+%import common.WS
+%import common.LETTER
+%import common.INT
+%import common.UCASE_LETTER
+%import common.LCASE_LETTER
+%import common.NUMBER
+%import common._EXP
+%import common.CPP_COMMENT
+%import common.C_COMMENT
+
+// Disregard spaces in text
+%ignore WS
+%ignore CPP_COMMENT
+%ignore C_COMMENT
+
+// Which type of clause do we expect?
+start: (( negative_strong_constraint_clause
+        | positive_strong_constraint
+        | weak_constraint
+        | definition_clause
+        | quantified_choice_clause)CNL_END_OF_LINE)+
+
+//Rules
+whenever_then_clause.1: (whenever_clause ","?)+ then_clause
+whenever_clause.1: ("Whenever" | "whenever") "there is " verb_negation? subject_clause
+then_clause: "then" subject_clause CNL_ASSIGNMENT_VERB CNL_COPULA cardinality? then_clause_body (","? "or" then_clause_body)*
+then_clause_body: ("a " | "an ")? (verb_name | verb_name_with_preposition) (cardinality)? "such that there is"? (object_clause_l ((","|", and") object_clause_l)*)? duration_clause?
+CNL_ASSIGNMENT_VERB: "can" | "must"
+object_clause_l.-1: ("a " | "an ")? object_name variable? (parameter_list)?
+cardinality: quantified_exact_quantity_clause | quantified_range_clause | quantified_maximum_quantity | quantified_minimum_quantity
+quantified_maximum_quantity: "at most" quantified_exact_quantity
+quantified_minimum_quantity: "at least" quantified_exact_quantity
+
+negative_strong_constraint_clause: CNL_PROHIBITION ( aggregate_clause comparison_clause (where_clause)? such_that_clause? ("," (whenever_clause ","?)+)? | when_then_clause (where_clause)? | quantified_constraint (where_clause)? | condition_clause  "," (whenever_clause ","?)+ | temporal_constraint "," (whenever_clause ","?)+ | simple_clause ("and also" simple_clause)* (where_clause)? ("," (whenever_clause ","?)+)? )
+positive_strong_constraint: CNL_REQUIREMENT (aggregate_clause comparison_clause (where_clause)? such_that_clause?  ("," (whenever_clause ","?)+)? | when_then_clause (where_clause)? | quantified_constraint (where_clause)? | condition_clause  "," (whenever_clause ","?)+ | temporal_constraint "," (whenever_clause ","?)+ | simple_clause "," (whenever_clause ","?)+)
+when_then_clause.1: "when" when_part "then" then_part
+when_part: (simple_clause comparison_clause? | simple_clause ("and also" simple_clause)*)
+then_part: (simple_clause comparison_clause? | simple_clause ("and also" simple_clause)*)
+quantified_constraint:  quantifier simple_clause
+
+weak_constraint: CNL_PREFERENCE  CNL_WEAK_OPTIMIZATION? ","? weak_priority_clause ","? "that" (condition_operation | aggregate_clause | subject_clause CNL_COPULA (verb_name | verb_name_with_preposition) object_clause "," whenever_clause) (","? weak_optimization_operator)? (where_clause)?
+CNL_WEAK_OPTIMIZATION: "as much as possible" | "as little as possible"
+weak_priority_clause: "with" CNL_PRIORITY_LEVEL "priority"
+weak_optimization_operator: "is" CNL_OPTIMIZATION_OPERATOR
+ranging_clause: "ranging between" constant "and" constant
+
+definition_clause: (temporal_concept_definition  | whenever_then_clause | domain_definition | fact_definition | compounded_clause | constant_definition_clause | ordering_definition_clause | enumerative_definition_clause)
+temporal_concept_definition.1: ("A " | "An ") subject_name "is a temporal concept expressed in" CNL_TEMPORAL_TYPE "ranging from" temporal_range_start "to" temporal_range_end ("with a length of" CNL_NUMBER ("minutes" | "days"))?
+CNL_TEMPORAL_TYPE: ("minutes" | "minute") | ("days" | "day") | ("steps" | "step")
+temporal_range_start: CNL_NUMBER ":" CNL_NUMBER CNL_WORD | CNL_NUMBER "/" CNL_NUMBER "/" CNL_NUMBER | CNL_NUMBER | CNL_WORD
+temporal_range_end: CNL_NUMBER ":" CNL_NUMBER CNL_WORD | CNL_NUMBER "/" CNL_NUMBER "/" CNL_NUMBER | CNL_NUMBER
+domain_definition.1: ("A " | "An ")? subject_clause ("is identified" atom_key)? ", and"? ("has" parameter ((","|", and") parameter)*)?
+atom_key.1: "by" parameter ((", by"|", and by") parameter)*
+parameter_list: "with" parameter parameter_definition? ((", with"|", and with") parameter parameter_definition?)*
+parameter_definition.1: "equal to" (value | CNL_EQUATION)  | CNL_OPERATOR (number parameter? | variable | constant )
+CNL_EQUATION: CNL_OPERATORS* CNL_WORD (CNL_OPERATORS* CNL_WORD?)*
+parameter.-1: temporal_ordering_with_respect_specified | ("a " | "an ")? CNL_PARAMETER_NAME+ parameter_variable?
+temporal_ordering_with_respect_specified.1: CNL_SHIFT_OPERATOR CNL_TEMPORAL_TYPE "respect to" parameter_variable
+parameter_variable.1: CNL_VARIABLE (CNL_OPERATORS (CNL_VARIABLE | CNL_NUMBER ))?
+CNL_OPERATORS: "+" | "-" | "*" | "/" | "\\" | "(" | ")" | "|"
+value: CNL_WORD
+fact_definition.1: "There is" subject_clause
+
+definition_object: constant
+compounded_clause: ("A " | "An ") subject_clause (compounded_clause_range compounded_clause_granularity? | compounded_clause_match compounded_clause_granularity? compounded_clause_match_tail?)
+compounded_clause_granularity: "and is made of" object_clause ("that are made of" object_clause)*
+compounded_clause_match_tail: "and has" object_clause ("that are equal to respectively" | "that is equal to respectively") compounded_list ("and also" object_clause ("that are equal to respectively" | "that is equal to respectively") compounded_list)*
+compounded_clause_match: "is one of" compounded_list
+compounded_list: definition_object ("," definition_object)*
+compounded_clause_range: "goes from" range_lhs "to" range_rhs
+constant_definition_clause.1: subject_name "is a constant equal to" (constant | question_mark)
+ordering_definition_clause: subject_clause "comes before" subject_clause ("which comes before" subject_clause)*
+enumerative_definition_clause: subject_clause CNL_COPULA? (verb_name | verb_name_with_preposition) (subject_clause ("and" subject_clause)*)? ("when" when_part)? (where_clause)?
+
+quantified_choice_clause.1: quantifier subject_clause "can" CNL_COPULA? (verb_name | verb_name_with_preposition) (quantified_exact_quantity_clause | quantified_range_clause)? (quantified_object_clause | disjunction_clause)? duration_clause? foreach_clause?
+quantifier.1: CNL_QUANTIFIER
+disjunction_clause.2:  ("a" | "an")? object_clause? (","? "or" ("a " | "an ")? (verb_name | verb_name_with_preposition) ("a" | "an")? object_clause?)+
+quantified_exact_quantity_clause.1: exact_quantity_operator quantified_exact_quantity
+quantified_exact_quantity: CNL_NUMBER
+quantified_range_clause: range_operator range_lhs "and" range_rhs
+exact_quantity_operator: CNL_EXACT_QUANTITY_OPERATOR
+quantified_object_clause: (object_clause | simple_clause) ("and" (object_clause | simple_clause))*
+duration_clause.1: "for " duration_value parameter
+duration_value: CNL_NUMBER | variable
+
+property_clause: "For" subject_name "holds" property_definition
+property_definition: ordering_definition
+ordering_definition: CNL_ORDERING_DEFINITION compounded_list
+
+ordering_operator: CNL_ORDERING_OPERATOR
+
+simple_clause: subject_clause ("with" parameter_list)?  CNL_COPULA? verb_clause
+aggregate_clause: "the" aggregate_operator parameter? "of" (aggregate_active_clause | aggregate_passive_clause | subject_clause) (ranging_clause)?
+such_that_clause: ", such that there is" subject_clause (", " "and"? subject_clause)*
+aggregate_operator: CNL_AGGREGATE
+aggregate_active_clause: subject_clause "that" CNL_COPULA? aggregate_verb_clause ((","|"and") aggregate_verb_clause)* aggregate_object_clause? aggregate_for_clause?
+aggregate_passive_clause: aggregate_object_clause (aggregate_for_clause)? "where" subject_clause CNL_COPULA? aggregate_verb_clause
+aggregate_object_clause: verb_object_clause ("," verb_object_clause)* | composition_clause | tuple_clause
+aggregate_verb_clause: verb_negation? (verb_name | verb_name_with_preposition)
+aggregate_for_clause: "for" aggregate_determinant_clause ("and" aggregate_determinant_clause)*
+aggregate_determinant_clause: aggregate_determinant object_clause
+aggregate_determinant: CNL_DETERMINANT
+
+temporal_constraint: "the" subject_clause "is" ordering_operator temporal_range_start
+
+subject_clause:  ("a " | "that ") subject_name
+                | subject_ordering_clause subject_name
+                | ("a " | "an ")? subject_name (variable | constant) ("and" subject_name (variable | constant))*
+                | subject_name
+                | ("a " | "an ")? subject_name variable? ("the" CNL_WORD CNL_WORD)? ("that is" ordering_operator temporal_range_start)? parameter_list?
+subject_name: CNL_WORD
+subject_ordering_clause.1: shift_operator consecution_clause?
+consecution_clause: number consecution_operator
+
+verb_clause: verb_negation? (verb_name | verb_name_with_preposition) (verb_object_clause (("and" | "," ) verb_object_clause)* | composition_clause | tuple_clause | same_clause)? | verb_negation? verb_name
+verb_negation: CNL_VERB_NEGATION | CNL_NEGATION
+verb_name: CNL_WORD (temporal_ordering)? (parameter_list)?
+temporal_ordering: shift_operator CNL_WORD
+verb_name_with_preposition.1: CNL_WORD ("the next" CNL_WORD)? (parameter_list)? CNL_PREPOSITION
+verb_object_clause: ("a "? object_name | object_name (variable | constant)) object_range? (verb_object_ordering_clause | verb_object_consecution_clause)?
+verb_object_ordering_clause: ordering_operator variable
+verb_object_consecution_clause: "for" number consecution_operator object_name
+object_name: CNL_WORD
+object_range: range_operator (object_binary_range | object_windowed_range)
+object_windowed_range: "each" constant subject_name
+object_binary_range: constant "and" constant
+range_operator: CNL_RANGE_OPERATOR
+
+where_clause.1: "," " "* "where" (condition_clause | condition_match_group) ("and" condition_clause)*
+condition_match_group: condition_match_clause ("and" condition_match_clause)*
+condition_match_clause: variable CNL_COPULA "one of" "respectively"* compounded_list
+condition_clause: (variable | condition_operation | condition_expression_value) CNL_COPULA (condition_comparison_clause | condition_ordering_clause | condition_bound_clause)
+condition_ordering_clause: number subject_name ordering_operator (variable | constant)
+condition_comparison_clause: condition_negation? condition_operator ( condition_expression | CNL_EQUATION)
+condition_bound_clause: "between" object_name "and" object_name
+condition_operator: CNL_OPERATOR
+condition_negation: CNL_NEGATION
+condition_expression: (condition_expression_value | condition_operation)
+condition_expression_value: ("modulo" CNL_NUMBER "of")? (constant | variable | aggregate_clause | "the" parameter "of the" subject_clause)
+condition_operation: condition_expression_operator condition_expression_value ((","|", and") condition_expression_value)+
+condition_expression_operator: ("modulo" CNL_NUMBER "of")? CNL_OPERATION absolute_value_operator? "between"
+
+comparison_clause: "is" condition_operator comparison_value
+comparison_value: constant | variable
+
+variable: CNL_VARIABLE
+constant: CNL_CONSTANT | CNL_NUMBER
+object_clause: ("a " | "an ")? object_name variable? (parameter_list)?
+number: CNL_NUMBER
+foreach_clause.1: "for each" object_clause ("and" object_clause)*
+range_lhs: CNL_NUMBER | CNL_CONSTANT
+range_rhs: CNL_NUMBER | CNL_CONSTANT
+question_mark: CNL_QUESTION_MARK
+tuple_operator: CNL_TUPLE_OPERATOR
+composition_operator: CNL_COMPOSITION_OPERATOR
+shift_operator: CNL_SHIFT_OPERATOR
+consecution_operator: CNL_CONSECUTION_OPERATOR
+tuple_clause: verb_object_clause tuple_operator verb_object_clause ("and" tuple_operator verb_object_clause)*
+composition_clause: verb_object_clause composition_operator verb_object_clause
+same_clause: "the same" subject_clause
+absolute_value_operator: CNL_ABSOLUTE_VALUE
+
+//Terminals
+CNL_PROHIBITION: "it is prohibited that"i
+CNL_REQUIREMENT: "it is required that"i
+CNL_PREFERENCE: "it is preferred"i
+
+CNL_PREPOSITION: "to" | "for" | "from" | "on" | "at" | "about" | "in"
+
+CNL_NEGATION: "not"
+CNL_VERB_NEGATION:  "do not"
+                  | "does not"
+                  | "don't"
+                  | "doesn't"
+                  | "are not"
+                  | "aren't"
+CNL_COPULA:    "be "
+             | "be a "
+             | "be an "
+             | "is "
+             | "is a "
+             | "is an "
+             | "are "
+             | "are a "
+             | "are an "
+             | "have "
+             | "have a "
+             | "have an "
+             | "has "
+             | "has a "
+             | "has an "
+CNL_RANGE_OPERATOR: "between"
+CNL_EXACT_QUANTITY_OPERATOR: "exactly"
+CNL_QUANTIFIER: "every"i | "any"i
+CNL_PRIORITY_LEVEL: "low" | "medium" | "high"
+CNL_OPTIMIZATION_OPERATOR: "minimized" | "maximized"
+
+CNL_OPERATOR: "the same as"
+            | "different from"
+            | "equal to"
+            | "more than"
+            | "greater than"
+            | "less than"
+            | "greater than or equal to"
+            | "less than or equal to"
+            | "at least"
+            | "at most"
+            | "not after"
+CNL_ORDERING_OPERATOR: "before" | "after"
+CNL_AGGREGATE: "number" | "total" | "highest" | "lowest" | "biggest" | "smallest"
+CNL_ORDERING_DEFINITION: "the ordering"
+CNL_TUPLE_OPERATOR: "with" | "taken with"
+CNL_COMPOSITION_OPERATOR: "in"
+CNL_SHIFT_OPERATOR: "the next" | "the previous"
+CNL_CONSECUTION_OPERATOR: "consecutive"
+CNL_DETERMINANT: "each" | "any"
+CNL_ABSOLUTE_VALUE: "in absolute value"
+
+CNL_WORD: (LETTER | INT | "_")+
+CNL_PARAMETER_NAME: LCASE_LETTER (LETTER | INT | "_")+
+CNL_CONSTANT: (LETTER | INT | "_" | "-")+
+CNL_VARIABLE.1: UCASE_LETTER (UCASE_LETTER | INT | "_")*
+CNL_EXPRESSION: (CNL_VARIABLE | CNL_NUMBER | "+" | "-"| "*" | "/")+
+CNL_OPERATION:   "the sum"
+               | "the difference"
+               | "the product"
+               | "the division"
+
+CNL_END_OF_LINE: "."
+CNL_NUMBER: INT | CNL_FLOAT
+CNL_FLOAT: INT _EXP | CNL_DECIMAL _EXP?
+CNL_DECIMAL: INT "." INT | "." INT
+
+CNL_QUESTION_MARK: /\?/
