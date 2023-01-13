@@ -1,29 +1,33 @@
-A payed is identified by a waiter.
 A movie is identified by an id, and has a title, a director, and a year.
+A director is identified by a name.
 A topMovie is identified by an id.
+A scoreAssignment is identified by a movie id, and by a value.
 A timeslot is a temporal concept expressed in minutes ranging from 07:00 AM to 09:00 AM with a length of 30 minutes.
 minKelvinTemperature is a constant equal to 0.
 A ColdTemperature goes from minKelvinTemperature to 273.
 A day goes from 1 to 365.
 A drink is one of alcoholic, nonalcoholic and has color that is equal to respectively blue, yellow.
 John is a waiter.
+1 is a pub.
+Alice is a patron.
 Pub 1 is close to pub 2 and pub X, where X is one of 3,4.
 Waiter John works in pub 1.
 Waiter John serves a drink alcoholic.
 Waiter W is working when waiter W serves a drink.
 Whenever there is a movie with director equal to spielberg, with id X then we must have a topmovie with id X.
-Whenever there is a movie with director X then we can have at most 1 topmovie with id I such that there is a movie with director X, and with id I.
-An assignment is identified by a movie id, and by a value.
-Every movie with id I can have an assignment with movie id I, and with value equal to 1 or an assignment with movie id I, and with value equal to 2.
+Whenever there is a director with name X different from spielberg then we can have at most 1 topmovie with id I such that there is a movie with director X, and with id I.
+Whenever there is a movie with id I, with director equal to nolan then we can have a scoreAssignment with movie id I, and with value equal to 3 or a scoreAssignment with movie id I, and with value equal to 2.
 There is a movie with id equal to 1, with director equal to spielberg, with title equal to jurassicPark, with year equal to 1993.
 There is a movie with id equal to 1, with director equal to spielberg, with year equal to 1993, with title equal to jurassicPark.
 There is a movie with director equal to spielberg, with year equal to 1993, with id equal to 1, with title equal to jurassicPark.
-It is prohibited that X is equal to Y, whenever there is a movie with id X, and with year equal to 1964, whenever there is a topMovie with id Y.
+Every patron can drink in exactly 1 pub for each day.
 Every waiter can serve a drink.
-A drink in is identified by a waiter, and by a pub.
-Pubname is a pub.
-Every waiter can drink in exactly 1 pub for each day.
-It is prohibited that a waiter is payed.
-
-//Every patron can drink with a patron next to patron X.
-
+Every movie with id I can have a scoreAssignment with movie id I, and with value equal to 1 or a scoreAssignment with movie id I, and with value equal to 2, or a scoreAssignment with movie id I, and with value equal to 3.
+It is prohibited that waiter W1 work in pub P1 and also waiter W2 work in pub P1, where W1 is different from W2.
+It is prohibited that X is equal to Y, whenever there is a movie with id X, and with year equal to 1964, whenever there is a topMovie with id Y.
+It is prohibited that the lowest value of a scoreAssignment with movie id X is equal to 1, whenever there is a topMovie with id X.
+It is required that the total value of a scoreAssignment with movie id X is equal to 10, such that there is a topMovie with id X.
+It is required that the number of pub where a waiter work in is less than 2.
+It is required that when waiter X works in pub P1 then waiter X does not work in pub P2, where P1 is different from P2.
+It is required that V is equal to 3, whenever there is a movie with id I, and with director equal to spielberg, whenever there is a scoreAssignment with movie id I, and with value V.
+It is required that every waiter is payed.
