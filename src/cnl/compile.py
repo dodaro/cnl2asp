@@ -783,7 +783,7 @@ class CNLCompiler:
                     self.__compilation_result += self.__compile_temporal_concept_clause(definition_clause.clause)
                 elif type(definition_clause.clause) == ConstantDefinition:
                     self.__compilation_result += self.__compile_constant_definition(definition_clause.clause)
-            except (IndexError, AttributeError):
+            except (IndexError):
                 dependent_definitions.append(definition_clause)
         for quantifier_clause in file.quantifiers:
             self.__compilation_result += self.__compile_quantified_choice_clause(quantifier_clause)
@@ -970,138 +970,154 @@ class CNLCompiler:
             if clause.temporal_constraint:
                 comparisons += self.temporal_constraint(atom, clause.temporal_constraint)
             body.append(atom)
-        condition: list[Atom] = []  # condition atoms in the head of the choice rule
-        condition_comparisons = []
         then_clause = wheneverThen_clause.thenClause
-        for object_clause in then_clause.object:
-            atom, comparison = self.init_atom_from_object_clause(object_clause)
-            comparisons += comparison
-            condition.append(atom)
-        if not self.__get_atom_from_signature_subject(then_clause.verb.name):
-            head_atom = Atom(then_clause.verb.name, dict())
-            for parameter in then_clause.verb.parameters:
-                if parameter.variable:
-                    label_found = False
-                    for atom in body:
-                        if atom.label == parameter.variable and atom.atom_name == parameter.name:
-                            label_found = True
-                            for parameterkey, parametervalue in atom.atom_parameters.items():
-                                if parametervalue[0] != '_':
-                                    if type(parametervalue[0]) == Atom:
-                                        for parameterkey1, parametervalue1 in parametervalue[0].atom_parameters.items():
-                                            atom_to_parameter = self.initialize_atom_from_signature(parameter.name)
-                                            head_atom.atom_parameters[parameter.name] = [atom_to_parameter]
-                                            head_atom.atom_parameters[parameter.name][0].atom_parameters[parameterkey][
-                                                0].set_parameter_variable(parameterkey1,
-                                                                          parametervalue1[0])
-                                    else:
-                                        if(self.__get_atom_from_signature_subject(parameter.name)):
-                                            head_atom.atom_parameters[parameter.name] = [self.__get_atom_from_signature_subject(parameter.name)] if not parameter.name in list(head_atom.atom_parameters.keys()) else head_atom.atom_parameters[parameter.name]
-                                            head_atom.atom_parameters[parameter.name][0].set_parameter_variable(parameterkey,
-                                                                                                            parametervalue[0])
+        head_atoms = []
+        for then_body_clause in then_clause.then_body:
+            condition: list[Atom] = []  # condition atoms in the head of the choice rule
+            condition_comparisons = []
+            for object_clause in then_body_clause.objects:
+                atom, comparison = self.init_atom_from_object_clause(object_clause)
+                comparisons += comparison
+                condition.append(atom)
+            verb_name = f'{then_body_clause.verb.name} {then_body_clause.verb.preposition}'.strip()
+            if not self.__get_atom_from_signature_subject(verb_name):
+                head_atom = Atom(verb_name, dict())
+                for parameter in then_body_clause.verb.parameters:
+                    if parameter.variable:
+                        label_found = False
+                        for atom in body:
+                            if atom.label == parameter.variable and atom.atom_name == parameter.name:
+                                label_found = True
+                                for parameterkey, parametervalue in atom.atom_parameters.items():
+                                    if parametervalue[0] != '_':
+                                        if type(parametervalue[0]) == Atom:
+                                            for parameterkey1, parametervalue1 in parametervalue[0].atom_parameters.items():
+                                                atom_to_parameter = self.initialize_atom_from_signature(parameter.name)
+                                                head_atom.atom_parameters[parameter.name] = [atom_to_parameter]
+                                                head_atom.atom_parameters[parameter.name][0].atom_parameters[parameterkey][
+                                                    0].set_parameter_variable(parameterkey1,
+                                                                              parametervalue1[0])
                                         else:
-                                            head_atom.set_parameter_variable(parameterkey, parametervalue[0], newDefinition=True)
-                    if not label_found:
-                        if (self.__get_atom_from_signature_subject(parameter.name)):
-                            atom_to_parameter = self.initialize_atom_from_signature(parameter.name)
-                            head_atom.atom_parameters[parameter.name] = [atom_to_parameter]
-                            head_atom.set_parameter_variable(parameter.name, parameter.variable)
-                        else:
-                            head_atom.set_parameter_variable(parameter.name, parameter.variable, newDefinition=True)
-            for atom in condition:
-                self.link_two_atoms(head_atom, atom, newDefinition=True)
-                # for parameterkey, parametervalue in atom.atom_parameters.items():
-                #     if parametervalue[0] != '_' and parameterkey in list(
-                #             head_atom.atom_parameters.keys()) and head_atom.get_parameter_value(parameterkey) == '_':
-                #         head_atom.set_parameter_variable(parameterkey, parametervalue[0], newDefinition=True)
-            if then_clause.verb.ordering:
-                ordering = then_clause.verb.ordering
-                if ordering.parameter == 'step':
-                    temporal_concept_name = self.step_temporal_concepts[0].name
-                    for atom in body:
-                        if temporal_concept_name in list(atom.atom_parameters.keys()):
-                            value = atom.get_parameter_value(temporal_concept_name)
-                            if ordering.shift_operator == "the next":
-                                head_atom.set_parameter_variable(temporal_concept_name, f'{value}+1', newDefinition=True)
+                                            if(self.__get_atom_from_signature_subject(parameter.name)):
+                                                head_atom.atom_parameters[parameter.name] = [self.__get_atom_from_signature_subject(parameter.name)] if not parameter.name in list(head_atom.atom_parameters.keys()) else head_atom.atom_parameters[parameter.name]
+                                                head_atom.atom_parameters[parameter.name][0].set_parameter_variable(parameterkey,
+                                                                                                                    parametervalue[0])
+                                            else:
+                                                head_atom.set_parameter_variable(parameterkey, parametervalue[0], newDefinition=True)
+                        if not label_found:
+                            if (self.__get_atom_from_signature_subject(parameter.name)):
+                                atom_to_parameter = self.initialize_atom_from_signature(parameter.name)
+                                head_atom.atom_parameters[parameter.name] = [atom_to_parameter]
+                                head_atom.set_parameter_variable(parameter.name, parameter.variable)
                             else:
-                                head_atom.set_parameter_variable(temporal_concept_name, value, newDefinition=True)
-            if then_clause.subject.subject_name.isupper():
-                for atom in body:
-                    if atom.label == then_clause.subject.subject_name:
-                        # if (atom.atom_name in list(head_atom.atom_parameters.keys()) and type(head_atom.atom_parameters[atom.atom_name][0]) == Atom):
-                        #     self.link_two_atoms(head_atom.atom_parameters[atom.atom_name][0], atom, newDefinition=True)
-                        # else:
-                        head_atom.atom_parameters[atom.atom_name] = [self.initialize_atom_from_signature(atom.atom_name)]
-                        self.link_two_atoms(head_atom.atom_parameters[atom.atom_name][0], atom, newDefinition=True)
-            self.decl_signatures.append(head_atom.compute_signature())
-        else:
-            head_atom = self.__get_atom_from_signature_subject(then_clause.verb.name)
-            for parameter in then_clause.verb.parameters:
-                if parameter.variable:
-                    label_found = False
+                                head_atom.set_parameter_variable(parameter.name, parameter.variable, newDefinition=True)
+                for atom in condition:
+                    self.link_two_atoms(head_atom, atom, newDefinition=True)
+                    # for parameterkey, parametervalue in atom.atom_parameters.items():
+                    #     if parametervalue[0] != '_' and parameterkey in list(
+                    #             head_atom.atom_parameters.keys()) and head_atom.get_parameter_value(parameterkey) == '_':
+                    #         head_atom.set_parameter_variable(parameterkey, parametervalue[0], newDefinition=True)
+                if then_body_clause.verb.ordering:
+                    ordering = then_body_clause.verb.ordering
+                    if ordering.parameter == 'step':
+                        temporal_concept_name = self.step_temporal_concepts[0].name
+                        for atom in body:
+                            if temporal_concept_name in list(atom.atom_parameters.keys()):
+                                value = atom.get_parameter_value(temporal_concept_name)
+                                if ordering.shift_operator == "the next":
+                                    head_atom.set_parameter_variable(temporal_concept_name, f'{value}+1', newDefinition=True)
+                                else:
+                                    head_atom.set_parameter_variable(temporal_concept_name, value, newDefinition=True)
+                if then_clause.subject.subject_name.isupper():
                     for atom in body:
-                        if atom.label == parameter.variable and atom.atom_name == parameter.name:
-                            label_found = True
-                            for parameterkey, parametervalue in atom.atom_parameters.items():
-                                if parametervalue[0] != '_':
-                                    if type(parametervalue[0]) == Atom:
-                                        for parameterkey1, parametervalue1 in parametervalue[0].atom_parameters.items():
-                                            head_atom.atom_parameters[parameter.name][0].atom_parameters[parameterkey][
-                                                0].set_parameter_variable(parameterkey1,
-                                                                          parametervalue1[0])
-                                    else:
-                                        if (type(head_atom.atom_parameters[parameter.name][0]) == Atom):
-                                            head_atom.atom_parameters[parameter.name][0].set_parameter_variable(
-                                                parameterkey,
-                                                parametervalue[0])
-                                        else:
-                                            head_atom.set_parameter_variable(parameterkey, parametervalue[0])
-                    if not label_found:
-                        head_atom.set_parameter_variable(parameter.name, parameter.variable)
-            for atom in condition:
-                for parameterkey, parametervalue in atom.atom_parameters.items():
-                    if parametervalue[0] != '_' and parameterkey in list(
-                            head_atom.atom_parameters.keys()) and head_atom.get_parameter_value(parameterkey) == '_':
-                        head_atom.set_parameter_variable(parameterkey, parametervalue[0])
-            if then_clause.verb.ordering:
-                ordering = then_clause.verb.ordering
-                if ordering.parameter == 'step':
-                    temporal_concept_name = self.step_temporal_concepts[0].name
-                    for atom in body:
-                        if temporal_concept_name in list(atom.atom_parameters.keys()):
-                            value = atom.get_parameter_value(temporal_concept_name)
-                            if ordering.shift_operator == "the next":
-                                head_atom.set_parameter_variable(temporal_concept_name, f'{value}+1')
-                            else:
-                                head_atom.set_parameter_variable(temporal_concept_name, value)
-            if then_clause.subject.subject_name.isupper():
-                for atom in body:
-                    if atom.label == then_clause.subject.subject_name:
-                        if (atom.atom_name in list(head_atom.atom_parameters.keys()) and type(
-                                head_atom.atom_parameters[atom.atom_name][0]) == Atom):
-                            self.link_two_atoms(head_atom.atom_parameters[atom.atom_name][0], atom)
-                        else:
-                            self.link_two_atoms(head_atom, atom)
-        duration_rules = ''
-        if then_clause.duration:
-            subject = None
-            for atom in body:
-                if [value for key, value in atom.atom_parameters.items() if value[0] == then_clause.duration.value]:
-                    subject = atom
-            if subject:
-                duration_rules += self.__compile_duration_clause(body, [head_atom], then_clause.duration,
-                                                                 then_clause.object)
+                        if atom.label == then_clause.subject.subject_name:
+                            # if (atom.atom_name in list(head_atom.atom_parameters.keys()) and type(head_atom.atom_parameters[atom.atom_name][0]) == Atom):
+                            #     self.link_two_atoms(head_atom.atom_parameters[atom.atom_name][0], atom, newDefinition=True)
+                            # else:
+                            head_atom.atom_parameters[atom.atom_name] = [self.initialize_atom_from_signature(atom.atom_name)]
+                            self.link_two_atoms(head_atom.atom_parameters[atom.atom_name][0], atom, newDefinition=True)
+                self.decl_signatures.append(head_atom.compute_signature())
+                head_atoms.append([head_atom, Conjunction(condition + condition_comparisons)])
             else:
-                raise Exception(f'{then_clause.duration.value} {then_clause.duration.parameter.name} not defined.')
+                head_atom = self.__get_atom_from_signature_subject(then_body_clause.verb.name)
+                for parameter in then_body_clause.verb.parameters:
+                    if parameter.variable:
+                        label_found = False
+                        for atom in body:
+                            if atom.label == parameter.variable and atom.atom_name == parameter.name:
+                                label_found = True
+                                for parameterkey, parametervalue in atom.atom_parameters.items():
+                                    if parametervalue[0] != '_':
+                                        if type(parametervalue[0]) == Atom:
+                                            for parameterkey1, parametervalue1 in parametervalue[0].atom_parameters.items():
+                                                head_atom.atom_parameters[parameter.name][0].atom_parameters[parameterkey][
+                                                    0].set_parameter_variable(parameterkey1,
+                                                                              parametervalue1[0])
+                                        else:
+                                            if (type(head_atom.atom_parameters[parameter.name][0]) == Atom):
+                                                head_atom.atom_parameters[parameter.name][0].set_parameter_variable(
+                                                    parameterkey,
+                                                    parametervalue[0])
+                                            else:
+                                                head_atom.set_parameter_variable(parameterkey, parametervalue[0])
+                        if not label_found:
+                            head_atom.set_parameter_variable(parameter.name, parameter.variable)
+                for atom in condition:
+                    for parameterkey, parametervalue in atom.atom_parameters.items():
+                        if parametervalue[0] != '_' and parameterkey in list(
+                                head_atom.atom_parameters.keys()) and head_atom.get_parameter_value(parameterkey) == '_':
+                            head_atom.set_parameter_variable(parameterkey, parametervalue[0])
+                if then_body_clause.verb.ordering:
+                    ordering = then_body_clause.verb.ordering
+                    if ordering.parameter == 'step':
+                        temporal_concept_name = self.step_temporal_concepts[0].name
+                        for atom in body:
+                            if temporal_concept_name in list(atom.atom_parameters.keys()):
+                                value = atom.get_parameter_value(temporal_concept_name)
+                                if ordering.shift_operator == "the next":
+                                    head_atom.set_parameter_variable(temporal_concept_name, f'{value}+1')
+                                else:
+                                    head_atom.set_parameter_variable(temporal_concept_name, value)
+                if then_clause.subject.subject_name.isupper():
+                    for atom in body:
+                        if atom.label == then_clause.subject.subject_name:
+                            if (atom.atom_name in list(head_atom.atom_parameters.keys()) and type(
+                                    head_atom.atom_parameters[atom.atom_name][0]) == Atom):
+                                self.link_two_atoms(head_atom.atom_parameters[atom.atom_name][0], atom)
+                            else:
+                                self.link_two_atoms(head_atom, atom)
+                head_atoms.append([head_atom, Conjunction(condition + condition_comparisons)])
+            duration_rules = ''
+            if then_body_clause.duration:
+                subject = None
+                for atom in body:
+                    if [value for key, value in atom.atom_parameters.items() if value[0] == then_body_clause.duration.value]:
+                        subject = atom
+                if subject:
+                    duration_rules += self.__compile_duration_clause(body, [head_atom], then_body_clause.duration,
+                                                                     then_body_clause.objects)
+                else:
+                    raise Exception(f'{then_body_clause.duration.value} {then_body_clause.duration.parameter.name} not defined.')
 
         rule_body: Conjunction = Conjunction(body + comparisons)
         rule_head = None
-        if (then_clause.assignment_verb.value == "can"):
-            quantified_range_lhs, quantified_range_rhs = self.__compile_cardinality(then_clause.cardinality)
-            rule_head = ShortDisjunction(quantified_range_lhs, quantified_range_rhs, {'lower': False, 'upper': False},
-                                        head_atom, Conjunction(condition + condition_comparisons))
+        if len(head_atoms) > 1:
+            if [x for x in head_atoms if len(x[1].body) > 0]:
+                objects = dict()
+                for head_atom in head_atoms:
+                    if len(head_atom[1].body):
+                        objects[head_atom[0].atom_name] = head_atom[1]
+                rule_head: ComplexDisjunction = ComplexDisjunction(head_atoms, objects)
+            else:
+                disjunction = [x[0] for x in head_atoms]
+                rule_head: SimpleDisjunction = SimpleDisjunction(disjunction)
         else:
-            rule_head = Conjunction([head_atom])
+            if (then_clause.assignment_verb.value == "can"):
+                quantified_range_lhs, quantified_range_rhs = self.__compile_cardinality(then_clause.cardinality)
+                rule_head = ShortDisjunction(quantified_range_lhs, quantified_range_rhs, {'lower': False, 'upper': False},
+                                            head_atoms[0][0], head_atoms[0][1])
+            else:
+                rule_head = Conjunction([head_atoms[0]])
         rule: Rule = Rule(head=rule_head, body=rule_body)
         return str(rule) + duration_rules
 
@@ -1680,7 +1696,7 @@ class CNLCompiler:
 
 
     def __compile_strong_constraint_clause(self, constraint: StrongConstraintClause):
-        if constraint.whenever_clause:
+        if constraint.whenever_clause or (type(constraint.clauses) == list and [x for x in constraint.clauses if type(x) == SuchThat]):
             body: list[Atom] = []
             clauses = []
             to_set_ordering_operator = []
@@ -1789,27 +1805,31 @@ class CNLCompiler:
 
                     variable = self.newVar()
                     name = ''
-                    for atom in body:
-                        if atom.atom_name == condition_clause.condition_clause.condition_expression[0][
-                            1].subject_name:
-                            if atom.label and condition_clause.condition_clause.condition_expression[0][
-                                1].subject_variable and atom.label == \
-                                    condition_clause.condition_clause.condition_expression[0][
-                                        1].subject_variable:
-                                if atom.atom_parameters[
-                                            condition_clause.condition_clause.condition_expression[0][0].name][
-                                            0] == '_':
-                                    atom.set_parameter_variable(
-                                        condition_clause.condition_clause.condition_expression[0][0].name,
-                                        variable)
-                                    name = condition_clause.condition_clause.condition_expression[0][0].name
-                                else:
-                                    variable = atom.atom_parameters[
-                                        condition_clause.condition_clause.condition_expression[0][0].name][0]
-                                    name = condition_clause.condition_clause.condition_expression[0][0].name
-                                    if type(variable) == Atom:
-                                        name = list(variable.atom_parameters.keys())[0]
-                                        variable = variable.atom_parameters[list(variable.atom_parameters.keys())[0]][0]
+                    if type(condition_clause.condition_clause.condition_expression[0]) == str:
+                        name = condition_clause.condition_clause.condition_expression[0]
+                        variable = condition_clause.condition_clause.condition_expression[0]
+                    else:
+                        for atom in body:
+                            if atom.atom_name == condition_clause.condition_clause.condition_expression[0][
+                                1].subject_name:
+                                if atom.label and condition_clause.condition_clause.condition_expression[0][
+                                    1].subject_variable and atom.label == \
+                                        condition_clause.condition_clause.condition_expression[0][
+                                            1].subject_variable:
+                                    if atom.atom_parameters[
+                                        condition_clause.condition_clause.condition_expression[0][0].name][
+                                        0] == '_':
+                                        atom.set_parameter_variable(
+                                            condition_clause.condition_clause.condition_expression[0][0].name,
+                                            variable)
+                                        name = condition_clause.condition_clause.condition_expression[0][0].name
+                                    else:
+                                        variable = atom.atom_parameters[
+                                            condition_clause.condition_clause.condition_expression[0][0].name][0]
+                                        name = condition_clause.condition_clause.condition_expression[0][0].name
+                                        if type(variable) == Atom:
+                                            name = list(variable.atom_parameters.keys())[0]
+                                            variable = variable.atom_parameters[list(variable.atom_parameters.keys())[0]][0]
                     # factors.append(variable)
                     if condition_clause.condition_clause.condition_operator in comparison_relations:
                         lhs_operator = factors[0]['variable']
@@ -1936,8 +1956,13 @@ class CNLCompiler:
                                     clause.aggregate_body.aggregate_subject_clause.subject_name,
                                     aggregate_variable_list[0])
                         aggregate_operator = clause.aggregate_operator
+                        aggregate_body = [aggregate_body_atom]
+                        for such_that in constraint.clauses:
+                            if type(such_that) == SuchThat:
+                                atom, comparison = self.init_atom_from_subject_clause(such_that.elements[0],body)
+                                aggregate_body.append(atom)
                         aggregate: Aggregate = Aggregate(aggregate_operator, aggregate_variable_list,
-                                                         [aggregate_body_atom], body)
+                                                         aggregate_body, body)
                         comparison_aggregate: Comparison = Comparison(
                             constraint.comparison_clause[0].condition_operator,
                             aggregate, '',

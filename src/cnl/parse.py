@@ -96,21 +96,27 @@ class CNLTransformer(Transformer):
     def then_clause(self, elem):
         subject = [x for x in elem if type(x) == SubjectClause][0]
         assignment_verb = elem[1]
-        cardinality = [x for x in elem if type(x) == Cardinality]
+        cardinality = [x.cardinality for x in elem if (type(x) == ThenClauseBody and x.cardinality)]
+        cardinality = cardinality[0] if len(cardinality) else None
+        if not cardinality:
+            cardinality = [x for x in elem if type(x) == Cardinality]
         cardinality = cardinality[0] if len(cardinality) else None
         # quantified_range_clause = [x for x in elem if type(x) == QuantifiedRangeClause]
         # quantified_range_clause = quantified_range_clause[0] if quantified_range_clause else []
-        verb_name = [x for x in elem if type(x) == VerbName][0]
-        for i, x in enumerate(elem):
-            if type(x) == VerbName and type(elem[i - 1]) == lark.Token and \
-                    elem[i - 1].value in ["have ", "have a ","have an ", "has ","has a ","has an "]:
-                verb_name = VerbName(x.name, '', x.parameters, x.ordering) if x.preposition == 'to' else x
-        verb_name = VerbName(f'{verb_name.name} {verb_name.preposition}'.strip().lower(), verb_name.preposition, verb_name.parameters, verb_name.ordering)
-        object_clause = [x for x in elem if type(x) == ObjectClause]
-        duration_clause = [x for x in elem if type(x) == DurationClause]
-        duration_clause = duration_clause[0] if duration_clause else []
-        return ThenClause(elem[0], assignment_verb, verb_name, object_clause,
-                      cardinality, duration_clause)
+        then_body = [x for x in elem if type(x) == ThenClauseBody]
+        #verb_name = [x for x in elem if type(x) == VerbName][0]
+        is_copula_have = [x for x in elem if (type(x) == lark.Token and x.value in ["have ", "have a ","have an ", "has ","has a ","has an "])]
+        for i, x in enumerate(then_body):
+            verb = x.verb
+            if is_copula_have and verb.preposition == 'to':
+                verb.preposition = ''
+            # if type(verb) == VerbName and type(elem[i - 1]) == lark.Token and \
+            #         elem[i - 1].value in ["have ", "have a ","have an ", "has ","has a ","has an "]:
+            #     verb_name = VerbName(x.name, '', x.parameters, x.ordering) if x.preposition == 'to' else x
+        #verb_name = VerbName(f'{verb_name.name} {verb_name.preposition}'.strip().lower(), verb_name.preposition, verb_name.parameters, verb_name.ordering)
+        #object_clause = [x for x in elem if type(x) == ObjectClause]
+        return ThenClause(elem[0], assignment_verb, then_body,
+                          cardinality)
 
     def parameter_list(self, elem):
         parameters = [x for idx, x in enumerate(elem) if
@@ -130,6 +136,9 @@ class CNLTransformer(Transformer):
 
         return parameters + parameters_definition + comparison_clause + temporal_ordering
 
+    def such_that_clause(self, elem):
+        return SuchThat(elem)
+
     def parameter_definition(self, elem):
         if len(elem) == 1:
             return str(elem[0])
@@ -137,6 +146,14 @@ class CNLTransformer(Transformer):
             return ComparisonClause(elem[0].value, [elem[1], elem[2]])
         else:
             return ComparisonClause(elem[0].value, [elem[1]])
+
+    def then_clause_body(self, elem):
+        verb = [x for x in elem if type(x) == VerbName][0]
+        cardinality = [x for x in elem if type(x) == Cardinality]
+        object = [x for x in elem if type(x) == ObjectClause]
+        duration_clause = [x for x in elem if type(x) == DurationClause]
+        duration_clause = duration_clause[0] if duration_clause else []
+        return ThenClauseBody(verb, cardinality, object, duration_clause)
 
     def temporal_constraint(self, elem):
         return TemporalConstraint(elem[0], elem[1], elem[2])
@@ -160,14 +177,15 @@ class CNLTransformer(Transformer):
         return TemporalOrdering(elem[0], elem[1], elem[2])
 
     def negative_strong_constraint_clause(self, elem):
-        if ([x for x in elem if type(x) == WheneverClause]):
+        if([x for x in elem if (type(x) == WheneverClause or type(x) == SuchThat)]):
             aggregate_clause = [x for x in elem if type(x) == AggregateClause]
             simple_clause = [x for x in elem if type(x) == SimpleClause]
             condition_clause = [x for x in elem if type(x) == ConditionClause]
             whenever_clause = [x for x in elem if type(x) == WheneverClause]
             comparison_clause = [x for x in elem if type(x) == ComparisonClause]
             temporal_clause = [x for x in elem if type(x) == TemporalConstraint]
-            clause = aggregate_clause + temporal_clause + simple_clause
+            such_that = [x for x in elem if type(x) == SuchThat]
+            clause = aggregate_clause + temporal_clause + simple_clause + such_that
             return StrongConstraintClause(clause, comparison_clause, "", condition_clause, whenever_clause, False)
         simple_clauses = [x for x in elem if type(x) == SimpleClause]
         aggregate_clause = [x for x in elem if type(x) == AggregateClause]
@@ -183,14 +201,15 @@ class CNLTransformer(Transformer):
         return StrongConstraintClause(clauses, comparison_clause, where_clause, '', '', False)
 
     def positive_strong_constraint(self, elem):
-        if([x for x in elem if type(x) == WheneverClause]):
+        if([x for x in elem if (type(x) == WheneverClause or type(x) == SuchThat)]):
             aggregate_clause = [x for x in elem if type(x) == AggregateClause]
             simple_clause = [x for x in elem if type(x) == SimpleClause]
             condition_clause = [x for x in elem if type(x) == ConditionClause]
             whenever_clause = [x for x in elem if type(x) == WheneverClause]
             comparison_clause = [x for x in elem if type(x) == ComparisonClause]
             temporal_clause = [x for x in elem if type(x) == TemporalConstraint]
-            clause = aggregate_clause + temporal_clause + simple_clause
+            such_that = [x for x in elem if type(x) == SuchThat]
+            clause = aggregate_clause + temporal_clause + simple_clause + such_that
             return StrongConstraintClause(clause, comparison_clause, "", condition_clause, whenever_clause, True)
         aggregate_clause = [x for x in elem if type(x) == AggregateClause]
         when_then_clause = [x for x in elem if type(x) == WhenThenClause]
@@ -750,7 +769,7 @@ class Parameter:
     name: str
     variable: str
 
-@dataclass(frozen=True)
+@dataclass()
 class VerbName:
     name: str
     preposition: str
@@ -1110,6 +1129,11 @@ class QuantifiedRangeClause:
 
 
 @dataclass(frozen=True)
+class Cardinality:
+    clause: QuantifiedMaximumQuantity | QuantifiedMinimumQuantity | QuantifiedExactQuantity | QuantifiedRangeClause
+
+
+@dataclass(frozen=True)
 class QuantifiedObjectClause:
     objects: list[SimpleObject]
 
@@ -1124,7 +1148,6 @@ class ParameterDefinition:
     name: str
     variable: str
 
-
 @dataclass(frozen=True)
 class QuantifiedChoiceClause:
     quantifier: str
@@ -1137,6 +1160,12 @@ class QuantifiedChoiceClause:
     duration_clause: DurationClause
     foreach_clause: ForeachClause
 
+@dataclass(frozen=True)
+class ThenClauseBody:
+    verb: VerbClause
+    cardinality: Cardinality
+    objects: list[ObjectClause]
+    duration: DurationClause
 
 @dataclass(frozen=True)
 class DomainDefinition:
@@ -1149,24 +1178,17 @@ class DomainDefinition:
 class FactDefinition:
     subject: SubjectClause
 
-
 @dataclass(frozen=True)
 class ParameterList:
     parameters: list[Parameter]
     parameters_definitions: list[ParameterDefinition]
 
 @dataclass(frozen=True)
-class Cardinality:
-    clause: QuantifiedMaximumQuantity | QuantifiedMinimumQuantity | QuantifiedExactQuantity | QuantifiedRangeClause
-
-@dataclass(frozen=True)
 class ThenClause:
     subject: SubjectClause
     assignment_verb: str
-    verb: VerbClause
-    object: ObjectClause
+    then_body: list[ThenClauseBody]
     cardinality: Cardinality
-    duration: DurationClause
 
 @dataclass(frozen= True)
 class TemporalConceptClause:
@@ -1217,6 +1239,10 @@ class WeakConstraintClause:
 class ConstantDefinition:
     subject: SubjectClause
     value: str
+
+@dataclass(frozen=True)
+class SuchThat:
+    elements: list[SubjectClause]
 
 @dataclass(frozen=True)
 class DefinitionClause:

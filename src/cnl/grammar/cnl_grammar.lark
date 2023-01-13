@@ -24,15 +24,16 @@ start: (( negative_strong_constraint_clause
 //Rules
 whenever_then_clause.1: (whenever_clause ","?)+ then_clause
 whenever_clause.1: ("Whenever" | "whenever") "there is " verb_negation? subject_clause
-then_clause: "then" subject_clause CNL_ASSIGNMENT_VERB CNL_COPULA cardinality? (verb_name | verb_name_with_preposition) (cardinality)? "such that there is"? (object_clause_l ((","|", and") object_clause_l)*)? duration_clause?
+then_clause: "then" subject_clause CNL_ASSIGNMENT_VERB CNL_COPULA cardinality? then_clause_body (","? "or" then_clause_body)*
+then_clause_body: ("a " | "an ")? (verb_name | verb_name_with_preposition) (cardinality)? "such that there is"? (object_clause_l ((","|", and") object_clause_l)*)? duration_clause?
 CNL_ASSIGNMENT_VERB: "can" | "must"
 object_clause_l.-1: ("a " | "an ")? object_name variable? (parameter_list)?
 cardinality: quantified_exact_quantity_clause | quantified_range_clause | quantified_maximum_quantity | quantified_minimum_quantity
 quantified_maximum_quantity: "at most" quantified_exact_quantity
 quantified_minimum_quantity: "at least" quantified_exact_quantity
 
-negative_strong_constraint_clause: CNL_PROHIBITION ( aggregate_clause comparison_clause (where_clause)? ("," (whenever_clause ","?)+)? | when_then_clause (where_clause)? | quantified_constraint (where_clause)? | condition_clause  "," (whenever_clause ","?)+ | temporal_constraint "," (whenever_clause ","?)+ | simple_clause ("and also" simple_clause)* (where_clause)? ("," (whenever_clause ","?)+)? )
-positive_strong_constraint: CNL_REQUIREMENT (aggregate_clause comparison_clause (where_clause)?  ("," (whenever_clause ","?)+)? | when_then_clause (where_clause)? | quantified_constraint (where_clause)? | condition_clause  "," (whenever_clause ","?)+ | temporal_constraint "," (whenever_clause ","?)+ | simple_clause "," (whenever_clause ","?)+)
+negative_strong_constraint_clause: CNL_PROHIBITION ( aggregate_clause comparison_clause (where_clause)? such_that_clause? ("," (whenever_clause ","?)+)? | when_then_clause (where_clause)? | quantified_constraint (where_clause)? | condition_clause  "," (whenever_clause ","?)+ | temporal_constraint "," (whenever_clause ","?)+ | simple_clause ("and also" simple_clause)* (where_clause)? ("," (whenever_clause ","?)+)? )
+positive_strong_constraint: CNL_REQUIREMENT (aggregate_clause comparison_clause (where_clause)? such_that_clause?  ("," (whenever_clause ","?)+)? | when_then_clause (where_clause)? | quantified_constraint (where_clause)? | condition_clause  "," (whenever_clause ","?)+ | temporal_constraint "," (whenever_clause ","?)+ | simple_clause "," (whenever_clause ","?)+)
 when_then_clause.1: "when" when_part "then" then_part
 when_part: (simple_clause comparison_clause? | simple_clause ("and also" simple_clause)*)
 then_part: (simple_clause comparison_clause? | simple_clause ("and also" simple_clause)*)
@@ -91,6 +92,7 @@ ordering_operator: CNL_ORDERING_OPERATOR
 
 simple_clause: subject_clause ("with" parameter_list)?  CNL_COPULA? verb_clause
 aggregate_clause: "the" aggregate_operator parameter? "of" (aggregate_active_clause | aggregate_passive_clause | subject_clause) (ranging_clause)?
+such_that_clause: ", such that there is" subject_clause (", " "and"? subject_clause)*
 aggregate_operator: CNL_AGGREGATE
 aggregate_active_clause: subject_clause "that" CNL_COPULA? aggregate_verb_clause ((","|"and") aggregate_verb_clause)* aggregate_object_clause? aggregate_for_clause?
 aggregate_passive_clause: aggregate_object_clause (aggregate_for_clause)? "where" subject_clause CNL_COPULA? aggregate_verb_clause
