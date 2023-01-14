@@ -1041,7 +1041,7 @@ class CNLCompiler:
                 self.decl_signatures.append(head_atom.compute_signature())
                 head_atoms.append([head_atom, Conjunction(condition + condition_comparisons)])
             else:
-                head_atom = self.__get_atom_from_signature_subject(then_body_clause.verb.name)
+                head_atom = self.__get_atom_from_signature_subject(f'{then_body_clause.verb.name} {then_body_clause.verb.preposition}'.strip())
                 for parameter in then_body_clause.verb.parameters:
                     if parameter.variable:
                         label_found = False
