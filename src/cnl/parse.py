@@ -242,21 +242,22 @@ class CNLTransformer(Transformer):
             priority_level = elem[1] if type(elem[1]) == str else elem[2]
             optimization_operator = elem[len(elem)-1]
             variable_to_optimize = elem[len(elem)-2] if type(elem[len(elem)-2]) == str else ''
-            if elem[1] == lark.Token and elem[1].type == 'CNL_WEAK_OPTIMIZATION':
+            if type(elem[1]) == lark.Token and (elem[1].value == 'as much as possible' or elem[1].value == 'as little as possible'):
                 optimization_operator = elem[1].value
             subject = [x for x in elem if type(x) == SubjectClause]
             verb = [x for x in elem if type(x) == VerbName]
             verb = verb[0] if verb else ''
             object = [x for x in elem if type(x) == ObjectClause]
             whenever_clause = [x for x in elem if type(x) == WheneverClause]
+            condition_clause = [x for x in elem if type(x) == ConditionClause]
             if verb:
                 for i, x in enumerate(elem):
                     if type(x) == VerbName and type(elem[i - 1]) == lark.Token and \
                             elem[i - 1].value in ["have ", "have a ", "have an ", "has ", "has a ", "has an "]:
                         verb = VerbName(x.name, '', x.parameters) if x.preposition == 'to' else x
                 verb = VerbName(f'{verb.name} {verb.preposition}'.strip().lower(), verb.preposition,
-                                     verb.parameters)
-            return WeakConstraintClause(priority_level, '', optimization_operator, '', subject, verb, object, whenever_clause, variable_to_optimize)
+                                verb.parameters)
+            return WeakConstraintClause(priority_level, condition_clause, optimization_operator, '', subject, verb, object, whenever_clause, variable_to_optimize)
         else:
             where_clause = [x for x in elem if type(x) == WhereClause]
             where_clause = where_clause[0] if where_clause else []

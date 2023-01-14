@@ -2151,13 +2151,31 @@ class CNLCompiler:
                 discriminant = verb_atom.atom_parameters[constraint.subject[0].subject_name][0]
                 if type(discriminant) == Atom:
                     discriminant = list(discriminant.atom_parameters.values())[0]
-                cost = '-1' if constraint.optimization_operator == 'as much as possible' else '1'
+                cost = '-1' if constraint.optimization_operator == 'as much as possible' or constraint.optimization_operator == 'maximized' else '1'
                 return str(Rule(head=None, body=Conjunction(body + comparisons + [subject_atom] + [verb_atom]),
                                 cost=[cost, str(priority_levels_map[constraint.priority_level])],
                                 discriminants=discriminant))
             elif constraint.variable_to_optimize:
-                cost = constraint.variable_to_optimize if constraint.optimization_operator == 'as much as possible' or constraint.optimization_operator == 'maximized' else f'-{constraint.variable_to_optimize}'
+                cost = constraint.variable_to_optimize if constraint.optimization_operator == 'as little as possible' or constraint.optimization_operator == 'minimized' else f'-{constraint.variable_to_optimize}'
                 return str(Rule(head=None, body=Conjunction(body + comparisons),
+                                cost=[cost, str(priority_levels_map[constraint.priority_level])]))
+            elif type(constraint.constraint_body[0]) == ConditionClause:
+                lhs = constraint.constraint_body[0].condition_variable
+                if type(constraint.constraint_body[0].condition_variable) == AggregateClause:
+                    subject_atom, comparison = self.init_atom_from_subject_clause(constraint.constraint_body[0].condition_variable.aggregate_body, body)
+                    var = self.newVar()
+                    subject_atom.set_parameter_variable(constraint.constraint_body[0].condition_variable.parameter[0].name, var, force=True)
+                    lhs = Aggregate(constraint.constraint_body[0].condition_variable.aggregate_operator,
+                                    [var],
+                                    [subject_atom],
+                                    [])
+                rhs = constraint.constraint_body[0].condition_clause.condition_expression[0]
+                if type(constraint.constraint_body[0].condition_clause.condition_expression[0]) == Aggregate:
+                    rhs = Aggregate()
+                rule = Comparison(constraint.constraint_body[0].condition_clause.condition_operator, lhs, '', rhs)
+
+                cost = '-1' if constraint.optimization_operator == 'as much as possible' or constraint.optimization_operator == 'maximized' else '1'
+                return str(Rule(head=None, body=Conjunction(body + comparisons + [rule]),
                                 cost=[cost, str(priority_levels_map[constraint.priority_level])]))
         compilation_string: str = ''
 
