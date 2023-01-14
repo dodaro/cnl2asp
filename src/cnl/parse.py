@@ -37,10 +37,6 @@ class CNLTransformer(Transformer):
         subject = elem[0]
         return FactDefinition(subject)
 
-    def constant_definition(self, elem):
-        subject = elem[0]
-        value = elem[1]
-        return ConstantDefinition(subject, value)
     def whenever_then_clause(self, elem):
         whever_clause = []
         then_clause = ''
@@ -274,7 +270,9 @@ class CNLTransformer(Transformer):
         return DefinitionClause(elem[0])
 
     def constant_definition_clause(self, elem):
-        return ConstantDefinitionClause(elem[0], elem[1])
+        if len(elem) > 1:
+            return ConstantDefinitionClause(elem[0], elem[1])
+        return ConstantDefinitionClause(elem[0], '')
 
     def duration_clause(self, elem):
         if type(elem[0][0]) == Parameter:
@@ -1251,17 +1249,12 @@ class WeakConstraintClause:
     variable_to_optimize: str = ''
 
 @dataclass(frozen=True)
-class ConstantDefinition:
-    subject: SubjectClause
-    value: str
-
-@dataclass(frozen=True)
 class SuchThat:
     elements: list[SubjectClause]
 
 @dataclass(frozen=True)
 class DefinitionClause:
-    clause: CompoundedClause | ConstantDefinitionClause | EnumerativeDefinitionClause | DomainDefinition | FactDefinition | ConstantDefinition
+    clause: CompoundedClause | ConstantDefinitionClause | EnumerativeDefinitionClause | DomainDefinition | FactDefinition
 
 @dataclass(frozen=True)
 class CNLContentTree:

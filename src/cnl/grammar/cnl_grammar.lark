@@ -69,7 +69,7 @@ compounded_clause_match_tail: "and has" object_clause ("that are equal to respec
 compounded_clause_match: "is one of" compounded_list
 compounded_list: definition_object ("," definition_object)*
 compounded_clause_range: "goes from" range_lhs "to" range_rhs
-constant_definition_clause.1: subject_name "is a constant equal to" (constant | question_mark)
+constant_definition_clause.1: subject_name "is a constant" ("equal to" (constant | question_mark))?
 ordering_definition_clause: subject_clause "comes before" subject_clause ("which comes before" subject_clause)*
 enumerative_definition_clause: subject_clause CNL_COPULA? (verb_name | verb_name_with_preposition) (subject_clause ("and" subject_clause)*)? ("when" when_part)? (where_clause)?
 

@@ -105,6 +105,8 @@ class Atom:
         for parameter in signature.primary_key:
             if type(parameter) == Signature:
                 self.atom_parameters[parameter.subject][0].initializeVariables(parameter)
+            elif len(signature.primary_key) == 1 and self.label:
+                self.atom_parameters[parameter][0] = self.label
             else:
                 variable = f'X_{str(uuid4()).replace("-", "_")}'
                 if self.atom_parameters[parameter][0] == '_':
@@ -149,8 +151,11 @@ class Atom:
     # set the parameter variable
     def set_parameter_variable(self, parameter_name: str, new_variable: str, force: bool = False, index: int = None,
                                newDefinition: bool = False):
-        if type(new_variable) == str and new_variable.isalpha() and not new_variable.isupper() and not (new_variable in list(constant_definitions_dict.keys())):
+        if type(new_variable) == str and new_variable.isalpha() and not new_variable.isupper() and not (new_variable.lower() in list(constant_definitions_dict.keys())):
             new_variable = f'"{new_variable}"'
+        elif type(new_variable) == str and new_variable.isalpha() and not new_variable.isupper() and new_variable.lower() in list(constant_definitions_dict.keys()) and constant_definitions_dict[new_variable.lower()]:
+            new_variable = constant_definitions_dict[new_variable.lower()]
+
 
 
         # If the parameter name is not defined in the atom, add the new name and variable
@@ -282,12 +287,14 @@ class Comparison:
             rhs = f"({str(self.comparison_value)})\{self.comparison_rhs_modulo}"
         else:
             rhs = f"{str(self.comparison_value)}"
+        if type(lhs) == str and lhs.isalpha() and not lhs.isupper() and not lhs.lower() in list(constant_definitions_dict.keys()): lhs = f'"{lhs}"'
+        if type(lhs) == str and lhs.isalpha() and not lhs.isupper() and lhs.lower() in list(constant_definitions_dict.keys()) and constant_definitions_dict[lhs.lower()]: lhs = constant_definitions_dict[lhs.lower()]
+        if type(rhs) == str and rhs.isalpha() and not lhs.isupper() and not rhs.lower() in list(constant_definitions_dict.keys()): rhs = f'"{rhs}"'
+        if type(rhs) == str and rhs.isalpha() and not rhs.isupper() and rhs.lower() in list(constant_definitions_dict.keys()) and constant_definitions_dict[rhs.lower()]: rhs = constant_definitions_dict[rhs.lower()]
         if self.negated:
             # check the current operator and replace it
             return f"{lhs} {negated_relations[self.comparison_operator]}" \
                    f" {rhs}"
-        if type(lhs) == str and lhs.isalpha() and not lhs.isupper() and not lhs in list(constant_definitions_dict.keys()): lhs = f'"{lhs}"'
-        if type(rhs) == str and rhs.isalpha() and not lhs.isupper() and not rhs in list(constant_definitions_dict.keys()): rhs = f'"{rhs}"'
         return f"{lhs} {comparison_relations[self.comparison_operator]}" \
                f" {rhs}"
 
@@ -475,13 +482,31 @@ class Operation:
 
     def __str__(self):
         string: str = f'{self.operation_eq_variable} = ' if self.operation_eq_variable is not None else ''
+        lhs = self.operation_lhs
+        rhs = self.operation_rhs
+        if type(lhs) == str and lhs.isalpha() and not lhs.isupper() and not lhs.lower() in list(
+            constant_definitions_dict.keys()): lhs = f'"{lhs}"'
+        if type(lhs) == str and lhs.isalpha() and not lhs.isupper() and lhs.lower() in list(
+            constant_definitions_dict.keys()) and constant_definitions_dict[lhs.lower()]: lhs = \
+        constant_definitions_dict[lhs.lower()]
+        if type(rhs) == str and rhs.isalpha() and not lhs.isupper() and not rhs.lower() in list(
+            constant_definitions_dict.keys()): rhs = f'"{rhs}"'
+        if type(rhs) == str and rhs.isalpha() and not rhs.isupper() and rhs.lower() in list(
+            constant_definitions_dict.keys()) and constant_definitions_dict[rhs.lower()]: rhs = \
+        constant_definitions_dict[rhs.lower()]
+
         if not self.absolute_value:
-            string += f"{self.operation_lhs} {condition_operation[self.operator]} {self.operation_rhs}"
+            string += f"{lhs} {condition_operation[self.operator]} {rhs}"
             if self.more_factors:
                 for factor in self.more_factors:
+                    if type(factor) == str and factor.isalpha() and not factor.isupper() and not factor.lower() in list(
+                            constant_definitions_dict.keys()): factor = f'"{factor}"'
+                    if type(factor) == str and factor.isalpha() and not factor.isupper() and factor.lower() in list(
+                            constant_definitions_dict.keys()) and constant_definitions_dict[factor.lower()]: factor = \
+                        constant_definitions_dict[factor.lower()]
                     string += f' {condition_operation[self.operator]} {factor}'
         else:
-            string += f"|{self.operation_lhs} {condition_operation[self.operator]} {self.operation_rhs}"
+            string += f"|{lhs} {condition_operation[self.operator]} {rhs}"
             if self.more_factors:
                 for factor in self.more_factors:
                     string += f' {string} {condition_operation[self.operator]} {factor}'
@@ -783,8 +808,6 @@ class CNLCompiler:
                     self.__compilation_result += self.__compile_wheneverThen_clause(definition_clause.clause)
                 elif type(definition_clause.clause) == TemporalConceptClause:
                     self.__compilation_result += self.__compile_temporal_concept_clause(definition_clause.clause)
-                elif type(definition_clause.clause) == ConstantDefinition:
-                    self.__compilation_result += self.__compile_constant_definition(definition_clause.clause)
             except (IndexError):
                 dependent_definitions.append(definition_clause)
         for quantifier_clause in file.quantifiers:
@@ -2360,7 +2383,7 @@ class CNLCompiler:
 
     # check if a string is in the global constants otherwise return itself
     def __make_substitution_value(self, string_to_check: str) -> str:
-        if string_to_check.lower() in constant_definitions_dict.keys():
+        if string_to_check.lower() in constant_definitions_dict.keys() and constant_definitions_dict[string_to_check.lower()]:
             return constant_definitions_dict[string_to_check.lower()]
         elif string_to_check in alphabetic_constants_set:
             return f'"{string_to_check}"'
