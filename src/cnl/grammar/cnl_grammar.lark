@@ -39,7 +39,7 @@ when_part: (simple_clause comparison_clause? | simple_clause ("and also" simple_
 then_part: (simple_clause comparison_clause? | simple_clause ("and also" simple_clause)*)
 quantified_constraint:  quantifier simple_clause
 
-weak_constraint: CNL_PREFERENCE  CNL_WEAK_OPTIMIZATION? ","? weak_priority_clause ","? "that" (condition_operation | aggregate_clause | subject_clause CNL_COPULA (verb_name | verb_name_with_preposition) object_clause "," whenever_clause) (","? weak_optimization_operator)? (where_clause)?
+weak_constraint: CNL_PREFERENCE  CNL_WEAK_OPTIMIZATION? ","? weak_priority_clause ","? "that" (condition_operation | aggregate_clause | subject_clause CNL_COPULA (verb_name | verb_name_with_preposition) object_clause "," whenever_clause | whenever_clause (", " whenever_clause)* ", " variable | condition_clause ", " whenever_clause (", " whenever_clause)*) (","? weak_optimization_operator)? (where_clause)?
 CNL_WEAK_OPTIMIZATION: "as much as possible" | "as little as possible"
 weak_priority_clause: "with" CNL_PRIORITY_LEVEL "priority"
 weak_optimization_operator: "is" CNL_OPTIMIZATION_OPERATOR
@@ -138,7 +138,7 @@ condition_operator: CNL_OPERATOR
 condition_negation: CNL_NEGATION
 condition_expression: (condition_expression_value | condition_operation)
 condition_expression_value: ("modulo" CNL_NUMBER "of")? (constant | variable | aggregate_clause | "the" parameter "of the" subject_clause)
-condition_operation: condition_expression_operator condition_expression_value ((","|", and") condition_expression_value)+
+condition_operation: condition_expression_operator condition_expression_value (("," | ","? " and") condition_expression_value)+
 condition_expression_operator: ("modulo" CNL_NUMBER "of")? CNL_OPERATION absolute_value_operator? "between"
 
 comparison_clause: "is" condition_operator comparison_value

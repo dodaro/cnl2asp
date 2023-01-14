@@ -1396,56 +1396,65 @@ class CNLCompiler:
                                             foreach_object in objects_in_foreach]
         head_atoms = []
         for verb in verb_names:
-            head_atoms.append(Atom(verb, dict()))
+            if self.__get_atom_from_signature_subject(verb):
+                head_atoms.append([self.__get_atom_from_signature_subject(verb), False])
+            else:
+                head_atoms.append([Atom(verb, dict()), True])
         if clause.verb_name.parameters:
-            self.set_parameter_list(head_atoms[0], clause.verb_name.parameters, newDefinition=True)
+            self.set_parameter_list(head_atoms[0][0], clause.verb_name.parameters, newDefinition=head_atoms[0][1])
         for i, head_atom in enumerate(head_atoms[1:]):
             if hasattr(clause.object_clause.objects[i], 'parameters'):
-                self.set_parameter_list(head_atom, clause.object_clause.objects[i].parameters, newDefinition=True)
+                self.set_parameter_list(head_atom[0], clause.object_clause.objects[i].parameters, newDefinition=head_atom[1])
         for x, y in [(elem.atom_name, elem.atom_parameters[elem.atom_name]) for elem in clause_foreach_atoms]:
             for z in y:
                 for atom in head_atoms:
-                    atom.set_parameter_variable(x, z, force=True, newDefinition=True)
+                    atom[0].set_parameter_variable(x, z, force=True, newDefinition=atom[1])
         objects = dict()
         if clause.object_clause.objects and [elem for elem in clause.object_clause.objects if
                                              type(elem) == ObjectClause]:
             for j, atom in enumerate(head_atoms):
-                objects[atom.atom_name] = []
+                objects[atom[0].atom_name] = []
                 atoms = []
                 variable = f'X_{str(uuid4()).replace("-", "_")}'
                 if j == 0:
                     parameter_name = list(self.__get_atom_from_signature_subject(
                         clause.object_clause.objects[0].object_name).atom_parameters.keys())[0]
                     atoms.append(self.__get_atom_from_signature_subject(clause.object_clause.objects[0].object_name) \
-                                 .set_parameter_variable(parameter_name, variable, newDefinition=True))
-                    atom.set_parameter_variable(parameter_name, variable, force=True, newDefinition=True)
+                                 .set_parameter_variable(parameter_name, variable, newDefinition=atom[1]))
+                    atom[0].set_parameter_variable(parameter_name, variable, force=True, newDefinition=atom[1])
                 else:
                     for i, object in enumerate(clause.object_clause.objects):
                         if type(object) == VerbName and (
-                                atom.atom_name == f'{object.name}_{object.preposition}' or atom.atom_name == f'{object.name}'):
+                                atom[0].atom_name == f'{object.name}_{object.preposition}' or atom[0].atom_name == f'{object.name}'):
                             parameter_name = list(self.__get_atom_from_signature_subject(
                                 clause.object_clause.objects[i + 1].object_name).atom_parameters.keys())[0]
                             atoms.append(
                                 self.__get_atom_from_signature_subject(clause.object_clause.objects[i + 1].object_name) \
-                                    .set_parameter_variable(parameter_name, variable, newDefinition=True))
-                            atom.set_parameter_variable(parameter_name, variable,force=True, newDefinition=True)
+                                    .set_parameter_variable(parameter_name, variable, newDefinition=atom[1]))
+                            atom[0].set_parameter_variable(parameter_name, variable,force=True, newDefinition=atom[1])
                 objects[atom.atom_name] = atoms
         duration_rules = ''
         if clause.duration_clause:
-            duration_rules += self.__compile_duration_clause([subject_in_clause_atom], head_atoms,
+            atom_list = []
+            for atom in head_atoms:
+                atom_list.append(atom[0])
+            duration_rules += self.__compile_duration_clause([subject_in_clause_atom], atom_list,
                                                              clause.duration_clause)
 
         rule_body: Conjunction = Conjunction([subject_in_clause_atom] + clause_foreach_atoms)
         if not clause.verb_name.parameters:
             for head_atom in head_atoms:
-                self.link_two_atoms(head_atom, subject_in_clause_atom, newDefinition=True)
+                self.link_two_atoms(head_atom[0], subject_in_clause_atom, newDefinition=head_atom[1])
         for head_atom in head_atoms:
-            self.decl_signatures.append(Signature(head_atom.atom_name, head_atom.atom_parameters.keys()))
+            if head_atom[1]:
+                self.decl_signatures.append(Signature(head_atom[0].atom_name, head_atom[0].atom_parameters.keys()))
         if clause.object_clause.objects and [elem for elem in clause.object_clause.objects if
                                              type(elem) == ObjectClause]:
-            rule_head: ComplexDisjunction = ComplexDisjunction(head_atoms, objects)
+            atom_list = [x[0] for x in head_atoms]
+            rule_head: ComplexDisjunction = ComplexDisjunction(atom_list, objects)
         else:
-            rule_head: SimpleDisjunction = SimpleDisjunction(head_atoms)
+            atom_list = [x[0] for x in head_atoms]
+            rule_head: SimpleDisjunction = SimpleDisjunction(atom_list)
         rule: Rule = Rule(head=rule_head, body=rule_body)
         return str(rule) + duration_rules
 
@@ -2099,29 +2108,34 @@ class CNLCompiler:
                 else:
                     atom.initializeVariables(self.__get_atom_from_signature_subject(elem.subject.subject_name))
                 body.append(atom)
-            verb_atom = self.__get_atom_from_signature_subject(constraint.verb.name)
-            subject_atom = ''
-            for elem in constraint.object:
-                verb_atom.set_parameter_variable(elem.object_name, elem.object_variable)
-                for atom in body:
-                    if atom.label == elem.object_variable:
-                        self.link_two_atoms(verb_atom, atom)
-                        break
-            discriminant = ''
-            if constraint.subject[0].parameters:
-                subject_atom = self.__get_atom_from_signature_subject(constraint.subject[0].subject_name)
-                subject_atom.label = constraint.subject[0].subject_variable
-                for parameter in constraint.subject[0].parameters:
-                    subject_atom.set_parameter_variable(parameter.name, parameter.variable)
+            if constraint.verb:
+                verb_atom = self.__get_atom_from_signature_subject(constraint.verb.name)
+                subject_atom = ''
+                for elem in constraint.object:
+                    verb_atom.set_parameter_variable(elem.object_name, elem.object_variable)
+                    for atom in body:
+                        if atom.label == elem.object_variable:
+                            self.link_two_atoms(verb_atom, atom)
+                            break
+                discriminant = ''
+                if constraint.subject[0].parameters:
+                    subject_atom = self.__get_atom_from_signature_subject(constraint.subject[0].subject_name)
+                    subject_atom.label = constraint.subject[0].subject_variable
+                    for parameter in constraint.subject[0].parameters:
+                        subject_atom.set_parameter_variable(parameter.name, parameter.variable)
 
-                self.link_two_atoms(subject_atom, verb_atom.atom_parameters[subject_atom.atom_name][0])
-            discriminant = verb_atom.atom_parameters[constraint.subject[0].subject_name][0]
-            if type(discriminant) == Atom:
-                discriminant = list(discriminant.atom_parameters.values())[0]
-            cost = '-1' if constraint.optimization_operator == 'as much as possible' else '1'
-            return str(Rule(head=None, body=Conjunction(body + comparisons + [subject_atom] + [verb_atom]),
-                            cost=[cost, str(priority_levels_map[constraint.priority_level])],
-                            discriminants=discriminant))
+                    self.link_two_atoms(subject_atom, verb_atom.atom_parameters[subject_atom.atom_name][0])
+                discriminant = verb_atom.atom_parameters[constraint.subject[0].subject_name][0]
+                if type(discriminant) == Atom:
+                    discriminant = list(discriminant.atom_parameters.values())[0]
+                cost = '-1' if constraint.optimization_operator == 'as much as possible' else '1'
+                return str(Rule(head=None, body=Conjunction(body + comparisons + [subject_atom] + [verb_atom]),
+                                cost=[cost, str(priority_levels_map[constraint.priority_level])],
+                                discriminants=discriminant))
+            elif constraint.variable_to_optimize:
+                cost = constraint.variable_to_optimize if constraint.optimization_operator == 'as much as possible' or constraint.optimization_operator == 'maximized' else f'-{constraint.variable_to_optimize}'
+                return str(Rule(head=None, body=Conjunction(body + comparisons),
+                                cost=[cost, str(priority_levels_map[constraint.priority_level])]))
         compilation_string: str = ''
 
         body_in_clause: ConditionOperation | AggregateClause = constraint.constraint_body
@@ -2201,7 +2215,7 @@ class CNLCompiler:
             for const, const_val in constant_definitions_dict.items():
                 elem.set_variable_value(const, const_val)
 
-        variable = f"-{variable}" if constraint.optimization_operator == 'maximized' else variable
+        variable = f"-{variable}" if constraint.optimization_operator == 'maximized' or constraint.optimization_operator == 'as much as possible' else variable
 
         for elem in conjunction_list:
             compilation_string += str(Rule(head=None, body=elem,
