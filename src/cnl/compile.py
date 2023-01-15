@@ -791,15 +791,15 @@ class CNLCompiler:
         dependent_definitions = []
         for definition_clause in file.definitions:
             try:
-                if type(definition_clause.clause) == CompoundedClause:
+                if type(definition_clause.clause) == ConstantDefinitionClause:
+                    self.__compile_constant_definition_clause(definition_clause.clause)
+                elif type(definition_clause.clause) == CompoundedClause:
                     if type(definition_clause.clause.definition) == CompoundedClauseRange:
                         self.__compilation_result += self.__compile_compounded_clause_range(definition_clause.clause)
                     else:
                         self.__compilation_result += self.__compile_compounded_clause_match(definition_clause.clause)
                 elif type(definition_clause.clause) == EnumerativeDefinitionClause:
                     self.__compilation_result += self.__compile_enumerative_definition_clause(definition_clause.clause)
-                elif type(definition_clause.clause) == ConstantDefinitionClause:
-                    self.__compile_constant_definition_clause(definition_clause.clause)
                 elif type(definition_clause.clause) == DomainDefinition:
                     self.__compile_domain_definition(definition_clause.clause)
                 elif type(definition_clause.clause) == FactDefinition:
@@ -1198,11 +1198,15 @@ class CNLCompiler:
             lhs = int(compounded_range.compounded_range_lhs)
         except ValueError:
             lhs = constant_definitions_dict[compounded_range.compounded_range_lhs.lower()]
+            if not lhs:
+                lhs = compounded_range.compounded_range_lhs.lower()
         rhs = None
         try:
             rhs = int(compounded_range.compounded_range_rhs)
         except ValueError:
             rhs = constant_definitions_dict[compounded_range.compounded_range_rhs.lower()]
+            if not rhs:
+                rhs = compounded_range.compounded_range_rhs.lower()
         # define the atom with parameters
         atom: Atom = Atom(subject_in_clause.name,
                           {f'{subject_in_clause.name}': [f'{lhs}'
@@ -1214,8 +1218,8 @@ class CNLCompiler:
                 granularity_hierarchy.append(Object(elem).name)
         # append the signature of the new atom
         self.decl_signatures.append(Signature(subject_in_clause.name, [subject_in_clause.name], granularity_hierarchy,
-                                              {'lower': int(lhs),
-                                               'upper': int(rhs)}))
+                                              {'lower': lhs,
+                                               'upper': rhs}))
         compiled_string += str(Rule(head=atom, body=None))
         return compiled_string
 
@@ -2112,8 +2116,8 @@ class CNLCompiler:
             return compiled_string
 
     def __compile_weak_constraint_clause(self, constraint: WeakConstraintClause):
+        body: list[Atom] = []
         if constraint.whenever_clause:
-            body: list[Atom] = []
             comparisons = []
             for elem in constraint.whenever_clause:
                 atom = self.__get_atom_from_signature_subject(elem.subject.subject_name)
@@ -2157,8 +2161,13 @@ class CNLCompiler:
                                 discriminants=discriminant))
             elif constraint.variable_to_optimize:
                 cost = constraint.variable_to_optimize if constraint.optimization_operator == 'as little as possible' or constraint.optimization_operator == 'minimized' else f'-{constraint.variable_to_optimize}'
+                discriminant = []
+                for atom in body:
+                    for key, parameter in atom.atom_parameters.items():
+                        if parameter[0] != '_':
+                            if not parameter[0] in discriminant: discriminant.append(parameter[0])
                 return str(Rule(head=None, body=Conjunction(body + comparisons),
-                                cost=[cost, str(priority_levels_map[constraint.priority_level])]))
+                                cost=[cost, str(priority_levels_map[constraint.priority_level])], discriminants=discriminant))
             elif type(constraint.constraint_body[0]) == ConditionClause:
                 lhs = constraint.constraint_body[0].condition_variable
                 if type(constraint.constraint_body[0].condition_variable) == AggregateClause:
@@ -2170,13 +2179,31 @@ class CNLCompiler:
                                     [subject_atom],
                                     [])
                 rhs = constraint.constraint_body[0].condition_clause.condition_expression[0]
-                if type(constraint.constraint_body[0].condition_clause.condition_expression[0]) == Aggregate:
-                    rhs = Aggregate()
                 rule = Comparison(constraint.constraint_body[0].condition_clause.condition_operator, lhs, '', rhs)
-
+                discriminant = []
+                for atom in body:
+                    for key, parameter in atom.atom_parameters.items():
+                        if parameter[0] != '_':
+                            if not parameter[0] in discriminant: discriminant.append(parameter[0])
                 cost = '-1' if constraint.optimization_operator == 'as much as possible' or constraint.optimization_operator == 'maximized' else '1'
                 return str(Rule(head=None, body=Conjunction(body + comparisons + [rule]),
-                                cost=[cost, str(priority_levels_map[constraint.priority_level])]))
+                                cost=[cost, str(priority_levels_map[constraint.priority_level])],discriminants=discriminant))
+            elif type(constraint.constraint_body[0]) == AggregateClause:
+                atom, comparison = self.init_atom_from_subject_clause(constraint.constraint_body[0].aggregate_body, body)
+                variable = self.newVar()
+                atom.set_parameter_variable(constraint.constraint_body[0].parameter[0].name, variable, force=True)
+                aggregate = Aggregate(constraint.constraint_body[0].aggregate_operator, [variable], [atom], [])
+                variable = self.newVar()
+                discriminant = []
+                comparison: Comparison = Comparison('equal to', aggregate, '', variable, '')
+                for atom in body:
+                    for key, parameter in atom.atom_parameters.items():
+                        if parameter[0] != '_':
+                            if not parameter[0] in discriminant:
+                                discriminant.append(parameter[0])
+                return str(Rule(head=None, body=Conjunction(body + comparisons + [comparison]),
+                                cost=[variable, str(priority_levels_map[constraint.priority_level])],
+                                discriminants=discriminant))
         compilation_string: str = ''
 
         body_in_clause: ConditionOperation | AggregateClause = constraint.constraint_body
@@ -2184,15 +2211,25 @@ class CNLCompiler:
         conjunction: Conjunction | str = ''
         subject_variables_in_clause: list[str] = []
         if type(body_in_clause) is AggregateClause:
-            subject_in_clause: Subject = Subject(body_in_clause
-                                                 .aggregate_body.aggregate_subject_clause)
-            aggregate: Aggregate = self.__compile_aggregate_clause(body_in_clause,
-                                                                   in_subject=subject_in_clause)
-            if not body_in_clause.aggregate_body.active_form:
-                subject_variables_in_clause.append(subject_in_clause.variable)
-            comparison: Comparison = Comparison('equal to', aggregate, '', variable, '')
             clause_list = []
-            clause_list.append(comparison)
+            if type(body_in_clause.aggregate_body) == SubjectClause:
+                atom, comparison = self.init_atom_from_subject_clause(body_in_clause.aggregate_body, body)
+                variable = self.newVar()
+                atom.set_parameter_variable(body_in_clause.parameter[0].name, variable, force=True)
+                aggregate = Aggregate(body_in_clause.aggregate_operator, [variable], [atom], [])
+                variable = self.newVar()
+                comparison: Comparison = Comparison('equal to', aggregate, '', variable, '')
+                clause_list.append(comparison)
+            else:
+                subject_in_clause: Subject = Subject(body_in_clause
+                                                     .aggregate_body.aggregate_subject_clause)
+                aggregate: Aggregate = self.__compile_aggregate_clause(body_in_clause,
+                                                                       in_subject=subject_in_clause)
+                if not body_in_clause.aggregate_body.active_form:
+                    subject_variables_in_clause.append(subject_in_clause.variable)
+                comparison: Comparison = Comparison('equal to', aggregate, '', variable, '')
+
+                clause_list.append(comparison)
             if body_in_clause.ranging_clause:
                 clause_list.append(BoundedVariable(variable, {'lower': self.__make_substitution_value(body_in_clause
                                                                                                       .ranging_clause.ranging_lhs),
@@ -2202,6 +2239,25 @@ class CNLCompiler:
         else:
             ag_variable: str = f'X_{str(uuid4()).replace("-", "_")}'
             clause_list = []
+            body = []
+            if type(body_in_clause) == ConditionClause:
+                lhs = constraint.constraint_body.condition_variable
+                if type(constraint.constraint_body.condition_variable) == AggregateClause:
+                    subject_atom, comparison = self.init_atom_from_subject_clause(
+                        constraint.constraint_body.condition_variable.aggregate_body, body)
+                    var = self.newVar()
+                    subject_atom.set_parameter_variable(
+                        constraint.constraint_body.condition_variable.parameter[0].name, var, force=True)
+                    lhs = Aggregate(constraint.constraint_body.condition_variable.aggregate_operator,
+                                    [var],
+                                    [subject_atom],
+                                    [])
+                rhs = constraint.constraint_body.condition_clause.condition_expression[0]
+                rule = Comparison(constraint.constraint_body.condition_clause.condition_operator, lhs, '', rhs)
+
+                cost = '-1' if constraint.optimization_operator == 'as much as possible' or constraint.optimization_operator == 'maximized' else '1'
+                return str(Rule(head=None, body=Conjunction(body + [rule]),
+                                cost=[cost, str(priority_levels_map[constraint.priority_level])]))
             if type(body_in_clause.expression_lhs) is AggregateClause:
                 subject_in_clause: Subject = Subject(body_in_clause.expression_lhs
                                                      .aggregate_body.aggregate_subject_clause)

@@ -249,7 +249,7 @@ class CNLTransformer(Transformer):
             verb = verb[0] if verb else ''
             object = [x for x in elem if type(x) == ObjectClause]
             whenever_clause = [x for x in elem if type(x) == WheneverClause]
-            condition_clause = [x for x in elem if type(x) == ConditionClause]
+            condition_clause = [x for x in elem if type(x) == ConditionClause or type(x) == AggregateClause]
             if verb:
                 for i, x in enumerate(elem):
                     if type(x) == VerbName and type(elem[i - 1]) == lark.Token and \
