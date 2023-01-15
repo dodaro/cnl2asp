@@ -2115,6 +2115,14 @@ class CNLCompiler:
 
             return compiled_string
 
+    def get_discriminats(self,atom_list):
+        discriminants = []
+        for atom in atom_list:
+            for key in atom.atom_parameters.keys():
+                if atom.get_parameter_value(key) != '_' and not atom.get_parameter_value(key) in discriminants:
+                    discriminants.append(atom.get_parameter_value(key))
+        return discriminants
+
     def __compile_weak_constraint_clause(self, constraint: WeakConstraintClause):
         body: list[Atom] = []
         if constraint.whenever_clause:
@@ -2161,11 +2169,7 @@ class CNLCompiler:
                                 discriminants=discriminant))
             elif constraint.variable_to_optimize:
                 cost = constraint.variable_to_optimize if constraint.optimization_operator == 'as little as possible' or constraint.optimization_operator == 'minimized' else f'-{constraint.variable_to_optimize}'
-                discriminant = []
-                for atom in body:
-                    for key, parameter in atom.atom_parameters.items():
-                        if parameter[0] != '_':
-                            if not parameter[0] in discriminant: discriminant.append(parameter[0])
+                discriminant = self.get_discriminats(body)
                 return str(Rule(head=None, body=Conjunction(body + comparisons),
                                 cost=[cost, str(priority_levels_map[constraint.priority_level])], discriminants=discriminant))
             elif type(constraint.constraint_body[0]) == ConditionClause:
@@ -2180,11 +2184,7 @@ class CNLCompiler:
                                     [])
                 rhs = constraint.constraint_body[0].condition_clause.condition_expression[0]
                 rule = Comparison(constraint.constraint_body[0].condition_clause.condition_operator, lhs, '', rhs)
-                discriminant = []
-                for atom in body:
-                    for key, parameter in atom.atom_parameters.items():
-                        if parameter[0] != '_':
-                            if not parameter[0] in discriminant: discriminant.append(parameter[0])
+                discriminant = self.get_discriminats(body)
                 cost = '-1' if constraint.optimization_operator == 'as much as possible' or constraint.optimization_operator == 'maximized' else '1'
                 return str(Rule(head=None, body=Conjunction(body + comparisons + [rule]),
                                 cost=[cost, str(priority_levels_map[constraint.priority_level])],discriminants=discriminant))
@@ -2194,13 +2194,8 @@ class CNLCompiler:
                 atom.set_parameter_variable(constraint.constraint_body[0].parameter[0].name, variable, force=True)
                 aggregate = Aggregate(constraint.constraint_body[0].aggregate_operator, [variable], [atom], [])
                 variable = self.newVar()
-                discriminant = []
+                discriminant = self.get_discriminats(body)
                 comparison: Comparison = Comparison('equal to', aggregate, '', variable, '')
-                for atom in body:
-                    for key, parameter in atom.atom_parameters.items():
-                        if parameter[0] != '_':
-                            if not parameter[0] in discriminant:
-                                discriminant.append(parameter[0])
                 return str(Rule(head=None, body=Conjunction(body + comparisons + [comparison]),
                                 cost=[variable, str(priority_levels_map[constraint.priority_level])],
                                 discriminants=discriminant))
