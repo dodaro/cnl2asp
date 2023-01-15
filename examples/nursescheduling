@@ -1,22 +1,21 @@
 A nurse goes from 1 to 10.
 A day goes from 1 to 365 and is made of shifts that are made of hours.
 A shift is one of morning, afternoon, night, specrest, rest, vacation and has hours that are equal to respectively 7, 7, 10, 0, 0, 0.
-A work in is identified by a nurse, by a day, and by a shift.
-maxNurseMorning is a constant equal to 10.
-maxNurseAfternoon is a constant equal to 10.
-maxNurseNight is a constant equal to 10.
-minNurseMorning is a constant equal to 10.
-minNurseAfternoon is a constant equal to 10.
-minNurseNight is a constant equal to 10.
-maxHours is a constant equal to 10.
-minHours is a constant equal to 10.
-maxDay is a constant equal to 10.
-maxNight is a constant equal to 10.
-minDay is a constant equal to 10.
-minNight is a constant equal to 10.
-balanceNurseDay is a constant equal to 10.
-balanceNurseAfternoon is a constant equal to 10.
-balanceNurseNight is a constant equal to 10.
+maxNurseMorning is a constant equal to 3.
+maxNurseAfternoon is a constant equal to 3.
+maxNurseNight is a constant equal to 2.
+minNurseMorning is a constant equal to 2.
+minNurseAfternoon is a constant equal to 2.
+minNurseNight is a constant equal to 1.
+maxHours is a constant equal to 1692.
+minHours is a constant equal to 1687.
+maxDay is a constant equal to 82.
+maxNight is a constant equal to 61.
+minDay is a constant equal to 74.
+minNight is a constant equal to 58.
+balanceNurseDay is a constant equal to 78.
+balanceNurseAfternoon is a constant equal to 78.
+balanceNurseNight is a constant equal to 60.
 Every nurse can work in exactly 1 shift for each day.
 It is required that the number of nurses that work in shift S for each day is at most M, where S is one of morning, afternoon, night and M is one of respectively maxNurseMorning, maxNurseAfternoon, maxNurseNight.
 It is prohibited that the number of nurses that work in shift S for each day is less than M, where S is one of morning, afternoon, night and M is one of respectively minNurseMorning, minNurseAfternoon, minNurseNight.

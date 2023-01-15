@@ -1,9 +1,20 @@
-A node goes from 1 to 5.
-Node 1 is connected to node X, where X is one of 2, 3.
-Node 2 is connected to node X, where X is one of 1, 3, 4, 5.
-Node 3 is connected to node X, where X is one of 1, 2, 4, 5.
-Node 4 is connected to node X, where X is one of 2, 3, 5.
-Node 5 is connected to node X, where X is one of 2, 3, 4.
-Every node can be chosen. 
-It is required that when node X is not connected to node Y then node X is not chosen and also node Y is not chosen, where X is different from Y.
-It is preferred with high priority that the number of nodes that are chosen is maximized.
+node(1..5).
+connected_to(1,2).
+connected_to(1,3).
+connected_to(2,1).
+connected_to(2,3).
+connected_to(2,4).
+connected_to(2,5).
+connected_to(3,1).
+connected_to(3,2).
+connected_to(3,4).
+connected_to(3,5).
+connected_to(4,2).
+connected_to(4,3).
+connected_to(4,5).
+connected_to(5,2).
+connected_to(5,3).
+connected_to(5,4).
+{chosen(X_2e6ed86b_6549_4c56_a88a_c5fa219ef552)} :- node(X_2e6ed86b_6549_4c56_a88a_c5fa219ef552).
+:- not connected_to(X,Y), chosen(X), chosen(Y), X != Y.
+:~ #count{X_03f82ab1_91d7_4644_893d_b015188b8d13: chosen(X_03f82ab1_91d7_4644_893d_b015188b8d13)} = X_cbe1df2d_231c_4808_8745_f428af78694a. [-X_cbe1df2d_231c_4808_8745_f428af78694a@3]
