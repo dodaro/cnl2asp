@@ -1204,6 +1204,7 @@ class CNLCompiler:
         try:
             rhs = int(compounded_range.compounded_range_rhs)
         except ValueError:
+            x = constant_definitions_dict
             rhs = constant_definitions_dict[compounded_range.compounded_range_rhs.lower()]
             if not rhs:
                 rhs = compounded_range.compounded_range_rhs.lower()

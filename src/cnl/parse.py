@@ -243,6 +243,8 @@ class CNLTransformer(Transformer):
             optimization_operator = elem[len(elem)-1]
             variable_to_optimize = elem[len(elem)-2] if type(elem[len(elem)-2]) == str else ''
             if type(elem[1]) == lark.Token and (elem[1].value == 'as much as possible' or elem[1].value == 'as little as possible'):
+                if optimization_operator == "minimized" or optimization_operator == "maximized":
+                    raise Exception('Parse error, duplicated optimization operator.')
                 optimization_operator = elem[1].value
             subject = [x for x in elem if type(x) == SubjectClause]
             verb = [x for x in elem if type(x) == VerbName]
@@ -263,6 +265,8 @@ class CNLTransformer(Transformer):
             where_clause = where_clause[0] if where_clause else []
             optimization_operator = elem[len(elem) - 1]
             if type(elem[1]) == lark.Token and elem[1].type == 'CNL_WEAK_OPTIMIZATION':
+                if optimization_operator == "minimized" or optimization_operator == "maximized":
+                    raise Exception('Parse error, duplicated optimization operator.')
                 optimization_operator = elem[1].value
                 return WeakConstraintClause(elem[2], elem[3], optimization_operator, where_clause, '', '', '', '')
             return WeakConstraintClause(elem[1], elem[2], optimization_operator, where_clause, '', '', '', '')
