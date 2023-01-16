@@ -1,0 +1,17 @@
+node(1..5).
+connected_to(1,2).
+connected_to(1,3).
+connected_to(2,1).
+connected_to(2,4).
+connected_to(3,1).
+connected_to(3,4).
+connected_to(4,3).
+connected_to(4,5).
+connected_to(5,3).
+connected_to(5,4).
+reachable(Y) :- reachable(X), path_to(X,Y).
+reachable(1).
+{path_to(X,X_5fd1c79a_5c34_424a_90cc_2594ba231497):connected_to(X,X_5fd1c79a_5c34_424a_90cc_2594ba231497)} :- node(X).
+:- node(X), #count{X_e2c8d786_3e1f_46af_ab88_8b0e8bfcb3f6: path_to(X,X_e2c8d786_3e1f_46af_ab88_8b0e8bfcb3f6)} != 1.
+:- node(X), #count{X_917b7dac_cef2_4dd3_b734_40dcca0477e6: path_to(X_917b7dac_cef2_4dd3_b734_40dcca0477e6,X)} != 1.
+:- not reachable(X_38bf1850_f4ef_40b2_958c_6c8723d29957), node(X_38bf1850_f4ef_40b2_958c_6c8723d29957).
