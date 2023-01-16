@@ -1,12 +1,13 @@
-A nurse goes from 1 to 10.
+numberOfNurses is a constant.
+A nurse goes from 1 to numberOfNurses.
 A day goes from 1 to 365 and is made of shifts that are made of hours.
 A shift is one of morning, afternoon, night, specrest, rest, vacation and has hours that are equal to respectively 7, 7, 10, 0, 0, 0.
-maxNurseMorning is a constant equal to 3.
-maxNurseAfternoon is a constant equal to 3.
-maxNurseNight is a constant equal to 2.
-minNurseMorning is a constant equal to 2.
-minNurseAfternoon is a constant equal to 2.
-minNurseNight is a constant equal to 1.
+maxNurseMorning is a constant.
+maxNurseAfternoon is a constant.
+maxNurseNight is a constant.
+minNurseMorning is a constant.
+minNurseAfternoon is a constant.
+minNurseNight is a constant.
 maxHours is a constant equal to 1692.
 minHours is a constant equal to 1687.
 maxDay is a constant equal to 82.
