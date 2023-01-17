@@ -1,0 +1,16 @@
+time(1).  time(2).  time(3).  time(4).  time(5).  time(6).  time(7).  time(8).  time(9).  time(10).  
+link(J2,J1) :- link(J1,J2).
+0 <= {rotation(J1,J2,A,AI,time(T)):joint(J1), joint(J2), angle(A), link(J1,J2), position(joint(J1),angle(AI),time(T))} <= 1 :- time(T), T > 0.
+1 <= {position(joint(J),angle(A),time(T)):angle(A)} <= 1 :- joint(J), time(T).
+:- rotation(_,_,_,_,time(T)), T >= timemax.
+:- rotation(J1,J2,_,_,time(_)), J1 <= J2.
+:- rotation(_,_,A,AI,time(_)), (A)\360 == (AI)\360.
+:- rotation(_,_,A,AI,time(_)), (A)\360 > 0, (AI)\360 > (A)\360, (AI)\360 != (A + granularity)\360.
+:- rotation(_,_,A,AI,time(_)), (AI)\360 > 0, (A)\360 > (AI)\360, (A)\360 != (AI + granularity)\360.
+:- rotation(_,_,A,0,time(_)), (A)\360 != 360 - granularity.
+:- rotation(_,_,0,AI,time(_)), (AI)\360 != 360 - granularity.
+:- position(joint(J),angle(A1),time(T)), position(joint(J),angle(A2),time(T+1)), not rotation(_,_,_,_,time(T)), T <= timemax, (A1)\360 != (A2)\360.
+:- position(joint(J1),angle(A1),time(T)), rotation(J1,_,A2,_,time(T-1)), (A1)\360 != (A2)\360.
+:- time(T), position(joint(J1),angle(AN),time(T+1)), rotation(J2,_,_,A,AP,time(T)), position(joint(J1),angle(AC),time(T)), J1 > J2, (AN)\360 != (|AC+(A-AP)+360|)\360.
+:- position(joint(J1),angle(A1),time(T)), position(joint(J1),angle(A2),time(T+1)), rotation(J2,_,_,_,time(T)), J2 > J1, T <= timemax, (A1)\360 != (A2)\360.
+:- goal(joint(J),angle(A1)), position(joint(J),angle(A2),time(timemax)), (A1)\360 != (A2)\360.

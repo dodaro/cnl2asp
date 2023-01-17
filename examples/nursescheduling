@@ -1,46 +1,33 @@
-//Definition
+numberOfNurses is a constant.
+A nurse goes from 1 to numberOfNurses.
 A day goes from 1 to 365 and is made of shifts that are made of hours.
 A shift is one of morning, afternoon, night, specrest, rest, vacation and has hours that are equal to respectively 7, 7, 10, 0, 0, 0.
-A nurse goes from 1 to 10.
-
-maxNurseMorning is equal to 3.
-maxNurseAfternoon is equal to 3.
-maxNurseNight is equal to 2.
-minNurseMorning is equal to 2.
-minNurseAfternoon is equal to 2.
-minNurseNight is equal to 1.
-maxHours is equal to 1692.
-minHours is equal to 1687.
-maxDay is equal to 82.
-maxNight is equal to 61.
-minDay is equal to 74.
-minNight is equal to 58.
-
-balanceNurseDay is equal to 78.
-balanceNurseAfternoon is equal to 78.
-balanceNurseNight is equal to 60.
-
-//Guess
+maxNurseMorning is a constant.
+maxNurseAfternoon is a constant.
+maxNurseNight is a constant.
+minNurseMorning is a constant.
+minNurseAfternoon is a constant.
+minNurseNight is a constant.
+maxHours is a constant equal to 1692.
+minHours is a constant equal to 1687.
+maxDay is a constant equal to 82.
+maxNight is a constant equal to 61.
+minDay is a constant equal to 74.
+minNight is a constant equal to 58.
+balanceNurseDay is a constant equal to 78.
+balanceNurseAfternoon is a constant equal to 78.
+balanceNurseNight is a constant equal to 60.
 Every nurse can work in exactly 1 shift for each day.
-
-//Constraints
 It is required that the number of nurses that work in shift S for each day is at most M, where S is one of morning, afternoon, night and M is one of respectively maxNurseMorning, maxNurseAfternoon, maxNurseNight.
 It is prohibited that the number of nurses that work in shift S for each day is less than M, where S is one of morning, afternoon, night and M is one of respectively minNurseMorning, minNurseAfternoon, minNurseNight.
-
 It is prohibited that the total of hours in a day where a nurse works in is more than maxHours.
 It is prohibited that the total of hours in a day where a nurse works in is less than minHours.
-
 It is prohibited that the number of days with shift vacation where a nurse works in is different from 30.
-
 It is prohibited that a nurse works in shift S in a day and also the next day works in a shift before S, where S is between morning and night.
-
 It is required that the number of occurrences between each 14 days with shift rest where a nurse works in is at least 2.
-
 It is required that when a nurse works in shift night for 2 consecutive days then the next day works in shift specrest.
 It is prohibited that a nurse works in a day in shift specrest and also the previous 2 consecutive days does not work in shift night.
-
 It is prohibited that the number of days with shift S where a nurse works in is more than M, where S is one of morning, afternoon, night and M is one of respectively maxDay, maxDay, maxNight.
 It is prohibited that the number of days with shift S where a nurse works in is less than M, where S is one of morning, afternoon, night and M is one of respectively minDay, minDay, minNight.
-
-It is preferred, with high priority, that the difference in absolute value between B and the number of days with shift S where a nurse works in ranging between minDay and maxDay is minimized, where B is one of balanceNurseDay, balanceNurseAfternoon and S is one of morning, afternoon.
-It is preferred, with high priority, that the difference in absolute value between balanceNurseNight and the number of days with shift night where a nurse works in ranging between minNight and maxNight is minimized.
+It is preferred, with high priority, that the difference in absolute value between B, and the number of days with shift S where a nurse works in ranging between minDay and maxDay is minimized, where B is one of balanceNurseDay, balanceNurseAfternoon and S is one of morning, afternoon.
+It is preferred, with high priority, that the difference in absolute value between balanceNurseNight, and the number of days with shift night where a nurse works in ranging between minNight and maxNight is minimized.

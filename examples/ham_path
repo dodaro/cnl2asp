@@ -6,7 +6,7 @@ Node 3 is connected to node X, where X is one of 1, 4.
 Node 4 is connected to node X, where X is one of 3, 5.
 Node 5 is connected to node X, where X is one of 3, 4.
 
-Start is equal to 1.
+start is a constant equal to 1.
 
 Every node X can have a path to a node connected to node X.
 It is required that the number of nodes where node X has a path to is equal to 1.
