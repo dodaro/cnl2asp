@@ -10,8 +10,8 @@ connected_to(4,5).
 connected_to(5,3).
 connected_to(5,4).
 reachable(Y) :- reachable(X), path_to(X,Y).
-reachable(1).
-{path_to(X,X_5fd1c79a_5c34_424a_90cc_2594ba231497):connected_to(X,X_5fd1c79a_5c34_424a_90cc_2594ba231497)} :- node(X).
-:- node(X), #count{X_e2c8d786_3e1f_46af_ab88_8b0e8bfcb3f6: path_to(X,X_e2c8d786_3e1f_46af_ab88_8b0e8bfcb3f6)} != 1.
-:- node(X), #count{X_917b7dac_cef2_4dd3_b734_40dcca0477e6: path_to(X_917b7dac_cef2_4dd3_b734_40dcca0477e6,X)} != 1.
-:- not reachable(X_38bf1850_f4ef_40b2_958c_6c8723d29957), node(X_38bf1850_f4ef_40b2_958c_6c8723d29957).
+reachable("start").
+{path_to(X,X_2bb66518_ded3_4179_ad2c_a1b811aed3a6):connected_to(X,X_2bb66518_ded3_4179_ad2c_a1b811aed3a6)} :- node(X).
+:- node(X), #count{X_9912a916_6090_46cd_8dd4_8fd5097e4fac: path_to(X,X_9912a916_6090_46cd_8dd4_8fd5097e4fac)} != 1.
+:- node(X), #count{X_44436c16_62e7_4c1e_8ae3_0270f4c4c567: path_to(X_44436c16_62e7_4c1e_8ae3_0270f4c4c567,X)} != 1.
+:- not reachable(X_39147a1b_fdd0_49a6_85f4_47e2fd20f2d6), node(X_39147a1b_fdd0_49a6_85f4_47e2fd20f2d6).

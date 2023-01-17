@@ -1401,7 +1401,7 @@ class CNLCompiler:
         constant = clause.subject
         if clause.subject[0].isupper():
             constant = constant[:1].lower() + constant[1:]
-            print(f'Warning: {clause.subject} converted into {constant}')
+            print(f'Warning: constants must start with a lowercase letter, {clause.subject} converted into {constant}')
         constant_definitions_dict[constant] = constant
 
     def __compile_quantified_choice_disjunction_clause(self, clause: QuantifiedChoiceClause):

@@ -5,8 +5,8 @@ A position is identified by a joint, by an angle, and by a time.
 A link is identified by a first joint, and by a second joint.
 A rotation is identified by a first joint, by a second joint, by a desired angle, by a current angle, and by a time.
 A goal is identified by a joint, and by an angle.
-Granularity is a constant equal to 90.
-Timemax is a constant equal to 90.
+granularity is a constant equal to 90.
+timemax is a constant equal to 90.
 Whenever there is a link with a first joint J1, and with a second joint J2, then we must have a link with a first joint J2, and with a second joint J1.
 Whenever there is a time T that is after 0, then we can have at most 1 rotation with a first joint J1, with a second joint J2, with a desired angle A, with a current angle AI, and with time T such that there is a joint J1, a joint J2, an angle A, a link with first joint J1, and with second joint J2, a position with joint J1, with angle AI, and with time T.
 It is required that T is less than timemax, whenever there is a rotation with time T.

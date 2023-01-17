@@ -15,6 +15,6 @@ connected_to(4,5).
 connected_to(5,2).
 connected_to(5,3).
 connected_to(5,4).
-{chosen(X_02109527_46bd_4973_9c06_78984a02bd52)} :- node(X_02109527_46bd_4973_9c06_78984a02bd52).
+{chosen(X_48873ca7_1eb5_4ea8_a1cf_dc35c2fbb29f)} :- node(X_48873ca7_1eb5_4ea8_a1cf_dc35c2fbb29f).
 :- not connected_to(X,Y), chosen(X), chosen(Y), X != Y.
-:~ #count{X_910057d3_16c7_4c91_9ac8_e5c53fd58bab: chosen(X_910057d3_16c7_4c91_9ac8_e5c53fd58bab)} = X_c8df5a9d_392f_4128_a00b_58998c326b45. [-X_c8df5a9d_392f_4128_a00b_58998c326b45@3]
+:~ #count{X_e85da2de_4162_4745_8e38_244700bd4c53: chosen(X_e85da2de_4162_4745_8e38_244700bd4c53)} = X_67318d03_599c_4802_a654_4a8fa1c4f7f6. [-X_67318d03_599c_4802_a654_4a8fa1c4f7f6@3]

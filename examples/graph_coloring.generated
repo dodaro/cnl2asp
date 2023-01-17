@@ -8,5 +8,5 @@ connected_to(2,1).
 connected_to(2,3).
 connected_to(3,1).
 connected_to(3,2).
-1 <= {assigned_to(X_4fd016b8_e0e3_4cd1_8f4e_331148e2b947,X_707a7630_19ef_4498_be5e_96f60b98e7ba):color(_,X_707a7630_19ef_4498_be5e_96f60b98e7ba)} <= 1 :- node(X_4fd016b8_e0e3_4cd1_8f4e_331148e2b947).
+1 <= {assigned_to(X_3c979797_e9cd_4dff_89e9_db9b3fb4ae40,X_67d8ae70_a0dd_4e50_b1c6_2ee3ab9fed35):color(_,X_67d8ae70_a0dd_4e50_b1c6_2ee3ab9fed35)} <= 1 :- node(X_3c979797_e9cd_4dff_89e9_db9b3fb4ae40).
 :- connected_to(X,Y), assigned_to(X,C), assigned_to(Y,C).
