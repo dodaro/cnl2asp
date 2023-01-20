@@ -32,8 +32,8 @@ cardinality: quantified_exact_quantity_clause | quantified_range_clause | quanti
 quantified_maximum_quantity: "at most" quantified_exact_quantity
 quantified_minimum_quantity: "at least" quantified_exact_quantity
 
-negative_strong_constraint_clause: CNL_PROHIBITION ( aggregate_clause comparison_clause (where_clause)? such_that_clause? ("," (whenever_clause ","?)+)? | when_then_clause (where_clause)? | quantified_constraint (where_clause)? | condition_clause  "," (whenever_clause ","?)+ | temporal_constraint "," (whenever_clause ","?)+ | simple_clause ("and also" simple_clause)* (where_clause)? ("," (whenever_clause ","?)+)? )
-positive_strong_constraint: CNL_REQUIREMENT (aggregate_clause comparison_clause (where_clause)? such_that_clause?  ("," (whenever_clause ","?)+)? | when_then_clause (where_clause)? | quantified_constraint (where_clause)? | condition_clause  "," (whenever_clause ","?)+ | temporal_constraint "," (whenever_clause ","?)+ | simple_clause "," (whenever_clause ","?)+)
+negative_strong_constraint_clause: CNL_PROHIBITION ( aggregate_clause comparison_clause (where_clause)? such_that_clause? ("," (whenever_clause ","?)+)? | when_then_clause (where_clause)? | quantified_constraint (where_clause)? | condition_clause  "," (whenever_clause ","?)+ | temporal_constraint "," (whenever_clause ","?)+ | "there is " subject_clause ("," whenever_clause)*  | simple_clause ("and also" simple_clause)* (where_clause)? ("," whenever_clause )* )
+positive_strong_constraint: CNL_REQUIREMENT (aggregate_clause comparison_clause (where_clause)? such_that_clause?  ("," (whenever_clause ","?)+)? | when_then_clause (where_clause)? | quantified_constraint (where_clause)? | condition_clause  "," (whenever_clause ","?)+ | temporal_constraint "," (whenever_clause ","?)+ | "there is " subject_clause ("," whenever_clause)* | simple_clause "," (whenever_clause ","?)+)
 when_then_clause.1: "when" when_part "then" then_part
 when_part: (simple_clause comparison_clause? | simple_clause ("and also" simple_clause)*)
 then_part: (simple_clause comparison_clause? | simple_clause ("and also" simple_clause)*)

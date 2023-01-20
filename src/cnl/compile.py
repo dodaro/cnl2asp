@@ -291,7 +291,7 @@ class Comparison:
             rhs = f"{str(self.comparison_value)}"
         if type(lhs) == str and lhs.isalpha() and not lhs.isupper() and not constant_format(lhs) in list(constant_definitions_dict.keys()): lhs = f'"{lhs}"'
         if type(lhs) == str and lhs.isalpha() and not lhs.isupper() and constant_format(lhs) in list(constant_definitions_dict.keys()) and constant_definitions_dict[constant_format(lhs)]: lhs = constant_definitions_dict[constant_format(lhs)]
-        if type(rhs) == str and rhs.isalpha() and not lhs.isupper() and not constant_format(rhs) in list(constant_definitions_dict.keys()): rhs = f'"{rhs}"'
+        if type(rhs) == str and rhs.isalpha() and not rhs.isupper() and not constant_format(rhs) in list(constant_definitions_dict.keys()): rhs = f'"{rhs}"'
         if type(rhs) == str and rhs.isalpha() and not rhs.isupper() and constant_format(rhs) in list(constant_definitions_dict.keys()) and constant_definitions_dict[constant_format(rhs)]: rhs = constant_definitions_dict[constant_format(rhs)]
         if self.negated:
             # check the current operator and replace it
@@ -1740,7 +1740,7 @@ class CNLCompiler:
 
 
     def __compile_strong_constraint_clause(self, constraint: StrongConstraintClause):
-        if constraint.whenever_clause or (type(constraint.clauses) == list and [x for x in constraint.clauses if type(x) == SuchThat]):
+        if constraint.whenever_clause or (type(constraint.clauses) == list and [x for x in constraint.clauses if type(x) == SuchThat or type(x) == SubjectClause]):
             body: list[Atom] = []
             clauses = []
             to_set_ordering_operator = []
@@ -2051,6 +2051,13 @@ class CNLCompiler:
                             self.link_two_atoms(atom,object_atom)
                         subject_atom, comparison = self.init_atom_from_subject_clause(clause.subject, [])
                         self.link_two_atoms(atom, subject_atom)
+                        body.append(atom)
+                    elif type(clause) == SubjectClause:
+                        atom, comparisons = self.init_atom_from_subject_clause(clause, body)
+                        for comparison in comparisons:
+                            clauses.append(comparison)
+                        if constraint.positive:
+                            atom.negated = True
                         body.append(atom)
                     for item in to_set_ordering_operator:
                         self.set_ordering_operator(item, body)
