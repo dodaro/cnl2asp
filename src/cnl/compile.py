@@ -996,6 +996,8 @@ class CNLCompiler:
             comparisons += comparison
             if clause.temporal_constraint:
                 comparisons += self.temporal_constraint(atom, clause.temporal_constraint)
+            if clause.verb_negation:
+                atom.negated = True
             body.append(atom)
         then_clause = wheneverThen_clause.thenClause
         head_atoms = []
