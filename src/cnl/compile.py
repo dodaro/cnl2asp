@@ -421,19 +421,26 @@ class SimpleDisjunction:
 @dataclass()
 class ComplexDisjunction:
 
-    def __init__(self, body: list[Atom], objects):
+    def __init__(self, body: list[Atom], objects, lower_bound = None, upper_bound = None):
         self.body: list[Atom] = body
         self.object: dict() = objects
+        self.lower_bound = lower_bound
+        self.upper_bound = upper_bound
 
     def __str__(self):
         string: str = '{'
         for (i, head) in enumerate(self.body):
+            head = head[0]
             string += f'{str(head)} : '
-            for (j, body) in enumerate(self.object.get(head.atom_name)):
-                string += f'{str(body)}'
+            #for (j, body) in enumerate(self.object.get(head.atom_name)):
+            string += f'{self.object.get(head.atom_name)}'
             if (i < len(self.body) - 1):
                 string += '; '
         string += '}'
+        if self.lower_bound:
+            string = f'{self.lower_bound} {string}'
+        if self.upper_bound:
+            string = f'{string} {self.upper_bound}'
         return string
 
 
@@ -1134,9 +1141,10 @@ class CNLCompiler:
             if [x for x in head_atoms if len(x[1].body) > 0]:
                 objects = dict()
                 for head_atom in head_atoms:
+                    quantified_range_lhs, quantified_range_rhs = self.__compile_cardinality(then_clause.cardinality)
                     if len(head_atom[1].body):
                         objects[head_atom[0].atom_name] = head_atom[1]
-                rule_head: ComplexDisjunction = ComplexDisjunction(head_atoms, objects)
+                rule_head: ComplexDisjunction = ComplexDisjunction(head_atoms, objects, quantified_range_lhs, quantified_range_rhs)
             else:
                 disjunction = [x[0] for x in head_atoms]
                 rule_head: SimpleDisjunction = SimpleDisjunction(disjunction)
@@ -1984,7 +1992,10 @@ class CNLCompiler:
                             self.set_parameter_list(aggregate_body_atom, clause.aggregate_body.parameters)
                             parameter_name = clause.parameter[0].name
                             parameter_value = clause.parameter[0].variable if clause.parameter[0].variable else self.newVar()
-                            aggregate_body_atom.set_parameter_variable(parameter_name, parameter_value)
+                            if aggregate_body_atom.get_parameter_value(parameter_name) == '_':
+                                aggregate_body_atom.set_parameter_variable(parameter_name, parameter_value)
+                            else:
+                                parameter_value = aggregate_body_atom.get_parameter_value(parameter_name)
                             aggregate_variable_list = [parameter_value]
                         else:
                             aggregate_body_atom = self.__get_atom_from_signature_subject(

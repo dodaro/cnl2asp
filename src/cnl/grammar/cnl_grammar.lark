@@ -91,7 +91,7 @@ ordering_definition: CNL_ORDERING_DEFINITION compounded_list
 ordering_operator: CNL_ORDERING_OPERATOR
 
 simple_clause: subject_clause ("with" parameter_list)?  CNL_COPULA? verb_clause
-aggregate_clause: "the" aggregate_operator parameter? "of" (aggregate_active_clause | aggregate_passive_clause | subject_clause) (ranging_clause)?
+aggregate_clause: "the" aggregate_operator "of"? parameter? "of" (aggregate_active_clause | aggregate_passive_clause | subject_clause) (ranging_clause)?
 such_that_clause: ", such that there is" subject_clause (", " "and"? subject_clause)*
 aggregate_operator: CNL_AGGREGATE
 aggregate_active_clause: subject_clause "that" CNL_COPULA? aggregate_verb_clause ((","|"and") aggregate_verb_clause)* aggregate_object_clause? aggregate_for_clause?
