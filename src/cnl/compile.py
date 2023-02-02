@@ -430,10 +430,9 @@ class ComplexDisjunction:
     def __str__(self):
         string: str = '{'
         for (i, head) in enumerate(self.body):
-            head = head[0]
-            string += f'{str(head)} : '
-            #for (j, body) in enumerate(self.object.get(head.atom_name)):
-            string += f'{self.object.get(head.atom_name)}'
+            string += f'{str(head[0])} : '
+            string += f'{head[1]}'
+            string = string.removesuffix(' : ')
             if (i < len(self.body) - 1):
                 string += '; '
         string += '}'
