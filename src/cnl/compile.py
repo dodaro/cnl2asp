@@ -1330,9 +1330,9 @@ class CNLCompiler:
             safe_variables: set[str] = conjunction.extract_safe_variables()
             safety_atoms_to_add: list[Atom] = []
 
-            for atom in maybe_unsafe_atoms:
-                for parameter in atom.atom_parameters.keys():
-                    for variable in atom.atom_parameters[parameter]:
+            for maybe_unsafe_atom in maybe_unsafe_atoms:
+                for parameter in maybe_unsafe_atom.atom_parameters.keys():
+                    for variable in maybe_unsafe_atom.atom_parameters[parameter]:
                         if (match := re.search(r'(X(_[a-z0-9]+){5}|[A-Z]([A-Z0-9a-z_])*)', variable)) \
                                 is not None and match.group(1) not in safe_variables:
                             safety_atom: Atom | None = None
