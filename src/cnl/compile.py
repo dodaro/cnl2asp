@@ -2167,6 +2167,8 @@ class CNLCompiler:
                             atom.set_parameter_variable(parameter.expression_lhs.name, lhs)
                 else:
                     atom.initializeVariables(self.__get_atom_from_signature_subject(elem.subject.subject_name))
+                if elem.verb_negation:
+                    atom.negated = True
                 body.append(atom)
             if constraint.verb:
                 verb_atom = self.__get_atom_from_signature_subject(constraint.verb.name)
