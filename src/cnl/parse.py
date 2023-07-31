@@ -173,7 +173,8 @@ class CNLTransformer(Transformer):
         return TemporalOrdering(elem[0], elem[1], elem[2])
 
     def negative_strong_constraint_clause(self, elem):
-        if([x for x in elem if (type(x) == WheneverClause or type(x) == SuchThat or type(x) == SubjectClause)]):
+        if([x for x in elem if (type(x) == WheneverClause or type(x) == SuchThat or type(x) == SubjectClause)] or
+        [x for x in elem if type(x) == ComparisonClause if type(x.comparison_value) == AggregateClause]):
             aggregate_clause = [x for x in elem if type(x) == AggregateClause]
             simple_clause = [x for x in elem if type(x) == SimpleClause]
             condition_clause = [x for x in elem if type(x) == ConditionClause]
@@ -205,7 +206,8 @@ class CNLTransformer(Transformer):
         return StrongConstraintClause(clauses, comparison_clause, where_clause, '', '', False)
 
     def positive_strong_constraint(self, elem):
-        if([x for x in elem if (type(x) == WheneverClause or type(x) == SuchThat or type(x) == SubjectClause)]):
+        if([x for x in elem if (type(x) == WheneverClause or type(x) == SuchThat or type(x) == SubjectClause)] or
+        [x for x in elem if type(x) == ComparisonClause if type(x.comparison_value) == AggregateClause]):
             aggregate_clause = [x for x in elem if type(x) == AggregateClause]
             simple_clause = [x for x in elem if type(x) == SimpleClause]
             condition_clause = [x for x in elem if type(x) == ConditionClause]

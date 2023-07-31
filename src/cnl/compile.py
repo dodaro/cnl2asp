@@ -1748,8 +1748,46 @@ class CNLCompiler:
                         atom.set_parameter_variable(parameter, f'{temporal_ordering.parameter}{incremental_value}')
 
 
+    def __compile_aggregate(self, constraint, clause, body):
+        if type(clause.aggregate_body) == SubjectClause:
+            aggregate_body_atom = self.__get_atom_from_signature_subject(
+                clause.aggregate_body.subject_name)
+            self.set_parameter_list(aggregate_body_atom, clause.aggregate_body.parameters)
+            parameter_name = clause.parameter[0].name
+            parameter_value = clause.parameter[0].variable if clause.parameter[0].variable else self.newVar()
+            if aggregate_body_atom.get_parameter_value(parameter_name) == '_':
+                aggregate_body_atom.set_parameter_variable(parameter_name, parameter_value)
+            else:
+                parameter_value = aggregate_body_atom.get_parameter_value(parameter_name)
+            aggregate_variable_list = [parameter_value]
+        else:
+            aggregate_body_atom = self.__get_atom_from_signature_subject(
+                clause.aggregate_body.aggregate_verb_clause.verb_name)
+            self.set_parameter_list(aggregate_body_atom, clause.aggregate_body.aggregate_verb_clause.parameters)
+            for parameter in clause.aggregate_body.aggregate_for_clauses:
+                aggregate_body_atom.set_parameter_variable(parameter.verb_object_name,
+                                                           parameter.verb_object_variable)
+            aggregate_variable_list = [self.newVar()]
+            parameter_name = '_'.join([clause.aggregate_body.aggregate_subject_clause.subject_name,
+                                       clause.aggregate_body.aggregate_subject_clause.subject_variable]) if clause.aggregate_body.aggregate_subject_clause.subject_variable else clause.aggregate_body.aggregate_subject_clause.subject_name
+            if (aggregate_body_atom.get_parameter_value(parameter_name) != '_'):
+                aggregate_variable_list = [aggregate_body_atom.get_parameter_value(parameter_name)]
+            else:
+                aggregate_body_atom.set_parameter_variable(
+                    clause.aggregate_body.aggregate_subject_clause.subject_name,
+                    aggregate_variable_list[0])
+        aggregate_operator = clause.aggregate_operator
+        aggregate_body = [aggregate_body_atom]
+        for such_that in constraint.clauses:
+            if type(such_that) == SuchThat:
+                atom, comparison = self.init_atom_from_subject_clause(such_that.elements[0], body)
+                aggregate_body.append(atom)
+        aggregate: Aggregate = Aggregate(aggregate_operator, aggregate_variable_list,
+                                         aggregate_body, body)
+        return aggregate
+
     def __compile_strong_constraint_clause(self, constraint: StrongConstraintClause):
-        if constraint.whenever_clause or (type(constraint.clauses) == list and [x for x in constraint.clauses if type(x) == SuchThat or type(x) == SubjectClause]):
+        if constraint.whenever_clause or (type(constraint.clauses) == list and [x for x in constraint.clauses if type(x) == SuchThat or type(x) == SubjectClause]) or (constraint.comparison_clause and type(constraint.comparison_clause) == list and type(constraint.comparison_clause[0].comparison_value) == AggregateClause):
             body: list[Atom] = []
             clauses = []
             to_set_ordering_operator = []
@@ -1985,45 +2023,15 @@ class CNLCompiler:
             if constraint.clauses:
                 for clause in constraint.clauses:
                     if type(clause) == AggregateClause:
-                        if type(clause.aggregate_body) == SubjectClause:
-                            aggregate_body_atom = self.__get_atom_from_signature_subject(
-                                clause.aggregate_body.subject_name)
-                            self.set_parameter_list(aggregate_body_atom, clause.aggregate_body.parameters)
-                            parameter_name = clause.parameter[0].name
-                            parameter_value = clause.parameter[0].variable if clause.parameter[0].variable else self.newVar()
-                            if aggregate_body_atom.get_parameter_value(parameter_name) == '_':
-                                aggregate_body_atom.set_parameter_variable(parameter_name, parameter_value)
-                            else:
-                                parameter_value = aggregate_body_atom.get_parameter_value(parameter_name)
-                            aggregate_variable_list = [parameter_value]
+                        aggregate = self.__compile_aggregate(constraint, clause, body)
+                        if type(constraint.comparison_clause[0].comparison_value) == AggregateClause:
+                            comparison_value = self.__compile_aggregate(constraint, constraint.comparison_clause[0].comparison_value, [])
                         else:
-                            aggregate_body_atom = self.__get_atom_from_signature_subject(
-                                clause.aggregate_body.aggregate_verb_clause.verb_name)
-                            self.set_parameter_list(aggregate_body_atom, clause.aggregate_body.aggregate_verb_clause.parameters)
-                            for parameter in clause.aggregate_body.aggregate_for_clauses:
-                                aggregate_body_atom.set_parameter_variable(parameter.verb_object_name,
-                                                                           parameter.verb_object_variable)
-                            aggregate_variable_list = [self.newVar()]
-                            parameter_name = '_'.join([clause.aggregate_body.aggregate_subject_clause.subject_name, clause.aggregate_body.aggregate_subject_clause.subject_variable]) if clause.aggregate_body.aggregate_subject_clause.subject_variable else clause.aggregate_body.aggregate_subject_clause.subject_name
-                            if (aggregate_body_atom.get_parameter_value(parameter_name) != '_'):
-                                aggregate_variable_list = [aggregate_body_atom.get_parameter_value(parameter_name)]
-                            else:
-                                aggregate_body_atom.set_parameter_variable(
-                                    clause.aggregate_body.aggregate_subject_clause.subject_name,
-                                    aggregate_variable_list[0])
-                        aggregate_operator = clause.aggregate_operator
-                        aggregate_body = [aggregate_body_atom]
-                        for such_that in constraint.clauses:
-                            if type(such_that) == SuchThat:
-                                atom, comparison = self.init_atom_from_subject_clause(such_that.elements[0],body)
-                                aggregate_body.append(atom)
-                        aggregate: Aggregate = Aggregate(aggregate_operator, aggregate_variable_list,
-                                                         aggregate_body, body)
+                            comparison_value = self.__make_substitution_value(constraint.comparison_clause[0].comparison_value)
                         comparison_aggregate: Comparison = Comparison(
                             constraint.comparison_clause[0].condition_operator,
                             aggregate, '',
-                            self.__make_substitution_value(
-                                constraint.comparison_clause[0].comparison_value), '', '', '', constraint.positive)
+                            comparison_value, '', '', '', constraint.positive)
                         conjunction = Conjunction([comparison_aggregate])
                         return str(Rule(head=None, body=conjunction))
                     elif type(clause) == TemporalConstraint:

@@ -53,7 +53,7 @@ temporal_range_end: CNL_NUMBER ":" CNL_NUMBER CNL_WORD | CNL_NUMBER "/" CNL_NUMB
 domain_definition.1: ("A " | "An ")? subject_clause ("is identified" atom_key)? ", and"? ("has" parameter ((","|", and") parameter)*)?
 atom_key.1: "by" parameter ((", by"|", and by") parameter)*
 parameter_list: "with" parameter parameter_definition? ((", with"|", and with") parameter parameter_definition?)*
-parameter_definition.1: "equal to" (value | CNL_EQUATION)  | CNL_OPERATOR (number parameter? | variable | constant )
+parameter_definition.2: "equal to" (value | CNL_EQUATION)  | CNL_OPERATOR (number parameter? | variable | constant )
 CNL_EQUATION: CNL_OPERATORS* CNL_WORD (CNL_OPERATORS* CNL_WORD?)*
 parameter.-1: temporal_ordering_with_respect_specified | ("a " | "an ")? CNL_PARAMETER_NAME+ parameter_variable?
 temporal_ordering_with_respect_specified.1: CNL_SHIFT_OPERATOR CNL_TEMPORAL_TYPE "respect to" parameter_variable
@@ -142,7 +142,7 @@ condition_operation: condition_expression_operator condition_expression_value ((
 condition_expression_operator: ("modulo" CNL_NUMBER "of")? CNL_OPERATION absolute_value_operator? "between"
 
 comparison_clause: "is" condition_operator comparison_value
-comparison_value: constant | variable
+comparison_value: constant | variable | aggregate_clause
 
 variable: CNL_VARIABLE
 constant: CNL_CONSTANT | CNL_NUMBER
