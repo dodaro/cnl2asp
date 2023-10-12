@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from typing import TextIO
 
 from lark import Lark
-from cnl.parse import *
+from cnl2asp.cnl.parse import *
 from dataclasses import *
 
 debug: bool = False
@@ -793,6 +793,9 @@ class CNLCompiler:
         self.time_temporal_concepts: list[TemporalConcept] = []
         self.date_temporal_concepts: list[TemporalConcept] = []
         self.step_temporal_concepts: list[TemporalConcept] = []
+
+    def get_compiled_result(self):
+        return self.__compilation_result
 
     # For each definition call the corresponding compile method
     def compile(self, file: CNLFile):

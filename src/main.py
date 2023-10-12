@@ -1,32 +1,7 @@
 import argparse
 import lark
-from cnl.compile import CNLFile, CNLCompiler, DefinitionError
-
-
-def parse_input(in_file):
-    cnl_file = None
-    try:
-        cnl_file = CNLFile(in_file)
-    except lark.exceptions.UnexpectedInput as err:
-        print("Syntax error in input file:", err)
-    return cnl_file
-
-
-def check_syntax_only(in_file):
-    if parse_input(in_file):
-        print("Input file fits the grammar.")
-
-
-def check_syntax_and_compile(in_file, out_file):
-    cnl_file = parse_input(in_file)
-    if cnl_file:
-        cnl_compiler: CNLCompiler = CNLCompiler()
-        try:
-            cnl_compiler.compile(cnl_file).into(out_file)
-            print('Compilation completed.')
-        except DefinitionError as err:
-            print(str(err), 'Compilation failed.')
-
+from cnl2asp.cnl.compile import CNLFile, CNLCompiler, DefinitionError
+from cnl2asp.cnl2asp import Cnl2asp
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -38,8 +13,14 @@ if __name__ == '__main__':
     input_file = args.input_file
     output_file = args.output_file
 
-    with open(input_file, 'r') as in_file, open(output_file, "w") as out_file:
+    with open(input_file, 'r') as in_file:
+        cnl2asp = Cnl2asp(in_file)
         if args.check_syntax:
-            check_syntax_only(in_file)
+            if cnl2asp.check_syntax():
+                print("Input file fits the grammar.")
         else:
-            check_syntax_and_compile(in_file, out_file)
+            with open(output_file, "w") as out_file:
+                result = cnl2asp.compile()
+                if result:
+                    out_file.write(result)
+                    print("Compilation completed.")
