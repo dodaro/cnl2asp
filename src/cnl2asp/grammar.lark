@@ -1,0 +1,170 @@
+// imports from common library
+%import common.WS
+%import common.LETTER
+%import common.INT
+%import common.UCASE_LETTER
+%import common.LCASE_LETTER
+%import common._EXP
+%import common.CPP_COMMENT
+%import common.C_COMMENT
+
+// Disregard spaces in text
+%ignore WS
+%ignore CPP_COMMENT
+%ignore C_COMMENT
+
+// Which type of clause do we expect?
+start: ((explicit_definition_proposition | implicit_definition_proposition | standard_proposition) END_OF_LINE)+
+
+explicit_definition_proposition.1: standard_definition | temporal_concept_definition
+standard_definition.1: ("a "i | "an "i )? STRING ["is identified " keys_list] ", and"? ["has" parameter_definition (", " "and "? parameter_definition)*]
+keys_list: "by" parameter_definition (", " "and"? "by" parameter_definition)*
+parameter_definition: ("a " | "an ")? (PARAMETER_NAME)+
+temporal_concept_definition.1: ("A " | "An ") STRING "is a temporal concept expressed in" TEMPORAL_TYPE "ranging from" temporal_value "to" temporal_value ["with a length of" NUMBER ("minutes" | "days")]
+TEMPORAL_TYPE: "minutes" | "minute" | "days" | "day" | "steps" | "step"
+temporal_value: NUMBER ":" NUMBER STRING | NUMBER "/" NUMBER "/" NUMBER | NUMBER | STRING
+
+implicit_definition_proposition: constant_definition_clause -> constant_implicit_definition_proposition
+                                 | simple_definition
+                                 | compounded_range_clause
+                                 | compounded_match_clause
+                                 | enumerative_definition_clause
+constant_definition_clause.1: STRING "is a constant" ["equal to" STRING]
+
+simple_definition.1: STRING COPULA ("a"i | "an"i)? STRING
+compounded_range_clause: ("a"i | "an"i)? STRING "goes from" (NUMBER | STRING) "to" (NUMBER | STRING) [compounded_match_tail]
+compounded_match_clause: ("a"i | "an"i)? STRING "is one of" string_list [compounded_match_tail]
+compounded_match_tail: "and has" STRING ("that are equal to respectively" | "that is equal to respectively") string_list ("and also" STRING ("that are equal to respectively" | "that is equal to respectively") string_list)*
+enumerative_definition_clause: entity COPULA? verb [conjunctive_object_list] [terminal_clauses]
+
+standard_proposition: whenever_then_clause_proposition
+                    | fact_proposition
+                    | quantified_choice_proposition
+                    | constraint_proposition
+                    | weak_constraint_proposition
+
+whenever_then_clause_proposition: (whenever_clause ","?)+ then_clause [terminal_clauses]
+whenever_clause: "whenever there is"i [VERB_NEGATION] entity
+then_clause: "then" entity ASSIGNMENT_VERB COPULA? [cardinality] predicate (","? "or" predicate)*
+
+fact_proposition: "There is" entity
+
+quantified_choice_proposition: QUANTIFIER entity ASSIGNMENT_VERB COPULA? predicate [(","? "or " predicate)*] [foreach_clause] [terminal_clauses]
+foreach_clause: "for each" conjunctive_object_list
+
+CONSTRAINT_OPERATOR: "it is prohibited that"i | "it is required that"i
+constraint_proposition: CONSTRAINT_OPERATOR (comparison [terminal_clauses]
+                                            | when_then_clause [terminal_clauses]
+                                            | quantified_simple_clause [terminal_clauses]
+                                            | simple_clause_conjunction [terminal_clauses]
+                                            | temporal_constraint [("," whenever_clause)+])
+
+simple_clause_conjunction.-1: simple_clause_wrv ("and also" simple_clause_wrv)*
+when_then_clause: when_clause "then" simple_clause_conjunction
+when_clause: "when" simple_clause_conjunction
+quantified_simple_clause: QUANTIFIER simple_clause_wrv
+
+simple_clause: entity COPULA? verb [conjunctive_object_list]
+
+temporal_constraint: "the"? entity "is" ORDERING_OPERATOR temporal_value
+ORDERING_OPERATOR: "before" | "after"
+
+terminal_clauses: ("," (whenever_clause
+                   | where_clause
+                   | when_clause))+
+
+where_clause: "where" comparison
+               | "where" VARIABLE COPULA "one of" string_list -> variable_substitution
+string_list: STRING ("," STRING)*
+
+parameter_entity_link: "the"? parameter "of the" entity
+comparison:  ARITHMETIC_OPERATOR "between" (EXPRESSION | STRING | parameter_entity_link) ("," "and"? (EXPRESSION | STRING | parameter_entity_link))+ "is" COMPARISON_OPERATOR (STRING | EXPRESSION | parameter_entity_link) -> arithmetic_operation_comparison
+            | aggregate_clause "is" COMPARISON_OPERATOR (STRING | EXPRESSION | aggregate_clause) [such_that_clause] -> aggregate_comparison
+            | (EXPRESSION | STRING | parameter_entity_link) "is" COMPARISON_OPERATOR (STRING | EXPRESSION | parameter_entity_link) -> variable_comparison
+
+aggregate_clause: AGGREGATE_OPERATOR ["of"? parameter] "of" entity [(aggregate_active_clause | aggregate_passive_clause)]
+aggregate_active_clause: "that" COPULA? predicate_wrv
+aggregate_passive_clause: "where" entity COPULA? predicate_wrv
+
+//predicate with return value
+predicate_wrv: ("a "i | "an "i )? verb [conjunctive_object_list] -> predicate_with_objects_wrv
+           | ("a "i | "an "i )? verb simple_clause_wrv -> predicate_with_simple_clause_wrv
+
+such_that_clause: ", such that there is" conjunctive_object_list
+AGGREGATE_OPERATOR: "the number" | "the total" | "the highest" | "the lowest" | "the biggest" | "the smallest"
+
+ARITHMETIC_OPERATOR: "the sum"
+               | "the difference"
+               | "the product"
+               | "the division"
+
+COMPARISON_OPERATOR: "the same as"
+          | "different from"
+          | "equal to"
+          | "more than"
+          | "greater than"
+          | "less than"
+          | "greater than or equal to"
+          | "less than or equal to"
+          | "at least"
+          | "at most"
+          | "not after"
+
+weak_constraint_proposition: PREFERENCE [OPTIMIZATION_STATEMENT] ","? weak_priority_clause ","? "that" (comparison | simple_clause ) [weak_optimization_operator] [terminal_clauses]
+                           | PREFERENCE [OPTIMIZATION_STATEMENT] ","? weak_priority_clause ","? "that" aggregate_clause [weak_optimization_operator] [terminal_clauses] -> preference_with_aggregate_clause
+                           | PREFERENCE [OPTIMIZATION_STATEMENT] ","? weak_priority_clause ","? "that" whenever_clauses_list "," VARIABLE weak_optimization_operator [terminal_clauses] -> preference_with_variable_minimization
+whenever_clauses_list: whenever_clause ("," whenever_clause)*
+PREFERENCE: "it is preferred"i
+OPTIMIZATION_STATEMENT: "as much as possible" | "as little as possible"
+weak_priority_clause: "with" PRIORITY_LEVEL "priority"
+PRIORITY_LEVEL: "low" | "medium" | "high"
+weak_optimization_operator: "is" OPTIMIZATION_OPERATOR
+OPTIMIZATION_OPERATOR: "minimized" | "maximized"
+
+//GLOBAL ELEMENT
+cardinality: QUANTITY_OPERATOR STRING -> single_quantity_cardinality
+           | "between" STRING "and" STRING -> range_quantity_cardinality
+conjunctive_object_list.-1: entity ((", " "and "?) entity)*
+predicate: ("a "i | "an "i )? verb [cardinality] "such that there is"? [conjunctive_object_list] ["for" (NUMBER | VARIABLE) STRING] -> predicate_with_objects
+           | ("a "i | "an "i )? verb [cardinality] "such that there is"? simple_clause_wrv -> predicate_with_simple_clause
+
+simple_clause_wrv.-2: entity COPULA? verb [conjunctive_object_list]
+
+entity: ("a "i | "an "i )? STRING [STRING] [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list]
+entity_temporal_order_constraint: "that is" ORDERING_OPERATOR temporal_value
+define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE
+
+
+verb.1: [VERB_NEGATION] STRING [parameter_list] [VERB_PREPOSITION]
+
+parameter_list.1: PARAMETER_PREPOSITION parameter (", " "and"? PARAMETER_PREPOSITION parameter)*
+parameter.-1: ("a " | "an ")? (PARAMETER_NAME)+ [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]
+              | SHIFT_OPERATOR TEMPORAL_TYPE "respect to" VARIABLE -> parameter_temporal_ordering
+
+EXPRESSION: (VARIABLE | NUMBER | "+" | "-"| "*" | "/" | "\\" | "(" | ")" | "|")+
+
+ASSIGNMENT_VERB: "can" | "must"
+COPULA: "be " | "be a " | "be an "
+      | "are " | "are a " | "are an "
+      | "is " | "is a " | "is an "
+      | "have " | "have a " | "have an "
+      | "has " | "has a " | "has an "
+SHIFT_OPERATOR: "the next" | "the previous"
+
+PARAMETER_NAME: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|at|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[a-z][A-Za-z0-9]+/i //has to start with lower case letter
+STRING: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|at|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[A-Za-z0-9]+/i
+VARIABLE: UCASE_LETTER (UCASE_LETTER | INT | "_")*
+PARAMETER_PREPOSITION: "by" | "with"
+VERB_PREPOSITION: "by" | "to" | "in"
+
+VERB_NEGATION: "do not" | "does not" | "don't"
+              | "doesn't" | "are not" | "aren't" | "not"
+
+QUANTITY_OPERATOR: "exactly" | "at most" | "at least"
+QUANTIFIER: "every"i | "any"i
+
+NUMBER: INT | FLOAT
+FLOAT: INT _EXP | DECIMAL _EXP?
+DECIMAL: INT "." INT | "." INT
+
+END_OF_LINE: /\./

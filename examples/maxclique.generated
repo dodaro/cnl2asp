@@ -1,20 +1,20 @@
 node(1..5).
-connected_to(1,2).
-connected_to(1,3).
-connected_to(2,1).
-connected_to(2,3).
-connected_to(2,4).
-connected_to(2,5).
-connected_to(3,1).
-connected_to(3,2).
-connected_to(3,4).
-connected_to(3,5).
-connected_to(4,2).
-connected_to(4,3).
-connected_to(4,5).
-connected_to(5,2).
-connected_to(5,3).
-connected_to(5,4).
-{chosen(X_48873ca7_1eb5_4ea8_a1cf_dc35c2fbb29f)} :- node(X_48873ca7_1eb5_4ea8_a1cf_dc35c2fbb29f).
-:- not connected_to(X,Y), chosen(X), chosen(Y), X != Y.
-:~ #count{X_e85da2de_4162_4745_8e38_244700bd4c53: chosen(X_e85da2de_4162_4745_8e38_244700bd4c53)} = X_67318d03_599c_4802_a654_4a8fa1c4f7f6. [-X_67318d03_599c_4802_a654_4a8fa1c4f7f6@3]
+connected_to(1,X) :- node(1), node(X), X = 2.
+connected_to(1,X) :- node(1), node(X), X = 3.
+connected_to(2,X) :- node(2), node(X), X = 1.
+connected_to(2,X) :- node(2), node(X), X = 3.
+connected_to(2,X) :- node(2), node(X), X = 4.
+connected_to(2,X) :- node(2), node(X), X = 5.
+connected_to(3,X) :- node(3), node(X), X = 1.
+connected_to(3,X) :- node(3), node(X), X = 2.
+connected_to(3,X) :- node(3), node(X), X = 4.
+connected_to(3,X) :- node(3), node(X), X = 5.
+connected_to(4,X) :- node(4), node(X), X = 2.
+connected_to(4,X) :- node(4), node(X), X = 3.
+connected_to(4,X) :- node(4), node(X), X = 5.
+connected_to(5,X) :- node(5), node(X), X = 2.
+connected_to(5,X) :- node(5), node(X), X = 3.
+connected_to(5,X) :- node(5), node(X), X = 4.
+ {chosen(ND_D)} 1 :- node(ND_D).
+:- not connected_to(X,Y), node(X), chosen(X), node(Y), chosen(Y), X != Y.
+:~ #count{D: chosen(D)} = 0552B_B6B_427_9F2_048FC2715530. [-0e552baa_ba6b_42a7_9fe2_048fc2715530@3]

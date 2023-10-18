@@ -1,99 +1,66 @@
-from __future__ import annotations
+import os
 from typing import TextIO
 
-from cnl2asp.cnl.compile import DefinitionError, CNLCompiler
-from cnl2asp.cnl.compile import CNLFile
-from cnl2asp.cnl.compile import Signature
+from lark import Lark
 
-import lark
-
+from cnl2asp.ASP_elements.asp_program import ASPProgram
+from cnl2asp.proposition.entity_component import EntityComponent
+from cnl2asp.converter.asp_converter import ASPConverter
+from cnl2asp.parser.parser import CNLTransformer
+from cnl2asp.proposition.problem import Problem
+from cnl2asp.proposition.signaturemanager import SignatureManager
 
 
 class Symbol:
-    def __init__(self, predicate: str, keys: list[str | Symbol], attributes: list[str | Symbol]):
-        """
-        Class for representing the concepts (ASP atoms) structure.
-
-        :param predicate:
-        :param keys: the list of attributes that are keys.
-        :param attributes: the FULL list (including the keys) of attributes of the atom.
-        """
+    def __init__(self, predicate: str, keys: list[str], attributes: list[str]):
         self.predicate = predicate
         self.keys = keys
         self.attributes = attributes
-
-    def __repr__(self):
-        return f'{self.predicate}({self.attributes})'
 
 
 class Cnl2asp:
     def __init__(self, input_file: TextIO):
         self.input_file = input_file
 
-    def __parse_input(self):
-        cnl_file = None
-        try:
-            self.input_file.seek(0)
-            cnl_file = CNLFile(self.input_file)
-        except lark.exceptions.UnexpectedInput as err:
-            print("Syntax error in input file:", err)
-        return cnl_file
+    def parse_input(self):
+        cnl_parser = Lark(open(os.path.join(os.path.dirname(__file__), "grammar.lark"), "r").read(),
+                          propagate_positions=True)
+        problem: Problem = CNLTransformer().transform(cnl_parser.parse(self.input_file.read()))
+        return problem
 
     def check_syntax(self) -> bool:
-        """
-        Check if the provided input fits the grammar.
-
-        :return: True if the input fits the grammar; False otherwise.
-        """
-        if self.__parse_input():
+        if self.parse_input():
             return True
         return False
 
     def compile(self) -> str:
-        """
-        Compile the input file into the ASP encoding.
+        try:
+            problem: Problem = self.parse_input()
+        except Exception as e:
+            print(e)
+            return ''
+        try:
+            asp_converter: ASPConverter = ASPConverter()
+            program: ASPProgram = problem.convert(asp_converter)
+            SignatureManager().signatures = []
+            return program.to_string()
+        except Exception as e:
+            print("Error in asp conversion:", str(e))
+            return ''
 
-        :return: the compiled string (ASP encoding).
-        """
-        cnl_file = self.__parse_input()
-        if cnl_file:
-            cnl_compiler: CNLCompiler = CNLCompiler()
-            try:
-                cnl_compiler.compile(cnl_file)
-                return cnl_compiler.get_compiled_result()
-            except DefinitionError as err:
-                print(str(err), 'Compilation failed.')
-                return ''
+    def __convert_signature(self, entity: EntityComponent) -> Symbol:
+        keys = []
+        attributes = []
+        for attribute in entity.get_attributes():
+            attributes.append(attribute.name)
+        for key in entity.get_keys():
+            keys.append(key.name)
+        return Symbol(entity.name, keys, keys+attributes)
 
-    def __convert_signature(self, signature: Signature) -> Symbol:
-        symbol = Symbol(signature.subject, [], [])
-        for attribute in signature.object_list:
-            if isinstance(attribute, Signature):
-                symbol.attributes.append(self.__convert_signature(attribute))
-            else:
-                symbol.attributes.append(attribute)
-        for key in signature.primary_key:
-            if isinstance(key, Signature):
-                symbol.keys.append(self.__convert_signature(key))
-            else:
-                symbol.keys.append(key)
-        return symbol
-
-
-    def get_symbols(self) -> list[Symbol]:
-        """
-        Get all the concepts defined in the problem and their initialized structure.
-
-        :return: list of symbols.
-        """
-        cnl_file = self.__parse_input()
-        if cnl_file:
-            cnl_compiler: CNLCompiler = CNLCompiler()
-            try:
-                cnl_compiler.compile(cnl_file)
-                definitions: list[Symbol] = []
-                for signature in cnl_compiler.decl_signatures:
-                    definitions.append(self.__convert_signature(signature))
-                return definitions
-            except:
-                return []
+    def get_signatures(self) -> list[Symbol]:
+        self.compile()
+        signatures: list[Symbol] = []
+        for signature in SignatureManager().signatures:
+            signatures.append(self.__convert_signature(signature))
+        SignatureManager().signatures = []
+        return signatures
