@@ -129,6 +129,12 @@ working(W) :- serve(W,DRNK_D), drink(DRNK_D), waiter(W).''')
 color("green").
 color("blue").''')
 
+    def test_compounded_clause_match_with_tail(self):
+        string = '''A drink is one of alcoholic, nonalcoholic and has color that is equal to respectively blue, yellow.
+'''
+        asp = self.compute_asp(string)
+        self.assertEqual(asp.strip(), '''drink("alcoholic","blue").
+drink("nonalcoholic","yellow").''')
 
     def test_fact_proposition(self):
         string = 'A movie is identified by an id, by a director, by a title, by a year.' \

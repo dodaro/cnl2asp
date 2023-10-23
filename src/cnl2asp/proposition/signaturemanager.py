@@ -1,4 +1,4 @@
-from cnl2asp.exception.cnl2asp_exceptions import EntityNotDefined
+from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound
 from cnl2asp.proposition.entity_component import EntityComponent
 
 
@@ -27,4 +27,4 @@ class SignatureManager:
         for signature in SignatureManager.signatures:
             if signature.name == name:
                 return signature.copy()
-        raise EntityNotDefined(f'Entity {name} not declared before its usage.')
+        raise EntityNotFound(f'Entity "{name}" not declared before its usage.')

@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 from typing import Any, TYPE_CHECKING
 
-from cnl2asp.exception.cnl2asp_exceptions import EntityNotDefined, AttributeNotFound
+from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, AttributeNotFound
 from cnl2asp.converter.converter_interface import Converter, EntityConverter
 from cnl2asp.proposition.attribute_component import AttributeComponent, ValueComponent, AttributeOrigin, is_same_origin
 from cnl2asp.proposition.component import Component
@@ -149,14 +149,14 @@ class SetOfTypedEntities:
         for entity in SetOfTypedEntities._TypedEntities:
             if entity.name == name:
                 return entity.copy()
-        raise EntityNotDefined(f"Typed entity {name} not defined.")
+        raise EntityNotFound(f"Typed entity {name} not defined.")
 
     @staticmethod
     def get_entity_from_type(entity_type: str) -> EntityComponent:
         for entity in SetOfTypedEntities._TypedEntities:
             if entity.entity_type == entity_type:
                 return entity.copy()
-        raise EntityNotDefined(f"Typed entity with type {entity_type} not defined.")
+        raise EntityNotFound(f"Typed entity with type {entity_type} not defined.")
 
     @staticmethod
     def get_entity_from_value(value: ValueComponent):
@@ -179,7 +179,7 @@ class SetOfTypedEntities:
         for entity in SetOfTypedEntities._TypedEntities:
             if entity.entity_type == entity_type:
                 return entity
-        raise Exception(f"No entity found with same type of {value}")
+        raise EntityNotFound(f"No entity found with same type of {value}")
 
 
 class TemporalEntityComponent(EntityComponent):
@@ -193,18 +193,16 @@ class TemporalEntityComponent(EntityComponent):
         step = 1 if not step else step
         self.values: dict = self._compute_values(lhs_range_value, rhs_range_value, step) if not values else values
 
-    def get_value(self, value: ValueComponent):
-        try:
-            in_time = datetime.strptime(str(value), "%I:%M %p")
-            value = datetime.strftime(in_time, "%H:%M")
-        except:
-            pass
-        return self.values[value]
+    def get_temporal_value_id(self, value: ValueComponent):
+        temporal_value_id = self.values.get(value)
+        if temporal_value_id:
+            return temporal_value_id
+        raise KeyError(f'Value "{value}" out of "{self.name}" range')
 
     def _compute_values(self, lhs_value: ValueComponent, rhs_value: ValueComponent,
                         step: ValueComponent) -> dict:
         """
-        Compute all the values in the range and assign a label starting from 0.
+        Compute all the values in the range and assign a label starting from 0
         :param lhs_value: left hand side value of the range
         :param rhs_value: right hand side value of the range
         :param step: step of increment from lhs to rhs
@@ -216,12 +214,12 @@ class TemporalEntityComponent(EntityComponent):
             if self.entity_type == EntityType.TIME:
                 start = datetime.strptime(lhs_value, '%I:%M %p')
                 end = datetime.strptime(rhs_value, '%I:%M %p')
-                elements[start.strftime('%H:%M')] = 0
+                elements[start.strftime('%I:%M %p')] = 0
                 start = start + timedelta(minutes=int(step))
                 while start <= end:
                     if start > end:
                         start = end
-                    elements[start.strftime('%H:%M')] = counter
+                    elements[start.strftime('%I:%M %p')] = counter
                     counter += 1
                     start = start + timedelta(minutes=int(step))
             elif self.entity_type == EntityType.DATE:

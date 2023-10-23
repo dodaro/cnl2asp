@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from cnl2asp.exception.cnl2asp_exceptions import EntityNotDefined
 from cnl2asp.converter.converter_interface import Converter
 from cnl2asp.proposition.component import Component
 from cnl2asp.proposition.constant_component import ConstantComponent
@@ -46,10 +45,7 @@ class Problem(Component):
 
     @staticmethod
     def get_signature(name: str) -> EntityComponent:
-        try:
-            return SignatureManager.get_signature(name)
-        except EntityNotDefined:
-            raise EntityNotDefined(f'Entity {name} not declared before its usage.')
+        return SignatureManager.get_signature(name)
 
     def convert(self, converter: Converter) -> Any:
         return converter.convert_problem(self)

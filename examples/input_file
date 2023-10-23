@@ -12,13 +12,13 @@ John is a waiter.
 1 is a pub.
 Alice is a patron.
 A pub is identified by an id.
-Pub 1 is close to pub 2, and pub X, where X is one of 3,4.
+Pub 1 is close to pub 2, and pub X where X is one of 3,4.
 A waiter is identified by an id.
 A drink is identified by an id.
 A patron is identified by an id.
 Waiter John works in pub 1.
 Waiter John serves a drink alcoholic.
-Waiter W is working, when waiter W serves a drink.
+Waiter W is working when waiter W serves a drink.
 Whenever there is a movie with director equal to spielberg, with id X then we must have a topmovie with id X.
 Whenever there is a director with name X different from spielberg then we can have at most 1 topmovie with id I such that there is a movie with director X, and with id I.
 Whenever there is a movie with id I, with director equal to nolan then we can have a scoreAssignment with movie I, and with value equal to 3 or a scoreAssignment with movie I, and with value equal to 2.

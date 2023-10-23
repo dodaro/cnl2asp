@@ -22,20 +22,20 @@ class Cnl2asp:
     def __init__(self, input_file: TextIO):
         self.input_file = input_file
 
-    def parse_input(self):
+    def __parse_input(self):
         cnl_parser = Lark(open(os.path.join(os.path.dirname(__file__), "grammar.lark"), "r").read(),
                           propagate_positions=True)
         problem: Problem = CNLTransformer().transform(cnl_parser.parse(self.input_file.read()))
         return problem
 
     def check_syntax(self) -> bool:
-        if self.parse_input():
+        if self.__parse_input():
             return True
         return False
 
     def compile(self) -> str:
         try:
-            problem: Problem = self.parse_input()
+            problem: Problem = self.__parse_input()
         except Exception as e:
             print(e)
             return ''
@@ -57,7 +57,7 @@ class Cnl2asp:
             keys.append(key.name)
         return Symbol(entity.name, keys, keys+attributes)
 
-    def get_signatures(self) -> list[Symbol]:
+    def get_symbols(self) -> list[Symbol]:
         self.compile()
         signatures: list[Symbol] = []
         for signature in SignatureManager().signatures:

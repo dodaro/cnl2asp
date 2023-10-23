@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from multipledispatch import dispatch
 
-from cnl2asp.exception.cnl2asp_exceptions import EntityNotDefined, EntityNotFound, LabelNotFound
+from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, EntityNotFound, LabelNotFound
 from cnl2asp.proposition.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent
 from cnl2asp.proposition.component import Component
 from cnl2asp.proposition.entity_component import EntityComponent, SetOfTypedEntities
@@ -42,7 +42,7 @@ class PropositionBuilder:
         for entity in self._original_rule.get_entities():
             if entity.label == label:
                 return entity
-        raise LabelNotFound("Label not found.")
+        raise LabelNotFound(f"Label \"{label}\" not declared before.")
 
     def copy_proposition(self) -> Proposition:
         child = self._original_rule.copy()

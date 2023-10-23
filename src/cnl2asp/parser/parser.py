@@ -1,4 +1,6 @@
+from __future__ import annotations
 import re
+
 from enum import Enum
 from uuid import uuid4
 
@@ -6,7 +8,7 @@ import lark
 from lark import Transformer, v_args
 
 from cnl2asp.exception.cnl2asp_exceptions import LabelNotFound, ParserError, AttributeNotFound, EntityNotFound, \
-    EntityNotDefined, CompilationError
+    EntityNotFound, CompilationError
 from cnl2asp.parser.command import SubstituteVariable, Command, DurationClause, CreateSignature
 from cnl2asp.parser.proposition_builder import PropositionBuilder, PreferencePropositionBuilder
 from cnl2asp.proposition.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent, AttributeOrigin
@@ -21,6 +23,7 @@ from cnl2asp.proposition.relation_component import RelationComponent
 from cnl2asp.proposition.aggregate_component import AggregateComponent, AggregateOperation
 from cnl2asp.proposition.operation_component import Operators, OperationComponent
 from cnl2asp.utility.utility import Utility
+from cnl2asp.exception.cnl2asp_exceptions import TypeNotFound
 
 
 class QUANTITY_OPERATOR(Enum):
@@ -42,7 +45,7 @@ def new_field_value(name: str = '') -> ValueComponent:
 class CNLTransformer(Transformer):
     def __init__(self):
         super().__init__()
-        self._problem = Problem()
+        self._problem: Problem = Problem()
         self._proposition: PropositionBuilder = PropositionBuilder()
         self._delayed_operations: list[Command] = []
 
@@ -56,6 +59,10 @@ class CNLTransformer(Transformer):
     def explicit_definition_proposition(self, elem):
         self._problem.add_signature(elem[0])
         self._clear()
+
+    @v_args(meta=True)
+    def explicit_definition_proposition_err(self, meta, elem):
+        raise ParserError("Domain definitions should go at the beginning.", meta.line)
 
     def standard_definition(self, elem) -> EntityComponent:
         entity_keys = []
@@ -113,7 +120,6 @@ class CNLTransformer(Transformer):
         return f'{elem[0]}:{elem[1]} {elem[2]}'
 
     def implicit_definition_proposition(self, elem) -> None:
-        self.set_entities_label_as_key_value()
         for command in self._delayed_operations:
             command.execute()
         if elem[0]:
@@ -121,12 +127,6 @@ class CNLTransformer(Transformer):
         self._problem.add_propositions(self._proposition.get_propositions())
         self._clear()
 
-    def set_entities_label_as_key_value(self):
-        # for proposition in self._proposition.get_propositions():
-        #     for entity in proposition.get_entities():
-        #         if entity.label_is_key_value():
-        #             entity.set_label_as_key_value()
-        return
 
     def constant_definition_clause(self, elem):
         value = ValueComponent(elem[1]) if elem[1] else ValueComponent('')
@@ -145,29 +145,39 @@ class CNLTransformer(Transformer):
 
     def simple_definition(self, elem) -> EntityComponent:
         name: str = elem[1].lower()
+        attribute_name = Utility.DEFAULT_ATTRIBUTE
+        try:
+            signature = self._problem.get_signature(name)
+            attributes = signature.get_keys_and_attributes()
+            if len(attributes) == 1:
+                attribute_name = attributes[0].name
+        except EntityNotFound:
+            pass
         entity = EntityComponent(name, '', [],
-                               [AttributeComponent(Utility.DEFAULT_ATTRIBUTE,
-                                                   ValueComponent(elem[0]),
-                                                   AttributeOrigin(name))])
+                               [AttributeComponent(attribute_name,
+                                                   ValueComponent(elem[0]))])
         self._proposition.add_new_knowledge(NewKnowledgeComponent(entity))
         return entity
 
-    def compounded_match_clause(self, elem) -> EntityComponent:
+    @v_args(meta=True)
+    def compounded_match_clause(self, meta, elem) -> EntityComponent:
         name: str = elem[0].lower()
-        tail_attributes: (str, ValueComponent) = elem[2]
+        tail_attributes: list[(str, ValueComponent)] = elem[2] if elem[2] else []
+        defined_entities: list[EntityComponent] = []
         for value in elem[1]:
-            entity = EntityComponent(name, '', [], [AttributeComponent(Utility.DEFAULT_ATTRIBUTE, value, AttributeOrigin(name))])
+            defined_entities.append(EntityComponent(name, '', [], [AttributeComponent(Utility.DEFAULT_ATTRIBUTE,
+                                                                                      value, AttributeOrigin(name))]))
+        for name, values in tail_attributes:
+            if len(values) != len(defined_entities):
+                raise CompilationError("Compounded tail has size different from values declared", meta.line)
+            for i in range(len(values)):
+                attribute = AttributeComponent(name, values[i])
+                defined_entities[i].attributes.append(attribute)
+        for entity in defined_entities[1:]:
             new_proposition = self._proposition.copy_proposition()
             new_proposition.new_knowledge.append(NewKnowledgeComponent(entity))
-        self._proposition._original_rule.new_knowledge.append(NewKnowledgeComponent(EntityComponent(name, '', [],
-                                                                                  [AttributeComponent(
-                                                                                      Utility.DEFAULT_ATTRIBUTE,
-                                                                                      elem[1],
-                                                                                      AttributeOrigin(name))])))
-        return EntityComponent(name, '', [],
-                               [AttributeComponent(Utility.DEFAULT_ATTRIBUTE,
-                                                   ValueComponent(Utility.NULL_VALUE),
-                                                   AttributeOrigin(name))])
+        self._proposition._original_rule.new_knowledge.append(NewKnowledgeComponent(defined_entities[0]))
+        return defined_entities[0]
 
     def compounded_match_tail(self, elem) -> list[(str, ValueComponent)]:
         attributes: (str, ValueComponent) = []
@@ -224,7 +234,6 @@ class CNLTransformer(Transformer):
 
     @v_args(meta=True)
     def standard_proposition(self, meta, elem):
-        self.set_entities_label_as_key_value()
         try:
             for command in self._delayed_operations:
                 command.execute()
@@ -324,23 +333,29 @@ class CNLTransformer(Transformer):
             relations.append(RelationComponent(verb, object_elem))
         self._proposition.add_relations(relations)
 
-    def temporal_constraint(self, elem):
+    @v_args(meta=True)
+    def temporal_constraint(self, meta, elem):
         try:
             temporal_entity = SetOfTypedEntities().get_entity_from_value(elem[2])
-            if elem[2].isnumeric():
-                elem[2] = int(elem[2])
-            temporal_value = temporal_entity.get_value(elem[2])
-            subject: EntityComponent = elem[0]
-            new_var = new_field_value('_'.join([temporal_entity.name, subject.name]))
+        except EntityNotFound as e:
+            raise CompilationError(str(e), meta.line)
+        if elem[2].isnumeric():
+            elem[2] = int(elem[2])
+        try:
+            temporal_value = temporal_entity.get_temporal_value_id(elem[2])
+        except KeyError as e:
+            raise CompilationError(str(e), meta.line)
+        subject: EntityComponent = elem[0]
+        new_var = new_field_value('_'.join([temporal_entity.name, subject.name]))
+        try:
             subject.set_attributes_value([AttributeComponent(temporal_entity.name, ValueComponent(new_var))])
-            operator = elem[1]
-            self._proposition.add_requisite(subject)
-            operation = OperationComponent(operator, new_var, ValueComponent(temporal_value))
-            self._proposition.add_requisite(operation)
-            return operation
         except:
-            # TODO manage different possible exceptions
-            raise Exception(f"Entity {elem[0]} do not contain temporal concept.")
+            RuntimeError(f'Compilation error in line {meta.line}')
+        operator = elem[1]
+        self._proposition.add_requisite(subject)
+        operation = OperationComponent(operator, new_var, ValueComponent(temporal_value))
+        self._proposition.add_requisite(operation)
+        return operation
 
     def ORDERING_OPERATOR(self, elem):
         if elem == 'after':
@@ -432,7 +447,8 @@ class CNLTransformer(Transformer):
     def preference_with_variable_minimization(self, elem):
         self._proposition.add_weight(elem[4])
 
-    def single_quantity_cardinality(self, elem):
+    @v_args(meta=True)
+    def single_quantity_cardinality(self, meta, elem):
         cardinality = None
         if elem[0] == QUANTITY_OPERATOR.EXACTLY:
             cardinality = CardinalityComponent(elem[1], elem[1])
@@ -441,14 +457,15 @@ class CNLTransformer(Transformer):
         elif elem[0] == QUANTITY_OPERATOR.AT_LEAST:
             cardinality = CardinalityComponent(elem[1], None)
         if self._proposition.get_cardinality() and self._proposition.get_cardinality() != cardinality:
-            raise Exception('Error multiple cardinality provided in the same proposition.')
+            raise CompilationError('Error multiple cardinality provided in the same proposition', meta.line)
         else:
             self._proposition.add_cardinality(cardinality)
 
-    def range_quantity_cardinality(self, elem):
+    @v_args(meta=True)
+    def range_quantity_cardinality(self, meta, elem):
         cardinality = CardinalityComponent(elem[0], elem[1])
         if self._proposition.get_cardinality() and self._proposition.get_cardinality() != cardinality:
-            raise Exception('Error multiple cardinality provided in the same proposition.')
+            raise CompilationError('Error multiple cardinality provided in the same proposition', meta.line)
         else:
             self._proposition.add_cardinality(cardinality)
 
@@ -549,7 +566,7 @@ class CNLTransformer(Transformer):
             try:
                 return self._proposition.get_entity_by_label(name)
             except LabelNotFound as e:
-                raise ParserError(str(e))
+                raise CompilationError(str(e), meta.line)
         name = name.lower()
         label = label if label else ''
         parameter_list = parameter_list if parameter_list else []
@@ -563,7 +580,7 @@ class CNLTransformer(Transformer):
             try:
                 entity = self._problem.get_signature(name)
                 entity.label = label
-            except EntityNotDefined as e:
+            except EntityNotFound as e:
                 # this is the case that we are defining a new entity
                 if new_definition:
                     parameter_list.sort(key=lambda x: x.name)
@@ -572,16 +589,22 @@ class CNLTransformer(Transformer):
                                               isinstance(attribute, AttributeComponent)])
                 else:
                     raise CompilationError(str(e), meta.line)
-        entity.set_attributes_value(parameter_list, self._proposition)
+        try:
+            entity.set_attributes_value(parameter_list, self._proposition)
+        except AttributeNotFound as e:
+            raise  CompilationError(str(e), meta.line)
         if entity_temporal_order_constraint:
-            self.temporal_constraint([entity] + entity_temporal_order_constraint)
+            self.temporal_constraint(meta, [entity] + entity_temporal_order_constraint)
         if define_subsequent_event:
-            self.substitute_subsequent_event(entity, define_subsequent_event[0], define_subsequent_event[1])
+            try:
+                self.__substitute_subsequent_event(entity, define_subsequent_event[0], define_subsequent_event[1])
+            except TypeNotFound as e:
+                raise CompilationError(str(e), meta.line)
         if entity.label_is_key_value():
             entity.set_label_as_key_value()
         return entity
 
-    def substitute_subsequent_event(self, entity, operator: str, entity_type: EntityType):
+    def __substitute_subsequent_event(self, entity, operator: str, entity_type: EntityType):
         attribute_name = ''
         for attribute in entity.get_keys_and_attributes():
             if SetOfTypedEntities.is_temporal_entity(attribute.name) and \
@@ -596,7 +619,7 @@ class CNLTransformer(Transformer):
                     return
                 except AttributeNotFound:
                     pass
-        raise CompilationError(f'Entity "{entity.name}" do not have type {entity_type}')
+        raise TypeNotFound(f'Entity "{entity.name}" do not have type {entity_type}')
 
     def define_subsequent_event(self, elem):
         return elem[0], elem[1]
@@ -660,7 +683,7 @@ class CNLTransformer(Transformer):
         elif quantity == 'at least':
             return QUANTITY_OPERATOR.AT_LEAST
         else:
-            raise Exception(f"Unrecognized token {quantity}")
+            raise ParserError(f"Unrecognized token {quantity}")
 
     def COMPARISON_OPERATOR(self, elem):
         operator = elem.value
@@ -717,12 +740,15 @@ class CNLTransformer(Transformer):
             return AggregateOperation.MIN
         if operator == "the lowest" or operator == "the smallest":
             return AggregateOperation.MIN
-        raise Exception(f"Aggregate operator {operator} not recognized")
+        raise ParserError(f"Aggregate operator {operator} not recognized")
 
     def VARIABLE(self, elem):
         return ValueComponent(elem.value)
 
     def COPULA(self, elem):
+        return lark.Discard
+
+    def INDEFINITE_ARTICLE(self, elem):
         return lark.Discard
 
     def QUANTIFIER(self, elem):

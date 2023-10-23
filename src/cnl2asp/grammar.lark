@@ -14,13 +14,15 @@
 %ignore C_COMMENT
 
 // Which type of clause do we expect?
-start: ((explicit_definition_proposition | implicit_definition_proposition | standard_proposition) END_OF_LINE)+
+start: (explicit_definition_proposition END_OF_LINE)* ((explicit_definition_proposition_err | implicit_definition_proposition | standard_proposition) END_OF_LINE)+
 
 explicit_definition_proposition.1: standard_definition | temporal_concept_definition
-standard_definition.1: ("a "i | "an "i )? STRING ["is identified " keys_list] ", and"? ["has" parameter_definition (", " "and "? parameter_definition)*]
+explicit_definition_proposition_err: standard_definition | temporal_concept_definition
+standard_definition.1: INDEFINITE_ARTICLE? STRING ["is identified " keys_list] ", and"? ["has" parameter_definition (", " "and "? parameter_definition)*]
 keys_list: "by" parameter_definition (", " "and"? "by" parameter_definition)*
-parameter_definition: ("a " | "an ")? (PARAMETER_NAME)+
+parameter_definition: INDEFINITE_ARTICLE? (PARAMETER_NAME)+
 temporal_concept_definition.1: ("A " | "An ") STRING "is a temporal concept expressed in" TEMPORAL_TYPE "ranging from" temporal_value "to" temporal_value ["with a length of" NUMBER ("minutes" | "days")]
+
 TEMPORAL_TYPE: "minutes" | "minute" | "days" | "day" | "steps" | "step"
 temporal_value: NUMBER ":" NUMBER STRING | NUMBER "/" NUMBER "/" NUMBER | NUMBER | STRING
 
@@ -69,7 +71,7 @@ simple_clause: entity COPULA? verb [conjunctive_object_list]
 temporal_constraint: "the"? entity "is" ORDERING_OPERATOR temporal_value
 ORDERING_OPERATOR: "before" | "after"
 
-terminal_clauses: ("," (whenever_clause
+terminal_clauses: (","? (whenever_clause
                    | where_clause
                    | when_clause))+
 
@@ -162,6 +164,8 @@ VERB_NEGATION: "do not" | "does not" | "don't"
 
 QUANTITY_OPERATOR: "exactly" | "at most" | "at least"
 QUANTIFIER: "every"i | "any"i
+
+INDEFINITE_ARTICLE: "a"i | "an"i
 
 NUMBER: INT | FLOAT
 FLOAT: INT _EXP | DECIMAL _EXP?
