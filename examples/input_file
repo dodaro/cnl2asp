@@ -11,11 +11,7 @@ A drink is one of alcoholic, nonalcoholic and has color that is equal to respect
 John is a waiter.
 1 is a pub.
 Alice is a patron.
-A pub is identified by an id.
 Pub 1 is close to pub 2, and pub X where X is one of 3,4.
-A waiter is identified by an id.
-A drink is identified by an id.
-A patron is identified by an id.
 Waiter John works in pub 1.
 Waiter John serves a drink alcoholic.
 Waiter W is working when waiter W serves a drink.

@@ -90,6 +90,9 @@ class AttributeComponent(Component):
         self.value = AngleValueComponent(value) if self.is_angle() else value
         # origin of the attribute, the entity from which it has been taken
 
+    def removesuffix(self, suffix: str):
+        self.name = self.name.removesuffix(suffix)
+
     def convert(self, converter: Converter):
         return converter.convert_attribute(self)
 

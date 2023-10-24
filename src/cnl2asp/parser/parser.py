@@ -399,27 +399,40 @@ class CNLTransformer(Transformer):
         self._proposition.add_requisite(aggregate)
         return aggregate
 
-    def aggregate_clause(self, elem):
-        if elem[1]:
-            discriminant = [elem[1]]
-            body = [elem[2]] + elem[3] if elem[3] else [elem[2]]
-        else:
-            discriminant = [AttributeComponent(elem[2].name, ValueComponent(Utility.NULL_VALUE))]
-            body = elem[3]
+    def simple_aggregate(self, elem):
+        discriminant = [elem[1]]
+        body = [elem[2]]
         aggregate = AggregateComponent(elem[0], discriminant, body)
         return aggregate
 
-    def aggregate_active_clause(self, elem) -> list[EntityComponent]:
-        for entity in elem[0][1:]:
-            self._proposition.add_requisite(entity)
-            self._proposition.add_relations([RelationComponent(elem[0][0], entity)])
-        return [elem[0][0]]
+    def aggregate_active_clause(self, elem) -> AggregateComponent:
+        discriminant = [elem[1], elem[2]] if elem[2] else [elem[1]]
+        body = [elem[3]]
+        if elem[4]:
+            body += elem[4]
+            for entity in elem[4]:
+                self._proposition.add_relations([RelationComponent(entity, elem[3])])
+        return AggregateComponent(elem[0], discriminant, body)
 
-    def aggregate_passive_clause(self, elem) -> list[EntityComponent]:
-        self._proposition.add_requisite(elem[0])
-        for entity in elem[1]:
-            self._proposition.add_relations([RelationComponent(elem[0], entity)])
-        return [*elem[1]]
+    @v_args(meta = True)
+    def aggregate_passive_clause(self, meta, elem) -> AggregateComponent:
+        discriminant = [elem[1], elem[3]] if elem[3] else [elem[1]]
+        verb: EntityComponent = elem[5]
+        if elem[2]:
+            try:
+                verb.set_attributes_value(elem[2])
+            except AttributeNotFound as e:
+                raise CompilationError(str(e), meta.line)
+        body = [verb]
+        AggregateComponent(elem[0], discriminant, body)
+        subject = elem[4]
+        self._proposition.add_requisite(subject)
+        self._proposition.add_relations([RelationComponent(subject, verb)])
+        if elem[6]:
+            body += elem[6]
+            for entity in elem[6]:
+                self._proposition.add_relations([RelationComponent(entity, verb)])
+        return AggregateComponent(elem[0], discriminant, body)
 
     def predicate_with_objects_wrv(self, elem) -> list[EntityComponent]:
         verb = elem[0]

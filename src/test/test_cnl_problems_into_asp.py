@@ -266,7 +266,7 @@ A registration is identified by a patient, and by an order, and has a number of 
         """
         asp = self.compute_asp(string)
         self.assertEqual(asp.strip(),
-                         '''1 {position_in(P,S): seat(S)} 1 :- patient(P).\n:- seat(S), #count{D: position_in(D,S)} >= 2.''')
+                         '''1 {position_in(P,S): seat(S)} 1 :- patient(P).\n:- #count{D: position_in(D,S), seat(S)} >= 2.''')
 
     def test_angle_operation(self):
         string = '''An angle is identified by a value.

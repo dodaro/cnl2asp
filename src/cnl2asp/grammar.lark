@@ -84,13 +84,18 @@ comparison:  ARITHMETIC_OPERATOR "between" (EXPRESSION | STRING | parameter_enti
             | aggregate_clause "is" COMPARISON_OPERATOR (STRING | EXPRESSION | aggregate_clause) [such_that_clause] -> aggregate_comparison
             | (EXPRESSION | STRING | parameter_entity_link) "is" COMPARISON_OPERATOR (STRING | EXPRESSION | parameter_entity_link) -> variable_comparison
 
-aggregate_clause: AGGREGATE_OPERATOR ["of"? parameter] "of" entity [(aggregate_active_clause | aggregate_passive_clause)]
-aggregate_active_clause: "that" COPULA? predicate_wrv
-aggregate_passive_clause: "where" entity COPULA? predicate_wrv
+aggregate_clause: AGGREGATE_OPERATOR "of"? parameter "of" entity -> simple_aggregate
+                //  the number of PARAMETRO [for each | in ..] (that (have | is) VERBO [with parametri_verbo] COMPLEMENTO [with parametri_complemento])*
+                | AGGREGATE_OPERATOR "of" parameter [("for each" | "in") parameter] ("that" COPULA verb [conjunctive_object_list]) -> aggregate_active_clause
+                //  the number of PARAMETRO [with parametri_verbo] [for each | in ..] (where ENTITÀ (have | is) VERBO [with parametri_verbo] COMPLEMENTO [with parametri_complemento])*
+                | AGGREGATE_OPERATOR "of" parameter [parameter_list] [("for each" | "in") parameter] ("where" entity COPULA? verb [conjunctive_object_list] ","?)+ -> aggregate_passive_clause
 
+// TODO remove also methods from transformer
+// aggregate_active_clause: "that" COPULA? predicate_wrv
+// aggregate_passive_clause: "where" entity COPULA? predicate_wrv
 //predicate with return value
-predicate_wrv: ("a "i | "an "i )? verb [conjunctive_object_list] -> predicate_with_objects_wrv
-           | ("a "i | "an "i )? verb simple_clause_wrv -> predicate_with_simple_clause_wrv
+// predicate_wrv: ("a "i | "an "i )? verb [conjunctive_object_list] -> predicate_with_objects_wrv
+//           | ("a "i | "an "i )? verb simple_clause_wrv -> predicate_with_simple_clause_wrv
 
 such_that_clause: ", such that there is" conjunctive_object_list
 AGGREGATE_OPERATOR: "the number" | "the total" | "the highest" | "the lowest" | "the biggest" | "the smallest"
