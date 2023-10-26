@@ -285,7 +285,7 @@ An assignment is identified by a patient, by a day, and by a timeslot.
 It is required that the number of patient that have an assignment with day D, with timeslot TS is less than the number of patient that have an assignment with day D+1, with timeslot TS.'''
         asp = self.compute_asp(string)
         self.assertEqual(asp.strip(),
-                         ''':- #count{D1: assignment(D1,D,TS)} = x_X, #count{D2: assignment(D2,D+1,TS)} = x_Y, x_X >= x_Y.''')
+                         ''':- #count{D1: assignment(D1,D,TS)} = X_X, #count{D2: assignment(D2,D+1,TS)} = X_Y, X_X >= X_Y.''')
 
 
     def test_do_not_link_choice_elements_with_body(self):

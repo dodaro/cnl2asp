@@ -1,4 +1,5 @@
 import os
+import traceback
 from typing import TextIO
 
 from lark import Lark
@@ -45,6 +46,7 @@ class Cnl2asp:
             SignatureManager().signatures = []
             return program.to_string()
         except Exception as e:
+            traceback.print_exc()
             print("Error in asp conversion:", str(e))
             return ''
 

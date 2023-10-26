@@ -12,7 +12,7 @@ from cnl2asp.utility.utility import Utility
 from cnl2asp.proposition.relation_component import RelationComponent
 
 if TYPE_CHECKING:
-    from parser.proposition_builder import PropositionBuilder
+    from cnl2asp.parser.proposition_builder import PropositionBuilder
 
 
 class EntityType(Enum):
@@ -51,6 +51,17 @@ class EntityComponent(Component):
     def set_name(self, name: str):
         self.name = name
 
+    def is_initialized(self) -> bool:
+        if self.get_keys_and_attributes():
+            return True
+        return False
+
+    def has_attribute_value(self, value: ValueComponent) -> bool:
+        for attribute in self.attributes:
+            if attribute.value == value:
+                return True
+        return False
+
     def convert(self, converter: Converter) -> EntityConverter:
         return converter.convert_entity(self)
 
@@ -79,6 +90,7 @@ class EntityComponent(Component):
                     entity_attributes = self.get_attributes_by_name(attribute.name)
                 for entity_attribute in entity_attributes:
                     entity_attribute.value = attribute.value
+                    entity_attribute.operations = attribute.operations
 
     def set_attribute_value(self, attribute_name: str, value: ValueComponent, origin: AttributeOrigin = None):
         if not origin:
@@ -104,7 +116,7 @@ class EntityComponent(Component):
             return attributes
         raise AttributeNotFound(f'Entity \"{self.name}\" do not contain attribute \"{name}\".')
 
-    def copy(self) -> Any:
+    def copy(self) -> EntityComponent:
         keys = [key.copy() for key in self.keys]
         attributes = [attribute.copy() for attribute in self.attributes]
         return EntityComponent(self.name, self.label, keys,

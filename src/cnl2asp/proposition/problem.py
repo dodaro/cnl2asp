@@ -3,11 +3,13 @@ from __future__ import annotations
 from typing import Any
 
 from cnl2asp.converter.converter_interface import Converter
+from cnl2asp.proposition.attribute_component import ValueComponent
 from cnl2asp.proposition.component import Component
 from cnl2asp.proposition.constant_component import ConstantComponent
 from cnl2asp.proposition.entity_component import EntityComponent
 from cnl2asp.proposition.proposition import Proposition
 from cnl2asp.proposition.signaturemanager import SignatureManager
+from cnl2asp.utility.utility import Utility
 
 
 class Problem(Component):
@@ -40,6 +42,8 @@ class Problem(Component):
     @staticmethod
     def add_signature(entity: EntityComponent):
         signature = entity.copy()
+        for attribute in signature.get_keys_and_attributes():
+            attribute.value = ValueComponent(Utility.NULL_VALUE)
         signature.label = ''
         SignatureManager.add_signature(signature)
 

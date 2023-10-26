@@ -109,12 +109,15 @@ class Proposition(Component):
                 to_be_related_with = relation.entity_1
             if to_be_related_with:
                 for key in to_be_related_with.get_keys():
+                    if key.value != Utility.NULL_VALUE and signature.has_attribute_value(key.value):
+                        continue
                     try:
                         signature.get_attributes_by_name_and_origin(key.name, key.origin)
                     except AttributeNotFound:
                         try:
                             attribute = signature.get_attributes_by_name(key.name)[0]
-                            if attribute.value == key.value and attribute.origin.name == signature.name and not attribute.origin.origin:
+                            if attribute.value == key.value and attribute.origin.name == signature.name \
+                                    and not attribute.origin.origin:
                                 new_entity.get_attributes_by_name(key.name)[0].origin = key.origin
                                 attribute.origin = key.origin
                             else:
@@ -173,8 +176,10 @@ class PREFERENCE_PRIORITY_LEVEL(Enum):
 class PreferenceProposition(Proposition):
     def __init__(self, requisite: RequisiteComponent = None, relations: list[RelationComponent] = None,
                  weight: str = '1', level: PREFERENCE_PRIORITY_LEVEL = PREFERENCE_PRIORITY_LEVEL.LOW,
-                 discriminant: list[AttributeComponent] = []):
+                 discriminant: list[AttributeComponent] = None):
         super().__init__(None, None, requisite, relations)
+        if discriminant is None:
+            discriminant = []
         self.weight = weight
         self.level = level
         self.discriminant = discriminant

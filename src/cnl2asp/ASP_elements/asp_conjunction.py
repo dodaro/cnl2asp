@@ -10,6 +10,15 @@ class ASPConjunction(ASPElement):
     def __init__(self, conjunction: list[ASPElement]):
         self.conjunction = conjunction
 
+    def remove_null_atoms(self):
+        for atom in self.conjunction:
+            if atom.is_null():
+                self.remove_element(atom)
+        for elem in self.conjunction:
+            for atom in elem.get_atom_list():
+                if atom.is_null():
+                    elem.remove_element(atom)
+
     @dispatch(list)
     def add_element(self, element: list[ASPElement]):
         self.conjunction += element

@@ -18,6 +18,12 @@ class ASPAggregate(ASPElement):
         self.discriminant = discriminant
         self.body = body
 
+    def get_atom_list(self) -> list[ASPElement]:
+        return self.body.get_atom_list()
+
+    def remove_element(self, element: ASPElement):
+        self.body.remove_element(element)
+
     def to_string(self) -> str:
         return f'#{ASPAggregate.symbols[self.operation]}{{' \
                f'{",".join([x.to_string() for x in self.discriminant])}' \

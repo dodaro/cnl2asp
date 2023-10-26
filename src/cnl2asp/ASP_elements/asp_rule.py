@@ -6,13 +6,16 @@ from cnl2asp.ASP_elements.asp_conjunction import ASPConjunction
 
 class ASPRuleHead(ASPElement):
     def __init__(self, choice_element: ASPAtom, condition: ASPConjunction = None):
+        if condition is None:
+            condition = ASPConjunction([])
         self.choice_element = choice_element
         self.condition = condition
 
     def to_string(self) -> str:
         head = f'{self.choice_element.to_string()}'
-        if self.condition:
-            head += f': {self.condition.to_string()}'
+        condition = self.condition.to_string()
+        if condition:
+            head += f': {condition}'
         return head
 
     def __eq__(self, other):
@@ -22,25 +25,39 @@ class ASPRuleHead(ASPElement):
 
 
 class ASPRule(ASPElement):
-    def __init__(self, body: ASPConjunction = ASPConjunction([]), head: list[ASPRuleHead] = [],
+    def __init__(self, body: ASPConjunction = ASPConjunction([]), head=None,
                  cardinality: (int | None, int | None) = None):
+        if head is None:
+            head = []
         self.head = head
         self.body = body
         self.cardinality = cardinality
-        self.remove_duplicates()
+        self._clear_rule()
 
-    def remove_duplicates(self):
+    def _clear_rule(self):
+        self._remove_duplicates()
+        self.remove_null_atoms()
+
+    def remove_null_atoms(self):
+        for head in self.head:
+            for atom in head.condition.get_atom_list():
+                if atom.is_null():
+                    head.condition.remove_element(atom)
+        self.body.remove_null_atoms()
+
+
+    def _remove_duplicates(self):
         if self.body:
-            to_remove = self.get_duplicates(self.body.get_atom_list(), self.body.get_atom_list())
+            to_remove = self._get_duplicates(self.body.get_atom_list(), self.body.get_atom_list())
             for elem in to_remove:
                 self.body.remove_element(elem)
         for head in self.head:
             if head.condition and self.body:
-                to_remove = self.get_duplicates(head.condition.get_atom_list(), self.body.get_atom_list())
+                to_remove = self._get_duplicates(head.condition.get_atom_list(), self.body.get_atom_list())
                 for elem in to_remove:
                     head.condition.remove_element(elem)
 
-    def get_duplicates(self, default_list: list[ASPAtom], comparison_list: list[ASPAtom]) -> list[ASPAtom]:
+    def _get_duplicates(self, default_list: list[ASPAtom], comparison_list: list[ASPAtom]) -> list[ASPAtom]:
         to_remove = []
         for component_1 in default_list:
             for component_2 in comparison_list:
@@ -62,7 +79,7 @@ class ASPRule(ASPElement):
                        f'{str(self.cardinality[1]) if self.cardinality[1] else ""}'
             else:
                 for head in self.head:
-                    if head.condition:
+                    if head.condition.to_string():
                         rule = f'{{{rule}}}'
         if self.body.conjunction:
             rule += f'{" " if self.head else ""}:- '

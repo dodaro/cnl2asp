@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from collections import UserString
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from cnl2asp.converter.converter_interface import Converter
 from cnl2asp.proposition.component import Component
+if TYPE_CHECKING:
+    from cnl2asp.proposition.operation_component import OperationComponent
 
 
 class ValueComponent(Component, str):
@@ -84,17 +85,25 @@ def is_same_origin(origin_1: AttributeOrigin, origin_2: AttributeOrigin) -> bool
 
 
 class AttributeComponent(Component):
-    def __init__(self, name: str, value: ValueComponent, attribute_origin: AttributeOrigin = None):
+    def __init__(self, name: str, value: ValueComponent,
+                 attribute_origin: AttributeOrigin = None,
+                 operations: list[OperationComponent] = None):
+        if operations is None:
+            operations = []
         self.name = name
+        # origin of the attribute, the entity from which it has been taken
         self.origin = attribute_origin
         self.value = AngleValueComponent(value) if self.is_angle() else value
-        # origin of the attribute, the entity from which it has been taken
+        self.operations = operations
 
     def removesuffix(self, suffix: str):
         self.name = self.name.removesuffix(suffix)
 
     def convert(self, converter: Converter):
         return converter.convert_attribute(self)
+
+    def add_operation(self, operation: OperationComponent):
+        self.operations.append(operation)
 
     def copy(self) -> Any:
         return AttributeComponent(self.name, self.value.copy(), self.origin)

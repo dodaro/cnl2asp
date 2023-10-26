@@ -75,7 +75,7 @@ terminal_clauses: (","? (whenever_clause
                    | where_clause
                    | when_clause))+
 
-where_clause: "where" comparison
+where_clause: "where" comparison ("and" comparison)*
                | "where" VARIABLE COPULA "one of" string_list -> variable_substitution
 string_list: STRING ("," STRING)*
 
@@ -132,8 +132,8 @@ OPTIMIZATION_OPERATOR: "minimized" | "maximized"
 cardinality: QUANTITY_OPERATOR STRING -> single_quantity_cardinality
            | "between" STRING "and" STRING -> range_quantity_cardinality
 conjunctive_object_list.-1: entity ((", " "and "?) entity)*
-predicate: ("a "i | "an "i )? verb [cardinality] "such that there is"? [conjunctive_object_list] ["for" (NUMBER | VARIABLE) STRING] -> predicate_with_objects
-           | ("a "i | "an "i )? verb [cardinality] "such that there is"? simple_clause_wrv -> predicate_with_simple_clause
+predicate: verb [cardinality] "such that there is"? [conjunctive_object_list] ["for" (NUMBER | VARIABLE) STRING] -> predicate_with_objects
+           | verb [cardinality] "such that there is"? simple_clause_wrv -> predicate_with_simple_clause
 
 simple_clause_wrv.-2: entity COPULA? verb [conjunctive_object_list]
 
@@ -142,7 +142,7 @@ entity_temporal_order_constraint: "that is" ORDERING_OPERATOR temporal_value
 define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE
 
 
-verb.1: [VERB_NEGATION] STRING [parameter_list] [VERB_PREPOSITION]
+verb.1: [VERB_NEGATION] INDEFINITE_ARTICLE? STRING [parameter_list] [VERB_PREPOSITION]
 
 parameter_list.1: PARAMETER_PREPOSITION parameter (", " "and"? PARAMETER_PREPOSITION parameter)*
 parameter.-1: ("a " | "an ")? (PARAMETER_NAME)+ [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]

@@ -182,7 +182,7 @@ class ASPConverter(Converter[ASPProgram,
                     attribute_matched = True
                     atom_matched_attribute = atom_matched_attributes[0]
                     if atom_matched_attribute.value != Utility.ASP_NULL_VALUE:
-                        if discriminant_value != atom_matched_attribute.value:
+                        if discriminant_value != Utility.ASP_NULL_VALUE and discriminant_value != atom_matched_attribute.value:
                             raise Exception(
                                 f"Error in aggregate: multiple values declared for discriminant {attribute.name}")
                         discriminant_value = atom_matched_attribute.value
@@ -218,7 +218,7 @@ class ASPConverter(Converter[ASPProgram,
             operations: list[ASPOperation] = []
             fields: list[ASPValue] = []
             for operand in operands:
-                new_field = ASPValue(Utility.create_unique_identifier())
+                new_field = ASPValue(Utility.create_unique_identifier().upper())
                 operations.append(ASPOperation(Operators.EQUALITY, operand, new_field))
                 fields.append(new_field)
             for i, field_1 in enumerate(fields):
@@ -228,7 +228,8 @@ class ASPConverter(Converter[ASPProgram,
         return ASPOperation(operation.operator, *operands)
 
     def convert_attribute(self, attribute: AttributeComponent) -> ASPAttribute:
-        return ASPAttribute(attribute.name, attribute.value.convert(self), attribute.origin)
+        return ASPAttribute(attribute.name, attribute.value.convert(self), attribute.origin,
+                            [operation.convert(self) for operation in attribute.operations])
 
     def convert_constant(self, constant: ConstantComponent) -> None:
         if constant.value and constant.value.isalpha():

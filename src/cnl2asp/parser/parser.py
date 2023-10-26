@@ -39,7 +39,7 @@ def new_field_value(name: str = '') -> ValueComponent:
     if name:
         result = re.sub(r'[AEIOU]', '', name, flags=re.IGNORECASE)
         return ValueComponent(result.upper())
-    return f'X_{str(uuid4()).replace("-", "_")}'
+    return ValueComponent(f'X_{str(uuid4()).replace("-", "_")}')
 
 
 class CNLTransformer(Transformer):
@@ -48,6 +48,7 @@ class CNLTransformer(Transformer):
         self._problem: Problem = Problem()
         self._proposition: PropositionBuilder = PropositionBuilder()
         self._delayed_operations: list[Command] = []
+        self._operation_parameter_queue: list[OperationComponent] = []
 
     def start(self, elem) -> Problem:
         return self._problem
@@ -92,7 +93,7 @@ class CNLTransformer(Transformer):
         name = parameter[:]
         # part of the parameter name can be the definition of the origin.
         # e.g. user id. we have an attribute id with origin user
-        origin = self.parameter_origin_builder(name)
+        origin = self._parameter_origin_builder(name)
         if origin and not name:
             # if origin and not name the user imply the key of the last "origin"
             keys = self._problem.get_signature(parameter[-1]).get_keys()
@@ -138,10 +139,7 @@ class CNLTransformer(Transformer):
         entity = EntityComponent(name, '', [],
                                  [AttributeComponent(Utility.DEFAULT_ATTRIBUTE, value, AttributeOrigin(name))])
         self._proposition.add_new_knowledge(NewKnowledgeComponent(entity))
-        signature = EntityComponent(name, '', [],
-                                    [AttributeComponent(Utility.DEFAULT_ATTRIBUTE, ValueComponent(Utility.NULL_VALUE),
-                                                        AttributeOrigin(name))])
-        return signature
+        return entity
 
     def simple_definition(self, elem) -> EntityComponent:
         name: str = elem[1].lower()
@@ -252,7 +250,7 @@ class CNLTransformer(Transformer):
             for condition_entity in new_knowledge.condition.components:
                 for entity in condition_entity.get_entities():
                     proposition.relations.append(
-                        RelationComponent(new_knowledge.new_entity, entity))
+                            RelationComponent(new_knowledge.new_entity, entity))
 
     def whenever_then_clause_proposition(self, elem):
         for proposition in self._proposition.get_propositions():
@@ -313,15 +311,16 @@ class CNLTransformer(Transformer):
                 self._proposition.add_requisite(entity)
         return entities
 
-    def when_then_clause(self, elem):
-        return elem[1]
-
-    def quantified_simple_clause(self, elem):
-        for i, entity_i in enumerate(elem[0][0:]):
-            self._proposition.add_requisite(entity_i)
-            for j, entity_j in enumerate(elem[i+1:]):
-                self._proposition.add_relations([RelationComponent(entity_i, entity_j)])
-        return elem[0][1]
+    def simple_clause_wrv(self, elem) -> list[EntityComponent]:
+        subject = elem[0]
+        verb = elem[1]
+        objects = elem[2] if elem[2] else []
+        entities = [subject, verb, *objects]
+        relations = [RelationComponent(subject, verb)]
+        for object_elem in objects:
+            relations.append(RelationComponent(verb, object_elem))
+        self._proposition.add_relations(relations)
+        return entities
 
     def simple_clause(self, elem):
         subject = elem[0]
@@ -332,6 +331,16 @@ class CNLTransformer(Transformer):
         for object_elem in objects:
             relations.append(RelationComponent(verb, object_elem))
         self._proposition.add_relations(relations)
+
+    def when_then_clause(self, elem):
+        return elem[1]
+
+    def quantified_simple_clause(self, elem):
+        for i, entity_i in enumerate(elem[0][0:]):
+            self._proposition.add_requisite(entity_i)
+            for j, entity_j in enumerate(elem[i+1:]):
+                self._proposition.add_relations([RelationComponent(entity_i, entity_j)])
+        return elem[0][1]
 
     @v_args(meta=True)
     def temporal_constraint(self, meta, elem):
@@ -452,7 +461,7 @@ class CNLTransformer(Transformer):
 
     def preference_with_aggregate_clause(self, elem):
         if elem[3]:
-            new_var = str(uuid4()).replace('-', '_')
+            new_var = new_field_value()
             self._proposition.add_requisite(OperationComponent(Operators.EQUALITY, elem[3],
                                                                new_field_value(new_var)))
             self._proposition.add_weight(new_var)
@@ -498,17 +507,6 @@ class CNLTransformer(Transformer):
         condition = elem[2]
         self._proposition.add_new_knowledge(NewKnowledgeComponent(verb, ConditionComponent(condition)))
 
-    def simple_clause_wrv(self, elem) -> list[EntityComponent]:
-        subject = elem[0]
-        verb = elem[1]
-        objects = elem[2] if elem[2] else []
-        entities = [subject, verb, *objects]
-        relations = [RelationComponent(subject, verb)]
-        for object_elem in objects:
-            relations.append(RelationComponent(verb, object_elem))
-        self._proposition.add_relations(relations)
-        return entities
-
     def parameter_list(self, list_parameters) -> list[AttributeComponent]:
         res = []
         # Discard prepositions
@@ -517,10 +515,10 @@ class CNLTransformer(Transformer):
                 res.append(elem)
         return list(res)
 
-    def parameter_origin_builder(self, name: list[str]):
+    def _parameter_origin_builder(self, name: list[str]):
         try:
             self._problem.get_signature(name[0])
-            return AttributeOrigin(name.pop(0), self.parameter_origin_builder(name))
+            return AttributeOrigin(name.pop(0), self._parameter_origin_builder(name))
         except:
             return None
 
@@ -534,21 +532,22 @@ class CNLTransformer(Transformer):
             pass
         # part of the parameter name can be the definition of the origin.
         # e.g. user id. we have an attribute id with origin user
-        origin = self.parameter_origin_builder(name)
+        origin = self._parameter_origin_builder(name)
         if origin and not name:
             # if origin and not name the user imply the key of the last "origin"
             name = self._problem.get_signature(parameter[-5]).get_keys()[0].name
         else:
             name = '_'.join(name)
         value = parameter[-4] if parameter[-4] else Utility.NULL_VALUE
+        operations = []
         if parameter[-3]:
             if parameter[-3] == Operators.EQUALITY and value == Utility.NULL_VALUE:
                 value = parameter[-2]
             else:
                 if value == Utility.NULL_VALUE:
                     value = new_field_value(name)
-                self._proposition.add_requisite(OperationComponent(parameter[-3], value, parameter[-2]))
-        attribute = AttributeComponent(name.strip(), ValueComponent(value), origin)
+                operations = [OperationComponent(parameter[-3], value, parameter[-2])]
+        attribute = AttributeComponent(name.strip(), ValueComponent(value), origin, operations)
         self._proposition.add_discriminant([attribute])
         return attribute
 
@@ -562,7 +561,7 @@ class CNLTransformer(Transformer):
     def _is_label(self, string: str) -> bool:
         if isinstance(string, EntityComponent):
             return False
-        if string.isalpha() and string.isupper():
+        if string.isupper():
             return True
         return False
 
@@ -605,7 +604,7 @@ class CNLTransformer(Transformer):
         try:
             entity.set_attributes_value(parameter_list, self._proposition)
         except AttributeNotFound as e:
-            raise  CompilationError(str(e), meta.line)
+            raise CompilationError(str(e), meta.line)
         if entity_temporal_order_constraint:
             self.temporal_constraint(meta, [entity] + entity_temporal_order_constraint)
         if define_subsequent_event:

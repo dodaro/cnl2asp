@@ -1,10 +1,10 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+
 
 from cnl2asp.proposition.attribute_component import AttributeOrigin, is_same_origin
 from cnl2asp.utility.utility import Utility
-from .asp_element import ASPElement
 from .asp_attribute import ASPAttribute
+from .asp_element import ASPElement
 
 
 class ASPAtom(ASPElement):
@@ -22,6 +22,15 @@ class ASPAtom(ASPElement):
                 if atom_attribute.isnull():
                     atom_attribute.value = attribute.value
                     break
+
+    def get_atom_list(self) -> list[ASPAtom]:
+        return [self]
+
+    def is_null(self):
+        for attribute in self.attributes:
+            if not attribute.is_null():
+                return False
+        return True
 
     def get_attributes_list(self, name: str, origin: AttributeOrigin = None) -> list[ASPAttribute]:
         if origin:
@@ -44,7 +53,11 @@ class ASPAtom(ASPElement):
         return attributes
 
     def to_string(self) -> str:
-        string = 'not ' if self.negated else ''
+        string = ''
+        for attribute in self.attributes:
+            for operation in attribute.operations:
+                string += f'{operation.to_string()}, '
+        string += 'not ' if self.negated else ''
         string += f'{self.name}('
         if Utility.PRINT_WITH_FUNCTIONS:
             visited = []
