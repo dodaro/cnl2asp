@@ -81,6 +81,7 @@ class ASPRule(ASPElement):
                 for head in self.head:
                     if head.condition.to_string():
                         rule = f'{{{rule}}}'
+        rule = rule.strip()
         if self.body.conjunction:
             rule += f'{" " if self.head else ""}:- '
             rule += f'{self.body.to_string()}'

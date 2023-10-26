@@ -8,6 +8,10 @@ class EntityNotFound(Exception):
     def __init__(self, msg: str):
         super(EntityNotFound, self).__init__(msg)
 
+class DuplicatedTypedEntity(Exception):
+    def __init__(self, msg: str):
+        super(DuplicatedTypedEntity, self).__init__(msg)
+
 class AttributeNotFound(Exception):
     def __init__(self, msg: str):
         super(AttributeNotFound, self).__init__(msg)

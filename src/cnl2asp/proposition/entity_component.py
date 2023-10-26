@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 from typing import Any, TYPE_CHECKING
 
-from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, AttributeNotFound
+from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, AttributeNotFound, DuplicatedTypedEntity
 from cnl2asp.converter.converter_interface import Converter, EntityConverter
 from cnl2asp.proposition.attribute_component import AttributeComponent, ValueComponent, AttributeOrigin, is_same_origin
 from cnl2asp.proposition.component import Component
@@ -21,6 +21,7 @@ class EntityType(Enum):
     DATE = 2
     STEP = 3
     ANGLE = 4
+    SET = 5
 
 
 class EntityComponent(Component):
@@ -35,6 +36,9 @@ class EntityComponent(Component):
                 attribute.origin = AttributeOrigin(self.name)
         self.negated = negated
         self.entity_type = entity_type
+
+    def removesuffix(self, string: str):
+        pass
 
     def label_is_key_value(self):
         if self.label and len(self.get_keys()) == 1 and self.get_keys()[0].value == Utility.NULL_VALUE:
@@ -67,6 +71,9 @@ class EntityComponent(Component):
 
     def negate(self):
         self.negated = not self.negated
+
+    def get_entity_identifier(self):
+        return self.name
 
     def get_keys(self) -> list[AttributeComponent]:
         return self.keys if self.keys else self.attributes
@@ -140,13 +147,22 @@ class EntityComponent(Component):
 
 
 class SetOfTypedEntities:
-    _TypedEntities = []
+    _TypedEntities: list[EntityComponent] = []
 
     def __init__(self):
         pass
 
+    def update_entity(self, name: str) -> EntityComponent:
+        for entity in SetOfTypedEntities._TypedEntities:
+            if entity.get_entity_identifier() == name:
+                return entity
+        raise EntityNotFound(f"Internal error. Typed entity {name} not defined.")
+
     @staticmethod
     def add_entity(entity: EntityComponent):
+        for typedEntity in SetOfTypedEntities._TypedEntities:
+            if entity.get_entity_identifier() == typedEntity.get_entity_identifier():
+                raise DuplicatedTypedEntity(f'Entity \"{entity.name}\" already defined.')
         SetOfTypedEntities._TypedEntities.append(entity)
 
     def is_temporal_entity(name: str) -> bool:
@@ -159,7 +175,7 @@ class SetOfTypedEntities:
     @staticmethod
     def get_entity(name: str) -> EntityComponent:
         for entity in SetOfTypedEntities._TypedEntities:
-            if entity.name == name:
+            if entity.get_entity_identifier() == name:
                 return entity.copy()
         raise EntityNotFound(f"Typed entity {name} not defined.")
 
@@ -268,3 +284,32 @@ class TemporalEntityComponent(EntityComponent):
         copy.set_attributes_value(super(TemporalEntityComponent, self).copy().attributes)
         copy.set_attributes_value(super(TemporalEntityComponent, self).copy().keys)
         return copy
+
+
+class SetEntityComponent(EntityComponent):
+    def __init__(self, name: str, set_id: ValueComponent = None, values: list[ValueComponent] = None):
+        if values is None:
+            self.values = []
+        else:
+            self.values = values
+        if set_id is None:
+            self.set_id = ValueComponent(Utility.generate_set_id())
+        else:
+            self.set_id = set_id
+        self.entity_identifier = name
+        super().__init__('set', '', [AttributeComponent('set_id', self.set_id)],
+                         [AttributeComponent('element', ValueComponent(Utility.NULL_VALUE))],
+                         False, EntityType.SET)
+
+    def get_entity_identifier(self):
+        return self.entity_identifier
+
+    def is_value_in_set(self, value: ValueComponent) -> bool:
+        for set_value in self.values:
+            if value == set_value:
+                return True
+        return False
+
+    def copy(self) -> EntityComponent:
+        return SetEntityComponent(self.entity_identifier, self.set_id, self.values)
+

@@ -87,7 +87,7 @@ Every waiter can be payed.
 It is required that when waiter X works in pub P1 then waiter X does not work in pub P2, where P1 is different from P2.'''
         asp = self.compute_asp(string)
         self.assertEqual(asp.strip(), '''{work_in(WTR_D,PB_D): pub(PB_D)} 1 :- waiter(WTR_D).
- {payed(WTR_D)} 1 :- waiter(WTR_D).
+{payed(WTR_D)} 1 :- waiter(WTR_D).
 :- work_in(X,P1), pub(P1), waiter(X), work_in(X,P2), pub(P2), P1 != P2.''')
 
     def test_quantified_simple_clause_constraint(self):
@@ -99,7 +99,7 @@ Every waiter can be payed.
         It is required that every waiter is payed.'''
         asp = self.compute_asp(string)
         self.assertEqual(asp.strip(), '''{work_in(WTR_D,PB_D): pub(PB_D)} 1 :- waiter(WTR_D).
- {payed(WTR_D)} 1 :- waiter(WTR_D).
+{payed(WTR_D)} 1 :- waiter(WTR_D).
 :- waiter(PYD_D), not payed(PYD_D).''')
 
     def test_enumerative_definition(self):
@@ -208,7 +208,7 @@ A patient is identified by an id, and has a preference.
 
 Whenever there is a patient P, whenever there is a timeslot T, then we can have a position in a day D for 2 timeslots.'''
         asp = self.compute_asp(string)
-        self.assertEqual(asp.strip(), '''{x_support(D,P,T): day(D)} 1 :- patient(P,_), timeslot(T).
+        self.assertEqual(asp.strip(), '''{x_support(D,P,T): day(D)} :- patient(P,_), timeslot(T).
 position_in(X_SPPRT_DY,P,T..T+2) :- patient(P,_), timeslot(T), x_support(X_SPPRT_DY,P,T).''')
 
     @patch('cnl2asp.utility.utility.uuid4')
@@ -220,7 +220,7 @@ position_in(X_SPPRT_DY,P,T..T+2) :- patient(P,_), timeslot(T), x_support(X_SPPRT
 
     Whenever there is a patient P, then we can have a position with timeslot T in a day D for 2 timeslots.'''
         asp = self.compute_asp(string)
-        self.assertEqual(asp.strip(), '''{x_support(D,P,T): day(D)} 1 :- patient(P,_).
+        self.assertEqual(asp.strip(), '''{x_support(D,P,T): day(D)} :- patient(P,_).
 position_in(X_SPPRT_DY,P,T..T+2) :- patient(P,_), x_support(X_SPPRT_DY,P,T).''')
 
     def test_substitute_subsequent_event(self):
@@ -308,7 +308,7 @@ A registration is identified by a patient, and by an order, and has a number of 
         Every node X can have a path to a node connected to node X.'''
         asp = self.compute_asp(string)
         self.assertEqual(asp.strip(),
-                         '''node(1..5).\n {path_to(CNNCTD_T_D): node(CNNCTD_T_D), connected_to(CNNCTD_T_D)} 1 :- node(X).''')
+                         '''node(1..5).\n{path_to(CNNCTD_T_D): node(CNNCTD_T_D), connected_to(CNNCTD_T_D)} 1 :- node(X).''')
 
     def test_parameter_temporal_ordering(self):
         string = '''
@@ -328,6 +328,18 @@ A registration is identified by a patient, and by an order, and has a number of 
         string = '''John is a waiter.'''
         asp = self.compute_asp(string)
         self.assertEqual(asp.strip(), 'waiter("John").')
+
+    @patch('cnl2asp.utility.utility.uuid4')
+    def test_simple_aggregate(self, mock_uuid):
+        mock_uuid.side_effect = ['TOT1', 'TOT2', 'TOT1', 'TOT2']
+        string = '''A positivematch is identified by a match.
+A negativematch is identified by a match.
+It is required that the number of positivematch is equal to the number of negativematch.
+It is required that the number of positivematch occurrences is equal to the number of negativematch occurrences.'''
+        asp = self.compute_asp(string)
+        self.assertEqual(asp.strip(), ''':- #count{positivematch(PSTVMTCH_MTCH): positivematch(PSTVMTCH_MTCH)} = X_TOT1, #count{negativematch(NGTVMTCH_MTCH): negativematch(NGTVMTCH_MTCH)} = X_TOT2, X_TOT1 != X_TOT2.
+:- #count{positivematch(PSTVMTCH_MTCH): positivematch(PSTVMTCH_MTCH)} = X_TOT1, #count{negativematch(NGTVMTCH_MTCH): negativematch(NGTVMTCH_MTCH)} = X_TOT2, X_TOT1 != X_TOT2.''')
+
 
 if __name__ == '__main__':
     unittest.main()

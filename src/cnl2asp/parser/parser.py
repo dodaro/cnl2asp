@@ -8,13 +8,14 @@ import lark
 from lark import Transformer, v_args
 
 from cnl2asp.exception.cnl2asp_exceptions import LabelNotFound, ParserError, AttributeNotFound, EntityNotFound, \
-    EntityNotFound, CompilationError
+    EntityNotFound, CompilationError, DuplicatedTypedEntity
 from cnl2asp.parser.command import SubstituteVariable, Command, DurationClause, CreateSignature
 from cnl2asp.parser.proposition_builder import PropositionBuilder, PreferencePropositionBuilder
 from cnl2asp.proposition.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent, AttributeOrigin
 from cnl2asp.proposition.component import Component
 from cnl2asp.proposition.constant_component import ConstantComponent
-from cnl2asp.proposition.entity_component import EntityComponent, EntityType, TemporalEntityComponent, SetOfTypedEntities
+from cnl2asp.proposition.entity_component import EntityComponent, EntityType, TemporalEntityComponent, \
+    SetOfTypedEntities, SetEntityComponent
 from cnl2asp.proposition.problem import Problem
 from cnl2asp.proposition.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, \
     CardinalityComponent, PREFERENCE_PROPOSITION_TYPE, \
@@ -58,7 +59,8 @@ class CNLTransformer(Transformer):
         self._delayed_operations = []
 
     def explicit_definition_proposition(self, elem):
-        self._problem.add_signature(elem[0])
+        if elem[0]:
+            self._problem.add_signature(elem[0])
         self._clear()
 
     @v_args(meta=True)
@@ -119,6 +121,23 @@ class CNLTransformer(Transformer):
             return f'{elem[0]}/{elem[1]}/{elem[2]}'
         # time
         return f'{elem[0]}:{elem[1]} {elem[2]}'
+
+    @v_args(meta=True)
+    def set_concept_definition(self, meta, elem):
+        try:
+            set_entity = SetEntityComponent(elem[0])
+            SetOfTypedEntities().add_entity(set_entity)
+            return set_entity
+        except DuplicatedTypedEntity as e:
+            raise CompilationError(str(e), meta.line)
+
+    @v_args(meta=True)
+    def set_elements_definition(self, meta, elem):
+        try:
+            set_entity: SetEntityComponent = SetOfTypedEntities().update_entity(elem[0])
+            set_entity.values = elem[1]
+        except EntityNotFound as e:
+            CompilationError(str(e), line=meta.line)
 
     def implicit_definition_proposition(self, elem) -> None:
         for command in self._delayed_operations:
@@ -268,8 +287,8 @@ class CNLTransformer(Transformer):
     def then_clause(self, elem) -> [EntityComponent | str, Proposition]:
         subject = elem[0]
         # if can and not cardinality we have a
-        # choice with cardinality = (0, 1) else we take the cardinality
-        cardinality = CardinalityComponent(0, 1) \
+        # choice with cardinality = Null else we take the cardinality
+        cardinality = CardinalityComponent(None, None) \
             if elem[1] == 'can' and not self._proposition.get_cardinality() else self._proposition.get_cardinality()
         self._proposition.add_cardinality(cardinality)
         return subject
@@ -409,6 +428,12 @@ class CNLTransformer(Transformer):
         return aggregate
 
     def simple_aggregate(self, elem):
+        discriminant = [elem[1]]
+        body = [elem[1]]
+        aggregate = AggregateComponent(elem[0], discriminant, body)
+        return aggregate
+
+    def simple_aggregate_with_parameter(self, elem):
         discriminant = [elem[1]]
         body = [elem[2]]
         aggregate = AggregateComponent(elem[0], discriminant, body)
@@ -565,6 +590,11 @@ class CNLTransformer(Transformer):
             return True
         return False
 
+    def _is_variable(self, string: str) -> bool:
+        if string.isupper():
+            return True
+        return False
+
     def entity_temporal_order_constraint(self, elem):
         return [elem[0], elem[1]]
 
@@ -615,6 +645,22 @@ class CNLTransformer(Transformer):
         if entity.label_is_key_value():
             entity.set_label_as_key_value()
         return entity
+
+    @v_args(meta=True)
+    def set_entity(self, meta, elem):
+        try:
+            set_entity: SetEntityComponent = SetOfTypedEntities.get_entity(elem[1])
+            if not self._is_variable(elem[0].value):
+                if not set_entity.is_value_in_set(elem[0].value):
+                    raise AttributeError(f'Value \"{elem[0].value}\" not declared '
+                                         f'in set {set_entity.get_entity_identifier()}')
+            set_entity.set_attribute_value('element', elem[0])
+            return set_entity
+        except EntityNotFound as e:
+            raise CompilationError(str(e), meta.line)
+
+    def set_entity_parameter(self, elem):
+        return self.parameter(elem)
 
     def __substitute_subsequent_event(self, entity, operator: str, entity_type: EntityType):
         attribute_name = ''

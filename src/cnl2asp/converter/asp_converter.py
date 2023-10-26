@@ -163,9 +163,7 @@ class ASPConverter(Converter[ASPProgram,
         return len(entity_keys) == 1 and \
                entity.get_attributes_by_name_and_origin(entity_keys[0].name, entity_keys[0].origin)[0].value == Utility.ASP_NULL_VALUE
 
-    def convert_aggregate(self, aggregate: AggregateComponent) -> ASPAggregate:
-        discriminant = [attribute.convert(self) for attribute in aggregate.discriminant]
-        body = ASPConjunction([component.convert(self) for component in aggregate.body])
+    def _match_discriminant_attributes_with_body(self, discriminant: list, body: ASPConjunction):
         unmatched_discriminant_attributes = []
         # create a variable to match discriminant attribute with the atoms attributes with the same name
         for attribute in discriminant:
@@ -197,6 +195,22 @@ class ASPConverter(Converter[ASPProgram,
                 discriminant_value = ASPValue(self.create_new_field_value(attribute.name))
             for attribute_to_set in attributes_to_be_equal_discriminant_value:
                 attribute_to_set.value = discriminant_value
+
+    def _match_discriminant_atom_with_body(self, discriminant: list[ASPAtom], body: ASPConjunction):
+        for discriminant_elem in discriminant:
+            for body_elem in body.get_atom_list():
+                if discriminant_elem == body_elem:
+                    for attribute in discriminant_elem.attributes:
+                        self._link_atom_to_attribute(body_elem, attribute, [])
+
+    def convert_aggregate(self, aggregate: AggregateComponent) -> ASPAggregate:
+        # discriminant can be an atom or an attribute
+        discriminant = [discr.convert(self) for discr in aggregate.discriminant]
+        body = ASPConjunction([component.convert(self) for component in aggregate.body])
+        if [x for x in discriminant if isinstance(x, ASPAttribute)]:
+            self._match_discriminant_attributes_with_body(discriminant, body)
+        else:
+            self._match_discriminant_atom_with_body(discriminant, body)
         return ASPAggregate(aggregate.operation, discriminant, body)
 
     def is_list_of_aggregates(self, operands) -> bool:
@@ -305,7 +319,9 @@ class ASPConverter(Converter[ASPProgram,
         return forbidden_attributes
 
     def _link_two_atoms(self, relation: RelationComponent, atom_1: ASPAtom, atom_2: ASPAtom,
-                        forbidden_links: list[ASPAttribute] = []):
+                        forbidden_links: list[ASPAttribute] = None):
+        if forbidden_links is None:
+            forbidden_links = []
         linked_attributes: list[ASPAttribute] = forbidden_links  # list of already linked attributes
         for key in relation.entity_1.get_keys():
             atom_1_keys = atom_1.get_attributes_list_by_name_and_origin(key.name, key.origin)
