@@ -16,8 +16,8 @@
 // Which type of clause do we expect?
 start: (explicit_definition_proposition END_OF_LINE)* ((explicit_definition_proposition_err | implicit_definition_proposition | standard_proposition) END_OF_LINE)+
 
-explicit_definition_proposition.1: standard_definition | temporal_concept_definition | set_concept_definition | set_elements_definition
-explicit_definition_proposition_err: standard_definition | temporal_concept_definition | set_concept_definition
+explicit_definition_proposition.1: standard_definition | temporal_concept_definition | complex_concept_definition | complex_concept_elements_definition
+explicit_definition_proposition_err: standard_definition | temporal_concept_definition | complex_concept_definition | complex_concept_elements_definition
 standard_definition.1: INDEFINITE_ARTICLE? STRING ["is identified " keys_list] ", and"? ["has" parameter_definition (", " "and "? parameter_definition)*]
 keys_list: "by" parameter_definition (", " "and"? "by" parameter_definition)*
 parameter_definition: INDEFINITE_ARTICLE? (PARAMETER_NAME)+
@@ -26,8 +26,9 @@ temporal_concept_definition.1: ("A " | "An ") STRING "is a temporal concept expr
 TEMPORAL_TYPE: "minutes" | "minute" | "days" | "day" | "steps" | "step"
 temporal_value: NUMBER ":" NUMBER STRING | NUMBER "/" NUMBER "/" NUMBER | NUMBER | STRING
 
-set_concept_definition.1: STRING "is a set"
-set_elements_definition: STRING "contains" string_list
+complex_concept_definition.1: STRING "is a" COMPLEXT_CONCEPT_TYPE
+COMPLEXT_CONCEPT_TYPE: "set" | "list"
+complex_concept_elements_definition: STRING "contains" string_list
 
 implicit_definition_proposition: constant_definition_clause -> constant_implicit_definition_proposition
                                  | simple_definition
@@ -89,17 +90,8 @@ comparison:  ARITHMETIC_OPERATOR "between" (EXPRESSION | STRING | parameter_enti
 
 aggregate_clause: AGGREGATE_OPERATOR "of" entity "occurrences"? -> simple_aggregate
                 | AGGREGATE_OPERATOR "of"? parameter "of" entity -> simple_aggregate_with_parameter
-                //  the number of PARAMETRO [for each | in ..] (that (have | is) VERBO [with parametri_verbo] COMPLEMENTO [with parametri_complemento])*
                 | AGGREGATE_OPERATOR "of" parameter [("for each" | "in") parameter] ("that" COPULA verb [conjunctive_object_list]) -> aggregate_active_clause
-                //  the number of PARAMETRO [with parametri_verbo] [for each | in ..] (where ENTITÀ (have | is) VERBO [with parametri_verbo] COMPLEMENTO [with parametri_complemento])*
                 | AGGREGATE_OPERATOR "of" parameter [parameter_list] [("for each" | "in") parameter] ("where" entity COPULA? verb [conjunctive_object_list] ","?)+ -> aggregate_passive_clause
-
-// TODO remove also methods from transformer
-// aggregate_active_clause: "that" COPULA? predicate_wrv
-// aggregate_passive_clause: "where" entity COPULA? predicate_wrv
-//predicate with return value
-// predicate_wrv: ("a "i | "an "i )? verb [conjunctive_object_list] -> predicate_with_objects_wrv
-//           | ("a "i | "an "i )? verb simple_clause_wrv -> predicate_with_simple_clause_wrv
 
 such_that_clause: ", such that there is" conjunctive_object_list
 AGGREGATE_OPERATOR: "the number" | "the total" | "the highest" | "the lowest" | "the biggest" | "the smallest"
@@ -141,12 +133,16 @@ predicate: verb [cardinality] "such that there is"? [conjunctive_object_list] ["
 
 simple_clause_wrv.-2: entity COPULA? verb [conjunctive_object_list]
 
-entity: ("a "i | "an "i )? STRING [STRING] [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list]
-      | set_entity_parameter "in" STRING -> set_entity
-set_entity_parameter: "an " "element" [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]
+?entity: simple_entity | complex_entity
+simple_entity: ("a "i | "an "i )? STRING [STRING] [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list]
+complex_entity: complex_entity_parameter "in" STRING -> generic_element
+              | "the" STRING "element"? [EXPRESSION] ORDERING_OPERATOR STRING -> list_element_order
+              | "the" NUMBER ("st" | "nd" | "rd" | "th") "element" [EXPRESSION] "in" STRING -> list_index_element
+complex_entity_parameter: "an " "element" [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]
+
+
 entity_temporal_order_constraint: "that is" ORDERING_OPERATOR temporal_value
 define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE
-
 
 verb.1: [VERB_NEGATION] INDEFINITE_ARTICLE? STRING [parameter_list] [VERB_PREPOSITION]
 

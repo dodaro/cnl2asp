@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import abc
 from datetime import datetime, timedelta
 from enum import Enum
 from typing import Any, TYPE_CHECKING
@@ -22,6 +23,7 @@ class EntityType(Enum):
     STEP = 3
     ANGLE = 4
     SET = 5
+    LIST = 6
 
 
 class EntityComponent(Component):
@@ -48,9 +50,10 @@ class EntityComponent(Component):
     def set_label_as_key_value(self):
         # we consider the label value as the value of the key in case the entity has only one key and
         # has no values
-        self.set_attributes_value(
-            [AttributeComponent(self.get_keys()[0].name,
-                                ValueComponent(self.label), self.get_keys()[0].origin)])
+        if self.label_is_key_value():
+            self.set_attributes_value(
+                [AttributeComponent(self.get_keys()[0].name,
+                                    ValueComponent(self.label), self.get_keys()[0].origin)])
 
     def set_name(self, name: str):
         self.name = name
@@ -146,70 +149,6 @@ class EntityComponent(Component):
                and self.entity_type == other.entity_type
 
 
-class SetOfTypedEntities:
-    _TypedEntities: list[EntityComponent] = []
-
-    def __init__(self):
-        pass
-
-    def update_entity(self, name: str) -> EntityComponent:
-        for entity in SetOfTypedEntities._TypedEntities:
-            if entity.get_entity_identifier() == name:
-                return entity
-        raise EntityNotFound(f"Internal error. Typed entity {name} not defined.")
-
-    @staticmethod
-    def add_entity(entity: EntityComponent):
-        for typedEntity in SetOfTypedEntities._TypedEntities:
-            if entity.get_entity_identifier() == typedEntity.get_entity_identifier():
-                raise DuplicatedTypedEntity(f'Entity \"{entity.name}\" already defined.')
-        SetOfTypedEntities._TypedEntities.append(entity)
-
-    def is_temporal_entity(name: str) -> bool:
-        try:
-            SetOfTypedEntities.get_entity(name)
-            return True
-        except:
-            return False
-
-    @staticmethod
-    def get_entity(name: str) -> EntityComponent:
-        for entity in SetOfTypedEntities._TypedEntities:
-            if entity.get_entity_identifier() == name:
-                return entity.copy()
-        raise EntityNotFound(f"Typed entity {name} not defined.")
-
-    @staticmethod
-    def get_entity_from_type(entity_type: str) -> EntityComponent:
-        for entity in SetOfTypedEntities._TypedEntities:
-            if entity.entity_type == entity_type:
-                return entity.copy()
-        raise EntityNotFound(f"Typed entity with type {entity_type} not defined.")
-
-    @staticmethod
-    def get_entity_from_value(value: ValueComponent):
-        """
-        Parse the value and return the first entity that match the same type
-        :param value: a date, time or number
-        :return: the entity that match the type
-        """
-        entity_type = EntityType.STEP
-        try:
-            datetime.strptime(str(value), '%I:%M %p')
-            entity_type = EntityType.TIME
-        except:
-            pass
-        try:
-            datetime.strptime(str(value), '%d/%m/%Y')
-            entity_type = EntityType.DATE
-        except:
-            pass
-        for entity in SetOfTypedEntities._TypedEntities:
-            if entity.entity_type == entity_type:
-                return entity
-        raise EntityNotFound(f"No entity found with same type of {value}")
-
-
 class TemporalEntityComponent(EntityComponent):
     def __init__(self, name: str, label: str,
                  lhs_range_value: ValueComponent,
@@ -286,23 +225,29 @@ class TemporalEntityComponent(EntityComponent):
         return copy
 
 
-class SetEntityComponent(EntityComponent):
-    def __init__(self, name: str, set_id: ValueComponent = None, values: list[ValueComponent] = None):
+class ComplexEntityComponent(EntityComponent):
+    def __init__(self, name: str, complex_entity_id: ValueComponent, keys: list[AttributeComponent],
+                 attributes: list[AttributeComponent], entity_type: EntityType, values: list[ValueComponent] = None):
         if values is None:
             self.values = []
         else:
             self.values = values
-        if set_id is None:
-            self.set_id = ValueComponent(Utility.generate_set_id())
-        else:
-            self.set_id = set_id
-        self.entity_identifier = name
-        super().__init__('set', '', [AttributeComponent('set_id', self.set_id)],
-                         [AttributeComponent('element', ValueComponent(Utility.NULL_VALUE))],
-                         False, EntityType.SET)
+        self.entity_identifier = complex_entity_id
+        super().__init__(name, '', keys, attributes, False, entity_type)
 
     def get_entity_identifier(self):
         return self.entity_identifier
+
+    def set_values(self, values):
+        self.values = values
+
+
+class SetEntityComponent(ComplexEntityComponent):
+    def __init__(self, set_id: ValueComponent = None, values: list[ValueComponent] = None):
+        super().__init__('set', set_id, [AttributeComponent('set_id', set_id, AttributeOrigin('set')),
+                                         AttributeComponent('element', ValueComponent(Utility.NULL_VALUE), AttributeOrigin('set'))],
+
+                         [], EntityType.SET, values)
 
     def is_value_in_set(self, value: ValueComponent) -> bool:
         for set_value in self.values:
@@ -310,6 +255,41 @@ class SetEntityComponent(EntityComponent):
                 return True
         return False
 
-    def copy(self) -> EntityComponent:
-        return SetEntityComponent(self.entity_identifier, self.set_id, self.values)
+    def set_label_as_key_value(self):
+        if self.label in self.values:
+            self.set_attribute_value('element', ValueComponent(self.label))
+
+    def copy(self) -> SetEntityComponent:
+        return SetEntityComponent(self.entity_identifier, self.values)
+
+
+class ListEntityComponent(ComplexEntityComponent):
+    def __init__(self, list_id: ValueComponent = None, values: list[ValueComponent] = None):
+        super().__init__('list', list_id, [AttributeComponent('list_id', list_id, AttributeOrigin('list')),
+                                           AttributeComponent('index', ValueComponent(Utility.NULL_VALUE), AttributeOrigin('list'))],
+                         [AttributeComponent('element', ValueComponent(Utility.NULL_VALUE), AttributeOrigin('list'))],
+                         EntityType.LIST, values)
+    def set_label_as_key_value(self):
+        if self.label in self.values:
+            self.set_attribute_value('element', ValueComponent(self.label))
+            self.set_attribute_value('index', ValueComponent(self.values.index(ValueComponent(self.label))))
+
+    def copy(self) -> ListEntityComponent:
+        return ListEntityComponent(self.entity_identifier, self.values)
+
+    def set_shifted_value(self, shift_value: int, starting_value: str, element_variable: ValueComponent):
+        element_index = (self.values.index(ValueComponent(starting_value)) + shift_value) % len(self.values)
+        element = self.values[element_index]
+        if element_variable:
+            element_index = element_variable
+        self.set_attribute_value('index', ValueComponent(element_index))
+        self.set_attribute_value('element', ValueComponent(element))
+
+    def set_index_value(self, index: int, element_variable: ValueComponent):
+        element = self.values[index]
+        if element_variable:
+            index = element_variable
+        self.set_attribute_value('index', ValueComponent(index))
+        self.set_attribute_value('element', ValueComponent(element))
+
 

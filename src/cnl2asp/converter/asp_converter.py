@@ -253,7 +253,7 @@ class ASPConverter(Converter[ASPProgram,
         self._program.add_constant((constant.name, value))
 
     def convert_value(self, value: ValueComponent) -> ASPValue:
-        if not self._program.is_constant(value) and value.isalpha() and not value.isupper():
+        if not self._program.is_constant(value) and not value == Utility.NULL_VALUE and not value.isnumeric() and not value.isupper():
             return ASPValue(f'"{value}"')
         return ASPValue(value)
 
