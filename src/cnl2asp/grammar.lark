@@ -18,29 +18,76 @@ start: (explicit_definition_proposition END_OF_LINE)* ((explicit_definition_prop
 
 explicit_definition_proposition.1: standard_definition | temporal_concept_definition | complex_concept_definition | complex_concept_elements_definition
 explicit_definition_proposition_err: standard_definition | temporal_concept_definition | complex_concept_definition | complex_concept_elements_definition
-standard_definition.1: INDEFINITE_ARTICLE? STRING ["is identified " keys_list] ", and"? ["has" parameter_definition (", " "and "? parameter_definition)*]
-keys_list: "by" parameter_definition (", " "and"? "by" parameter_definition)*
-parameter_definition: INDEFINITE_ARTICLE? (PARAMETER_NAME)+
-temporal_concept_definition.1: ("A " | "An ") STRING "is a temporal concept expressed in" TEMPORAL_TYPE "ranging from" temporal_value "to" temporal_value ["with a length of" NUMBER ("minutes" | "days")]
+_CNL_IS: "is"
+_CNL_IDENTIFIED: "identified"
+_CNL_IS_IDENTIFIED: _CNL_IS " " _CNL_IDENTIFIED
+_CNL_COMMA: ","
+_CNL_AND: "and"
+_CNL_HAS: "has"
+standard_definition.1: _CNL_INDEFINITE_ARTICLE? STRING [_CNL_IS_IDENTIFIED keys_list] (_CNL_COMMA _CNL_AND)? [_CNL_HAS parameter_definition (_CNL_COMMA _CNL_AND? parameter_definition)*]
+_CNL_BY: "by"
+keys_list: _CNL_BY parameter_definition (_CNL_COMMA _CNL_AND? _CNL_BY parameter_definition)*
+parameter_definition: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+
+_CNL_A: "a"i
+_CNL_TEMPORAL: "temporal"
+_CNL_CONCEPT: "concept"
+_CNL_EXPRESSED: "expressed"
+_CNL_IN: "in"
+_CNL_IS_A_TEMPORAL_CONCEPT_EXPRESSED_IN: _CNL_IS " " _CNL_A " " _CNL_TEMPORAL " " _CNL_CONCEPT " " _CNL_EXPRESSED " " _CNL_IN
+_CNL_RANGING: "ranging"
+_CNL_FROM: "from"
+_CNL_RANGING_FROM: _CNL_RANGING " " _CNL_FROM
+_CNL_TO: "to"
+_CNL_WITH: "with"
+_CNL_LENGTH: "length"
+_CNL_OF: "of"
+_CNL_WITH_A_LENGTH_OF: _CNL_WITH " " _CNL_A " " _CNL_LENGTH " " _CNL_OF
+_CNL_MINUTES: "minutes"
+_CNL_DAYS: "days"
+temporal_concept_definition.1: _CNL_INDEFINITE_ARTICLE STRING _CNL_IS_A_TEMPORAL_CONCEPT_EXPRESSED_IN TEMPORAL_TYPE _CNL_RANGING_FROM temporal_value _CNL_TO temporal_value [_CNL_WITH_A_LENGTH_OF NUMBER (_CNL_MINUTES | _CNL_DAYS)]
 
-TEMPORAL_TYPE: "minutes" | "minute" | "days" | "day" | "steps" | "step"
+_CNL_MINUTE: "minute"
+_CNL_DAY: "day"
+_CNL_STEP: "step"
+_CNL_STEPS: "steps"
+TEMPORAL_TYPE: _CNL_MINUTES | _CNL_MINUTE | _CNL_DAYS | _CNL_DAY | _CNL_STEPS | _CNL_STEP
 temporal_value: NUMBER ":" NUMBER STRING | NUMBER "/" NUMBER "/" NUMBER | NUMBER | STRING
 
-complex_concept_definition.1: STRING "is a" COMPLEXT_CONCEPT_TYPE
-COMPLEXT_CONCEPT_TYPE: "set" | "list"
-complex_concept_elements_definition: STRING "contains" string_list
+complex_concept_definition.1: STRING _CNL_IS COMPLEX_CONCEPT_TYPE
+_CNL_SET: "set"
+_CNL_LIST: "list"
+COMPLEX_CONCEPT_TYPE: _CNL_A " " (_CNL_SET | _CNL_LIST)
+_CNL_CONTAINS: "contains"
+complex_concept_elements_definition: STRING _CNL_CONTAINS string_list
 
 implicit_definition_proposition: constant_definition_clause -> constant_implicit_definition_proposition
                                  | simple_definition
                                  | compounded_range_clause
                                  | compounded_match_clause
                                  | enumerative_definition_clause
-constant_definition_clause.1: STRING "is a constant" ["equal to" STRING]
+_CNL_CONSTANT: "constant"
+_CNL_IS_A_CONSTANT: _CNL_IS " " _CNL_A " " _CNL_CONSTANT
+_CNL_EQUAL: "equal"
+_CNL_EQUAL_TO: _CNL_EQUAL " " _CNL_TO
+constant_definition_clause.1: STRING _CNL_IS_A_CONSTANT [_CNL_EQUAL_TO STRING]
 
-simple_definition.1: STRING COPULA ("a"i | "an"i)? STRING
-compounded_range_clause: ("a"i | "an"i)? STRING "goes from" (NUMBER | STRING) "to" (NUMBER | STRING) [compounded_match_tail]
-compounded_match_clause: ("a"i | "an"i)? STRING "is one of" string_list [compounded_match_tail]
-compounded_match_tail: "and has" STRING ("that are equal to respectively" | "that is equal to respectively") string_list ("and also" STRING ("that are equal to respectively" | "that is equal to respectively") string_list)*
+_CNL_AN: "an"i
+_CNL_INDEFINITE_ARTICLE: _CNL_A | _CNL_AN
+simple_definition.1: STRING COPULA _CNL_INDEFINITE_ARTICLE? STRING
+_CNL_GOES: "goes"
+_CNL_GOES_FROM: _CNL_GOES " " _CNL_FROM
+compounded_range_clause: _CNL_INDEFINITE_ARTICLE? STRING _CNL_GOES_FROM (NUMBER | STRING) _CNL_TO (NUMBER | STRING) [compounded_match_tail]
+_CNL_ONE: "one"
+_CNL_IS_ONE_OF: _CNL_IS " " _CNL_ONE " " _CNL_OF
+compounded_match_clause: _CNL_INDEFINITE_ARTICLE? STRING _CNL_IS_ONE_OF string_list [compounded_match_tail]
+
+_CNL_THAT: "that"
+_CNL_ARE: "are"
+_CNL_RESPECTIVELY: "respectively"
+_CNL_THAT_ARE_EQUAL_TO_RESPECTIVELY: _CNL_THAT " " _CNL_ARE " " _CNL_EQUAL_TO " " _CNL_RESPECTIVELY
+_CNL_THAT_IS_EQUAL_TO_RESPECTIVELY: _CNL_THAT " " _CNL_IS " " _CNL_EQUAL_TO " " _CNL_RESPECTIVELY
+_CNL_ALSO: "also"
+compounded_match_tail: _CNL_AND _CNL_HAS STRING (_CNL_THAT_ARE_EQUAL_TO_RESPECTIVELY | _CNL_THAT_IS_EQUAL_TO_RESPECTIVELY) string_list (_CNL_AND _CNL_ALSO STRING (_CNL_THAT_ARE_EQUAL_TO_RESPECTIVELY | _CNL_THAT_IS_EQUAL_TO_RESPECTIVELY) string_list)*
 enumerative_definition_clause: entity COPULA? verb [conjunctive_object_list] [terminal_clauses]
 
 standard_proposition: whenever_then_clause_proposition
@@ -49,106 +96,177 @@ standard_proposition: whenever_then_clause_proposition
                     | constraint_proposition
                     | weak_constraint_proposition
 
-whenever_then_clause_proposition: (whenever_clause ","?)+ then_clause [terminal_clauses]
-whenever_clause: "whenever there is"i [VERB_NEGATION] entity
-then_clause: "then" entity ASSIGNMENT_VERB COPULA? [cardinality] predicate (","? "or" predicate)*
+whenever_then_clause_proposition: (whenever_clause _CNL_COMMA?)+ then_clause [terminal_clauses]
+_CNL_WHENEVER: "whenever"i
+_CNL_THERE: "there"i
+_CNL_WHENEVER_THERE_IS: _CNL_WHENEVER " " _CNL_THERE " " _CNL_IS
+whenever_clause: _CNL_WHENEVER_THERE_IS [VERB_NEGATION] entity
+_CNL_THEN: "then"
+_CNL_OR: "or"
+then_clause: _CNL_THEN entity ASSIGNMENT_VERB COPULA? [cardinality] predicate (_CNL_COMMA? _CNL_OR predicate)*
 
-fact_proposition: "There is" entity
 
-quantified_choice_proposition: QUANTIFIER entity ASSIGNMENT_VERB COPULA? predicate [(","? "or " predicate)*] [foreach_clause] [terminal_clauses]
-foreach_clause: "for each" conjunctive_object_list
+fact_proposition: _CNL_THERE _CNL_IS entity
 
-CONSTRAINT_OPERATOR: "it is prohibited that"i | "it is required that"i
+quantified_choice_proposition: QUANTIFIER entity ASSIGNMENT_VERB COPULA? predicate [(_CNL_COMMA? _CNL_OR predicate)*] [foreach_clause] [terminal_clauses]
+_CNL_FOR: "for"
+_CNL_EACH: "each"
+_CNL_FOR_EACH: _CNL_FOR " " _CNL_EACH
+foreach_clause: _CNL_FOR_EACH conjunctive_object_list
+
+_CNL_IT: "it"i
+_CNL_PROHIBITED: "prohibited"
+_CNL_IT_IS_PROHIBITED_THAT: _CNL_IT " " _CNL_IS " " _CNL_PROHIBITED " " _CNL_THAT
+_CNL_REQUIRED: "required"
+_CNL_IT_IS_REQUIRED_THAT: _CNL_IT " " _CNL_IS " " _CNL_REQUIRED " " _CNL_THAT
+CONSTRAINT_OPERATOR: _CNL_IT_IS_PROHIBITED_THAT | _CNL_IT_IS_REQUIRED_THAT
 constraint_proposition: CONSTRAINT_OPERATOR (comparison [terminal_clauses]
                                             | when_then_clause [terminal_clauses]
                                             | quantified_simple_clause [terminal_clauses]
                                             | simple_clause_conjunction [terminal_clauses]
-                                            | temporal_constraint [("," whenever_clause)+])
+                                            | temporal_constraint [(_CNL_COMMA whenever_clause)+])
 
-simple_clause_conjunction.-1: simple_clause_wrv ("and also" simple_clause_wrv)*
-when_then_clause: when_clause "then" simple_clause_conjunction
-when_clause: "when" simple_clause_conjunction
+simple_clause_conjunction.-1: simple_clause_wrv (_CNL_AND _CNL_ALSO simple_clause_wrv)*
+when_then_clause: when_clause _CNL_THEN simple_clause_conjunction
+_CNL_WHEN: "when"
+when_clause: _CNL_WHEN simple_clause_conjunction
 quantified_simple_clause: QUANTIFIER simple_clause_wrv
 
 simple_clause: entity COPULA? verb [conjunctive_object_list]
 
-temporal_constraint: "the"? entity "is" ORDERING_OPERATOR temporal_value
-ORDERING_OPERATOR: "before" | "after"
+_CNL_THE: "the"
+temporal_constraint: _CNL_THE? entity _CNL_IS ORDERING_OPERATOR temporal_value
+_CNL_BEFORE: "before"
+_CNL_AFTER: "after"
+ORDERING_OPERATOR: _CNL_BEFORE | _CNL_AFTER
 
-terminal_clauses: (","? (whenever_clause
+terminal_clauses: (_CNL_COMMA? (whenever_clause
                    | where_clause
                    | when_clause))+
 
-where_clause: "where" comparison ("and" comparison)*
-               | "where" VARIABLE COPULA "one of" string_list -> variable_substitution
-string_list: STRING ("," STRING)*
+_CNL_WHERE: "where"
+_CNL_ONE_OF: _CNL_ONE " " _CNL_OF
+where_clause: _CNL_WHERE comparison (_CNL_AND comparison)*
+               | _CNL_WHERE VARIABLE COPULA _CNL_ONE_OF string_list -> variable_substitution
+string_list: STRING (_CNL_COMMA STRING)*
 
-parameter_entity_link: "the"? parameter "of the" entity
-comparison:  ARITHMETIC_OPERATOR "between" (EXPRESSION | STRING | parameter_entity_link) ("," "and"? (EXPRESSION | STRING | parameter_entity_link))+ "is" COMPARISON_OPERATOR (STRING | EXPRESSION | parameter_entity_link) -> arithmetic_operation_comparison
-            | aggregate_clause "is" COMPARISON_OPERATOR (STRING | EXPRESSION | aggregate_clause) [such_that_clause] -> aggregate_comparison
-            | (EXPRESSION | STRING | parameter_entity_link) "is" COMPARISON_OPERATOR (STRING | EXPRESSION | parameter_entity_link) -> variable_comparison
+parameter_entity_link: _CNL_THE? parameter _CNL_OF _CNL_THE entity
+_CNL_BETWEEN: "between"
+comparison:  ARITHMETIC_OPERATOR _CNL_BETWEEN (EXPRESSION | STRING | parameter_entity_link) (_CNL_COMMA _CNL_AND? (EXPRESSION | STRING | parameter_entity_link))+ _CNL_IS COMPARISON_OPERATOR (STRING | EXPRESSION | parameter_entity_link) -> arithmetic_operation_comparison
+            | aggregate_clause _CNL_IS COMPARISON_OPERATOR (STRING | EXPRESSION | aggregate_clause) [such_that_clause] -> aggregate_comparison
+            | (EXPRESSION | STRING | parameter_entity_link) _CNL_IS COMPARISON_OPERATOR (STRING | EXPRESSION | parameter_entity_link) -> variable_comparison
 
-aggregate_clause: AGGREGATE_OPERATOR "of" entity "occurrences"? -> simple_aggregate
-                | AGGREGATE_OPERATOR "of"? parameter "of" entity -> simple_aggregate_with_parameter
-                | AGGREGATE_OPERATOR "of" parameter [("for each" | "in") parameter] ("that" COPULA verb [conjunctive_object_list]) -> aggregate_active_clause
-                | AGGREGATE_OPERATOR "of" parameter [parameter_list] [("for each" | "in") parameter] ("where" entity COPULA? verb [conjunctive_object_list] ","?)+ -> aggregate_passive_clause
+_CNL_OCCURRENCES: "occurrences"
+aggregate_clause: AGGREGATE_OPERATOR _CNL_OF entity _CNL_OCCURRENCES? -> simple_aggregate
+                | AGGREGATE_OPERATOR _CNL_OF? parameter _CNL_OF entity -> simple_aggregate_with_parameter
+                | AGGREGATE_OPERATOR _CNL_OF parameter [(_CNL_FOR_EACH | _CNL_IN) parameter] (_CNL_THAT COPULA verb [conjunctive_object_list]) -> aggregate_active_clause
+                | AGGREGATE_OPERATOR _CNL_OF parameter [parameter_list] [(_CNL_FOR_EACH | _CNL_IN) parameter] (_CNL_WHERE entity COPULA? verb [conjunctive_object_list] _CNL_COMMA?)+ -> aggregate_passive_clause
 
-such_that_clause: ", such that there is" conjunctive_object_list
-AGGREGATE_OPERATOR: "the number" | "the total" | "the highest" | "the lowest" | "the biggest" | "the smallest"
+_CNL_SUCH: "such"
+_CNL_SUCH_THAT_THERE_IS: _CNL_SUCH " " _CNL_THAT " " _CNL_THERE " " _CNL_IS
+such_that_clause: _CNL_COMMA _CNL_SUCH_THAT_THERE_IS conjunctive_object_list
+_CNL_NUMBER: "number"
+_CNL_TOTAL: "total"
+_CNL_HIGHEST: "highest"
+_CNL_LOWEST: "lowest"
+_CNL_BIGGEST: "biggest"
+_CNL_SMALLEST: "smallest"
+AGGREGATE_OPERATOR: _CNL_THE " " (_CNL_NUMBER | _CNL_TOTAL | _CNL_HIGHEST | _CNL_LOWEST | _CNL_BIGGEST | _CNL_SMALLEST)
 
-ARITHMETIC_OPERATOR: "the sum"
-               | "the difference"
-               | "the product"
-               | "the division"
+_CNL_SUM: "sum"
+_CNL_DIFFERENCE: "difference"
+_CNL_PRODUCT: "product"
+_CNL_DIVISION: "division"
+ARITHMETIC_OPERATOR: _CNL_THE " " (_CNL_SUM
+               | _CNL_DIFFERENCE
+               | _CNL_PRODUCT
+               | _CNL_DIVISION)
 
-COMPARISON_OPERATOR: "the same as"
-          | "different from"
-          | "equal to"
-          | "more than"
-          | "greater than"
-          | "less than"
-          | "greater than or equal to"
-          | "less than or equal to"
-          | "at least"
-          | "at most"
-          | "not after"
+_CNL_SAME: "same"
+_CNL_AS: "as"
+_CNL_THE_SAME_AS: _CNL_THE " " _CNL_SAME " " _CNL_AS
+_CNL_DIFFERENT: "different"
+_CNL_DIFFERENT_FROM: _CNL_DIFFERENT " " _CNL_FROM
+_CNL_MORE: "more"
+_CNL_THAN: "than"
+_CNL_MORE_THAN: _CNL_MORE " " _CNL_THAN
+_CNL_GREATER: "greater"
+_CNL_GREATER_THAN: _CNL_GREATER " " _CNL_THAN
+_CNL_LESS: "less"
+_CNL_LESS_THAN: _CNL_LESS " " _CNL_THAN
+_CNL_GREATER_THAN_OR_EQUAL_TO: _CNL_GREATER_THAN " " "or" " " _CNL_EQUAL_TO
+_CNL_AT: "at"
+_CNL_LEAST: "least"
+_CNL_AT_LEAST: _CNL_AT " " _CNL_LEAST
+_CNL_MOST: "most"
+_CNL_AT_MOST: _CNL_AT " " _CNL_MOST
+_CNL_NOT: "not"
+_CNL_NOT_AFTER: _CNL_NOT " " _CNL_AFTER
+COMPARISON_OPERATOR: _CNL_THE_SAME_AS
+          | _CNL_DIFFERENT_FROM
+          | _CNL_EQUAL_TO
+          | _CNL_MORE_THAN
+          | _CNL_GREATER_THAN
+          | _CNL_LESS_THAN
+          | _CNL_GREATER_THAN_OR_EQUAL_TO
+          | _CNL_GREATER_THAN_OR_EQUAL_TO
+          | _CNL_AT_LEAST
+          | _CNL_AT_MOST
+          | _CNL_NOT_AFTER
 
-weak_constraint_proposition: PREFERENCE [OPTIMIZATION_STATEMENT] ","? weak_priority_clause ","? "that" (comparison | simple_clause ) [weak_optimization_operator] [terminal_clauses]
-                           | PREFERENCE [OPTIMIZATION_STATEMENT] ","? weak_priority_clause ","? "that" aggregate_clause [weak_optimization_operator] [terminal_clauses] -> preference_with_aggregate_clause
-                           | PREFERENCE [OPTIMIZATION_STATEMENT] ","? weak_priority_clause ","? "that" whenever_clauses_list "," VARIABLE weak_optimization_operator [terminal_clauses] -> preference_with_variable_minimization
-whenever_clauses_list: whenever_clause ("," whenever_clause)*
-PREFERENCE: "it is preferred"i
-OPTIMIZATION_STATEMENT: "as much as possible" | "as little as possible"
-weak_priority_clause: "with" PRIORITY_LEVEL "priority"
-PRIORITY_LEVEL: "low" | "medium" | "high"
-weak_optimization_operator: "is" OPTIMIZATION_OPERATOR
-OPTIMIZATION_OPERATOR: "minimized" | "maximized"
+weak_constraint_proposition: CNL_IT_IS_PREFERRED [OPTIMIZATION_STATEMENT] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison | simple_clause ) [weak_optimization_operator] [terminal_clauses]
+                           | CNL_IT_IS_PREFERRED [OPTIMIZATION_STATEMENT] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT aggregate_clause [weak_optimization_operator] [terminal_clauses] -> preference_with_aggregate_clause
+                           | CNL_IT_IS_PREFERRED [OPTIMIZATION_STATEMENT] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT whenever_clauses_list _CNL_COMMA VARIABLE weak_optimization_operator [terminal_clauses] -> preference_with_variable_minimization
+whenever_clauses_list: whenever_clause (_CNL_COMMA whenever_clause)*
+
+_CNL_PREFERRED: "preferred"
+CNL_IT_IS_PREFERRED: _CNL_IT " " _CNL_IS " " _CNL_PREFERRED
+_CNL_MUCH: "much"
+_CNL_POSSIBLE: "possible"
+_CNL_AS_MUCH_AS_POSSIBLE: _CNL_AS " " _CNL_MUCH " " _CNL_AS " " _CNL_POSSIBLE
+_CNL_LITTLE: "little"
+_CNL_AS_LITTLE_AS_POSSIBLE: _CNL_AS " " _CNL_LITTLE " " _CNL_AS " " _CNL_POSSIBLE
+OPTIMIZATION_STATEMENT: _CNL_AS_MUCH_AS_POSSIBLE | _CNL_AS_LITTLE_AS_POSSIBLE
+_CNL_PRIORITY: "priority"
+weak_priority_clause: _CNL_WITH " " PRIORITY_LEVEL " " _CNL_PRIORITY
+_CNL_LOW: "low"
+_CNL_MEDIUM: "medium"
+_CNL_HIGH: "high"
+PRIORITY_LEVEL: _CNL_LOW | _CNL_MEDIUM | _CNL_HIGH
+weak_optimization_operator: _CNL_IS OPTIMIZATION_OPERATOR
+
+_CNL_MINIMIZED: "minimized"
+_CNL_MAXIMIZED: "maximized"
+OPTIMIZATION_OPERATOR: _CNL_MINIMIZED | _CNL_MAXIMIZED
 
 //GLOBAL ELEMENT
 cardinality: QUANTITY_OPERATOR STRING -> single_quantity_cardinality
-           | "between" STRING "and" STRING -> range_quantity_cardinality
-conjunctive_object_list.-1: entity ((", " "and "?) entity)*
-predicate: verb [cardinality] "such that there is"? [conjunctive_object_list] ["for" (NUMBER | VARIABLE) STRING] -> predicate_with_objects
-           | verb [cardinality] "such that there is"? simple_clause_wrv -> predicate_with_simple_clause
+           | _CNL_BETWEEN STRING _CNL_AND STRING -> range_quantity_cardinality
+conjunctive_object_list.-1: entity ((_CNL_COMMA _CNL_AND?) entity)*
+predicate: verb [cardinality] _CNL_SUCH_THAT_THERE_IS? [conjunctive_object_list] [_CNL_FOR (NUMBER | VARIABLE) STRING] -> predicate_with_objects
+           | verb [cardinality] _CNL_SUCH_THAT_THERE_IS? simple_clause_wrv -> predicate_with_simple_clause
 
 simple_clause_wrv.-2: entity COPULA? verb [conjunctive_object_list]
 
 ?entity: simple_entity | complex_entity
-simple_entity: ("a "i | "an "i )? STRING [STRING] [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list]
-complex_entity: complex_entity_parameter "in" STRING -> generic_element
-              | "the" STRING "element"? [EXPRESSION] ORDERING_OPERATOR STRING -> list_element_order
-              | "the" NUMBER ("st" | "nd" | "rd" | "th") "element" [EXPRESSION] "in" STRING -> list_index_element
-complex_entity_parameter: "an " "element" [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]
+simple_entity: _CNL_INDEFINITE_ARTICLE? STRING [STRING] [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list]
+_CNL_ELEMENT: "element"
+complex_entity: complex_entity_parameter _CNL_IN STRING -> generic_element
+              | _CNL_THE STRING _CNL_ELEMENT? [EXPRESSION] ORDERING_OPERATOR STRING -> list_element_order
+              | _CNL_THE NUMBER ("st" | "nd" | "rd" | "th") _CNL_ELEMENT [EXPRESSION] _CNL_IN STRING -> list_index_element
+complex_entity_parameter: _CNL_AN _CNL_ELEMENT [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]
 
 
-entity_temporal_order_constraint: "that is" ORDERING_OPERATOR temporal_value
+entity_temporal_order_constraint: _CNL_THAT _CNL_IS ORDERING_OPERATOR temporal_value
 define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE
 
-verb.1: [VERB_NEGATION] INDEFINITE_ARTICLE? STRING [parameter_list] [VERB_PREPOSITION]
+verb.1: [VERB_NEGATION] _CNL_INDEFINITE_ARTICLE? STRING [parameter_list] [VERB_PREPOSITION]
 
-parameter_list.1: PARAMETER_PREPOSITION parameter (", " "and"? PARAMETER_PREPOSITION parameter)*
-parameter.-1: ("a " | "an ")? (PARAMETER_NAME)+ [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]
-              | SHIFT_OPERATOR TEMPORAL_TYPE "respect to" VARIABLE -> parameter_temporal_ordering
+parameter_list.1: PARAMETER_PREPOSITION parameter (_CNL_COMMA _CNL_AND? PARAMETER_PREPOSITION parameter)*
+_CNL_RESPECT: "respect"
+_CNL_RESPECT_TO: _CNL_RESPECT " " _CNL_TO
+parameter.-1: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+ [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]
+              | SHIFT_OPERATOR TEMPORAL_TYPE _CNL_RESPECT_TO VARIABLE -> parameter_temporal_ordering
 
 EXPRESSION: (VARIABLE | NUMBER | "+" | "-"| "*" | "/" | "\\" | "(" | ")" | "|")+
 
@@ -158,21 +276,19 @@ COPULA: "be " | "be a " | "be an "
       | "is " | "is a " | "is an "
       | "have " | "have a " | "have an "
       | "has " | "has a " | "has an "
-SHIFT_OPERATOR: "the next" | "the previous"
+SHIFT_OPERATOR: _CNL_THE " " ("next" | "previous")
 
 PARAMETER_NAME: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|at|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[a-z][A-Za-z0-9]+/i //has to start with lower case letter
 STRING: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|at|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[A-Za-z0-9]+/i
 VARIABLE: UCASE_LETTER (UCASE_LETTER | INT | "_")*
-PARAMETER_PREPOSITION: "by" | "with"
-VERB_PREPOSITION: "by" | "to" | "in"
+PARAMETER_PREPOSITION: _CNL_BY | "with"
+VERB_PREPOSITION: _CNL_BY | "to" | "in"
 
 VERB_NEGATION: "do not" | "does not" | "don't"
               | "doesn't" | "are not" | "aren't" | "not"
 
 QUANTITY_OPERATOR: "exactly" | "at most" | "at least"
 QUANTIFIER: "every"i | "any"i
-
-INDEFINITE_ARTICLE: "a"i | "an"i
 
 NUMBER: INT | FLOAT
 FLOAT: INT _EXP | DECIMAL _EXP?

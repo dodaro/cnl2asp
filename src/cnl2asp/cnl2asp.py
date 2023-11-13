@@ -2,9 +2,11 @@ import os
 import traceback
 from typing import TextIO
 
-from lark import Lark
+from lark import Lark, UnexpectedCharacters
+from lark.exceptions import VisitError
 
 from cnl2asp.ASP_elements.asp_program import ASPProgram
+from cnl2asp.exception.cnl2asp_exceptions import ParserError
 from cnl2asp.proposition.entity_component import EntityComponent
 from cnl2asp.converter.asp_converter import ASPConverter
 from cnl2asp.parser.parser import CNLTransformer
@@ -37,8 +39,13 @@ class Cnl2asp:
     def compile(self) -> str:
         try:
             problem: Problem = self.__parse_input()
-        except Exception as e:
-            print(e)
+        except UnexpectedCharacters as e:
+            self.input_file.seek(0)
+            print(ParserError(e.char, e.line, e.column, e.get_context(self.input_file.read()), list(e.allowed)))
+            return ''
+        except VisitError as e:
+            traceback.print_exc()
+            print(e.orig_exc)
             return ''
         try:
             asp_converter: ASPConverter = ASPConverter()
@@ -46,7 +53,6 @@ class Cnl2asp:
             SignatureManager().signatures = []
             return program.to_string()
         except Exception as e:
-            traceback.print_exc()
             print("Error in asp conversion:", str(e))
             return ''
 

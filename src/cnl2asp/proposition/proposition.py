@@ -110,7 +110,11 @@ class Proposition(Component):
             if to_be_related_with:
                 for key in to_be_related_with.get_keys():
                     if key.value != Utility.NULL_VALUE and signature.has_attribute_value(key.value):
-                        continue
+                        try:
+                            new_entity.get_attributes_by_name_and_origin(key.name, AttributeOrigin(signature.name))[0].origin = key.origin
+                            signature.get_attributes_by_name_and_origin(key.name, AttributeOrigin(signature.name))[0].origin = key.origin
+                        except:
+                            pass
                     try:
                         signature.get_attributes_by_name_and_origin(key.name, key.origin)
                     except AttributeNotFound:

@@ -81,7 +81,7 @@ class CNLTransformer(Transformer):
 
     @v_args(meta=True)
     def explicit_definition_proposition_err(self, meta, elem):
-        raise ParserError("Domain definitions should go at the beginning.", meta.line)
+        raise CompilationError("Domain definitions should go at the beginning.", meta.line)
 
     def standard_definition(self, elem) -> EntityComponent:
         entity_keys = []
@@ -147,10 +147,10 @@ class CNLTransformer(Transformer):
         except DuplicatedTypedEntity as e:
             raise CompilationError(str(e), meta.line)
 
-    def COMPLEXT_CONCEPT_TYPE(self, elem):
-        if elem.value == "set":
+    def COMPLEX_CONCEPT_TYPE(self, elem):
+        if elem.value == "a set":
             return SetEntityComponent('')
-        elif elem.value == "list":
+        elif elem.value == "a list":
             return ListEntityComponent('')
 
     @v_args(meta=True)
@@ -738,7 +738,7 @@ class CNLTransformer(Transformer):
         self._delayed_operations.append(CreateSignature(self._problem, self._proposition, entity))
         return entity
 
-    def PREFERENCE(self, elem):
+    def CNL_IT_IS_PREFERRED(self, elem):
         self._proposition = PreferencePropositionBuilder()
 
     def OPTIMIZATION_STATEMENT(self, elem):
@@ -754,11 +754,11 @@ class CNLTransformer(Transformer):
             self._proposition.add_type(PREFERENCE_PROPOSITION_TYPE.MINIMIZATION)
 
     def PRIORITY_LEVEL(self, elem):
-        if elem == 'low':
+        if elem.value == 'low':
             self._proposition.add_level(PREFERENCE_PRIORITY_LEVEL.LOW)
-        elif elem == 'medium':
+        elif elem.value == 'medium':
             self._proposition.add_level(PREFERENCE_PRIORITY_LEVEL.MEDIUM)
-        elif elem == 'high':
+        elif elem.value == 'high':
             self._proposition.add_level(PREFERENCE_PRIORITY_LEVEL.HIGH)
 
     def NUMBER(self, elem) -> ValueComponent:
@@ -785,8 +785,6 @@ class CNLTransformer(Transformer):
             return QUANTITY_OPERATOR.AT_MOST
         elif quantity == 'at least':
             return QUANTITY_OPERATOR.AT_LEAST
-        else:
-            raise ParserError(f"Unrecognized token {quantity}")
 
     def COMPARISON_OPERATOR(self, elem):
         operator = elem.value
@@ -843,7 +841,6 @@ class CNLTransformer(Transformer):
             return AggregateOperation.MIN
         if operator == "the lowest" or operator == "the smallest":
             return AggregateOperation.MIN
-        raise ParserError(f"Aggregate operator {operator} not recognized")
 
     def VARIABLE(self, elem):
         return ValueComponent(elem.value)

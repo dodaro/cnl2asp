@@ -25,11 +25,18 @@ class AttributeGenericError(Exception):
 
 
 class ParserError(Exception):
-    def __init__(self, msg: str, line: str):
-        line_error = ''
-        if line:
-            line_error = f' at line {line}'
-        super(ParserError, self).__init__(f"Parser Error{line_error}: {msg}")
+    def __init__(self, unexpected_char: str, line: int, col: int, context: str, allowed: list[str]):
+        expected_tokens = ''
+        for word in allowed:
+            if word.startswith('_CNL_'):
+                expected_tokens += f' * {word.removeprefix("_CNL_")}\n'
+            elif word == 'SPACE':
+                expected_tokens += f' * SPACE (" ")\n'
+            else:
+                expected_tokens += f' * {word}\n'
+        super(ParserError, self).__init__(f'Parser error at line {line}, col {col}. Unexpected char "{unexpected_char}":\n'
+                                          f'{context}'
+                                          f'Expected one of:\n{expected_tokens}')
 
 
 class LabelNotFound(Exception):
