@@ -14,7 +14,7 @@
 %ignore C_COMMENT
 
 // Which type of clause do we expect?
-start: (explicit_definition_proposition END_OF_LINE)* ((explicit_definition_proposition_err | implicit_definition_proposition | standard_proposition) END_OF_LINE)+
+start: (explicit_definition_proposition END_OF_LINE)* ((explicit_definition_proposition_err | implicit_definition_proposition | standard_proposition) END_OF_LINE)*
 
 explicit_definition_proposition.1: standard_definition | temporal_concept_definition | complex_concept_definition | complex_concept_elements_definition
 explicit_definition_proposition_err: standard_definition | temporal_concept_definition | complex_concept_definition | complex_concept_elements_definition
