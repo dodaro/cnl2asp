@@ -1,0 +1,15 @@
+set1 is a set.
+set2 is a set.
+A match is identified by a first, and by a second.
+A positivematch is identified by a match.
+A negativematch is identified by a match.
+
+Whenever there is an element X in set1, whenever there is an element Y in set2, then we can have a match with first X, and with second Y.
+
+Whenever there is a match M with first X, and with second Y less than X, then we must have a positivematch with match M.
+Whenever there is a match M with first X, and with second Y greater than X, then we must have a negativematch with match M.
+
+It is required that the number of match occurrences with first E is equal to 1, whenever there is an element E in set1.
+It is required that the number of match occurrences with second E is equal to 1, whenever there is an element E in set2.
+
+It is required that the number of positivematch is equal to the number of negativematch.

@@ -8,9 +8,9 @@ Node 5 is connected to node X, where X is one of 3, 4.
 
 start is a constant equal to 1.
 
-Every node X can have a path to a node connected to node X.
+Every node X can have a path to a node Y connected to node X.
 It is required that the number of nodes where node X has a path to is equal to 1.
-It is required that the number of nodes that have a path to node X is equal to 1.
+It is required that the number of nodes that have a path to is equal to 1.
 
 Node Y is reachable when node X is reachable and also node X has a path to node Y.
 Node start is reachable.

@@ -56,7 +56,6 @@ class Cnl2asp:
             print(ParserError(e.char, e.line, e.column, e.get_context(self.input_file.read()), list(e.allowed)))
             return ''
         except VisitError as e:
-            traceback.print_exc()
             print(e.orig_exc)
             return ''
         try:

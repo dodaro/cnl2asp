@@ -1,0 +1,30 @@
+A node is identified by an id, and by a weight.
+An edge is identified by a first node id, and by a second node id.
+A set is identified by an id.
+
+There is a node with id 1, with weight 1.
+There is a node with id 2, with weight 1.
+There is a node with id 3, with weight 1.
+There is a node with id 4, with weight 1.
+There is a node with id 5, with weight 4.
+
+There is an edge with first node id equal to 1, with second node id equal to 2.
+There is an edge with first node id equal to 1, with second node id equal to 3.
+There is an edge with first node id equal to 4, with second node id equal to 5.
+
+1 is a set.
+2 is a set.
+
+Whenever there is a node N, then N can be assigned to exactly 1 set.
+
+It is prohibited that a node with id N1 is assigned to a set S1
+and also a node with id N2 is assigned to S1,
+whenever there is an edge with first node id N1, with second node id N2.
+
+It is required that the number of node id that are assigned to a set S1
+is greater than
+the number of node id that are assigned to a set S2, where S1 is equal to 1 and S2 is equal to 2.
+
+It is required that the total of weights that are assigned to a set S2
+is greater than or equal to
+the total of weights that are assigned to a set S1, where S1 is equal to 1 and S2 is equal to 2.

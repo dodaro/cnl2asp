@@ -1,0 +1,14 @@
+integer(-1,1).
+integer(1,1).
+integer(2,1).
+integer(4,1).
+integer(5,1).
+integer(0,2).
+integer(1,2).
+integer(3,2).
+integer(6,2).
+integer(7,2).
+1 {match_to(S1,X,S2,Y): S2 != S1, integer(Y,S2)} 1 :- S1 = 1, integer(X,S1).
+:- match_to(S1,X,S2,Y), integer(Y,S2), integer(X,S1), match_to(S1,X,S2,Z), Z != Y, integer(Z,S2).
+:- integer(X,S1), match_to(S1,X,S2,Y), integer(Z,S1), Z != X, match_to(S1,Z,S2,Y), integer(Y,S2).
+:- #count{X1: X2 < X1, match_to(_,X1,_,X2)} = X_A4E6ED3D_6B6D_4660_8824_64C1115DC351, #count{X1: X2 > X1, match_to(_,X1,_,X2)} = X_B8C008CD_F883_43FE_83C2_D42B0B8E400C, X_A4E6ED3D_6B6D_4660_8824_64C1115DC351 != X_B8C008CD_F883_43FE_83C2_D42B0B8E400C.

@@ -127,7 +127,7 @@ class ASPConverter(Converter[ASPProgram,
         discriminant = [attribute.convert(self) for attribute in preference.discriminant]
         weight = preference.weight
         if preference.type == PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION:
-            weight = '-' + preference.weight
+            weight = '-' + preference.weight.upper()
         weak_constraint = ASPWeakConstraint(rule.body, weight,
                                             preference.level.value, discriminant)
         return weak_constraint
@@ -195,6 +195,7 @@ class ASPConverter(Converter[ASPProgram,
                 discriminant_value = ASPValue(self.create_new_field_value(attribute.name))
             for attribute_to_set in attributes_to_be_equal_discriminant_value:
                 attribute_to_set.value = discriminant_value
+        return discriminant
 
     def _match_discriminant_atom_with_body(self, discriminant: list[ASPAtom], body: ASPConjunction):
         for discriminant_elem in discriminant:
@@ -208,7 +209,7 @@ class ASPConverter(Converter[ASPProgram,
         discriminant = [discr.convert(self) for discr in aggregate.discriminant]
         body = ASPConjunction([component.convert(self) for component in aggregate.body])
         if [x for x in discriminant if isinstance(x, ASPAttribute)]:
-            self._match_discriminant_attributes_with_body(discriminant, body)
+            discriminant = self._match_discriminant_attributes_with_body(discriminant, body)
         else:
             self._match_discriminant_atom_with_body(discriminant, body)
         return ASPAggregate(aggregate.operation, discriminant, body)
