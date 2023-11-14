@@ -142,7 +142,7 @@ It is preferred, with medium priority, that whenever there is a topMovie with id
 A director is identified by a name.
 A topMovie is identified by an id.
 A scoreAssignment is identified by a movie, and by a value.
-It is preferred, with medium priority, that the total value of a scoreAssignment is maximized.''', ''':~ #sum{VL: scoreassignment(_,VL)} = X_X. [-X_X@2]''')
+It is preferred, with medium priority, that the total value of a scoreAssignment is minimized.''', ''':~ #sum{VL: scoreassignment(_,VL)} = X_X. [X_X@2]''')
 
     def test_variable_substitution(self):
         self.check_input_to_output('''
@@ -151,10 +151,15 @@ It is preferred, with medium priority, that the total value of a scoreAssignment
 connected_to(1,X) :- node(1), node(X), X = 3.
 connected_to(1,X) :- node(1), node(X), X = 4.''')
 
-    def test_temporal_definitions_and_constraints(self):
+    def test_temporal_definitions_and_constraints_after(self):
         self.check_input_to_output('''A timeslot is a temporal concept expressed in minutes ranging from 07:30 AM to 01:30 PM with a length of 10 minutes.
 An entity is identified by an id, and by a timeslot.
 It is required that the entity E is after 11:20 AM.''',''':- entity(_,TMSLT_NTTY), TMSLT_NTTY <= 23.''')
+
+    def test_temporal_definitions_and_constraints_before(self):
+            self.check_input_to_output('''A timeslot is a temporal concept expressed in minutes ranging from 07:30 AM to 01:30 PM with a length of 10 minutes.
+    An entity is identified by an id, and by a timeslot.
+    It is required that the entity E is before 11:20 AM.''', ''':- entity(_,TMSLT_NTTY), TMSLT_NTTY >= 23.''')
 
     def test_artithmentic_operations_with_parameters(self):
         self.check_input_to_output('''A day is identified by a day.

@@ -1,13 +1,20 @@
 from enum import Enum
 
 from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, AttributeNotFound
-from cnl2asp.converter.converter_interface import Converter, NewKnowledgeConverter, ConditionConverter, RequisiteConverter, \
+from cnl2asp.converter.converter_interface import Converter, NewKnowledgeConverter, ConditionConverter, \
+    RequisiteConverter, \
     CardinalityConverter, PropositionConverter
 from cnl2asp.utility.utility import Utility
 from .attribute_component import AttributeComponent, ValueComponent, AttributeOrigin, is_same_origin
 from .component import Component
 from .entity_component import EntityComponent
 from .relation_component import RelationComponent
+
+
+class PROPOSITION_TYPE(Enum):
+    CONSTRAINT = 0
+    REQUIREMENT = 1
+    PREFERENCE = 2
 
 
 class AggregateOfComponents(Component):
@@ -111,8 +118,10 @@ class Proposition(Component):
                 for key in to_be_related_with.get_keys():
                     if key.value != Utility.NULL_VALUE and signature.has_attribute_value(key.value):
                         try:
-                            new_entity.get_attributes_by_name_and_origin(key.name, AttributeOrigin(signature.name))[0].origin = key.origin
-                            signature.get_attributes_by_name_and_origin(key.name, AttributeOrigin(signature.name))[0].origin = key.origin
+                            new_entity.get_attributes_by_name_and_origin(key.name, AttributeOrigin(signature.name))[
+                                0].origin = key.origin
+                            signature.get_attributes_by_name_and_origin(key.name, AttributeOrigin(signature.name))[
+                                0].origin = key.origin
                         except:
                             pass
                     try:

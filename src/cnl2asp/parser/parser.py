@@ -21,7 +21,7 @@ from cnl2asp.proposition.entity_component import EntityComponent, EntityType, Te
 from cnl2asp.proposition.problem import Problem
 from cnl2asp.proposition.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, \
     CardinalityComponent, PREFERENCE_PROPOSITION_TYPE, \
-    PREFERENCE_PRIORITY_LEVEL
+    PREFERENCE_PRIORITY_LEVEL, PROPOSITION_TYPE
 from cnl2asp.proposition.relation_component import RelationComponent
 from cnl2asp.proposition.aggregate_component import AggregateComponent, AggregateOperation
 from cnl2asp.proposition.operation_component import Operators, OperationComponent
@@ -340,7 +340,7 @@ class CNLTransformer(Transformer):
                     proposition.relations.append(RelationComponent(new_knowledge.new_entity, entity))
 
     def constraint_proposition(self, elem):
-        if elem[0] == "It is required that":
+        if elem[0] == PROPOSITION_TYPE.REQUIREMENT:
             if isinstance(elem[1], list):
                 for e in elem[1]:
                     e.negate()
@@ -738,20 +738,26 @@ class CNLTransformer(Transformer):
         self._delayed_operations.append(CreateSignature(self._problem, self._proposition, entity))
         return entity
 
-    def CNL_IT_IS_PREFERRED(self, elem):
+    def cnl_it_is_preferred(self, elem):
         self._proposition = PreferencePropositionBuilder()
 
-    def OPTIMIZATION_STATEMENT(self, elem):
-        if elem == 'as much as possible':
+    def optimization_statement(self, elem):
+        if elem == PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION:
             self._proposition.add_type(PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION)
-        elif elem == 'as little as possible':
+        elif elem == PREFERENCE_PROPOSITION_TYPE.MINIMIZATION:
             self._proposition.add_type(PREFERENCE_PROPOSITION_TYPE.MINIMIZATION)
 
-    def OPTIMIZATION_OPERATOR(self, elem):
-        if elem == 'maximized':
+    def optimization_operator(self, elem):
+        if elem[0] == PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION:
             self._proposition.add_type(PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION)
-        elif elem == 'minimized':
+        elif elem[0] == PREFERENCE_PROPOSITION_TYPE.MINIMIZATION:
             self._proposition.add_type(PREFERENCE_PROPOSITION_TYPE.MINIMIZATION)
+
+    def CNL_MINIMIZED(self, elem):
+        return PREFERENCE_PROPOSITION_TYPE.MINIMIZATION
+
+    def CNL_MAXIMIZED(self, elem):
+        return PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION
 
     def PRIORITY_LEVEL(self, elem):
         if elem.value == 'low':
@@ -828,7 +834,7 @@ class CNLTransformer(Transformer):
     def SHIFT_OPERATOR(self, elem):
         if elem == 'the previous':
             return '-'
-        else:
+        elif elem == 'the next':
             return '+'
 
     def AGGREGATE_OPERATOR(self, elem):
@@ -859,3 +865,51 @@ class CNLTransformer(Transformer):
 
     def END_OF_LINE(self, end_of_line) -> None:
         return lark.Discard
+
+    def cnl_whenever_there_is(self, elem) -> None:
+        return lark.Discard
+
+    def cnl_that_is_equal_to_respectively(self, elem) -> None:
+        return lark.Discard
+
+    def cnl_that_are_equal_to_respectively(self, elem) -> None:
+        return lark.Discard
+
+    def cnl_is_one_of(self, elem) -> None:
+         return lark.Discard
+
+    def cnl_goes_from(self, elem) -> None:
+         return lark.Discard
+
+    def cnl_with_a_length_of(self, elem) -> None:
+        return lark.Discard
+
+    def cnl_is_identified(self, elem) -> None:
+        return lark.Discard
+
+    def cnl_is_a_temporal_concept_expressed_in(self, elem) -> None:
+        return lark.Discard
+
+    def cnl_ranging_from(self, elem) -> None:
+        return lark.Discard
+
+    def cnl_is_a_constant(self, elem) -> None:
+        return lark.Discard
+
+    def cnl_it_is_prohibited_that(self, elem) -> PROPOSITION_TYPE:
+        return PROPOSITION_TYPE.CONSTRAINT
+
+    def cnl_it_is_required_that(self, elem) -> PROPOSITION_TYPE:
+        return PROPOSITION_TYPE.REQUIREMENT
+
+    def cnl_as_much_as_possible(self, elem) -> None:
+        return PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION
+
+    def cnl_as_little_as_possible(self, elem) -> None:
+        return PREFERENCE_PROPOSITION_TYPE.MINIMIZATION
+    #
+    # def (self, elem) -> None:
+    #     return lark.Discard
+    #
+    # def (self, elem) -> None:
+    #     return lark.Discard

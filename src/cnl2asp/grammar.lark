@@ -20,11 +20,11 @@ explicit_definition_proposition.1: standard_definition | temporal_concept_defini
 explicit_definition_proposition_err: standard_definition | temporal_concept_definition | complex_concept_definition | complex_concept_elements_definition
 _CNL_IS: "is"
 _CNL_IDENTIFIED: "identified"
-_CNL_IS_IDENTIFIED: _CNL_IS " " _CNL_IDENTIFIED
+cnl_is_identified: _CNL_IS " " _CNL_IDENTIFIED
 _CNL_COMMA: ","
 _CNL_AND: "and"
 _CNL_HAS: "has"
-standard_definition.1: _CNL_INDEFINITE_ARTICLE? STRING [_CNL_IS_IDENTIFIED keys_list] (_CNL_COMMA _CNL_AND)? [_CNL_HAS parameter_definition (_CNL_COMMA _CNL_AND? parameter_definition)*]
+standard_definition.1: _CNL_INDEFINITE_ARTICLE? STRING cnl_is_identified? [keys_list] (_CNL_COMMA _CNL_AND)? [_CNL_HAS parameter_definition (_CNL_COMMA _CNL_AND? parameter_definition)*]
 _CNL_BY: "by"
 keys_list: _CNL_BY parameter_definition (_CNL_COMMA _CNL_AND? _CNL_BY parameter_definition)*
 parameter_definition: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+
@@ -33,18 +33,18 @@ _CNL_TEMPORAL: "temporal"
 _CNL_CONCEPT: "concept"
 _CNL_EXPRESSED: "expressed"
 _CNL_IN: "in"
-_CNL_IS_A_TEMPORAL_CONCEPT_EXPRESSED_IN: _CNL_IS " " _CNL_A " " _CNL_TEMPORAL " " _CNL_CONCEPT " " _CNL_EXPRESSED " " _CNL_IN
+cnl_is_a_temporal_concept_expressed_in: _CNL_IS " " _CNL_A " " _CNL_TEMPORAL " " _CNL_CONCEPT " " _CNL_EXPRESSED " " _CNL_IN
 _CNL_RANGING: "ranging"
 _CNL_FROM: "from"
-_CNL_RANGING_FROM: _CNL_RANGING " " _CNL_FROM
+cnl_ranging_from: _CNL_RANGING " " _CNL_FROM
 _CNL_TO: "to"
 _CNL_WITH: "with"
 _CNL_LENGTH: "length"
 _CNL_OF: "of"
-_CNL_WITH_A_LENGTH_OF: _CNL_WITH " " _CNL_A " " _CNL_LENGTH " " _CNL_OF
+cnl_with_a_length_of: _CNL_WITH " " _CNL_A " " _CNL_LENGTH " " _CNL_OF
 _CNL_MINUTES: "minutes"
 _CNL_DAYS: "days"
-temporal_concept_definition.1: _CNL_INDEFINITE_ARTICLE STRING _CNL_IS_A_TEMPORAL_CONCEPT_EXPRESSED_IN TEMPORAL_TYPE _CNL_RANGING_FROM temporal_value _CNL_TO temporal_value [_CNL_WITH_A_LENGTH_OF NUMBER (_CNL_MINUTES | _CNL_DAYS)]
+temporal_concept_definition.1: _CNL_INDEFINITE_ARTICLE STRING cnl_is_a_temporal_concept_expressed_in TEMPORAL_TYPE cnl_ranging_from temporal_value _CNL_TO temporal_value [cnl_with_a_length_of NUMBER (_CNL_MINUTES | _CNL_DAYS)]
 
 _CNL_MINUTE: "minute"
 _CNL_DAY: "day"
@@ -66,28 +66,28 @@ implicit_definition_proposition: constant_definition_clause -> constant_implicit
                                  | compounded_match_clause
                                  | enumerative_definition_clause
 _CNL_CONSTANT: "constant"
-_CNL_IS_A_CONSTANT: _CNL_IS " " _CNL_A " " _CNL_CONSTANT
+cnl_is_a_constant: _CNL_IS " " _CNL_A " " _CNL_CONSTANT
 _CNL_EQUAL: "equal"
 _CNL_EQUAL_TO: _CNL_EQUAL " " _CNL_TO
-constant_definition_clause.1: STRING _CNL_IS_A_CONSTANT [_CNL_EQUAL_TO STRING]
+constant_definition_clause.1: STRING cnl_is_a_constant [_CNL_EQUAL_TO STRING]
 
 _CNL_AN: "an"i
 _CNL_INDEFINITE_ARTICLE: _CNL_A | _CNL_AN
 simple_definition.1: STRING COPULA _CNL_INDEFINITE_ARTICLE? STRING
 _CNL_GOES: "goes"
-_CNL_GOES_FROM: _CNL_GOES " " _CNL_FROM
-compounded_range_clause: _CNL_INDEFINITE_ARTICLE? STRING _CNL_GOES_FROM (NUMBER | STRING) _CNL_TO (NUMBER | STRING) [compounded_match_tail]
+cnl_goes_from: _CNL_GOES " " _CNL_FROM
+compounded_range_clause: _CNL_INDEFINITE_ARTICLE? STRING cnl_goes_from (NUMBER | STRING) _CNL_TO (NUMBER | STRING) [compounded_match_tail]
 _CNL_ONE: "one"
-_CNL_IS_ONE_OF: _CNL_IS " " _CNL_ONE " " _CNL_OF
-compounded_match_clause: _CNL_INDEFINITE_ARTICLE? STRING _CNL_IS_ONE_OF string_list [compounded_match_tail]
+cnl_is_one_of: _CNL_IS " " _CNL_ONE " " _CNL_OF
+compounded_match_clause: _CNL_INDEFINITE_ARTICLE? STRING cnl_is_one_of string_list [compounded_match_tail]
 
 _CNL_THAT: "that"
 _CNL_ARE: "are"
 _CNL_RESPECTIVELY: "respectively"
-_CNL_THAT_ARE_EQUAL_TO_RESPECTIVELY: _CNL_THAT " " _CNL_ARE " " _CNL_EQUAL_TO " " _CNL_RESPECTIVELY
-_CNL_THAT_IS_EQUAL_TO_RESPECTIVELY: _CNL_THAT " " _CNL_IS " " _CNL_EQUAL_TO " " _CNL_RESPECTIVELY
+cnl_that_are_equal_to_respectively: _CNL_THAT " " _CNL_ARE " " _CNL_EQUAL_TO " " _CNL_RESPECTIVELY
+cnl_that_is_equal_to_respectively: _CNL_THAT " " _CNL_IS " " _CNL_EQUAL_TO " " _CNL_RESPECTIVELY
 _CNL_ALSO: "also"
-compounded_match_tail: _CNL_AND _CNL_HAS STRING (_CNL_THAT_ARE_EQUAL_TO_RESPECTIVELY | _CNL_THAT_IS_EQUAL_TO_RESPECTIVELY) string_list (_CNL_AND _CNL_ALSO STRING (_CNL_THAT_ARE_EQUAL_TO_RESPECTIVELY | _CNL_THAT_IS_EQUAL_TO_RESPECTIVELY) string_list)*
+compounded_match_tail: _CNL_AND _CNL_HAS STRING (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list (_CNL_AND _CNL_ALSO STRING (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list)*
 enumerative_definition_clause: entity COPULA? verb [conjunctive_object_list] [terminal_clauses]
 
 standard_proposition: whenever_then_clause_proposition
@@ -99,8 +99,8 @@ standard_proposition: whenever_then_clause_proposition
 whenever_then_clause_proposition: (whenever_clause _CNL_COMMA?)+ then_clause [terminal_clauses]
 _CNL_WHENEVER: "whenever"i
 _CNL_THERE: "there"i
-_CNL_WHENEVER_THERE_IS: _CNL_WHENEVER " " _CNL_THERE " " _CNL_IS
-whenever_clause: _CNL_WHENEVER_THERE_IS [VERB_NEGATION] entity
+cnl_whenever_there_is: _CNL_WHENEVER " " _CNL_THERE " " _CNL_IS
+whenever_clause: cnl_whenever_there_is [VERB_NEGATION] entity
 _CNL_THEN: "then"
 _CNL_OR: "or"
 then_clause: _CNL_THEN entity ASSIGNMENT_VERB COPULA? [cardinality] predicate (_CNL_COMMA? _CNL_OR predicate)*
@@ -116,11 +116,11 @@ foreach_clause: _CNL_FOR_EACH conjunctive_object_list
 
 _CNL_IT: "it"i
 _CNL_PROHIBITED: "prohibited"
-_CNL_IT_IS_PROHIBITED_THAT: _CNL_IT " " _CNL_IS " " _CNL_PROHIBITED " " _CNL_THAT
+cnl_it_is_prohibited_that: _CNL_IT " " _CNL_IS " " _CNL_PROHIBITED " " _CNL_THAT
 _CNL_REQUIRED: "required"
-_CNL_IT_IS_REQUIRED_THAT: _CNL_IT " " _CNL_IS " " _CNL_REQUIRED " " _CNL_THAT
-CONSTRAINT_OPERATOR: _CNL_IT_IS_PROHIBITED_THAT | _CNL_IT_IS_REQUIRED_THAT
-constraint_proposition: CONSTRAINT_OPERATOR (comparison [terminal_clauses]
+cnl_it_is_required_that: _CNL_IT " " _CNL_IS " " _CNL_REQUIRED " " _CNL_THAT
+?constraint_operator: cnl_it_is_prohibited_that | cnl_it_is_required_that
+constraint_proposition: constraint_operator (comparison [terminal_clauses]
                                             | when_then_clause [terminal_clauses]
                                             | quantified_simple_clause [terminal_clauses]
                                             | simple_clause_conjunction [terminal_clauses]
@@ -215,30 +215,30 @@ COMPARISON_OPERATOR: _CNL_THE_SAME_AS
           | _CNL_AT_MOST
           | _CNL_NOT_AFTER
 
-weak_constraint_proposition: CNL_IT_IS_PREFERRED [OPTIMIZATION_STATEMENT] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison | simple_clause ) [weak_optimization_operator] [terminal_clauses]
-                           | CNL_IT_IS_PREFERRED [OPTIMIZATION_STATEMENT] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT aggregate_clause [weak_optimization_operator] [terminal_clauses] -> preference_with_aggregate_clause
-                           | CNL_IT_IS_PREFERRED [OPTIMIZATION_STATEMENT] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT whenever_clauses_list _CNL_COMMA VARIABLE weak_optimization_operator [terminal_clauses] -> preference_with_variable_minimization
+weak_constraint_proposition: cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison | simple_clause ) [weak_optimization_operator] [terminal_clauses]
+                           | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT aggregate_clause [weak_optimization_operator] [terminal_clauses] -> preference_with_aggregate_clause
+                           | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT whenever_clauses_list _CNL_COMMA VARIABLE weak_optimization_operator [terminal_clauses] -> preference_with_variable_minimization
 whenever_clauses_list: whenever_clause (_CNL_COMMA whenever_clause)*
 
 _CNL_PREFERRED: "preferred"
-CNL_IT_IS_PREFERRED: _CNL_IT " " _CNL_IS " " _CNL_PREFERRED
+cnl_it_is_preferred: _CNL_IT " " _CNL_IS " " _CNL_PREFERRED
 _CNL_MUCH: "much"
 _CNL_POSSIBLE: "possible"
-_CNL_AS_MUCH_AS_POSSIBLE: _CNL_AS " " _CNL_MUCH " " _CNL_AS " " _CNL_POSSIBLE
+cnl_as_much_as_possible: _CNL_AS " " _CNL_MUCH " " _CNL_AS " " _CNL_POSSIBLE
 _CNL_LITTLE: "little"
-_CNL_AS_LITTLE_AS_POSSIBLE: _CNL_AS " " _CNL_LITTLE " " _CNL_AS " " _CNL_POSSIBLE
-OPTIMIZATION_STATEMENT: _CNL_AS_MUCH_AS_POSSIBLE | _CNL_AS_LITTLE_AS_POSSIBLE
+cnl_as_little_as_possible: _CNL_AS " " _CNL_LITTLE " " _CNL_AS " " _CNL_POSSIBLE
+optimization_statement: cnl_as_much_as_possible | cnl_as_little_as_possible
 _CNL_PRIORITY: "priority"
 weak_priority_clause: _CNL_WITH " " PRIORITY_LEVEL " " _CNL_PRIORITY
 _CNL_LOW: "low"
 _CNL_MEDIUM: "medium"
 _CNL_HIGH: "high"
 PRIORITY_LEVEL: _CNL_LOW | _CNL_MEDIUM | _CNL_HIGH
-weak_optimization_operator: _CNL_IS OPTIMIZATION_OPERATOR
+weak_optimization_operator: _CNL_IS optimization_operator
 
-_CNL_MINIMIZED: "minimized"
-_CNL_MAXIMIZED: "maximized"
-OPTIMIZATION_OPERATOR: _CNL_MINIMIZED | _CNL_MAXIMIZED
+CNL_MINIMIZED: "minimized"
+CNL_MAXIMIZED: "maximized"
+optimization_operator: CNL_MINIMIZED | CNL_MAXIMIZED
 
 //GLOBAL ELEMENT
 cardinality: QUANTITY_OPERATOR STRING -> single_quantity_cardinality
