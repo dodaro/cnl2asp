@@ -387,6 +387,9 @@ class CNLTransformer(Transformer):
                 self._proposition.add_relations([RelationComponent(entity_i, entity_j)])
         return elem[0][1]
 
+    def there_is_clause(self, elem):
+        self.whenever_clause(elem)
+
     @v_args(meta=True)
     def temporal_constraint(self, meta, elem):
         try:
@@ -402,7 +405,7 @@ class CNLTransformer(Transformer):
         subject: EntityComponent = elem[0]
         new_var = self._new_field_value('_'.join([temporal_entity.name, subject.name]))
         try:
-            subject.set_attributes_value([AttributeComponent(temporal_entity.name, ValueComponent(new_var))])
+            subject.set_attributes_value([AttributeComponent(temporal_entity.name, ValueComponent(new_var), AttributeOrigin(temporal_entity.name))])
         except:
             RuntimeError(f'Compilation error in line {meta.line}')
         operator = elem[1]
@@ -585,13 +588,15 @@ class CNLTransformer(Transformer):
                 if value == Utility.NULL_VALUE:
                     value = self._new_field_value(name)
                 operations = [OperationComponent(parameter[-3], value, parameter[-2])]
+        if not origin and SignatureManager.is_temporal_entity(name.strip()):
+            origin = AttributeOrigin(name.strip())
         attribute = AttributeComponent(name.strip(), ValueComponent(value), origin, operations)
         self._proposition.add_discriminant([attribute])
         return attribute
 
     def parameter_temporal_ordering(self, elem):
-        name = SignatureManager.get_signature_from_type(elem[1]).name
-        return AttributeComponent(name, ValueComponent(f'{elem[2]}{elem[0]}1'))
+        temporal_entity = SignatureManager.get_signature_from_type(elem[1])
+        return AttributeComponent(temporal_entity.name, ValueComponent(f'{elem[2]}{elem[0]}1'), AttributeOrigin(temporal_entity.name))
 
     def EXPRESSION(self, elem):
         return ''.join(elem)
@@ -638,7 +643,7 @@ class CNLTransformer(Transformer):
             except EntityNotFound as e:
                 # this is the case that we are defining a new entity
                 if new_definition:
-                    parameter_list.sort(key=lambda x: x.name)
+                    #parameter_list.sort(key=lambda x: x.name)
                     entity = EntityComponent(name, label, [],
                                              [attribute for attribute in parameter_list if
                                               isinstance(attribute, AttributeComponent)])
@@ -716,9 +721,9 @@ class CNLTransformer(Transformer):
         for declared_entity in self._proposition.get_entities():
             if not declared_entity is entity:
                 try:
-                    attribute_value = declared_entity.get_attributes_by_name(attribute_name)[0].value
+                    attribute_value = declared_entity.get_attributes_by_name_and_origin(attribute_name, AttributeOrigin(attribute_name))[0].value
                     entity.set_attributes_value([AttributeComponent(attribute_name,
-                                                                    ValueComponent(f'{attribute_value}{operator}1'))])
+                                                                    ValueComponent(f'{attribute_value}{operator}1'),  AttributeOrigin(attribute_name))])
                     return
                 except AttributeNotFound:
                     pass

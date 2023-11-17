@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 from typing import Any, TYPE_CHECKING
 
-from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, AttributeNotFound, DuplicatedTypedEntity
+from cnl2asp.exception.cnl2asp_exceptions import AttributeNotFound
 from cnl2asp.converter.converter_interface import Converter, EntityConverter
 from cnl2asp.proposition.attribute_component import AttributeComponent, ValueComponent, AttributeOrigin, is_same_origin
 from cnl2asp.proposition.component import Component
@@ -97,7 +97,9 @@ class EntityComponent(Component):
                 if attribute.origin:
                     entity_attributes = self.get_attributes_by_name_and_origin(attribute.name, attribute.origin)
                 else:
-                    entity_attributes = self.get_attributes_by_name(attribute.name)
+                    origin = AttributeOrigin(self.name)
+                    entity_attributes = self.get_attributes_by_name_and_origin(attribute.name, origin)
+                    #entity_attributes = self.get_attributes_by_name(attribute.name)
                 for entity_attribute in entity_attributes:
                     entity_attribute.value = attribute.value
                     entity_attribute.operations = attribute.operations

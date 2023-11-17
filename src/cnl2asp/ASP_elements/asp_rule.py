@@ -36,7 +36,7 @@ class ASPRule(ASPElement):
 
     def _clear_rule(self):
         self._remove_duplicates()
-        self.remove_null_atoms()
+        #self.remove_null_atoms() #TODO: remove
 
     def remove_null_atoms(self):
         for head in self.head:
@@ -71,7 +71,7 @@ class ASPRule(ASPElement):
         if self.head:
             for idx, element in enumerate(self.head):
                 if idx > 0:
-                    rule += '; '
+                    rule += ' | '
                 rule += element.to_string()
             if self.cardinality:
                 rule = f'{str(self.cardinality[0]) if self.cardinality[0] else ""} ' \

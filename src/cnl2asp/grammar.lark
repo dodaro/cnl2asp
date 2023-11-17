@@ -123,8 +123,11 @@ cnl_it_is_required_that: _CNL_IT " " _CNL_IS " " _CNL_REQUIRED " " _CNL_THAT
 constraint_proposition: constraint_operator (comparison [terminal_clauses]
                                             | when_then_clause [terminal_clauses]
                                             | quantified_simple_clause [terminal_clauses]
+                                            | there_is_clause [terminal_clauses]
                                             | simple_clause_conjunction [terminal_clauses]
                                             | temporal_constraint [(_CNL_COMMA whenever_clause)+])
+
+there_is_clause: _CNL_THERE " " _CNL_IS [VERB_NEGATION] entity
 
 simple_clause_conjunction.-1: simple_clause_wrv (_CNL_AND _CNL_ALSO simple_clause_wrv)*
 when_then_clause: when_clause _CNL_THEN simple_clause_conjunction

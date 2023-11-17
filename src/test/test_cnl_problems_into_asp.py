@@ -186,13 +186,22 @@ position_in(X_SPPRT_DY,P,T..T+2) :- patient(P,_), timeslot(T), x_support(X_SPPRT
     Whenever there is a patient P, then we can have a position with timeslot T in a day D for 2 timeslots.''','''{x_support(D,P,T): day(D)} :- patient(P,_).
 position_in(X_SPPRT_DY,P,T..T+2) :- patient(P,_), x_support(X_SPPRT_DY,P,T).''')
 
-    def test_substitute_subsequent_event(self):
+    def test_substitute_subsequent_event_next(self):
         self.check_input_to_output("""
 A time is a temporal concept expressed in steps ranging from 1 to 10.
 A joint is identified by an id.
 An rotation is identified by a value.
 A position is identified by a joint, by an rotation, and by a time.
 It is required that the rotation A1 of the position P1 is equal to the rotation A2 of the position P2, whenever there is a position P1 with joint J, with rotation A1, and with time T, whenever there is a position P2 the next step with joint J, and with rotation A2.""",''':- A1 != A2, position(J,A1,T), position(J,A2,T+1).''')
+
+    def test_substitute_subsequent_event_previous(self):
+            self.check_input_to_output("""
+    A time is a temporal concept expressed in steps ranging from 1 to 10.
+    A joint is identified by an id.
+    An rotation is identified by a value.
+    A position is identified by a joint, by an rotation, and by a time.
+    It is required that the rotation A1 of the position P1 is equal to the rotation A2 of the position P2, whenever there is a position P1 with joint J, with rotation A1, and with time T, whenever there is a position P2 the previous step with joint J, and with rotation A2.""",
+                                       ''':- A1 != A2, position(J,A1,T), position(J,A2,T-1).''')
 
     def test_entity_as_parameter(self):
         self.check_input_to_output( """

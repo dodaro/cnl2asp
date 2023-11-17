@@ -1,8 +1,13 @@
+from __future__ import annotations
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, DuplicatedTypedEntity
 from cnl2asp.proposition.attribute_component import ValueComponent
-from cnl2asp.proposition.entity_component import EntityComponent, EntityType
+from cnl2asp.proposition.entity_component import EntityType
+
+if TYPE_CHECKING:
+    from cnl2asp.proposition.entity_component import EntityComponent
 
 
 class SignatureManager:
