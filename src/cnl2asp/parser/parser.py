@@ -849,7 +849,7 @@ class CNLTransformer(Transformer):
         if operator == "the total":
             return AggregateOperation.SUM
         if operator == "the highest" or operator == "the biggest":
-            return AggregateOperation.MIN
+            return AggregateOperation.MAX
         if operator == "the lowest" or operator == "the smallest":
             return AggregateOperation.MIN
 

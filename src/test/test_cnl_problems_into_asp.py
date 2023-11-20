@@ -232,6 +232,15 @@ A registration is identified by a patient, and by an order, and has a number of 
         """,
                          '''1 {position_in(P,S): seat(S)} 1 :- patient(P).\n:- #count{D: position_in(D,S), seat(S)} >= 2.''')
 
+    def test_aggregate_with_objects(self):
+        self.check_input_to_output("""
+        A patient is identified by an id.
+        A seat is identified by an id.
+        Whenever there is a patient P then P can have a position in exactly 1 seat S.
+        It is required that the highest of patient that have a position in seat S is less than 2.
+        """,
+                         '''1 {position_in(P,S): seat(S)} 1 :- patient(P).\n:- #max{D: position_in(D,S), seat(S)} >= 2.''')
+
     def test_angle_operation(self):
         self.check_input_to_output( '''An angle is identified by a value.
 A rotation is identified by a first joint, by a second joint, by a desired angle, by a current angle, and by a time.
