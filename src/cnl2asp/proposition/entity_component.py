@@ -117,7 +117,14 @@ class EntityComponent(Component):
                 attributes.append(attribute)
         if attributes:
             return attributes
-        raise AttributeNotFound(f'Entity \"{self.name}\" do not contain attribute \"{name}\".')
+        else:
+            error_msg = f'Entity \"{self.name}\" do not contain attribute \"{origin} {name}\".'
+            try:
+                hint = self.get_attributes_by_name(name)
+                error_msg += f'\nDid you mean \"{hint[0]}\"?'
+            except AttributeNotFound:
+                pass
+            raise AttributeNotFound(error_msg)
 
     def get_attributes_by_name(self, name: str) -> list[AttributeComponent]:
         attributes = []

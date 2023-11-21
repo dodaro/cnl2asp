@@ -58,6 +58,11 @@ class AttributeOrigin:
             return self.origin
         return False
 
+    def __str__(self):
+        if self.origin:
+            return str(self.origin) + ' ' + self.name
+        return self.name
+
     def __eq__(self, other):
         if not isinstance(other, AttributeOrigin):
             return False
@@ -116,4 +121,6 @@ class AttributeComponent(Component):
             return False
         return self.name == other.name and self.value == other.value
 
+    def __str__(self):
+        return str(self.origin) + ' ' + self.name
 
