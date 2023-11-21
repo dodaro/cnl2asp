@@ -11,8 +11,10 @@ from cnl2asp.proposition.signaturemanager import SignatureManager
 cnl_parser = Lark(open("cnl2asp/grammar.lark", "r").read())
 
 
-class TestASPElements(unittest.TestCase):
+class TestCnlPropositions(unittest.TestCase):
+
     def setUp(self):
+        self.maxDiff = None
         SignatureManager.signatures = []
         asp_converter: ASPConverter = ASPConverter()
         asp_converter.clear_support_variables()
@@ -40,7 +42,7 @@ A patient is identified by an id, and has a preference.
 A registration is identified by a patient, and by an order, and has a number of waiting days, a duration of the first phase, a duration of the second phase, a duration of the third phase, and a duration of the fourth phase.
 
 Whenever there is a registration R with an order O, then R can have an assignment to exactly 1 day, and timeslot.''',
-                         '1 {assignment_to(DY_DY,RGSTRTN_D,O,TMSLT_TMSLT): day(DY_DY), timeslot(TMSLT_TMSLT)} 1 :- registration(RGSTRTN_D,O,_,_,_,_,_).')
+                         '1 <= {assignment_to(DY_DY,RGSTRTN_D,O,TMSLT_TMSLT): day(DY_DY), timeslot(TMSLT_TMSLT)} <= 1 :- registration(RGSTRTN_D,O,_,_,_,_,_).')
 
     def test_quantified_choice_proposition(self):
         self.check_input_to_output('''
@@ -50,7 +52,7 @@ A pub is identified by an id.
 A day is identified by a day.
 
 Every patron can drink in exactly 1 pub for each day.''',
-                         '1 {drink_in(DY_DY,PTRN_D,PB_D): pub(PB_D)} 1 :- day(DY_DY), patron(PTRN_D).')
+                         '1 <= {drink_in(DY_DY,PTRN_D,PB_D): pub(PB_D)} <= 1 :- day(DY_DY), patron(PTRN_D).')
 
     def test_constraint_with_aggregate(self):
         self.check_input_to_output('''
@@ -173,8 +175,45 @@ It is required that the sum between the id of the patient I, and the day of the 
 A day is identified by a day.
 A patient is identified by an id, and has a preference.
 
-Whenever there is a patient P, whenever there is a timeslot T, then we can have a position in a day D for 2 timeslots.''','''{x_support(D,P,T): day(D)} :- patient(P,_), timeslot(T).
-position_in(X_SPPRT_DY,P,T..T+2) :- patient(P,_), timeslot(T), x_support(X_SPPRT_DY,P,T).''')
+Whenever there is a patient P, whenever there is a timeslot T, then we can have a position in a day D for 2 timeslots.''','''timeslot(0,"07:30 AM").
+timeslot(1,"07:40 AM").
+timeslot(2,"07:50 AM").
+timeslot(3,"08:00 AM").
+timeslot(4,"08:10 AM").
+timeslot(5,"08:20 AM").
+timeslot(6,"08:30 AM").
+timeslot(7,"08:40 AM").
+timeslot(8,"08:50 AM").
+timeslot(9,"09:00 AM").
+timeslot(10,"09:10 AM").
+timeslot(11,"09:20 AM").
+timeslot(12,"09:30 AM").
+timeslot(13,"09:40 AM").
+timeslot(14,"09:50 AM").
+timeslot(15,"10:00 AM").
+timeslot(16,"10:10 AM").
+timeslot(17,"10:20 AM").
+timeslot(18,"10:30 AM").
+timeslot(19,"10:40 AM").
+timeslot(20,"10:50 AM").
+timeslot(21,"11:00 AM").
+timeslot(22,"11:10 AM").
+timeslot(23,"11:20 AM").
+timeslot(24,"11:30 AM").
+timeslot(25,"11:40 AM").
+timeslot(26,"11:50 AM").
+timeslot(27,"12:00 PM").
+timeslot(28,"12:10 PM").
+timeslot(29,"12:20 PM").
+timeslot(30,"12:30 PM").
+timeslot(31,"12:40 PM").
+timeslot(32,"12:50 PM").
+timeslot(33,"01:00 PM").
+timeslot(34,"01:10 PM").
+timeslot(35,"01:20 PM").
+timeslot(36,"01:30 PM").
+{x_support(D,P,T): day(D)} :- patient(P,_), timeslot(T,_).
+position_in(X_SPPRT_DY,P,T..T+2) :- patient(P,_), timeslot(T,_), x_support(X_SPPRT_DY,P,T).''')
 
     @patch('cnl2asp.utility.utility.uuid4')
     def test_duration_clause_with_parameter_as_attribute(self, mock_uuid):
@@ -209,7 +248,44 @@ It is required that the rotation A1 of the position P1 is equal to the rotation 
         A patient is identified by an id, and has a preference.
 A registration is identified by a patient, and by an order, and has a number of waiting days, a duration of the first phase, a duration of the second phase, a duration of the third phase, and a duration of the fourth phase.
         Whenever there is a registration R with patient P, with order OR, and with a number of waiting days W, then we can have an assignment with registration R to exactly 1 timeslot.""",
-                         '''1 {assignment_to(P,OR,TMSLT_TMSLT): timeslot(TMSLT_TMSLT)} 1 :- registration(P,OR,W,_,_,_,_).''')
+                         '''timeslot(0,"07:30 AM").
+timeslot(1,"07:40 AM").
+timeslot(2,"07:50 AM").
+timeslot(3,"08:00 AM").
+timeslot(4,"08:10 AM").
+timeslot(5,"08:20 AM").
+timeslot(6,"08:30 AM").
+timeslot(7,"08:40 AM").
+timeslot(8,"08:50 AM").
+timeslot(9,"09:00 AM").
+timeslot(10,"09:10 AM").
+timeslot(11,"09:20 AM").
+timeslot(12,"09:30 AM").
+timeslot(13,"09:40 AM").
+timeslot(14,"09:50 AM").
+timeslot(15,"10:00 AM").
+timeslot(16,"10:10 AM").
+timeslot(17,"10:20 AM").
+timeslot(18,"10:30 AM").
+timeslot(19,"10:40 AM").
+timeslot(20,"10:50 AM").
+timeslot(21,"11:00 AM").
+timeslot(22,"11:10 AM").
+timeslot(23,"11:20 AM").
+timeslot(24,"11:30 AM").
+timeslot(25,"11:40 AM").
+timeslot(26,"11:50 AM").
+timeslot(27,"12:00 PM").
+timeslot(28,"12:10 PM").
+timeslot(29,"12:20 PM").
+timeslot(30,"12:30 PM").
+timeslot(31,"12:40 PM").
+timeslot(32,"12:50 PM").
+timeslot(33,"01:00 PM").
+timeslot(34,"01:10 PM").
+timeslot(35,"01:20 PM").
+timeslot(36,"01:30 PM").
+1 <= {assignment_to(P,OR,TMSLT_TMSLT): timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(P,OR,W,_,_,_,_).''')
 
     def test_handle_duplicated_parameters(self):
         """
@@ -221,7 +297,7 @@ A registration is identified by a patient, and by an order, and has a number of 
         A patient is identified by an id.
         A seat is identified by an id.
         Whenever there is a patient P, then P can have a position with id S in exactly 1 seat S.""",
-                         '''1 {position_in(S,P): seat(S)} 1 :- patient(P).''')
+                         '''1 <= {position_in(S,P): seat(S)} <= 1 :- patient(P).''')
 
     def test_aggregate_with_objects(self):
         self.check_input_to_output( """
@@ -239,7 +315,7 @@ A registration is identified by a patient, and by an order, and has a number of 
         Whenever there is a patient P then P can have a position in exactly 1 seat S.
         It is required that the highest of patient that have a position in seat S is less than 2.
         """,
-                         '''1 {position_in(P,S): seat(S)} 1 :- patient(P).\n:- #max{D: position_in(D,S), seat(S)} >= 2.''')
+                         '''1 <= {position_in(P,S): seat(S)} <= 1 :- patient(P).\n:- #max{D: position_in(D,S), seat(S)} >= 2.''')
 
     def test_angle_operation(self):
         self.check_input_to_output( '''An angle is identified by a value.
@@ -267,13 +343,57 @@ An assignment is identified by a registration, by a day, and by a timeslot.
 A registration is identified by a patient, and by an order, and has a number of waiting days, a duration of the first phase, a duration of the second phase, a duration of the third phase, and a duration of the fourth phase.
         Whenever there is a registration R with patient P, with order OR, and with a number of waiting days W, whenever there is an assignment with registration patient P, with registration order OR-1, and with day D, whenever there is a day with day D+W, then we can have an assignment with registration R, and with day D+W to exactly 1 timeslot.
         ''',
-                         '''1 {assignment_to(D+W,P,OR,TMSLT_TMSLT): timeslot(TMSLT_TMSLT)} 1 :- registration(P,OR,W,_,_,_,_), assignment(P,OR-1,D,_), day(D+W).''')
+                         '''timeslot(0,"07:30 AM").
+timeslot(1,"07:40 AM").
+timeslot(2,"07:50 AM").
+timeslot(3,"08:00 AM").
+timeslot(4,"08:10 AM").
+timeslot(5,"08:20 AM").
+timeslot(6,"08:30 AM").
+timeslot(7,"08:40 AM").
+timeslot(8,"08:50 AM").
+timeslot(9,"09:00 AM").
+timeslot(10,"09:10 AM").
+timeslot(11,"09:20 AM").
+timeslot(12,"09:30 AM").
+timeslot(13,"09:40 AM").
+timeslot(14,"09:50 AM").
+timeslot(15,"10:00 AM").
+timeslot(16,"10:10 AM").
+timeslot(17,"10:20 AM").
+timeslot(18,"10:30 AM").
+timeslot(19,"10:40 AM").
+timeslot(20,"10:50 AM").
+timeslot(21,"11:00 AM").
+timeslot(22,"11:10 AM").
+timeslot(23,"11:20 AM").
+timeslot(24,"11:30 AM").
+timeslot(25,"11:40 AM").
+timeslot(26,"11:50 AM").
+timeslot(27,"12:00 PM").
+timeslot(28,"12:10 PM").
+timeslot(29,"12:20 PM").
+timeslot(30,"12:30 PM").
+timeslot(31,"12:40 PM").
+timeslot(32,"12:50 PM").
+timeslot(33,"01:00 PM").
+timeslot(34,"01:10 PM").
+timeslot(35,"01:20 PM").
+timeslot(36,"01:30 PM").
+day(0,"01/01/2022").
+day(1,"02/01/2022").
+day(2,"03/01/2022").
+day(3,"04/01/2022").
+day(4,"05/01/2022").
+day(5,"06/01/2022").
+day(6,"07/01/2022").
+1 <= {assignment_to(D+W,P,OR,TMSLT_TMSLT): timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(P,OR,W,_,_,_,_), assignment(P,OR-1,D,_), day(D+W,_).''')
 
     def test_remove_duplicates_from_condition(self):
         self.check_input_to_output( '''
         A node goes from 1 to 5.
         Every node X can have a path to a node connected to node X.''',
-                         '''node(1..5).\n{path_to(CNNCTD_T_D): node(CNNCTD_T_D), connected_to(CNNCTD_T_D)} :- node(X).''')
+                         '''node(1..5).\n{path_to(CNNCTD_T_D,X): node(CNNCTD_T_D), connected_to(CNNCTD_T_D,X)} :- node(X).''')
 
     def test_parameter_temporal_ordering(self):
         self.check_input_to_output( '''

@@ -55,7 +55,7 @@ class AttributeOrigin:
         if 'angle' in self.name:
             return True
         if self.origin:
-            return self.origin
+            return self.origin.is_angle()
         return False
 
     def __str__(self):

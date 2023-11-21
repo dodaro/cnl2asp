@@ -32,6 +32,11 @@ class ASPAtom(ASPElement):
                 return False
         return True
 
+    def has_attribute(self, attribute: ASPAttribute):
+        if attribute in self.attributes:
+            return True
+        return False
+
     def get_attributes_list(self, name: str, origin: AttributeOrigin = None) -> list[ASPAttribute]:
         if origin:
             return self.get_attributes_list_by_name_and_origin(name, origin)

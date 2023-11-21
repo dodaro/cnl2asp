@@ -74,9 +74,9 @@ class ASPRule(ASPElement):
                     rule += ' | '
                 rule += element.to_string()
             if self.cardinality:
-                rule = f'{str(self.cardinality[0]) if self.cardinality[0] else ""} ' \
-                       f'{{{rule}}} ' \
-                       f'{str(self.cardinality[1]) if self.cardinality[1] else ""}'
+                rule = f'{str(self.cardinality[0]) + " <= " if self.cardinality[0] else ""}' \
+                       f'{{{rule}}}' \
+                       f'{" <= " + str(self.cardinality[1]) if self.cardinality[1] else ""}'
             else:
                 for head in self.head:
                     if head.condition.to_string():

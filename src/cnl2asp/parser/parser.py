@@ -407,7 +407,7 @@ class CNLTransformer(Transformer):
         try:
             subject.set_attributes_value([AttributeComponent(temporal_entity.name, ValueComponent(new_var), AttributeOrigin(temporal_entity.name))])
         except:
-            RuntimeError(f'Compilation error in line {meta.line}')
+            CompilationError(f'Compilation error in line {meta.line}')
         operator = elem[1]
         self._proposition.add_requisite(subject)
         operation = OperationComponent(operator, new_var, ValueComponent(temporal_value))
@@ -503,8 +503,7 @@ class CNLTransformer(Transformer):
     def preference_with_aggregate_clause(self, elem):
         if elem[3]:
             new_var = self._new_field_value()
-            self._proposition.add_requisite(OperationComponent(Operators.EQUALITY, elem[3],
-                                                               self._new_field_value(new_var)))
+            self._proposition.add_requisite(OperationComponent(Operators.EQUALITY, elem[3], new_var))
             self._proposition.add_weight(new_var)
 
     def preference_with_variable_minimization(self, elem):
@@ -587,7 +586,7 @@ class CNLTransformer(Transformer):
             else:
                 if value == Utility.NULL_VALUE:
                     value = self._new_field_value(name)
-                operations = [OperationComponent(parameter[-3], value, parameter[-2])]
+                operations = [OperationComponent(parameter[-3], AttributeComponent(name.strip(), ValueComponent(value), origin), parameter[-2])]
         if not origin and SignatureManager.is_temporal_entity(name.strip()):
             origin = AttributeOrigin(name.strip())
         attribute = AttributeComponent(name.strip(), ValueComponent(value), origin, operations)

@@ -99,7 +99,7 @@ class EntityComponent(Component):
                 else:
                     origin = AttributeOrigin(self.name)
                     entity_attributes = self.get_attributes_by_name_and_origin(attribute.name, origin)
-                    #entity_attributes = self.get_attributes_by_name(attribute.name)
+                    # entity_attributes = self.get_attributes_by_name(attribute.name)
                 for entity_attribute in entity_attributes:
                     entity_attribute.value = attribute.value
                     entity_attribute.operations = attribute.operations
@@ -163,15 +163,16 @@ class TemporalEntityComponent(EntityComponent):
                  lhs_range_value: ValueComponent,
                  rhs_range_value: ValueComponent, step: ValueComponent,
                  entity_type: EntityType, values: dict = None):
-        super().__init__(name, label, [],
+        super().__init__(name, label,
                          [AttributeComponent(name, ValueComponent('_'), AttributeOrigin(name))],
+                         [AttributeComponent('value', ValueComponent('_'), AttributeOrigin(name))],
                          entity_type=entity_type)
         step = 1 if not step else step
         self.values: dict = self._compute_values(lhs_range_value, rhs_range_value, step) if not values else values
 
     def get_temporal_value_id(self, value: ValueComponent):
         temporal_value_id = self.values.get(value)
-        if temporal_value_id:
+        if temporal_value_id is not None:
             return temporal_value_id
         raise KeyError(f'Value "{value}" out of "{self.name}" range')
 
@@ -202,17 +203,17 @@ class TemporalEntityComponent(EntityComponent):
                 start = datetime.strptime(lhs_value, '%d/%m/%Y')
                 end = datetime.strptime(rhs_value, '%d/%m/%Y')
                 elements[start.strftime('%d/%m/%Y')] = 0
-                start = start + timedelta(minutes=int(step))
+                start = start + timedelta(days=int(step))
                 while start <= end:
                     if start > end:
                         start = end
                     elements[start.strftime('%d/%m/%Y')] = counter
                     counter += 1
-                    start = start + timedelta(minutes=int(step))
+                    start = start + timedelta(days=int(step))
             elif self.entity_type == EntityType.STEP:
                 start = lhs_value
                 end = rhs_value
-                elements[0] = start
+                elements[int(start)] = 0
                 for i in range(int(start) + 1, int(end) + 1):
                     elements[i] = counter
                     counter += 1
@@ -224,7 +225,7 @@ class TemporalEntityComponent(EntityComponent):
         return True
 
     def get_temporal_key(self) -> AttributeComponent:
-        return self.attributes[0]
+        return self.keys[0]
 
     def copy(self) -> Any:
         copy = TemporalEntityComponent(self.name, self.label, None,
@@ -232,6 +233,9 @@ class TemporalEntityComponent(EntityComponent):
         copy.set_attributes_value(super(TemporalEntityComponent, self).copy().attributes)
         copy.set_attributes_value(super(TemporalEntityComponent, self).copy().keys)
         return copy
+
+    def convert(self, converter: Converter):
+        return converter.convert_temporal_entity(self)
 
 
 class ComplexEntityComponent(EntityComponent):
@@ -254,7 +258,8 @@ class ComplexEntityComponent(EntityComponent):
 class SetEntityComponent(ComplexEntityComponent):
     def __init__(self, set_id: ValueComponent = None, values: list[ValueComponent] = None):
         super().__init__('set', set_id, [AttributeComponent('set_id', set_id, AttributeOrigin('set')),
-                                         AttributeComponent('element', ValueComponent(Utility.NULL_VALUE), AttributeOrigin('set'))],
+                                         AttributeComponent('element', ValueComponent(Utility.NULL_VALUE),
+                                                            AttributeOrigin('set'))],
 
                          [], EntityType.SET, values)
 
@@ -275,9 +280,11 @@ class SetEntityComponent(ComplexEntityComponent):
 class ListEntityComponent(ComplexEntityComponent):
     def __init__(self, list_id: ValueComponent = None, values: list[ValueComponent] = None):
         super().__init__('list', list_id, [AttributeComponent('list_id', list_id, AttributeOrigin('list')),
-                                           AttributeComponent('index', ValueComponent(Utility.NULL_VALUE), AttributeOrigin('list'))],
+                                           AttributeComponent('index', ValueComponent(Utility.NULL_VALUE),
+                                                              AttributeOrigin('list'))],
                          [AttributeComponent('element', ValueComponent(Utility.NULL_VALUE), AttributeOrigin('list'))],
                          EntityType.LIST, values)
+
     def set_label_as_key_value(self):
         if self.label in self.values:
             self.set_attribute_value('element', ValueComponent(self.label))
@@ -300,5 +307,3 @@ class ListEntityComponent(ComplexEntityComponent):
             index = element_variable
         self.set_attribute_value('index', ValueComponent(index))
         self.set_attribute_value('element', ValueComponent(element))
-
-

@@ -107,6 +107,7 @@ class Proposition(Component):
 
     def create_new_signature(self, new_entity: EntityComponent) -> EntityComponent:
         signature: EntityComponent = new_entity.copy()
+        linked_entities: list[str] = []  # list of labels already linked
         # add all the keys of all the entities related with the new entity
         for relation in self.relations:
             to_be_related_with = None
@@ -115,6 +116,16 @@ class Proposition(Component):
             elif relation.entity_2 == new_entity:
                 to_be_related_with = relation.entity_1
             if to_be_related_with:
+
+                if len(to_be_related_with.get_keys_and_attributes()) == 1 and \
+                        to_be_related_with.label not in linked_entities:
+                    for key in to_be_related_with.get_keys():
+                        if not new_entity.has_attribute_value(key.value):
+                            signature.attributes.append(AttributeComponent(key.name, ValueComponent(Utility.NULL_VALUE),
+                                                                           AttributeOrigin(to_be_related_with.name,
+                                                                                           key.origin)))
+                if to_be_related_with.label not in linked_entities:
+                    linked_entities.append(to_be_related_with.label)
                 for key in to_be_related_with.get_keys():
                     if key.value != Utility.NULL_VALUE and signature.has_attribute_value(key.value):
                         try:

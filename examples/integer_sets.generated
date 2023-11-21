@@ -1,14 +1,6 @@
-integer(-1,1).
-integer(1,1).
-integer(2,1).
-integer(4,1).
-integer(5,1).
-integer(0,2).
-integer(1,2).
-integer(3,2).
-integer(6,2).
-integer(7,2).
-1 {match_to(S1,X,S2,Y): S2 != S1, integer(Y,S2)} 1 :- S1 = 1, integer(X,S1).
-:- match_to(S1,X,S2,Y), integer(Y,S2), integer(X,S1), match_to(S1,X,S2,Z), Z != Y, integer(Z,S2).
-:- integer(X,S1), match_to(S1,X,S2,Y), integer(Z,S1), Z != X, match_to(S1,Z,S2,Y), integer(Y,S2).
-:- #count{X1: X2 < X1, match_to(_,X1,_,X2)} = X_A4E6ED3D_6B6D_4660_8824_64C1115DC351, #count{X1: X2 > X1, match_to(_,X1,_,X2)} = X_B8C008CD_F883_43FE_83C2_D42B0B8E400C, X_A4E6ED3D_6B6D_4660_8824_64C1115DC351 != X_B8C008CD_F883_43FE_83C2_D42B0B8E400C.
+{match(X,Y)} :- set("set1",X), set("set2",Y).
+positivematch(X,Y) :- Y < X, match(X,Y).
+negativematch(X,Y) :- Y > X, match(X,Y).
+:- #count{match(E,MTCH_SCND): match(E,MTCH_SCND)} != 1, set("set1",E).
+:- #count{match(MTCH_FRST,E): match(MTCH_FRST,E)} != 1, set("set2",E).
+:- #count{positivematch(PSTVMTCH_FRST,PSTVMTCH_SCND): positivematch(PSTVMTCH_FRST,PSTVMTCH_SCND)} = X_211196D9_B206_49E4_84C6_A21E423B3815, #count{negativematch(NGTVMTCH_FRST,NGTVMTCH_SCND): negativematch(NGTVMTCH_FRST,NGTVMTCH_SCND)} = X_27DC87E1_53CE_4E7A_908E_052B2C091D92, X_211196D9_B206_49E4_84C6_A21E423B3815 != X_27DC87E1_53CE_4E7A_908E_052B2C091D92.

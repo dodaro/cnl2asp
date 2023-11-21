@@ -60,7 +60,7 @@ class TestASPElements(unittest.TestCase):
         # choice with cardinality
         rule = ASPRule(body, [head], (1, 1))
         self.assertEqual(rule.to_string(),
-                         '1 {head(FIELD): condition(FIELD), condition2(FIELD)} 1 :- body(FIELD), body2(FIELD).\n',
+                         '1 <= {head(FIELD): condition(FIELD), condition2(FIELD)} <= 1 :- body(FIELD), body2(FIELD).\n',
                          'Incorrect choice with cardinality print.')
 
     def test_assignment_to_string(self):

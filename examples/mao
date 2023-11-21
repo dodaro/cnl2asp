@@ -1,4 +1,4 @@
-A time is a temporal concept expressed in steps ranging from 1 to 10.
+A time is a temporal concept expressed in steps ranging from 0 to 10.
 A joint is identified by an id.
 An angle is identified by a value.
 A position is identified by a joint, by an angle, and by a time.
