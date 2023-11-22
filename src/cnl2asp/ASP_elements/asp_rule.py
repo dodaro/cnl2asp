@@ -11,9 +11,9 @@ class ASPRuleHead(ASPElement):
         self.choice_element = choice_element
         self.condition = condition
 
-    def to_string(self) -> str:
-        head = f'{self.choice_element.to_string()}'
-        condition = self.condition.to_string()
+    def __str__(self) -> str:
+        head = f'{str(self.choice_element)}'
+        condition = str(self.condition)
         if condition:
             head += f': {condition}'
         return head
@@ -66,25 +66,25 @@ class ASPRule(ASPElement):
                     break
         return to_remove
 
-    def to_string(self) -> str:
+    def __str__(self) -> str:
         rule = ''
         if self.head:
             for idx, element in enumerate(self.head):
                 if idx > 0:
                     rule += ' | '
-                rule += element.to_string()
+                rule += str(element)
             if self.cardinality:
                 rule = f'{str(self.cardinality[0]) + " <= " if self.cardinality[0] else ""}' \
                        f'{{{rule}}}' \
                        f'{" <= " + str(self.cardinality[1]) if self.cardinality[1] else ""}'
             else:
                 for head in self.head:
-                    if head.condition.to_string():
+                    if str(head.condition):
                         rule = f'{{{rule}}}'
         rule = rule.strip()
         if self.body.conjunction:
             rule += f'{" " if self.head else ""}:- '
-            rule += f'{self.body.to_string()}'
+            rule += f'{str(self.body)}'
         rule += '.\n'
         return rule
 
@@ -94,7 +94,7 @@ class ASPRule(ASPElement):
         return self.head == other.head and self.body == other.body and self.cardinality == other.cardinality
 
     def __repr__(self):
-        return self.to_string()
+        return str(self)
 
 
 class ASPWeakConstraint(ASPRule):
@@ -104,19 +104,19 @@ class ASPWeakConstraint(ASPRule):
         self.level = level
         self.discriminant = discriminant
 
-    def to_string(self) -> str:
-        weak_constraint = super().to_string()
+    def __str__(self) -> str:
+        weak_constraint = super().__str__()
         weak_constraint = weak_constraint.replace(':-', ':~')
         weak_constraint = weak_constraint.replace('\n', ' ')
         weak_constraint += f'[{self.weight}@{self.level}'
         if self.discriminant:
-            weak_constraint += f',{",".join([attribute.to_string() for attribute in self.discriminant])}]\n'
+            weak_constraint += f',{",".join([str(attribute) for attribute in self.discriminant])}]\n'
         else:
             weak_constraint += ']\n'
         return weak_constraint
 
     def __repr__(self):
-        return self.to_string()
+        return str(self)
 
     def __eq__(self, other):
         super().__eq__(other)

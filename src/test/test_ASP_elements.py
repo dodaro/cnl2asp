@@ -22,18 +22,18 @@ class TestASPElements(unittest.TestCase):
 
     def test_atom_to_string(self):
         atom = ASPAtom('test', [ASPAttribute('field', ASPValue('FIELD'))])
-        self.assertEqual(atom.to_string(), 'test(FIELD)', 'Incorrect atom print.')
+        self.assertEqual(str(atom), 'test(FIELD)', 'Incorrect atom print.')
 
     def test_conjunction_to_string(self):
         conjunction = ASPConjunction([ASPAtom('test', [ASPAttribute('field', ASPValue('FIELD'))]),
                                       ASPAtom('test2', [ASPAttribute('field', ASPValue('FIELD'))])])
-        self.assertEqual(conjunction.to_string(), 'test(FIELD), test2(FIELD)', 'Incorrect conjunction print.')
+        self.assertEqual(str(conjunction), 'test(FIELD), test2(FIELD)', 'Incorrect conjunction print.')
 
     def test_aggregate_to_string(self):
         conjunction = ASPConjunction([ASPAtom('test', [ASPAttribute('field', ASPValue('FIELD'))]),
                                       ASPAtom('test2', [ASPAttribute('field', ASPValue('FIELD'))])])
         aggregate = ASPAggregate(AggregateOperation.SUM, [ASPAttribute('discriminant', ASPValue('DISCRIMINANT'))], conjunction)
-        self.assertEqual(aggregate.to_string(),
+        self.assertEqual(str(aggregate),
                          '#sum{DISCRIMINANT: test(FIELD), test2(FIELD)}',
                          'Incorrect aggregate print.')
 
@@ -46,7 +46,7 @@ class TestASPElements(unittest.TestCase):
                                ASPAtom('body2', [ASPAttribute('field', ASPValue('FIELD'))])])
         rule = ASPRule(body, [head])
         # choice without cardinality
-        self.assertEqual(rule.to_string(),
+        self.assertEqual(str(rule),
                          '{head(FIELD): condition(FIELD), condition2(FIELD)} :- body(FIELD), body2(FIELD).\n',
                          'Incorrect choice without cardinality print.')
 
@@ -59,7 +59,7 @@ class TestASPElements(unittest.TestCase):
                                ASPAtom('body2', [ASPAttribute('field', ASPValue('FIELD'))])])
         # choice with cardinality
         rule = ASPRule(body, [head], (1, 1))
-        self.assertEqual(rule.to_string(),
+        self.assertEqual(str(rule),
                          '1 <= {head(FIELD): condition(FIELD), condition2(FIELD)} <= 1 :- body(FIELD), body2(FIELD).\n',
                          'Incorrect choice with cardinality print.')
 
@@ -68,7 +68,7 @@ class TestASPElements(unittest.TestCase):
                                ASPAtom('body2', [ASPAttribute('field', ASPValue('FIELD'))])])
         # assignment
         rule = ASPRule(body, [ASPRuleHead(ASPAtom('head', [ASPAttribute('field', ASPValue('FIELD'))]))])
-        self.assertEqual(rule.to_string(),
+        self.assertEqual(str(rule),
                          'head(FIELD) :- body(FIELD), body2(FIELD).\n',
                          'Incorrect assignment print.')
 
@@ -77,7 +77,7 @@ class TestASPElements(unittest.TestCase):
                                ASPAtom('body2', [ASPAttribute('field', ASPValue('FIELD'))])])
         # constraint
         rule = ASPRule(body)
-        self.assertEqual(rule.to_string(),
+        self.assertEqual(str(rule),
                          ':- body(FIELD), body2(FIELD).\n',
                          'Incorrect constraint print.')
 
@@ -92,7 +92,7 @@ class TestASPElements(unittest.TestCase):
         program = ASPProgram()
         program.add_rule(rule)
         program.add_constant(('time', '10'))
-        self.assertEqual(program.to_string(),
+        self.assertEqual(str(program),
                          '#const time = 10.\n'
                          '{head(FIELD): condition(FIELD), condition2(FIELD)} :- body(FIELD), body2(FIELD).\n',
                          'Incorrect choice without cardinality print.')
@@ -100,12 +100,12 @@ class TestASPElements(unittest.TestCase):
     def test_weak_constraint(self):
         weak_constraint = ASPWeakConstraint(ASPConjunction([ASPAtom('test', [ASPAttribute('field', ASPValue('FIELD'))])]),
                                             1, 1, [ASPAttribute('key', ASPValue('KEY'))])
-        self.assertEqual(weak_constraint.to_string(),
+        self.assertEqual(str(weak_constraint),
                          ':~ test(FIELD). [1@1,KEY]\n')
 
     def test_asp_operation(self):
         operation = ASPOperation(Operators.SUM, ASPValue('1'), ASPValue('2'), ASPValue('3'))
-        self.assertEqual(operation.to_string(), '1 + 2 + 3')
+        self.assertEqual(str(operation), '1 + 2 + 3')
 
     def test_print_with_functions(self):
         Utility.PRINT_WITH_FUNCTIONS = True
@@ -113,7 +113,7 @@ class TestASPElements(unittest.TestCase):
                                  ASPAttribute('field2', ASPValue('FIELD'), AttributeOrigin('atom2', AttributeOrigin('atom3'))),
                                  ASPAttribute('field3', ASPValue('FIELD'), AttributeOrigin('atom2', AttributeOrigin('atom3', AttributeOrigin('atom4')))),
                                  ASPAttribute('field4', ASPValue('FIELD'), AttributeOrigin('atom1'))])
-        self.assertEqual(atom.to_string(), 'atom1(atom2(FIELD,atom3(FIELD,atom4(FIELD))),FIELD)')
+        self.assertEqual(str(atom), 'atom1(atom2(FIELD,atom3(FIELD,atom4(FIELD))),FIELD)')
 
 if __name__ == '__main__':
     unittest.main()

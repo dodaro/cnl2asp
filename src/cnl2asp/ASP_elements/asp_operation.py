@@ -42,20 +42,20 @@ class ASPOperation(ASPElement):
                     elem.remove_element(element)
 
 
-    def to_string(self) -> str:
-        return f' {ASPOperation.operators[self.operator]} '.join([operand.to_string() for operand in self.operands])
+    def __str__(self) -> str:
+        return f' {ASPOperation.operators[self.operator]} '.join([str(operand) for operand in self.operands])
 
     def __repr__(self):
-        self.to_string()
+        return str(self)
 
 
 class ASPAngleOperation(ASPOperation):
     def __init__(self, operator: Operators, *operands: ASPElement):
         super(ASPAngleOperation, self).__init__(operator, *operands)
 
-    def to_string(self) -> str:
+    def __str__(self) -> str:
         if self.operator != Operators.SUM and self.operator != Operators.DIFFERENCE and \
                 self.operator != Operators.MULTIPLICATION and self.operator != Operators.DIVISION:
-            return f' {ASPOperation.operators[self.operator]} '.join(['(' + operand.to_string() + ')/360' for operand in self.operands])
+            return f' {ASPOperation.operators[self.operator]} '.join(['(' + str(operand) + ')/360' for operand in self.operands])
         else:
-            return super(ASPAngleOperation, self).to_string()
+            return super(ASPAngleOperation, self).__str__()

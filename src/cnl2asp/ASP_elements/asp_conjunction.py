@@ -33,8 +33,8 @@ class ASPConjunction(ASPElement):
     def get_atom_list(self) -> list[ASPElement]:
         return self.conjunction
 
-    def to_string(self) -> str:
-        return ', '.join([x.to_string() for x in self.conjunction])
+    def __str__(self) -> str:
+        return ', '.join([str(x) for x in self.conjunction])
 
     def __eq__(self, other):
         if not isinstance(other, ASPConjunction):
@@ -42,4 +42,4 @@ class ASPConjunction(ASPElement):
         return self.conjunction == other.conjunction
 
     def __repr__(self):
-        self.to_string()
+        return str(self)

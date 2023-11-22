@@ -62,7 +62,7 @@ class Cnl2asp:
             asp_converter: ASPConverter = ASPConverter()
             program: ASPProgram = problem.convert(asp_converter)
             SignatureManager().signatures = []
-            return program.to_string()
+            return str(program)
         except Exception as e:
             print("Error in asp conversion:", str(e))
             return ''

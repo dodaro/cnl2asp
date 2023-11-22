@@ -57,11 +57,11 @@ class ASPAtom(ASPElement):
                 attributes.append(attribute)
         return attributes
 
-    def to_string(self) -> str:
+    def __str__(self) -> str:
         string = ''
         for attribute in self.attributes:
             for operation in attribute.operations:
-                string += f'{operation.to_string()}, '
+                string += f'{str(operation)}, '
         string += 'not ' if self.negated else ''
         string += f'{self.name}('
         if Utility.PRINT_WITH_FUNCTIONS:
@@ -80,14 +80,14 @@ class ASPAtom(ASPElement):
                             visited.append(attribute2)
                             tmp_atom.attributes.append(ASPAttribute(attribute2.name, attribute2.value,
                                                                     attribute2.origin.origin))
-                    string += tmp_atom.to_string() + ','
+                    string += str(tmp_atom) + ','
                 else:
-                    string += attribute1.to_string() + ','
+                    string += str(attribute1) + ','
             if string[-1] == ',':
                 string = string[0:-1]
             return string + ')'
         else:
-            return string + f'{",".join([x.to_string() for x in self.attributes])})'
+            return string + f'{",".join([str(x) for x in self.attributes])})'
 
     def __eq__(self, other):
         if not isinstance(other, ASPAtom):
@@ -95,4 +95,4 @@ class ASPAtom(ASPElement):
         return self.name == other.name and self.attributes == other.attributes
 
     def __repr__(self):
-        return self.to_string()
+        return str(self)
