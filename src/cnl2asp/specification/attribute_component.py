@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import Any, TYPE_CHECKING
 
 from cnl2asp.converter.converter_interface import Converter
-from cnl2asp.proposition.component import Component
+from cnl2asp.specification.component import Component
 if TYPE_CHECKING:
-    from cnl2asp.proposition.operation_component import OperationComponent
+    from cnl2asp.specification.operation_component import OperationComponent
 
 
 class ValueComponent(Component, str):

@@ -9,7 +9,8 @@ from cnl2asp.ASP_elements.asp_aggregate import ASPAggregate
 from cnl2asp.ASP_elements.asp_atom import ASPAtom
 from cnl2asp.ASP_elements.asp_attribute import ASPAttribute, RangeASPValue
 from cnl2asp.ASP_elements.asp_conjunction import ASPConjunction
-from cnl2asp.ASP_elements.asp_operation import ASPOperation, ASPAngleOperation
+from cnl2asp.ASP_elements.asp_encoding import ASPEncoding
+from cnl2asp.ASP_elements.asp_operation import ASPOperation, ASPAngleOperation, ASPTemporalOperation
 from cnl2asp.ASP_elements.asp_program import ASPProgram
 from cnl2asp.ASP_elements.asp_rule import ASPRule, ASPRuleHead, ASPWeakConstraint
 from cnl2asp.ASP_elements.asp_attribute import ASPValue
@@ -17,18 +18,19 @@ from cnl2asp.ASP_elements.asp_attribute import ASPValue
 from cnl2asp.converter.converter_interface import Converter
 from cnl2asp.exception.cnl2asp_exceptions import AttributeNotFound
 
-from cnl2asp.proposition.constant_component import ConstantComponent
-from cnl2asp.proposition.entity_component import EntityComponent, TemporalEntityComponent
-from cnl2asp.proposition.attribute_component import AttributeComponent, RangeValueComponent, is_same_origin
-from cnl2asp.proposition.component import Component
-from cnl2asp.proposition.problem import Problem
-from cnl2asp.proposition.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, RequisiteComponent, \
+from cnl2asp.specification.constant_component import ConstantComponent
+from cnl2asp.specification.entity_component import EntityComponent, TemporalEntityComponent
+from cnl2asp.specification.attribute_component import AttributeComponent, RangeValueComponent, is_same_origin
+from cnl2asp.specification.component import Component
+from cnl2asp.specification.problem import Problem
+from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, RequisiteComponent, \
     PreferenceProposition, CardinalityComponent, PREFERENCE_PROPOSITION_TYPE
-from cnl2asp.proposition.aggregate_component import AggregateComponent
-from cnl2asp.proposition.operation_component import OperationComponent, Operators
-from cnl2asp.proposition.relation_component import RelationComponent
-from cnl2asp.proposition.attribute_component import ValueComponent
-from cnl2asp.proposition.signaturemanager import SignatureManager
+from cnl2asp.specification.aggregate_component import AggregateComponent
+from cnl2asp.specification.operation_component import OperationComponent, Operators
+from cnl2asp.specification.relation_component import RelationComponent
+from cnl2asp.specification.attribute_component import ValueComponent
+from cnl2asp.specification.signaturemanager import SignatureManager
+from cnl2asp.specification.specification import SpecificationComponent
 from cnl2asp.utility.utility import Utility
 
 
@@ -61,7 +63,9 @@ class ASPConverter(Converter[ASPProgram,
                              ASPAtom, ASPAggregate,
                              ASPOperation, ASPAttribute,
                              None, ASPValue, None]):
+
     def __init__(self):
+        self._asp_encoding: ASPEncoding = ASPEncoding()
         self._program: ASPProgram = ASPProgram()
         self._atoms_in_current_rule: list[EntityToAtom] = []  # variable used to track the conversion entity -> atom
         self._created_fields: list[str] = []
@@ -91,9 +95,16 @@ class ASPConverter(Converter[ASPProgram,
         self._created_fields.append(result)
         return result
 
-    def convert_problem(self, problem: Problem) -> ASPProgram:
-        for constant in problem.get_constant():
+    def convert_specification(self, specification: SpecificationComponent):
+        for constant in specification.get_constant():
             constant.convert(self)
+        for problem in specification.get_problems():
+            self._asp_encoding.add_program(problem.convert(self))
+            self._program = ASPProgram()
+        return self._asp_encoding
+
+    def convert_problem(self, problem: Problem) -> ASPProgram:
+        self._program.name = problem.name
         for proposition in problem.get_propositions():
             self._program.add_rule(proposition.convert(self))
             self.clear_support_variables()
@@ -155,7 +166,7 @@ class ASPConverter(Converter[ASPProgram,
 
     def convert_entity(self, entity: EntityComponent) -> ASPAtom:
         atom = ASPAtom(entity.name, [attribute.convert(self) for attribute in entity.keys + entity.attributes],
-                       entity.negated)
+                       entity.negated, entity.is_before, entity.is_after, entity.is_initial)
         self._atoms_in_current_rule.append(EntityToAtom(entity, atom))
         return atom
 
@@ -250,6 +261,8 @@ class ASPConverter(Converter[ASPProgram,
                 for j, field_2 in enumerate(fields[i + 1:]):
                     operations.append(ASPOperation(operation.operator, field_1, field_2))
             return operations
+        if operation.operator >= Operators.CONJUNCTION:
+            return ASPTemporalOperation(operation.operator, *operands)
         return ASPOperation(operation.operator, *operands)
 
     def convert_attribute(self, attribute: AttributeComponent) -> ASPAttribute:
@@ -261,12 +274,12 @@ class ASPConverter(Converter[ASPProgram,
             value = f'"{constant.value}"'
         else:
             value = constant.value.convert(self)
-        self._program.add_constant((constant.name, value))
+        self._asp_encoding.add_constant((constant.name, value))
 
     def convert_value(self, value: ValueComponent) -> ASPValue:
         if not value:
             return ASPValue(value)
-        if not self._program.is_constant(value) and not value == Utility.NULL_VALUE and not value.isnumeric() and not value.isupper():
+        if not self._asp_encoding.is_constant(value) and not value == Utility.NULL_VALUE and not value.isnumeric() and not value.isupper():
             return ASPValue(f'"{value}"')
         return ASPValue(value)
 

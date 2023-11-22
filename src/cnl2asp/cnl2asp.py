@@ -7,12 +7,12 @@ from lark.exceptions import VisitError
 
 from cnl2asp.ASP_elements.asp_program import ASPProgram
 from cnl2asp.exception.cnl2asp_exceptions import ParserError
-from cnl2asp.proposition.attribute_component import AttributeComponent
-from cnl2asp.proposition.entity_component import EntityComponent
+from cnl2asp.specification.attribute_component import AttributeComponent
+from cnl2asp.specification.entity_component import EntityComponent
 from cnl2asp.converter.asp_converter import ASPConverter
 from cnl2asp.parser.parser import CNLTransformer
-from cnl2asp.proposition.problem import Problem
-from cnl2asp.proposition.signaturemanager import SignatureManager
+from cnl2asp.specification.problem import Problem
+from cnl2asp.specification.signaturemanager import SignatureManager
 
 
 class Symbol:

@@ -1,17 +1,21 @@
 from __future__ import annotations
 
 
-from cnl2asp.proposition.attribute_component import AttributeOrigin, is_same_origin
+from cnl2asp.specification.attribute_component import AttributeOrigin, is_same_origin
 from cnl2asp.utility.utility import Utility
 from .asp_attribute import ASPAttribute
 from .asp_element import ASPElement
 
 
 class ASPAtom(ASPElement):
-    def __init__(self, name: str, attributes: list[ASPAttribute], negated: bool = False):
+    def __init__(self, name: str, attributes: list[ASPAttribute], negated: bool = False,
+                 is_before: bool = False, is_after: bool = False, is_initial: bool = False):
         self.name = name
         self.attributes = attributes
         self.negated = negated
+        self.is_before = is_before
+        self.is_after = is_after
+        self.is_initial = is_initial
 
     def set_attributes_value(self, attributes: list[ASPAttribute]):
         for attribute in attributes:
@@ -63,7 +67,11 @@ class ASPAtom(ASPElement):
             for operation in attribute.operations:
                 string += f'{str(operation)}, '
         string += 'not ' if self.negated else ''
-        string += f'{self.name}('
+        string += '\'' if self.is_before else ''
+        string += '_' if self.is_initial else ''
+        string += f'{self.name}'
+        string += '\'' if self.is_after else ''
+        string += '('
         if Utility.PRINT_WITH_FUNCTIONS:
             visited = []
             for attribute1 in self.attributes:

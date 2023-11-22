@@ -4,15 +4,18 @@ from cnl2asp.ASP_elements.asp_aggregate import ASPAggregate
 from cnl2asp.ASP_elements.asp_atom import ASPAtom
 from cnl2asp.ASP_elements.asp_attribute import ASPAttribute
 from cnl2asp.ASP_elements.asp_conjunction import ASPConjunction
-from cnl2asp.proposition.aggregate_component import AggregateComponent, AggregateOperation
-from cnl2asp.proposition.signaturemanager import SignatureManager
+from cnl2asp.specification.aggregate_component import AggregateComponent, AggregateOperation
+from cnl2asp.specification.problem import Problem
+from cnl2asp.specification.proposition import Proposition, RequisiteComponent
+from cnl2asp.specification.signaturemanager import SignatureManager
 from cnl2asp.converter.asp_converter import ASPConverter
-from cnl2asp.proposition.attribute_component import AttributeComponent, AttributeOrigin
-from cnl2asp.proposition.entity_component import EntityComponent
-from cnl2asp.proposition.relation_component import RelationComponent
+from cnl2asp.specification.attribute_component import AttributeComponent, AttributeOrigin
+from cnl2asp.specification.entity_component import EntityComponent
+from cnl2asp.specification.relation_component import RelationComponent
 
 from cnl2asp.ASP_elements.asp_attribute import ASPValue
-from cnl2asp.proposition.attribute_component import ValueComponent
+from cnl2asp.specification.attribute_component import ValueComponent
+from cnl2asp.specification.specification import SpecificationComponent
 from cnl2asp.utility.utility import Utility
 
 asp_converter = ASPConverter()
@@ -66,6 +69,21 @@ class TestASPConverter(unittest.TestCase):
         self.assertEqual(str(atom_1), 'entity_1(NTTY_2_FLD1)')
         self.assertEqual(str(atom_2), 'entity_2(NTTY_2_FLD1,_)')
 
+    def test_multiple_problems(self):
+        entity = EntityComponent('entity', '', [], [
+            AttributeComponent('field', ValueComponent('FIELD'), AttributeOrigin('entity'))])
+        problem1 = Problem('problem1')
+        problem1.add_proposition(Proposition(requisite=RequisiteComponent([entity])))
+
+        problem2 = Problem('problem2')
+        problem2.add_proposition(Proposition(requisite=RequisiteComponent([entity])))
+
+        specification = SpecificationComponent()
+        specification.add_problem(problem1)
+        specification.add_problem(problem2)
+        asp_converter = ASPConverter()
+        encoding = asp_converter.convert_specification(specification)
+        self.assertEqual(str(encoding).strip(), '''#program problem1.\n:- entity(FIELD).\n#program problem2.\n:- entity(FIELD).''')
 
 if __name__ == '__main__':
     unittest.main()

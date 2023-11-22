@@ -3,11 +3,12 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, DuplicatedTypedEntity
-from cnl2asp.proposition.attribute_component import ValueComponent
-from cnl2asp.proposition.entity_component import EntityType
+from cnl2asp.specification.attribute_component import ValueComponent
+from cnl2asp.specification.entity_component import EntityType
+from cnl2asp.utility.utility import Utility
 
 if TYPE_CHECKING:
-    from cnl2asp.proposition.entity_component import EntityComponent
+    from cnl2asp.specification.entity_component import EntityComponent
 
 
 class SignatureManager:
@@ -18,6 +19,7 @@ class SignatureManager:
 
     @staticmethod
     def add_signature(entity: EntityComponent):
+        entity = entity.copy()
         # Update previous declared signatures
         for signature in SignatureManager.signatures:
             try:
@@ -28,6 +30,8 @@ class SignatureManager:
                 signature.attributes.sort(key=lambda x: x.name)
             except:
                 pass
+        for attribute in entity.get_keys_and_attributes():
+            attribute.value = ValueComponent(Utility.NULL_VALUE)
         SignatureManager.signatures.append(entity)
 
     @staticmethod

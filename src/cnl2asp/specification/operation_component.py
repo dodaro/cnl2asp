@@ -1,13 +1,15 @@
 from __future__ import annotations
 
 from enum import Enum
+from functools import total_ordering
 
 from cnl2asp.converter.converter_interface import Converter, OperationConverter
-from cnl2asp.proposition.attribute_component import ValueComponent
-from cnl2asp.proposition.component import Component
-from cnl2asp.proposition.entity_component import EntityComponent
+from cnl2asp.specification.attribute_component import ValueComponent
+from cnl2asp.specification.component import Component
+from cnl2asp.specification.entity_component import EntityComponent
 
 
+@total_ordering
 class Operators(Enum):
     SUM = 0
     DIFFERENCE = 1
@@ -19,6 +21,33 @@ class Operators(Enum):
     LESS_THAN = 7
     GREATER_THAN_OR_EQUAL_TO = 8
     LESS_THAN_OR_EQUAL_TO = 9
+    CONJUNCTION = 10
+    DISJUNCTION = 11
+    LEFT_IMPLICATION = 12
+    RIGHT_IMPLICATION = 13
+    EQUIVALENCE = 14
+    NEGATION = 15
+    PREVIOUS = 16
+    WEAK_PREVIOUS = 17
+    TRIGGER = 18
+    ALWAYS_BEFORE = 19
+    SINCE = 20
+    EVENTUALLY_BEFORE = 21
+    PRECEDE = 22
+    WEAK_PRECEDE = 23
+    NEXT = 24
+    WEAK_NEXT = 25
+    RELEASE = 26
+    ALWAYS_AFTER = 27
+    UNTIL = 28
+    EVENTUALLY_AFTER = 29
+    FOLLOW = 30
+    WEAK_FOLLOW = 31
+
+    def __lt__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value < other.value
+        return NotImplemented
 
 
 operators_negation = {

@@ -3,10 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cnl2asp.converter.converter_interface import Converter
-from cnl2asp.proposition.component import Component
+from cnl2asp.specification.component import Component
 
 if TYPE_CHECKING:
-    from cnl2asp.proposition.entity_component import EntityComponent
+    from cnl2asp.specification.entity_component import EntityComponent
 
 
 class RelationComponent(Component):

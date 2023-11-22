@@ -4,12 +4,12 @@ from uuid import uuid4
 from multipledispatch import dispatch
 
 from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, EntityNotFound, LabelNotFound
-from cnl2asp.proposition.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent
-from cnl2asp.proposition.component import Component
-from cnl2asp.proposition.entity_component import EntityComponent
-from cnl2asp.proposition.proposition import Proposition, NewKnowledgeComponent, CardinalityComponent, PreferenceProposition, \
+from cnl2asp.specification.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent
+from cnl2asp.specification.component import Component
+from cnl2asp.specification.entity_component import EntityComponent
+from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, CardinalityComponent, PreferenceProposition, \
     PREFERENCE_PRIORITY_LEVEL, PREFERENCE_PROPOSITION_TYPE, ConditionComponent
-from cnl2asp.proposition.relation_component import RelationComponent
+from cnl2asp.specification.relation_component import RelationComponent
 from cnl2asp.utility.utility import Utility
 
 

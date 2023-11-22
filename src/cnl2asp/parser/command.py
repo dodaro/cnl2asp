@@ -1,9 +1,10 @@
 from cnl2asp.parser.proposition_builder import PropositionBuilder
-from cnl2asp.proposition.attribute_component import ValueComponent, AttributeComponent
-from cnl2asp.proposition.entity_component import EntityComponent
-from cnl2asp.proposition.operation_component import OperationComponent, Operators
-from cnl2asp.proposition.problem import Problem
-from cnl2asp.proposition.proposition import NewKnowledgeComponent
+from cnl2asp.specification.attribute_component import ValueComponent, AttributeComponent
+from cnl2asp.specification.entity_component import EntityComponent
+from cnl2asp.specification.operation_component import OperationComponent, Operators
+from cnl2asp.specification.problem import Problem
+from cnl2asp.specification.proposition import NewKnowledgeComponent
+from cnl2asp.specification.signaturemanager import SignatureManager
 
 
 class Command:
@@ -42,17 +43,16 @@ class DurationClause(Command):
 
 
 class CreateSignature(Command):
-    def __init__(self, problem: Problem, proposition: PropositionBuilder, entity: EntityComponent):
-        self.problem = problem
+    def __init__(self, proposition: PropositionBuilder, entity: EntityComponent):
         self.proposition = proposition
         self.entity = entity
 
     def execute(self):
         try:
-            signature = self.problem.get_signature(self.entity.name)
+            signature = SignatureManager.get_signature(self.entity.name)
         except:
             signature = self.proposition.create_new_signature(self.entity)
-            self.problem.add_signature(signature)
+            SignatureManager.add_signature(signature)
         signature.set_attributes_value(self.entity.get_keys_and_attributes())
         self.entity.keys = signature.keys
         self.entity.attributes = signature.attributes

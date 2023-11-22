@@ -2,7 +2,7 @@ from multipledispatch import dispatch
 
 from cnl2asp.ASP_elements.asp_attribute import ASPAttribute
 from cnl2asp.ASP_elements.asp_element import ASPElement
-from cnl2asp.proposition.signaturemanager import SignatureManager
+from cnl2asp.specification.signaturemanager import SignatureManager
 
 
 

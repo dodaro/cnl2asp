@@ -1,8 +1,8 @@
 from typing import Any
 
 from cnl2asp.converter.converter_interface import Converter
-from cnl2asp.proposition.attribute_component import ValueComponent
-from cnl2asp.proposition.component import Component
+from cnl2asp.specification.attribute_component import ValueComponent
+from cnl2asp.specification.component import Component
 
 
 class ConstantComponent(Component):

@@ -7,10 +7,10 @@ from typing import Any, TYPE_CHECKING
 
 from cnl2asp.exception.cnl2asp_exceptions import AttributeNotFound
 from cnl2asp.converter.converter_interface import Converter, EntityConverter
-from cnl2asp.proposition.attribute_component import AttributeComponent, ValueComponent, AttributeOrigin, is_same_origin
-from cnl2asp.proposition.component import Component
+from cnl2asp.specification.attribute_component import AttributeComponent, ValueComponent, AttributeOrigin, is_same_origin
+from cnl2asp.specification.component import Component
 from cnl2asp.utility.utility import Utility
-from cnl2asp.proposition.relation_component import RelationComponent
+from cnl2asp.specification.relation_component import RelationComponent
 
 if TYPE_CHECKING:
     from cnl2asp.parser.proposition_builder import PropositionBuilder
@@ -28,7 +28,8 @@ class EntityType(Enum):
 
 class EntityComponent(Component):
     def __init__(self, name: str, label: str, keys: list[AttributeComponent], attributes: list[AttributeComponent],
-                 negated: bool = False, entity_type: EntityType = EntityType.GENERIC):
+                 negated: bool = False, entity_type: EntityType = EntityType.GENERIC,
+                 is_before: bool = False, is_after: bool = False, is_initial: bool = False):
         self.name = name
         self.label = label
         self.keys = keys if keys else []
@@ -38,6 +39,9 @@ class EntityComponent(Component):
                 attribute.origin = AttributeOrigin(self.name)
         self.negated = negated
         self.entity_type = entity_type
+        self.is_before = is_before
+        self.is_after = is_after
+        self.is_initial = is_initial
 
     def removesuffix(self, string: str):
         pass

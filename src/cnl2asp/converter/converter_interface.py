@@ -5,15 +5,17 @@ from typing import TypeVar, Generic, TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from proposition.attribute_component import ValueComponent, RangeValueComponent
-    from proposition.constant_component import ConstantComponent
-    from proposition.problem import Problem
-    from proposition.proposition import Proposition, PreferenceProposition, CardinalityComponent
-    from proposition.aggregate_component import AggregateComponent
-    from proposition.entity_component import EntityComponent
-    from proposition.operation_component import OperationComponent
-    from proposition.relation_component import RelationComponent
-    from proposition.attribute_component import AttributeComponent
+    from cnl2asp.specification.entity_component import TemporalEntityComponent
+    from cnl2asp.specification.specification import SpecificationComponent
+    from cnl2asp.specification.attribute_component import ValueComponent, RangeValueComponent
+    from cnl2asp.specification.constant_component import ConstantComponent
+    from cnl2asp.specification.problem import Problem
+    from cnl2asp.specification.proposition import Proposition, PreferenceProposition, CardinalityComponent
+    from cnl2asp.specification.aggregate_component import AggregateComponent
+    from cnl2asp.specification.entity_component import EntityComponent
+    from cnl2asp.specification.operation_component import OperationComponent
+    from cnl2asp.specification.relation_component import RelationComponent
+    from cnl2asp.specification.attribute_component import AttributeComponent
 
 ProblemConverter = TypeVar('ProblemConverter')
 DomainDefinitionConverter = TypeVar('DomainDefinitionConverter')
@@ -97,4 +99,12 @@ class Converter(ABC, Generic[ProblemConverter,
     @abstractmethod
     def convert_relation(self, relation: RelationComponent) -> RelationConverter:
         """Convert relation"""
+
+    @abstractmethod
+    def convert_specification(self, specification: SpecificationComponent):
+        """Convert specification"""
+
+    @abstractmethod
+    def convert_temporal_entity(self, temporal_entity: TemporalEntityComponent):
+        """Convert temporal entity"""
 

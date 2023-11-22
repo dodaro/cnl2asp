@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from cnl2asp.ASP_elements.asp_operation import ASPOperation
-from cnl2asp.proposition.attribute_component import AttributeOrigin
+from cnl2asp.specification.attribute_component import AttributeOrigin
 from cnl2asp.utility.utility import Utility
 
 from cnl2asp.ASP_elements.asp_element import ASPElement

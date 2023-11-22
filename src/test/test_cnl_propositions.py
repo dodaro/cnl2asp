@@ -6,7 +6,7 @@ from lark import Lark
 from cnl2asp.ASP_elements.asp_program import ASPProgram
 from cnl2asp.converter.asp_converter import ASPConverter
 from cnl2asp.parser.parser import CNLTransformer
-from cnl2asp.proposition.signaturemanager import SignatureManager
+from cnl2asp.specification.signaturemanager import SignatureManager
 
 cnl_parser = Lark(open("cnl2asp/grammar.lark", "r").read())
 
@@ -164,9 +164,10 @@ It is required that the entity E is after 11:20 AM.''',''':- entity(_,TMSLT_NTTY
     It is required that the entity E is before 11:20 AM.''', ''':- entity(_,TMSLT_NTTY), TMSLT_NTTY >= 23.''')
 
     def test_artithmentic_operations_with_parameters(self):
-        self.check_input_to_output('''A day is identified by a day.
+        self.check_input_to_output('''A day is identified by an id.
 A patient is identified by an id, and has a preference.
-It is required that the sum between the id of the patient I, and the day of the day is equal to 1.''',''':- patient(PTNT_D,_), day(DY_DY), PTNT_D + DY_DY != 1.''')
+It is required that the sum between the id of the patient I, and the id of the day is equal to 1.''',
+                                   ''':- patient(PTNT_D,_), day(DY_D), (PTNT_D + DY_D) != 1.''')
 
     @patch('cnl2asp.utility.utility.uuid4')
     def test_duration_clause_with_parameter_as_entity(self, mock_uuid):

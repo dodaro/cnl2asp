@@ -13,19 +13,20 @@ from cnl2asp.exception.cnl2asp_exceptions import LabelNotFound, ParserError, Att
     EntityNotFound, CompilationError, DuplicatedTypedEntity, AttributeGenericError
 from cnl2asp.parser.command import SubstituteVariable, Command, DurationClause, CreateSignature
 from cnl2asp.parser.proposition_builder import PropositionBuilder, PreferencePropositionBuilder
-from cnl2asp.proposition.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent, AttributeOrigin
-from cnl2asp.proposition.component import Component
-from cnl2asp.proposition.constant_component import ConstantComponent
-from cnl2asp.proposition.entity_component import EntityComponent, EntityType, TemporalEntityComponent, \
+from cnl2asp.specification.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent, AttributeOrigin
+from cnl2asp.specification.component import Component
+from cnl2asp.specification.constant_component import ConstantComponent
+from cnl2asp.specification.entity_component import EntityComponent, EntityType, TemporalEntityComponent, \
     SetEntityComponent, ListEntityComponent, ComplexEntityComponent
-from cnl2asp.proposition.problem import Problem
-from cnl2asp.proposition.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, \
+from cnl2asp.specification.problem import Problem
+from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, \
     CardinalityComponent, PREFERENCE_PROPOSITION_TYPE, \
     PREFERENCE_PRIORITY_LEVEL, PROPOSITION_TYPE
-from cnl2asp.proposition.relation_component import RelationComponent
-from cnl2asp.proposition.aggregate_component import AggregateComponent, AggregateOperation
-from cnl2asp.proposition.operation_component import Operators, OperationComponent
-from cnl2asp.proposition.signaturemanager import SignatureManager
+from cnl2asp.specification.relation_component import RelationComponent
+from cnl2asp.specification.aggregate_component import AggregateComponent, AggregateOperation
+from cnl2asp.specification.operation_component import Operators, OperationComponent
+from cnl2asp.specification.signaturemanager import SignatureManager
+from cnl2asp.specification.specification import SpecificationComponent
 from cnl2asp.utility.utility import Utility
 from cnl2asp.exception.cnl2asp_exceptions import TypeNotFound
 
@@ -44,6 +45,7 @@ PRONOUNS = ['i', 'you', 'he', 'she', 'it', 'we', 'you', 'they']  # they are skip
 class CNLTransformer(Transformer):
     def __init__(self):
         super().__init__()
+        self._specification: SpecificationComponent = SpecificationComponent()
         self._problem: Problem = Problem()
         self._proposition: PropositionBuilder = PropositionBuilder()
         self._delayed_operations: list[Command] = []
@@ -67,7 +69,8 @@ class CNLTransformer(Transformer):
         return ValueComponent(f'X_{str(uuid4()).replace("-", "_")}')
 
     def start(self, elem) -> Problem:
-        return self._problem
+        self._specification.add_problem(self._problem)
+        return self._specification
 
     def _clear(self):
         self._proposition = PropositionBuilder()
@@ -76,7 +79,7 @@ class CNLTransformer(Transformer):
 
     def explicit_definition_proposition(self, elem):
         if elem[0]:
-            self._problem.add_signature(elem[0])
+            SignatureManager.add_signature(elem[0])
         self._clear()
 
     @v_args(meta=True)
@@ -115,7 +118,7 @@ class CNLTransformer(Transformer):
         origin = self._parameter_origin_builder(name)
         if origin and not name:
             # if origin and not name the user imply the key of the last "origin"
-            keys = self._problem.get_signature(parameter[-1]).get_keys()
+            keys = SignatureManager.get_signature(parameter[-1]).get_keys()
             res = []
             for key in keys:
                 key_origin = AttributeOrigin(origin.name, key.origin)
@@ -166,14 +169,14 @@ class CNLTransformer(Transformer):
         for command in self._delayed_operations:
             command.execute()
         if elem[0]:
-            self._problem.add_signature(elem[0])
+            SignatureManager.add_signature(elem[0])
         self._problem.add_propositions(self._proposition.get_propositions())
         self._clear()
 
 
     def constant_definition_clause(self, elem):
         value = ValueComponent(elem[1]) if elem[1] else ValueComponent('')
-        self._problem.add_constant(ConstantComponent(elem[0], value))
+        self._specification.add_constant(ConstantComponent(elem[0], value))
 
     def compounded_range_clause(self, elem) -> EntityComponent:
         name: str = elem[0].lower()
@@ -187,7 +190,7 @@ class CNLTransformer(Transformer):
         name: str = elem[1].lower()
         attribute_name = Utility.DEFAULT_ATTRIBUTE
         try:
-            signature = self._problem.get_signature(name)
+            signature = SignatureManager.get_signature(name)
             attributes = signature.get_keys_and_attributes()
             if len(attributes) == 1:
                 attribute_name = attributes[0].name
@@ -229,10 +232,10 @@ class CNLTransformer(Transformer):
     def enumerative_definition_clause(self, elem):
         subject = elem[0]
         try:
-            signature = self._problem.get_signature(subject.name)
+            signature = SignatureManager.get_signature(subject.name)
         except:
             signature = self._proposition.create_new_signature(subject)
-            self._problem.add_signature(signature)
+            SignatureManager.add_signature(signature)
         copy: EntityComponent = signature.copy()
         copy.set_attributes_value(subject.keys + subject.attributes)
         subject.keys = copy.keys
@@ -240,7 +243,7 @@ class CNLTransformer(Transformer):
         verb = elem[1]
         if subject.label or subject.attributes:
             self._proposition.add_requisite(subject)
-            self._problem.add_signature(elem[0])  # we can have new definitions in subject position for this proposition
+            SignatureManager.add_signature(elem[0])  # we can have new definitions in subject position for this proposition
         else:
             # subject is an attribute value of the verb
             verb.attributes.append(AttributeComponent('id', ValueComponent(subject.name), AttributeOrigin(verb.name)))
@@ -249,7 +252,7 @@ class CNLTransformer(Transformer):
             # replace the object elements with the proper signature if same of the subject
             for entity in object_entity.get_entities():
                 if entity.name == subject.name:
-                    entity_signature = self._problem.get_signature(entity.name)
+                    entity_signature = SignatureManager.get_signature(entity.name)
                     entity_signature.label = entity.label
                     entity_signature.set_attributes_value(entity.get_keys_and_attributes())
                     object_list[idx] = entity_signature
@@ -257,7 +260,7 @@ class CNLTransformer(Transformer):
                                                                   ConditionComponent([])))
         # In this proposition we have a particular construction of the signature
         # we always have subjects and objects keys linked to the verb
-        for key in self._problem.get_signature(subject.name).get_keys():
+        for key in SignatureManager.get_signature(subject.name).get_keys():
             verb.attributes.append(key.copy())
         for entity in object_list:
             for key in entity.get_keys():
@@ -265,7 +268,7 @@ class CNLTransformer(Transformer):
                 copy.value = ValueComponent(Utility.NULL_VALUE)
                 verb.attributes.append(copy)
         signature = self._proposition.create_new_signature(verb)
-        self._problem.add_signature(signature)
+        SignatureManager.add_signature(signature)
         self._proposition.add_requisite_list(object_list)
         for proposition in self._proposition.get_propositions():
             if subject.label or subject.attributes:
@@ -557,7 +560,7 @@ class CNLTransformer(Transformer):
 
     def _parameter_origin_builder(self, name: list[str]):
         try:
-            self._problem.get_signature(name[0])
+            SignatureManager.get_signature(name[0])
             return AttributeOrigin(name.pop(0), self._parameter_origin_builder(name))
         except:
             return None
@@ -575,7 +578,7 @@ class CNLTransformer(Transformer):
         origin = self._parameter_origin_builder(name)
         if origin and not name:
             # if origin and not name the user imply the key of the last "origin"
-            name = self._problem.get_signature(parameter[-5]).get_keys()[0].name
+            name = SignatureManager.get_signature(parameter[-5]).get_keys()[0].name
         else:
             name = '_'.join(name)
         value = parameter[-4] if parameter[-4] else Utility.NULL_VALUE
@@ -637,7 +640,7 @@ class CNLTransformer(Transformer):
                 raise LabelNotFound("")
         except (LabelNotFound, AttributeNotFound):
             try:
-                entity = self._problem.get_signature(name)
+                entity = SignatureManager.get_signature(name)
                 entity.label = label
             except EntityNotFound as e:
                 # this is the case that we are defining a new entity
@@ -739,7 +742,7 @@ class CNLTransformer(Transformer):
         entity = self.simple_entity(meta, verb_name, '', None, None, elem[2], new_definition=True)
         if elem[0]:
             entity.negated = True
-        self._delayed_operations.append(CreateSignature(self._problem, self._proposition, entity))
+        self._delayed_operations.append(CreateSignature(self._proposition, entity))
         return entity
 
     def cnl_it_is_preferred(self, elem):
