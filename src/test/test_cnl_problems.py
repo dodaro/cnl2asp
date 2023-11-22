@@ -23,7 +23,7 @@ class TestCnlPropositions(unittest.TestCase):
         problem = CNLTransformer().transform(cnl_parser.parse(string))
         asp_converter: ASPConverter = ASPConverter()
         program: ASPProgram = problem.convert(asp_converter)
-        return program.__str__()
+        return str(program)
 
     def check_input_to_output(self, input_string, expected_output):
         asp = self.compute_asp(input_string)

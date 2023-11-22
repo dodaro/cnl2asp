@@ -50,7 +50,7 @@ class TestASPConverter(unittest.TestCase):
         asp_aggregate = ASPAggregate(AggregateOperation.COUNT, [ASPAttribute('TEST_DISCR', ASPValue('TST_DSCR'))],
                                      ASPConjunction([asp_atom]))
         self.assertEqual(str(aggregate.convert(asp_converter)),
-                         asp_aggregate.__str__())
+                         str(asp_aggregate))
 
     def test_link_two_atoms(self):
         entity_1 = EntityComponent('entity_1', '', [], [AttributeComponent('field1', ValueComponent(Utility.ASP_NULL_VALUE), AttributeOrigin('entity_1'))])
