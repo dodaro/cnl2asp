@@ -24,7 +24,7 @@ class ASPAggregate(ASPElement):
     def remove_element(self, element: ASPElement):
         self.body.remove_element(element)
 
-    def to_string(self) -> str:
+    def __str__(self) -> str:
         return f'#{ASPAggregate.symbols[self.operation]}{{' \
-               f'{",".join([x.to_string() for x in self.discriminant])}' \
-               f': {self.body.to_string()}}}'
+               f'{",".join([str(x) for x in self.discriminant])}' \
+               f': {str(self.body)}}}'

@@ -20,11 +20,11 @@ class ASPProgram(ASPElement):
     def add_rule(self, rule: ASPRule):
         self._rules.append(rule)
 
-    def to_string(self) -> str:
+    def __str__(self) -> str:
         program = ''
         for constant in self._constants:
             if constant[1]:
                 program += f'#const {constant[0]} = {constant[1]}.\n'
         for rule in self._rules:
-            program += rule.to_string()
+            program += str(rule)
         return program

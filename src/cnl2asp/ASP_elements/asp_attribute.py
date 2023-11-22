@@ -10,12 +10,7 @@ from cnl2asp.ASP_elements.asp_element import ASPElement
 
 
 class ASPValue(ASPElement, str):
-    def to_string(self):
-        return self
-
-    def __repr__(self):
-        self.to_string()
-
+    pass
 
 class RangeASPValue(ASPValue):
     def __new__(cls, content):
@@ -37,8 +32,8 @@ class ASPAttribute(ASPElement):
             return True
         return False
 
-    def to_string(self):
-        return f'{self.value.to_string()}'
+    def __str__(self):
+        return f'{self.value}'
 
     def isnull(self):
         return self.value == Utility.ASP_NULL_VALUE
@@ -52,4 +47,4 @@ class ASPAttribute(ASPElement):
         return self.name == other.name and self.value == other.value
 
     def __repr__(self):
-        self.to_string()
+        str(self)

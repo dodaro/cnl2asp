@@ -49,8 +49,8 @@ class TestASPConverter(unittest.TestCase):
                                     ASPAttribute('field', ASPValue('FIELD')), ASPAttribute('TEST_DISCR', ASPValue('TST_DSCR'))])
         asp_aggregate = ASPAggregate(AggregateOperation.COUNT, [ASPAttribute('TEST_DISCR', ASPValue('TST_DSCR'))],
                                      ASPConjunction([asp_atom]))
-        self.assertEqual(aggregate.convert(asp_converter).to_string(),
-                         asp_aggregate.to_string())
+        self.assertEqual(str(aggregate.convert(asp_converter)),
+                         asp_aggregate.__str__())
 
     def test_link_two_atoms(self):
         entity_1 = EntityComponent('entity_1', '', [], [AttributeComponent('field1', ValueComponent(Utility.ASP_NULL_VALUE), AttributeOrigin('entity_1'))])
@@ -59,12 +59,12 @@ class TestASPConverter(unittest.TestCase):
         relation = RelationComponent(entity_1, entity_2)
         asp_converter = ASPConverter()
         atom_1 = entity_1.convert(asp_converter)
-        self.assertEqual(atom_1.to_string(), 'entity_1(_)')
+        self.assertEqual(str(atom_1), 'entity_1(_)')
         atom_2 = entity_2.convert(asp_converter)
-        self.assertEqual(atom_2.to_string(), 'entity_2(_,_)')
+        self.assertEqual(str(atom_2), 'entity_2(_,_)')
         asp_converter._link_two_atoms(relation, atom_1, atom_2)
-        self.assertEqual(atom_1.to_string(), 'entity_1(NTTY_2_FLD1)')
-        self.assertEqual(atom_2.to_string(), 'entity_2(NTTY_2_FLD1,_)')
+        self.assertEqual(str(atom_1), 'entity_1(NTTY_2_FLD1)')
+        self.assertEqual(str(atom_2), 'entity_2(NTTY_2_FLD1,_)')
 
 
 if __name__ == '__main__':
