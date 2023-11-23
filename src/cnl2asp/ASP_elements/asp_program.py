@@ -12,7 +12,7 @@ class ASPProgram(ASPElement):
         self._rules.append(rule)
 
     def __str__(self) -> str:
-        program = f'#program {self.name}.\n' if self.name else ''
+        program = f'\n#program {self.name}.\n' if self.name else ''
         for rule in self._rules:
             program += str(rule)
         return program

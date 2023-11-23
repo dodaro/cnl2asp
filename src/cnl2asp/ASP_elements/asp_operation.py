@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from cnl2asp.ASP_elements.asp_temporal_formula import ASPTemporalFormula
 from cnl2asp.specification.operation_component import Operators
 from cnl2asp.ASP_elements.asp_element import ASPElement
 
@@ -98,7 +99,15 @@ class ASPTemporalOperation(ASPOperation):
     }
 
     def __init__(self, operator: Operators, *operands: ASPElement):
-        super(ASPTemporalOperation, self).__init__(operator, *operands)
+        clean_operands = []
+        for operand in operands:
+            if isinstance(operand, ASPTemporalFormula):
+                clean_operands.append(operand.operations[0])
+            else:
+                clean_operands.append(operand)
+
+        super(ASPTemporalOperation, self).__init__(operator, *clean_operands)
+
 
     def _operator_to_symbol(self, operator):
         return ASPTemporalOperation.asp_temporal_operators.get(operator)

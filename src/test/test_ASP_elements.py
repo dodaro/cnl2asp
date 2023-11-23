@@ -98,10 +98,9 @@ class TestASPElements(unittest.TestCase):
         encoding = ASPEncoding()
         encoding.add_program(program)
         encoding.add_constant(('time', '10'))
-        self.assertEqual(str(encoding),
+        self.assertEqual(str(encoding).strip(),
                          '#const time = 10.\n'
-                         '{head(FIELD): condition(FIELD), condition2(FIELD)} :- body(FIELD), body2(FIELD).\n',
-                         'Incorrect choice without cardinality print.')
+                         '{head(FIELD): condition(FIELD), condition2(FIELD)} :- body(FIELD), body2(FIELD).')
 
     def test_weak_constraint(self):
         weak_constraint = ASPWeakConstraint(
@@ -179,7 +178,7 @@ class TestASPElements(unittest.TestCase):
 
         encoding.add_program(program_base)
         encoding.add_program(program_dynamic)
-        self.assertEqual(str(encoding).strip(), '''#program base.\n:- atom(FIELD).\n#program dynamic.\n:- atom(FIELD).''')
+        self.assertEqual(str(encoding).strip(), '''#program base.\n:- atom(FIELD).\n\n#program dynamic.\n:- atom(FIELD).''')
 
 if __name__ == '__main__':
     unittest.main()

@@ -68,9 +68,23 @@ class CNLTransformer(Transformer):
             return ValueComponent(result)
         return ValueComponent(f'X_{str(uuid4()).replace("-", "_")}')
 
-    def start(self, elem) -> Problem:
+    def start(self, elem) -> SpecificationComponent:
         self._specification.add_problem(self._problem)
         return self._specification
+
+    def specification(self, elem):
+        self._specification.add_problem(self._problem)
+        self._problem = Problem()
+
+    def PROBLEM_IDENTIFIER(self, elem):
+        if elem == "Initially:":
+            self._problem.name = 'initial'
+        elif elem == "Dynamically:":
+            self._problem.name = 'dynamic'
+        elif elem == "Always:":
+            self._problem.name = 'always'
+        elif elem == "Finally:":
+            self._problem.name = 'final'
 
     def _clear(self):
         self._proposition = PropositionBuilder()
@@ -81,10 +95,6 @@ class CNLTransformer(Transformer):
         if elem[0]:
             SignatureManager.add_signature(elem[0])
         self._clear()
-
-    @v_args(meta=True)
-    def explicit_definition_proposition_err(self, meta, elem):
-        raise CompilationError("Domain definitions should go at the beginning.", meta.line)
 
     def standard_definition(self, elem) -> EntityComponent:
         entity_keys = []
@@ -322,6 +332,64 @@ class CNLTransformer(Transformer):
         self._proposition.add_cardinality(cardinality)
         return subject
 
+    def telingo_operation(self, elem):
+        operand = elem[3]
+        if elem[1]:
+            operand = OperationComponent(Operators.NEGATION, operand)
+        if elem[0] and elem[2]:
+            TELINGO_TEMPORAL_RELATIONSHIP = elem[0].removeprefix('from ')
+            TELINGO_TEMPORAL_OPERATOR = elem[2]
+            operation = OperationComponent(Operators[f'{TELINGO_TEMPORAL_OPERATOR}_{TELINGO_TEMPORAL_RELATIONSHIP}'.upper()], operand)
+        else:
+            operation = operand
+        TELINGO_DUAL_OPERATOR = elem[4]
+        telingo_operation = elem[5]
+        if TELINGO_DUAL_OPERATOR:
+            operation = OperationComponent(TELINGO_DUAL_OPERATOR, operation, telingo_operation)
+        if elem[0] == 'from before':
+            operation = OperationComponent(Operators.PREVIOUS, operation)
+        elif elem[0] == 'from after':
+            operation = OperationComponent(Operators.NEXT, operation)
+        return operation
+
+    def telingo_operand(self, elem):
+        if not elem[1]:
+            return elem[0]
+        else:
+            return OperationComponent(elem[1], elem[0], elem[2])
+
+
+    def TELINGO_TEMPORAL_RELATIONSHIP(self, elem):
+        return elem.value
+
+    def TELINGO_TEMPORAL_OPERATOR(self, elem):
+        return elem.value
+
+    def TELINGO_DUAL_OPERATOR(self, elem):
+        if elem == "and":
+            return Operators.CONJUNCTION
+        elif elem == "or":
+            return Operators.DISJUNCTION
+        elif elem == "implies":
+            return Operators.LEFT_IMPLICATION
+        elif elem == "imply":
+            return Operators.LEFT_IMPLICATION
+        elif elem == "equivalent":
+            return Operators.EQUIVALENCE
+        elif elem == "trigger":
+            return Operators.TRIGGER
+        elif elem == "since":
+            return Operators.SINCE
+        elif elem == "precede":
+            return Operators.PRECEDE
+        elif elem == "release":
+            return Operators.RELEASE
+        elif elem == "until":
+            return Operators.UNTIL
+        elif elem == "follow":
+            return Operators.FOLLOW
+
+
     def fact_proposition(self, elem):
         self._proposition.add_new_knowledge(NewKnowledgeComponent(elem[0]))
 
@@ -391,7 +459,14 @@ class CNLTransformer(Transformer):
         return elem[0][1]
 
     def there_is_clause(self, elem):
-        self.whenever_clause(elem)
+        if elem[0]:
+            elem[1].negated = True
+        self._proposition.add_requisite(elem[1])
+        return elem[1]
+
+    def telingo_there_is(self, elem):
+        self._proposition.add_requisite(elem[0])
+        return elem[0]
 
     @v_args(meta=True)
     def temporal_constraint(self, meta, elem):
@@ -602,6 +677,18 @@ class CNLTransformer(Transformer):
 
     def EXPRESSION(self, elem):
         return ''.join(elem)
+
+    def entity(self, elem):
+        if elem[0] == "previously":
+            elem[1].is_before = True
+        elif elem[0] == "subsequently":
+            elem[1].is_after = True
+        elif elem[0] == "initially":
+            elem[1].is_initial = True
+        return elem[1]
+
+    def TELINGO_ENTITY_TEMPORAL_OPERATOR(self, elem):
+        return elem.value
 
     def _is_label(self, string: str) -> bool:
         if isinstance(string, EntityComponent):

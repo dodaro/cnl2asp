@@ -14,10 +14,13 @@
 %ignore C_COMMENT
 
 // Which type of clause do we expect?
-start: (explicit_definition_proposition END_OF_LINE)* ((explicit_definition_proposition_err | implicit_definition_proposition | standard_proposition) END_OF_LINE)*
+start: ((explicit_definition_proposition | implicit_definition_proposition) END_OF_LINE)* (specification)*
+
+specification: PROBLEM_IDENTIFIER? (standard_proposition END_OF_LINE)+
+
+PROBLEM_IDENTIFIER: "Initially:" | "Dynamically:" | "Always:" | "Finally:"
 
 explicit_definition_proposition.1: standard_definition | temporal_concept_definition | complex_concept_definition | complex_concept_elements_definition
-explicit_definition_proposition_err: standard_definition | temporal_concept_definition | complex_concept_definition | complex_concept_elements_definition
 _CNL_IS: "is"
 _CNL_IDENTIFIED: "identified"
 cnl_is_identified: _CNL_IS " " _CNL_IDENTIFIED
@@ -99,12 +102,18 @@ standard_proposition: whenever_then_clause_proposition
 whenever_then_clause_proposition: (whenever_clause _CNL_COMMA?)+ then_clause [terminal_clauses]
 _CNL_WHENEVER: "whenever"i
 _CNL_THERE: "there"i
-cnl_whenever_there_is: _CNL_WHENEVER " " _CNL_THERE " " _CNL_IS
-whenever_clause: cnl_whenever_there_is [VERB_NEGATION] entity
+whenever_clause: _CNL_WHENEVER _CNL_THERE _CNL_IS [VERB_NEGATION] entity
+                | _CNL_WHENEVER [VERB_NEGATION] telingo_operation
 _CNL_THEN: "then"
 _CNL_OR: "or"
 then_clause: _CNL_THEN entity ASSIGNMENT_VERB COPULA? [cardinality] predicate (_CNL_COMMA? _CNL_OR predicate)*
 
+telingo_operation: [TELINGO_TEMPORAL_RELATIONSHIP] _CNL_THERE _CNL_IS [VERB_NEGATION] [TELINGO_TEMPORAL_OPERATOR] telingo_operand [TELINGO_DUAL_OPERATOR telingo_operation]
+TELINGO_TEMPORAL_RELATIONSHIP: "before" | "from before" | "after" | "from after"
+TELINGO_TEMPORAL_OPERATOR: "always" | "eventually"
+TELINGO_DUAL_OPERATOR: "and" | "or" | "implies" | "imply" | "equivalent" | "trigger" | "since" | "precede" | "release" | "until" | "follow"
+
+telingo_operand: entity [TELINGO_DUAL_OPERATOR telingo_operand]
 
 fact_proposition: _CNL_THERE _CNL_IS entity
 
@@ -128,6 +137,7 @@ constraint_proposition: constraint_operator (comparison [terminal_clauses]
                                             | temporal_constraint [(_CNL_COMMA whenever_clause)+])
 
 there_is_clause: _CNL_THERE " " _CNL_IS [VERB_NEGATION] entity
+                | telingo_operation -> telingo_there_is
 
 simple_clause_conjunction.-1: simple_clause_wrv (_CNL_AND _CNL_ALSO simple_clause_wrv)*
 when_then_clause: when_clause _CNL_THEN simple_clause_conjunction
@@ -252,7 +262,7 @@ predicate: verb [cardinality] _CNL_SUCH_THAT_THERE_IS? [conjunctive_object_list]
 
 simple_clause_wrv.-2: entity COPULA? verb [conjunctive_object_list]
 
-?entity: simple_entity | complex_entity
+?entity: TELINGO_ENTITY_TEMPORAL_OPERATOR? (simple_entity | complex_entity)
 simple_entity: _CNL_INDEFINITE_ARTICLE? STRING [STRING] [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list]
 _CNL_ELEMENT: "element"
 complex_entity: complex_entity_parameter _CNL_IN STRING -> generic_element
@@ -260,6 +270,7 @@ complex_entity: complex_entity_parameter _CNL_IN STRING -> generic_element
               | _CNL_THE NUMBER ("st" | "nd" | "rd" | "th") _CNL_ELEMENT [EXPRESSION] _CNL_IN STRING -> list_index_element
 complex_entity_parameter: _CNL_AN _CNL_ELEMENT [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]
 
+TELINGO_ENTITY_TEMPORAL_OPERATOR: "previously" | "subsequently" | "initially"
 
 entity_temporal_order_constraint: _CNL_THAT _CNL_IS ORDERING_OPERATOR temporal_value
 define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE

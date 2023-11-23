@@ -445,5 +445,12 @@ A nurse is identified by an id.
 
 It is prohibited that a nurse works in the 1st element in shift.''', ''':- nurse(WRK_N_D), work_in(WRK_N_D,LMNT,"shift"), list("shift",LMNT,"morning").''')
 
+    def test_multiple_problems(self):
+        self.check_input_to_output('''A node is identified by an id.
+        Initially:
+        There is a node with id 1.
+        Finally:
+        There is a node with id 2.''', '''#program initial.\nnode(1).\n\n#program final.\nnode(2).''')
+
 if __name__ == '__main__':
     unittest.main()

@@ -83,8 +83,13 @@ class ASPRule(ASPElement):
                         rule = f'{{{rule}}}'
         rule = rule.strip()
         if self.body.conjunction:
-            rule += f'{" " if self.head else ""}:- '
-            rule += f'{str(self.body)}'
+            body = str(self.body)
+            if self.head:
+                rule += f' '
+                for elem in body.split(','):
+                    if elem.strip().startswith('&tel'):
+                        body = body.replace(elem, f' not not {elem.strip()}')
+            rule += f':- {body}'
         rule += '.\n'
         return rule
 

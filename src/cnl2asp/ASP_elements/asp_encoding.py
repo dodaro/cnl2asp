@@ -26,4 +26,4 @@ class ASPEncoding(ASPElement):
                 string += f'#const {constant[0]} = {constant[1]}.\n'
         for program in self._programs:
             string += str(program)
-        return string
+        return string.strip()

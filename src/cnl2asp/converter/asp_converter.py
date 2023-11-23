@@ -14,6 +14,7 @@ from cnl2asp.ASP_elements.asp_operation import ASPOperation, ASPAngleOperation, 
 from cnl2asp.ASP_elements.asp_program import ASPProgram
 from cnl2asp.ASP_elements.asp_rule import ASPRule, ASPRuleHead, ASPWeakConstraint
 from cnl2asp.ASP_elements.asp_attribute import ASPValue
+from cnl2asp.ASP_elements.asp_temporal_formula import ASPTemporalFormula
 
 from cnl2asp.converter.converter_interface import Converter
 from cnl2asp.exception.cnl2asp_exceptions import AttributeNotFound
@@ -262,7 +263,7 @@ class ASPConverter(Converter[ASPProgram,
                     operations.append(ASPOperation(operation.operator, field_1, field_2))
             return operations
         if operation.operator >= Operators.CONJUNCTION:
-            return ASPTemporalOperation(operation.operator, *operands)
+            return ASPTemporalFormula([ASPTemporalOperation(operation.operator, *operands)])
         return ASPOperation(operation.operator, *operands)
 
     def convert_attribute(self, attribute: AttributeComponent) -> ASPAttribute:
