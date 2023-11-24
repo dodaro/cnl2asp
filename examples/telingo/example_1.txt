@@ -1,0 +1,19 @@
+A gun is identified by a status.
+A shooter is identified by an id.
+
+Initially:
+There is a gun with status equal to unloaded.
+
+Always:
+There is a shooter with id 1.
+
+Dynamically:
+Whenever there is a shooter X, then we can have a gun with status equal to shooting, or a gun with status equal to  loading, or a gun with status equal to  waiting.
+
+Whenever there is a gun loading then we must have a gun with status equal to loaded.
+Whenever there is not a gun unloaded, whenever there is previously a gun loaded then we must have a gun with status equal to loaded.
+
+Whenever there is a gun shooting, whenever there is previously a gun loaded then we must have a gun with status equal to unloaded.
+Whenever there is previously a gun unloaded, whenever there is not a gun loaded then we must have a gun with status equal to unloaded.
+
+It is prohibited that there is a gun loading, whenever there is previously a gun loaded.

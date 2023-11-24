@@ -1,9 +1,5 @@
 from __future__ import annotations
-
-import random
 import re
-
-from multipledispatch import dispatch
 
 from cnl2asp.ASP_elements.asp_aggregate import ASPAggregate
 from cnl2asp.ASP_elements.asp_atom import ASPAtom
