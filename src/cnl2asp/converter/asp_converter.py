@@ -15,7 +15,7 @@ from cnl2asp.ASP_elements.asp_rule import ASPRule, ASPRuleHead, ASPWeakConstrain
 from cnl2asp.ASP_elements.asp_attribute import ASPValue
 
 from cnl2asp.converter.converter_interface import Converter
-from cnl2asp.exception.cnl2asp_exceptions import AttributeNotFound
+from cnl2asp.exception.cnl2asp_exceptions import AttributeNotFound, EntityNotFound, CompilationError
 
 from cnl2asp.proposition.constant_component import ConstantComponent
 from cnl2asp.proposition.entity_component import EntityComponent, TemporalEntityComponent
@@ -197,8 +197,11 @@ class ASPConverter(Converter[ASPProgram,
                     attributes_to_be_equal_discriminant_value.append(atom_matched_attribute)
             if not attribute_matched:
                 unmatched_discriminant_attributes.append(attribute)
-                discriminant += [attribute.convert(self) for attribute in
-                                 SignatureManager.get_signature(attribute.name).get_keys()]
+                try:
+                    discriminant += [attribute.convert(self) for attribute in
+                                     SignatureManager.get_signature(attribute.name).get_keys()]
+                except EntityNotFound:
+                    raise Exception(f"Impossible to use attribute \"{attribute.origin} {attribute.name}\" in aggregate.")
             discriminant = [attribute for attribute in discriminant if
                             attribute not in unmatched_discriminant_attributes]
             if discriminant_value == Utility.ASP_NULL_VALUE:
