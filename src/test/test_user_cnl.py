@@ -128,5 +128,18 @@ class TestCnlPropositions(unittest.TestCase):
         output = ':- #sum{D: node(D)} = 1.'
         self.assert_equal(input_string, problem_specification, output)
 
-
+    def test_closure_operators(self):
+        input_string = '''
+        import explicit_definition_proposition
+        [operation.operator.conjunction]
+        and: "and"
+        [operation]
+        operation: entity{operation.operand} (and{operation.operator} entity{operation.operand})+
+        [constraint]
+        "It is forbidden that there is" operation{body}
+        '''
+        problem_specification = '''
+        It is forbidden that there is sun and rain and snow.'''
+        output = ':- &tel {"sun" & "rain" & "snow"}.'
+        self.assert_equal(input_string, problem_specification, output)
 

@@ -229,17 +229,25 @@ class TreeInterpreter(Interpreter):
     def context(self, tree: Tree):
         return self.functions_map.get(tree.children[1].value)
 
-    def support_rule(self, tree: Tree) -> ProductionRule:
-        production_rule: ProductionRule = ProductionRule(tree.children[0].value, self.visit(tree.children[1]).body)
+    def support_proposition(self, tree: Tree) -> ProductionRule:
+        production_rule: ProductionRule = ProductionRule(tree.children[0].value, self.visit(tree.children[1]))
         self.grammar.support_rules.append(production_rule)
         return production_rule
 
-    def proposition(self, tree: Tree) -> ProductionRule:
-        production_rule: ProductionRule = ProductionRule(self._generate_production_rule_id(), '')
+    def proposition(self, tree: Tree):
+        return ProductionRule(self._generate_production_rule_id(), self.visit(tree.children[0]))
+
+    def dummy(self, tree: Tree):
+        return self.visit(tree.children[0])
+
+    def structural_proposition(self, tree: Tree) -> str:
+        body: str = ''
         for child in tree.children:
             if isinstance(child, Tree):
-                production_rule.body += self.visit(child) + ' '
-        return production_rule
+                body += self.visit(child) + ' '
+            else:
+                body += child.value
+        return body
 
     def structural_token(self, tree: Tree) -> str:
         structural_token = ''

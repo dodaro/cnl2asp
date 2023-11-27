@@ -60,8 +60,13 @@ OPEN_PARENTHESIS: "("
 CLOSED_PARENTHESIS: ")"
 KLEENE_CLOSURE_OPERATOR: "*"
 POSITIVE_CLOSURE_OPERATOR: "+"
-proposition:  token+
-           | STRING ":" proposition -> support_rule
+proposition: structural_proposition
+            | support_proposition -> dummy
+
+structural_proposition: token
+           | structural_proposition structural_proposition
+           | OPEN_PARENTHESIS structural_proposition CLOSED_PARENTHESIS (KLEENE_CLOSURE_OPERATOR | POSITIVE_CLOSURE_OPERATOR)
+support_proposition: STRING ":" structural_proposition
 token: /\"/ STRING+ /\"/ -> structural_token
      | STRING /\{/ command_list /\}/
 command_list: COMMAND ("," COMMAND)*
