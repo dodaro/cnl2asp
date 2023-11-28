@@ -18,7 +18,10 @@ start: ((explicit_definition_proposition | implicit_definition_proposition) END_
 
 specification: PROBLEM_IDENTIFIER? (standard_proposition END_OF_LINE)+
 
-PROBLEM_IDENTIFIER: "Initially:" | "Dynamically:" | "Always:" | "Finally:"
+PROBLEM_IDENTIFIER: "The following propositions apply in the initial state:"
+                    | "The following propositions always apply except in the initial state:"
+                    | "The following propositions always apply:"
+                    | "The following propositions apply in the final state:"
 
 explicit_definition_proposition.1: standard_definition | temporal_concept_definition | complex_concept_definition | complex_concept_elements_definition
 _CNL_IS: "is"

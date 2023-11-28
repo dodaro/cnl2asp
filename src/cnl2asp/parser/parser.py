@@ -77,13 +77,13 @@ class CNLTransformer(Transformer):
         self._problem = Problem()
 
     def PROBLEM_IDENTIFIER(self, elem):
-        if elem == "Initially:":
+        if elem == "The following propositions apply in the initial state:":
             self._problem.name = 'initial'
-        elif elem == "Dynamically:":
-            self._problem.name = 'dynamic'
-        elif elem == "Always:":
+        elif elem == "The following propositions always apply except in the initial state:":
             self._problem.name = 'always'
-        elif elem == "Finally:":
+        elif elem == "The following propositions always apply:":
+            self._problem.name = 'dynamic'
+        elif elem == "The following propositions apply in the final state:":
             self._problem.name = 'final'
 
     def _clear(self):
