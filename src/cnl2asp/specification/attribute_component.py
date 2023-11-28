@@ -60,7 +60,7 @@ class AttributeOrigin:
 
     def __str__(self):
         if self.origin:
-            return str(self.origin) + ' ' + self.name
+            return self.name + ' ' + str(self.origin)
         return self.name
 
     def __eq__(self, other):
