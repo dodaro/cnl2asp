@@ -468,6 +468,11 @@ class CNLTransformer(Transformer):
         aggregate = AggregateComponent(elem[0], discriminant, body)
         return aggregate
 
+    def aggregate_range(self, elem):
+        operation = OperationComponent(Operators.LESS_THAN_OR_EQUAL_TO, elem[1], elem[0], elem[2])
+        self._proposition.add_requisite(operation)
+        return operation
+
     def aggregate_active_clause(self, elem) -> AggregateComponent:
         discriminant = [elem[1], elem[2]] if elem[2] else [elem[1]]
         body = [elem[3]]

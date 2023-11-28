@@ -100,7 +100,11 @@ whenever_then_clause_proposition: (whenever_clause _CNL_COMMA?)+ then_clause [te
 _CNL_WHENEVER: "whenever"i
 _CNL_THERE: "there"i
 cnl_whenever_there_is: _CNL_WHENEVER " " _CNL_THERE " " _CNL_IS
+_CNL_HAVE: "have"
+_CNL_WE: "we"
+cnl_whenever_we_have_that: _CNL_WHENEVER " " _CNL_WE " " _CNL_HAVE " " _CNL_THAT
 whenever_clause: cnl_whenever_there_is [VERB_NEGATION] entity
+                | cnl_whenever_we_have_that comparison -> whenever_with_comparison
 _CNL_THEN: "then"
 _CNL_OR: "or"
 then_clause: _CNL_THEN entity ASSIGNMENT_VERB COPULA? [cardinality] predicate (_CNL_COMMA? _CNL_OR predicate)*
@@ -157,6 +161,7 @@ parameter_entity_link: _CNL_THE? parameter _CNL_OF _CNL_THE entity
 _CNL_BETWEEN: "between"
 comparison:  ARITHMETIC_OPERATOR _CNL_BETWEEN (EXPRESSION | STRING | parameter_entity_link) (_CNL_COMMA _CNL_AND? (EXPRESSION | STRING | parameter_entity_link))+ _CNL_IS COMPARISON_OPERATOR (STRING | EXPRESSION | parameter_entity_link) -> arithmetic_operation_comparison
             | aggregate_clause _CNL_IS COMPARISON_OPERATOR (STRING | EXPRESSION | aggregate_clause) [such_that_clause] -> aggregate_comparison
+            | aggregate_clause _CNL_IS _CNL_BETWEEN (EXPRESSION | STRING | parameter_entity_link) _CNL_AND (EXPRESSION | STRING | parameter_entity_link) -> aggregate_range
             | (EXPRESSION | STRING | parameter_entity_link) _CNL_IS COMPARISON_OPERATOR (STRING | EXPRESSION | parameter_entity_link) -> variable_comparison
 
 _CNL_OCCURRENCES: "occurrences"
@@ -282,8 +287,8 @@ COPULA: "be " | "be a " | "be an "
       | "has " | "has a " | "has an "
 SHIFT_OPERATOR: _CNL_THE " " ("next" | "previous")
 
-PARAMETER_NAME: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|at|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[a-z][A-Za-z0-9]+/i //has to start with lower case letter
-STRING: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|at|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[A-Za-z0-9]+/i
+PARAMETER_NAME: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|at|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[a-z][A-Za-z0-9\_]+/i //has to start with lower case letter
+STRING: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|at|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[A-Za-z0-9\_]+/i
 VARIABLE: UCASE_LETTER (UCASE_LETTER | INT | "_")*
 PARAMETER_PREPOSITION: _CNL_BY | "with"
 VERB_PREPOSITION: _CNL_BY | "to" | "in"

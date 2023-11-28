@@ -191,8 +191,7 @@ class ASPConverter(Converter[ASPProgram,
                     atom_matched_attribute = atom_matched_attributes[0]
                     if atom_matched_attribute.value != Utility.ASP_NULL_VALUE:
                         if discriminant_value != Utility.ASP_NULL_VALUE and discriminant_value != atom_matched_attribute.value:
-                            raise Exception(
-                                f"Error in aggregate: multiple values declared for discriminant {attribute.name}")
+                            continue
                         discriminant_value = atom_matched_attribute.value
                     attributes_to_be_equal_discriminant_value.append(atom_matched_attribute)
             if not attribute_matched:
