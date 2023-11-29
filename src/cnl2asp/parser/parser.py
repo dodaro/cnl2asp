@@ -255,17 +255,6 @@ class CNLTransformer(Transformer):
                     object_list[idx] = entity_signature
         self._proposition.add_new_knowledge(NewKnowledgeComponent(verb,
                                                                   ConditionComponent([])))
-        # In this proposition we have a particular construction of the signature
-        # we always have subjects and objects keys linked to the verb
-        for key in self._problem.get_signature(subject.name).get_keys():
-            verb.attributes.append(key.copy())
-        for entity in object_list:
-            for key in entity.get_keys():
-                copy = key.copy()
-                copy.value = ValueComponent(Utility.NULL_VALUE)
-                verb.attributes.append(copy)
-        signature = self._proposition.create_new_signature(verb)
-        self._problem.add_signature(signature)
         self._proposition.add_requisite_list(object_list)
         for proposition in self._proposition.get_propositions():
             if subject.label or subject.attributes:

@@ -369,7 +369,7 @@ It is prohibited that the total va_lue, for each id, that have a score_assignmen
         self.check_input_to_output('''A top_Movie is identified by an id.
 A score_Assignment is identified by an id, and by a value.
 
-Whenever we have that the total value, for each id, that have a score_assignment with id X is between 1 and 2, then we can have a movie.''', ''' {movie(X,VL)} :- 1 <= #sum{VL,X: score_assignment(X,VL)} <= 2.''')
+Whenever we have that the total value, for each id, that have a score_assignment with id X is between 1 and 2, then we can have a movie.''', '''{movie(X,VL)} :- 1 <= #sum{VL,X: score_assignment(X,VL)} <= 2.''')
 
 if __name__ == '__main__':
     unittest.main()
