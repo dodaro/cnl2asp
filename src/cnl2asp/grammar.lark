@@ -116,9 +116,11 @@ _CNL_THEN: "then"
 _CNL_OR: "or"
 then_clause: _CNL_THEN entity ASSIGNMENT_VERB COPULA? [cardinality] predicate (_CNL_COMMA? _CNL_OR predicate)*
 
-telingo_operation: [TELINGO_TEMPORAL_RELATIONSHIP] _CNL_THERE _CNL_IS [VERB_NEGATION] [TELINGO_TEMPORAL_OPERATOR] telingo_operand [TELINGO_DUAL_OPERATOR telingo_operation]
-TELINGO_TEMPORAL_RELATIONSHIP: "before" | "from before" | "after" | "from after"
-TELINGO_TEMPORAL_OPERATOR: "always" | "eventually"
+_CNL_HOLD: "hold" | "holds"
+hold_condition: (_CNL_THAT | VERB_NEGATION) TELINGO_TEMPORAL_OPERATOR _CNL_HOLD
+                | (_CNL_THAT | VERB_NEGATION) _CNL_HOLD TELINGO_TEMPORAL_OPERATOR
+telingo_operation: _CNL_THERE _CNL_IS [TELINGO_TEMPORAL_OPERATOR] telingo_operand [hold_condition] [TELINGO_DUAL_OPERATOR telingo_operation]
+TELINGO_TEMPORAL_OPERATOR: "always" | "eventually" | "before" | "since before" | "after" | "since after"
 TELINGO_DUAL_OPERATOR: "and" | "or" | "implies" | "imply" | "equivalent" | "trigger" | "since" | "precede" | "release" | "until" | "follow"
 
 telingo_operand: entity [TELINGO_DUAL_OPERATOR telingo_operand]

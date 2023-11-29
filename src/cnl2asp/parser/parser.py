@@ -332,25 +332,33 @@ class CNLTransformer(Transformer):
         self._proposition.add_cardinality(cardinality)
         return subject
 
+
     def telingo_operation(self, elem):
-        operand = elem[3]
-        if elem[1]:
+        operand = elem[1]
+        if elem[2][0]:
             operand = OperationComponent(Operators.NEGATION, operand)
-        if elem[0] and elem[2]:
-            TELINGO_TEMPORAL_RELATIONSHIP = elem[0].removeprefix('from ')
-            TELINGO_TEMPORAL_OPERATOR = elem[2]
-            operation = OperationComponent(Operators[f'{TELINGO_TEMPORAL_OPERATOR}_{TELINGO_TEMPORAL_RELATIONSHIP}'.upper()], operand)
+        if elem[0] and elem[2][1]:
+            TELINGO_TEMPORAL_RELATIONSHIP = elem[0].removeprefix('since ')
+            TELINGO_TEMPORAL_OPERATOR = elem[2][1].removeprefix('since ')
+            operator = f'{TELINGO_TEMPORAL_RELATIONSHIP}_{TELINGO_TEMPORAL_OPERATOR}' if TELINGO_TEMPORAL_OPERATOR == 'before' or TELINGO_TEMPORAL_OPERATOR == 'after' else f'{TELINGO_TEMPORAL_OPERATOR}_{TELINGO_TEMPORAL_RELATIONSHIP}'
+            operation = OperationComponent(Operators[operator.upper()], operand)
         else:
             operation = operand
-        TELINGO_DUAL_OPERATOR = elem[4]
-        telingo_operation = elem[5]
+        TELINGO_DUAL_OPERATOR = elem[3]
+        telingo_operation = elem[4]
         if TELINGO_DUAL_OPERATOR:
             operation = OperationComponent(TELINGO_DUAL_OPERATOR, operation, telingo_operation)
-        if elem[0] == 'from before':
+        if elem[2][1] == 'since before':
             operation = OperationComponent(Operators.PREVIOUS, operation)
-        elif elem[0] == 'from after':
+        elif elem[2][1] == 'since after':
             operation = OperationComponent(Operators.NEXT, operation)
         return operation
+
+    def hold_condition(self, elem):
+        if elem[0] == True:
+            return True, elem[1]
+        else:
+            return False, elem[0]
 
     def telingo_operand(self, elem):
         if not elem[1]:

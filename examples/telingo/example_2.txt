@@ -1,14 +1,14 @@
 A gun is identified by a status.
 A shooter is identified by an id.
 
-Initially:
+The following propositions apply in the initial state:
 There is a gun with status equal to unloaded.
-It is prohibited that after there is not always a gun loaded and a gun shooting.
+It is prohibited that there is after a gun loaded and a gun shooting do not always holds.
 
-Always:
+The following propositions always apply:
 There is a shooter with id 1.
 
-Dynamically:
+The following propositions always apply except in the initial state:
 Whenever there is a shooter X, then we can have a gun with status equal to shooting, or a gun with status equal to  loading, or a gun with status equal to  waiting.
 
 Whenever there is a gun loading then we must have a gun with status equal to loaded.
@@ -19,6 +19,7 @@ Whenever there is previously a gun unloaded, whenever there is not a gun loaded 
 
 It is prohibited that there is a gun loading, whenever there is previously a gun loaded.
 
-Whenever there is a gun shooting, whenever before there is always a gun unloaded and from before there is eventually a gun shooting, then we must have a gun with status equal to broken.
+//Whenever there is a gun shooting, whenever before there is always a gun unloaded and from before there is eventually a gun shooting, then we must have a gun with status equal to broken.
+Whenever there is a gun shooting, whenever there is before a gun unloaded that always holds and there is eventually a gun shooting that holds since before, then we must have a gun with status equal to broken.
 
 Whenever there is previously a gun broken, then we must have a gun with status equal to broken.
