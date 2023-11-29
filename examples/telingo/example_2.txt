@@ -3,7 +3,7 @@ A shooter is identified by an id.
 
 The following propositions apply in the initial state:
 There is a gun with status equal to unloaded.
-It is prohibited that there is after a gun loaded and a gun shooting do not always holds.
+It is prohibited that there is after a gun loaded and a gun shooting that do not always holds.
 
 The following propositions always apply:
 There is a shooter with id 1.
