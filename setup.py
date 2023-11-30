@@ -12,6 +12,7 @@ setup(
     maintainer_email='simone.caruso@edu.unige.it',
     package_dir={'': 'src'},
     packages=find_packages('src', exclude=['test*']),
+    package_data={'': ['grammar.lark']},
     install_requires=['lark'],
     python_requires=">=3.10"
 )
