@@ -1,9 +1,7 @@
+from __future__ import annotations
 from multipledispatch import dispatch
 
-from cnl2asp.ASP_elements.asp_attribute import ASPAttribute
 from cnl2asp.ASP_elements.asp_element import ASPElement
-from cnl2asp.proposition.signaturemanager import SignatureManager
-
 
 
 class ASPConjunction(ASPElement):
@@ -25,7 +23,11 @@ class ASPConjunction(ASPElement):
 
     @dispatch(ASPElement)
     def add_element(self, element: ASPElement):
-        self.conjunction.append(element)
+        if isinstance(element, ASPConjunction):
+            for elem in element.conjunction:
+                self.add_element(elem)
+        else:
+            self.conjunction.append(element)
 
     def remove_element(self, element: ASPElement):
         self.conjunction.remove(element)

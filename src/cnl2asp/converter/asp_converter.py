@@ -65,6 +65,8 @@ class ASPConverter(Converter[ASPProgram,
         self._program: ASPProgram = ASPProgram()
         self._atoms_in_current_rule: list[EntityToAtom] = []  # variable used to track the conversion entity -> atom
         self._created_fields: list[str] = []
+        self._aggregates: list[ASPAggregate] = []
+        self._operations: list[ASPOperation] = []
         self._forbidden_links: list[ForbiddenLink] = []
         self._converted_complex_entities: list[str] = [] # name of complex entities already converted, used to track if their values have been already converted.
 
@@ -103,6 +105,8 @@ class ASPConverter(Converter[ASPProgram,
         self._atoms_in_current_rule = []
         self._created_fields = []
         self._forbidden_links = []
+        self._aggregates = []
+        self._operations = []
 
     def convert_proposition(self, proposition: Proposition) -> ASPRule:
         # Create a new signature for each new entity
@@ -117,11 +121,20 @@ class ASPConverter(Converter[ASPProgram,
         if proposition.cardinality:
             cardinality = proposition.cardinality.convert(self)
         if proposition.requisite:
-            body = proposition.requisite.convert(self)
+            body: ASPConjunction = proposition.requisite.convert(self)
         if proposition.relations:
             for relation in proposition.relations:
                 relation.convert(self)
+        self.move_operations(body)
         return ASPRule(body, head, cardinality)
+
+    def move_operations(self, body):
+        for operation in self._operations:
+            for operand in operation.operands:
+                for aggregate in self._aggregates:
+                    if operand in aggregate.get_discriminant_attributes_value():
+                        aggregate.body.add_element(operation)
+                        body.remove_element(operation)
 
     def convert_preference_proposition(self, preference: PreferenceProposition) -> ASPWeakConstraint:
         rule = self.convert_proposition(preference)
@@ -224,7 +237,9 @@ class ASPConverter(Converter[ASPProgram,
             discriminant = self._match_discriminant_attributes_with_body(discriminant, body)
         else:
             self._match_discriminant_atom_with_body(discriminant, body)
-        return ASPAggregate(aggregate.operation, discriminant, body)
+        aggregate = ASPAggregate(aggregate.operation, discriminant, body)
+        self._aggregates.append(aggregate)
+        return aggregate
 
     def _is_list_of_aggregates(self, operands) -> bool:
         for operand in operands:
@@ -242,11 +257,15 @@ class ASPConverter(Converter[ASPProgram,
         for i, field_1 in enumerate(fields):
             for j, field_2 in enumerate(fields[i + 1:]):
                 operations.append(ASPOperation(operation.operator, field_1, field_2))
+        for operation in operations:
+            self._operations.append(operation)
         return operations
 
     def _convert_between_operation_without_aggregate(self, operation, operands):
         operation1 = ASPOperation(operation.operator, operands[0], operands[1])
         operation2 = ASPOperation(operation.operator, operands[1], operands[2])
+        self._operations.append(operation1)
+        self._operations.append(operation2)
         return ASPConjunction([operation1, operation2])
 
     def convert_operation(self, operation: OperationComponent) -> ASPOperation | [ASPOperation]:
@@ -263,7 +282,9 @@ class ASPConverter(Converter[ASPProgram,
         if not is_arithmetic_operator(operation.operator) and len(operands) == 3 \
                 and not isinstance(operands[1], ASPAggregate):
             return self._convert_between_operation_without_aggregate(operation, operands)
-        return ASPOperation(operation.operator, *operands)
+        operation = ASPOperation(operation.operator, *operands)
+        self._operations.append(operation)
+        return operation
 
     def convert_attribute(self, attribute: AttributeComponent) -> ASPAttribute:
         return ASPAttribute(attribute.name, attribute.value.convert(self), attribute.origin,
