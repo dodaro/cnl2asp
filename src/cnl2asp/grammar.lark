@@ -274,11 +274,11 @@ complex_entity: complex_entity_parameter _CNL_IN STRING -> generic_element
               | _CNL_THE NUMBER ("st" | "nd" | "rd" | "th") _CNL_ELEMENT [EXPRESSION] _CNL_IN STRING -> list_index_element
 complex_entity_parameter: _CNL_AN _CNL_ELEMENT [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]
 
+verb.1: [VERB_NEGATION] _CNL_INDEFINITE_ARTICLE? STRING [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list] [VERB_PREPOSITION]
 
 entity_temporal_order_constraint: _CNL_THAT _CNL_IS ORDERING_OPERATOR temporal_value
 define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE
 
-verb.1: [VERB_NEGATION] _CNL_INDEFINITE_ARTICLE? STRING [parameter_list] [VERB_PREPOSITION]
 
 parameter_list.1: PARAMETER_PREPOSITION parameter (_CNL_COMMA _CNL_AND? PARAMETER_PREPOSITION parameter)*
 _CNL_RESPECT: "respect"

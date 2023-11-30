@@ -25,7 +25,7 @@ from cnl2asp.proposition.problem import Problem
 from cnl2asp.proposition.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, RequisiteComponent, \
     PreferenceProposition, CardinalityComponent, PREFERENCE_PROPOSITION_TYPE
 from cnl2asp.proposition.aggregate_component import AggregateComponent
-from cnl2asp.proposition.operation_component import OperationComponent, Operators
+from cnl2asp.proposition.operation_component import OperationComponent, Operators, is_arithmetic_operator
 from cnl2asp.proposition.relation_component import RelationComponent
 from cnl2asp.proposition.attribute_component import ValueComponent
 from cnl2asp.proposition.signaturemanager import SignatureManager
@@ -226,11 +226,28 @@ class ASPConverter(Converter[ASPProgram,
             self._match_discriminant_atom_with_body(discriminant, body)
         return ASPAggregate(aggregate.operation, discriminant, body)
 
-    def is_list_of_aggregates(self, operands) -> bool:
+    def _is_list_of_aggregates(self, operands) -> bool:
         for operand in operands:
             if not isinstance(operand, ASPAggregate):
                 return False
         return True
+
+    def _convert_operation_of_list_of_aggregate(self, operation, operands):
+        operations: list[ASPOperation] = []
+        fields: list[ASPValue] = []
+        for operand in operands:
+            new_field = ASPValue(Utility.create_unique_identifier().upper())
+            operations.append(ASPOperation(Operators.EQUALITY, operand, new_field))
+            fields.append(new_field)
+        for i, field_1 in enumerate(fields):
+            for j, field_2 in enumerate(fields[i + 1:]):
+                operations.append(ASPOperation(operation.operator, field_1, field_2))
+        return operations
+
+    def _convert_between_operation_without_aggregate(self, operation, operands):
+        operation1 = ASPOperation(operation.operator, operands[0], operands[1])
+        operation2 = ASPOperation(operation.operator, operands[1], operands[2])
+        return ASPConjunction([operation1, operation2])
 
     def convert_operation(self, operation: OperationComponent) -> ASPOperation | [ASPOperation]:
         operands = []
@@ -241,17 +258,11 @@ class ASPConverter(Converter[ASPProgram,
             operands.append(operand.convert(self))
         if is_operation_on_angle:
             return ASPAngleOperation(operation.operator, *operands)
-        if self.is_list_of_aggregates(operands):
-            operations: list[ASPOperation] = []
-            fields: list[ASPValue] = []
-            for operand in operands:
-                new_field = ASPValue(Utility.create_unique_identifier().upper())
-                operations.append(ASPOperation(Operators.EQUALITY, operand, new_field))
-                fields.append(new_field)
-            for i, field_1 in enumerate(fields):
-                for j, field_2 in enumerate(fields[i + 1:]):
-                    operations.append(ASPOperation(operation.operator, field_1, field_2))
-            return operations
+        if self._is_list_of_aggregates(operands):
+            return self._convert_operation_of_list_of_aggregate(operation, operands)
+        if not is_arithmetic_operator(operation.operator) and len(operands) == 3 \
+                and not isinstance(operands[1], ASPAggregate):
+            return self._convert_between_operation_without_aggregate(operation, operands)
         return ASPOperation(operation.operator, *operands)
 
     def convert_attribute(self, attribute: AttributeComponent) -> ASPAttribute:

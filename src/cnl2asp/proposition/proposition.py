@@ -5,7 +5,7 @@ from cnl2asp.converter.converter_interface import Converter, NewKnowledgeConvert
     RequisiteConverter, \
     CardinalityConverter, PropositionConverter
 from cnl2asp.utility.utility import Utility
-from .attribute_component import AttributeComponent, ValueComponent, AttributeOrigin, is_same_origin
+from .attribute_component import AttributeComponent, ValueComponent, AttributeOrigin
 from .component import Component
 from .entity_component import EntityComponent
 from .relation_component import RelationComponent
@@ -213,7 +213,7 @@ class PreferenceProposition(Proposition):
         return converter.convert_preference_proposition(self)
 
     def add_discriminant(self, discriminant: AttributeComponent):
-        if not discriminant in self.discriminant:
+        if discriminant not in self.discriminant:
             self.discriminant.append(discriminant)
 
     def copy(self):

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
+from functools import total_ordering
 
 from cnl2asp.converter.converter_interface import Converter, OperationConverter
 from cnl2asp.proposition.attribute_component import ValueComponent
@@ -8,6 +9,12 @@ from cnl2asp.proposition.component import Component
 from cnl2asp.proposition.entity_component import EntityComponent
 
 
+def is_arithmetic_operator(operator):
+    if operator <= Operators.DIVISION:
+        return True
+    return False
+
+@total_ordering
 class Operators(Enum):
     SUM = 0
     DIFFERENCE = 1
@@ -23,6 +30,10 @@ class Operators(Enum):
     NOTBETWEEN = 11
     ABSOLUTE_VALUE = 12
 
+    def __lt__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value < other.value
+        return NotImplemented
 
 operators_negation = {
     Operators.EQUALITY: Operators.INEQUALITY,

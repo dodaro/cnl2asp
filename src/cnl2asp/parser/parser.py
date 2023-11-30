@@ -730,9 +730,9 @@ class CNLTransformer(Transformer):
     @v_args(meta=True)
     def verb(self, meta, elem):
         elem[1] = elem[1][0:-1] if elem[1][-1] == 's' else elem[1]  # remove 3rd person final 's'
-        verb_name = '_'.join([elem[1], elem[3]]) if elem[3] else elem[1]
+        verb_name = '_'.join([elem[1], elem[5]]) if elem[5] else elem[1]
         verb_name = verb_name.lower()
-        entity = self.simple_entity(meta, verb_name, '', None, None, elem[2], new_definition=True)
+        entity = self.simple_entity(meta, verb_name, '', elem[2], elem[3], elem[4], new_definition=True)
         if elem[0]:
             entity.negated = True
         self._delayed_operations.append(CreateSignature(self._problem, self._proposition, entity))
