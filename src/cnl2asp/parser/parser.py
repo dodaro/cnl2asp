@@ -65,7 +65,7 @@ class CNLTransformer(Transformer):
                 return self._new_field_value(f'{name}{last_num}')
             self._defined_variables.append(result)
             return ValueComponent(result)
-        return ValueComponent(f'X_{str(uuid4()).replace("-", "_")}')
+        return ValueComponent(f'X_{str(uuid4()).replace("-", "_").upper()}')
 
     def start(self, elem) -> Problem:
         return self._problem
