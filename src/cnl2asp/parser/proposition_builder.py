@@ -44,6 +44,9 @@ class PropositionBuilder:
                 return entity
         raise LabelNotFound(f"Label \"{label}\" not declared before.")
 
+    def add_proposition(self, proposition: Proposition):
+        self._derived_rules.append(proposition)
+
     def copy_proposition(self) -> Proposition:
         child = self._original_rule.copy()
         self._derived_rules.append(child)

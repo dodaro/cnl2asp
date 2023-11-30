@@ -18,15 +18,29 @@ class SubstituteVariable(Command):
         self.values = values
 
     def execute(self):
-        if len(self.values) > 1:
-            for value in self.values[1:]:
-                derived_proposition = self.proposition.copy_proposition()
+        new_propositions = []
+        for proposition in self.proposition.get_propositions():
+            for value in self.values:
+                derived_proposition = proposition.copy()
                 derived_proposition.add_requisite([OperationComponent(Operators.EQUALITY,
                                                                       ValueComponent(self.variable),
                                                                       value)])
-        self.proposition._original_rule.add_requisite([OperationComponent(Operators.EQUALITY,
-                                                                          ValueComponent(self.variable),
-                                                                          self.values[0])])
+                new_propositions.append(derived_proposition)
+        self.proposition._original_rule = new_propositions[0]
+        self.proposition._derived_rules = new_propositions[1:]
+
+
+class RespectivelySubstituteVariable(Command):
+    def __init__(self, proposition: PropositionBuilder, variable: str, values: list[ValueComponent]):
+        self.proposition = proposition
+        self.variable = variable
+        self.values = values
+
+    def execute(self):
+        for proposition, value in zip(self.proposition.get_propositions(), self.values):
+                proposition.add_requisite([OperationComponent(Operators.EQUALITY,
+                                                                      ValueComponent(self.variable),
+                                                                      value)])
 
 
 class DurationClause(Command):

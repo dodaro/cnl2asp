@@ -56,7 +56,7 @@ class Cnl2asp:
             print(ParserError(e.char, e.line, e.column, e.get_context(self.input_file.read()), list(e.allowed)))
             return ''
         except VisitError as e:
-            print(e.orig_exc)
+            print(e.args[0])
             return ''
         try:
             asp_converter: ASPConverter = ASPConverter()

@@ -19,6 +19,9 @@ class Operators(Enum):
     LESS_THAN = 7
     GREATER_THAN_OR_EQUAL_TO = 8
     LESS_THAN_OR_EQUAL_TO = 9
+    BETWEEN = 10
+    NOTBETWEEN = 11
+    ABSOLUTE_VALUE = 12
 
 
 operators_negation = {
@@ -27,7 +30,8 @@ operators_negation = {
     Operators.GREATER_THAN: Operators.LESS_THAN_OR_EQUAL_TO,
     Operators.LESS_THAN: Operators.GREATER_THAN_OR_EQUAL_TO,
     Operators.GREATER_THAN_OR_EQUAL_TO: Operators.LESS_THAN,
-    Operators.LESS_THAN_OR_EQUAL_TO: Operators.GREATER_THAN
+    Operators.LESS_THAN_OR_EQUAL_TO: Operators.GREATER_THAN,
+    Operators.BETWEEN: Operators.NOTBETWEEN
 }
 
 
@@ -35,10 +39,27 @@ class OperationComponent(Component):
     def __init__(self, operator: Operators, *operands: Component):
         self.operator = operator
         self.operands = []
+        if self.operator == Operators.BETWEEN:
+            operands = self.between_operator(operands)
         for operand in operands:
             if not isinstance(operand, Component):
                 operand = ValueComponent(operand)
             self.operands.append(operand)
+
+
+    def between_operator(self, operands):
+        operands = list(operands)
+        if self.operator == Operators.BETWEEN:
+            self.operator = Operators.LESS_THAN_OR_EQUAL_TO
+        elif self.operator == Operators.NOTBETWEEN:
+            raise NotImplemented("Operator not between not implemented")
+        for operand in operands:
+            if isinstance(operand, list):
+                operands.insert(0, operand[0])
+                operands.append(operand[1])
+                operands.remove(operand)
+        return operands
+
 
     def get_entities(self) -> list[EntityComponent]:
         entities = []
