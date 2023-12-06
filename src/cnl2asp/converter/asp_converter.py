@@ -190,7 +190,7 @@ class ASPConverter(Converter[ASPProgram,
         unmatched_discriminant_attributes = []
         # create a variable to match discriminant attribute with the atoms attributes with the same name
         for attribute in discriminant:
-            discriminant_value = Utility.ASP_NULL_VALUE
+            discriminant_value = attribute.value
             attributes_to_be_equal_discriminant_value = [attribute]
             attribute_matched = False
             for atom in body.get_atom_list():
