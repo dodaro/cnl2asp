@@ -393,11 +393,13 @@ class CNLTransformer(Transformer):
         except KeyError as e:
             raise CompilationError(str(e), meta.line)
         subject: EntityComponent = elem[0]
-        new_var = self._new_field_value('_'.join([temporal_entity.name, subject.name]))
-        try:
-            subject.set_attributes_value([AttributeComponent(temporal_entity.name, ValueComponent(new_var), AttributeOrigin(temporal_entity.name))])
-        except:
-            CompilationError(f'Compilation error in line {meta.line}')
+        new_var = subject.get_attributes_by_name_and_origin(temporal_entity.name, AttributeOrigin(temporal_entity.name))[0]
+        if new_var.value == Utility.NULL_VALUE:
+            new_var = self._new_field_value('_'.join([temporal_entity.name, subject.name]))
+            try:
+                subject.set_attributes_value([AttributeComponent(temporal_entity.name, ValueComponent(new_var), AttributeOrigin(temporal_entity.name))])
+            except:
+                raise CompilationError(f'Compilation error in line {meta.line}')
         operator = elem[1]
         self._proposition.add_requisite(subject)
         operation = OperationComponent(operator, new_var, ValueComponent(temporal_value))
@@ -648,6 +650,7 @@ class CNLTransformer(Transformer):
             entity.set_attributes_value(parameter_list, self._proposition)
         except AttributeNotFound as e:
             raise CompilationError(str(e), meta.line)
+        entity.set_label_as_key_value()
         if entity_temporal_order_constraint:
             self.temporal_constraint(meta, [entity] + entity_temporal_order_constraint)
         if define_subsequent_event:
@@ -655,7 +658,6 @@ class CNLTransformer(Transformer):
                 self.__substitute_subsequent_event(entity, define_subsequent_event[0], define_subsequent_event[1])
             except TypeNotFound as e:
                 raise CompilationError(str(e), meta.line)
-        entity.set_label_as_key_value()
         return entity
 
     @v_args(meta=True)
