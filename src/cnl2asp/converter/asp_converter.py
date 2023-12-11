@@ -94,7 +94,7 @@ class ASPConverter(Converter[ASPProgram,
         return result
 
     def convert_problem(self, problem: Problem) -> ASPProgram:
-        for constant in problem.get_constant():
+        for constant in problem.get_constants():
             constant.convert(self)
         for proposition in problem.get_propositions():
             self._program.add_rule(proposition.convert(self))
@@ -125,10 +125,10 @@ class ASPConverter(Converter[ASPProgram,
         if proposition.relations:
             for relation in proposition.relations:
                 relation.convert(self)
-        self.move_operations(body)
+        self.__move_operations(body)
         return ASPRule(body, head, cardinality)
 
-    def move_operations(self, body):
+    def __move_operations(self, body):
         for operation in self._operations:
             for operand in operation.operands:
                 for aggregate in self._aggregates:
@@ -155,12 +155,12 @@ class ASPConverter(Converter[ASPProgram,
         return cardinality.lower_bound, cardinality.upper_bound
 
     def convert_condition(self, condition: ConditionComponent) -> ASPConjunction:
-        return self.create_conjunction(condition.components)
+        return self.__create_conjunction(condition.components)
 
     def convert_requisite(self, requisite: RequisiteComponent) -> ASPConjunction:
-        return self.create_conjunction(requisite.components)
+        return self.__create_conjunction(requisite.components)
 
-    def create_conjunction(self, components: list[Component]) -> ASPConjunction:
+    def __create_conjunction(self, components: list[Component]) -> ASPConjunction:
         asp_conjunction = ASPConjunction([])
         for component in components:
             asp_conjunction.add_element(component.convert(self))
@@ -181,7 +181,7 @@ class ASPConverter(Converter[ASPProgram,
             self._converted_complex_entities.append(temporal_entity.name)
         return self.convert_entity(temporal_entity)
 
-    def has_single_key(self, entity: EntityComponent) -> bool:
+    def __has_single_key(self, entity: EntityComponent) -> bool:
         entity_keys = entity.get_keys()
         return len(entity_keys) == 1 and \
                entity.get_attributes_by_name_and_origin(entity_keys[0].name, entity_keys[0].origin)[0].value == Utility.ASP_NULL_VALUE

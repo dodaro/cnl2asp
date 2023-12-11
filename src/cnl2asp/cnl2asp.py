@@ -8,6 +8,7 @@ from lark import Lark, UnexpectedCharacters
 from lark.exceptions import VisitError
 
 from cnl2asp.ASP_elements.asp_program import ASPProgram
+from cnl2asp.converter.cnl2json_converter import Cnl2jsonConverter
 from cnl2asp.exception.cnl2asp_exceptions import ParserError, EntityNotFound
 from cnl2asp.proposition.attribute_component import AttributeComponent
 from cnl2asp.proposition.entity_component import EntityComponent
@@ -71,26 +72,8 @@ class Cnl2asp:
 
     def cnl_to_json(self):
         problem = self.__parse_input()
-        signatures = SignatureManager.signatures
-        json = dict()
-        assignments = list()
-        constants = list()
-        for proposition in problem.get_propositions():
-            assignment = collections.defaultdict(set)
-            for entity in proposition.get_entities():
-                assignment[entity.name] = set()
-                for attribute in entity.get_keys_and_attributes():
-                    if attribute.value != Utility.NULL_VALUE:
-                        predicate = self.__get_predicate(entity.name, attribute)
-                        if predicate:
-                            assignment[predicate.name].add(attribute.value)
-                        else:
-                            assignment[entity.name].add(attribute.value)
-            for key, value in assignment.items():
-                assignment.update({key: list(value)})
-            assignments.append(dict(assignment))
-        json.update({'assignments': assignments})
-        json.update({'constants': constants})
+        converter = Cnl2jsonConverter()
+        json = problem.convert(converter)
         return json
 
     def check_syntax(self) -> bool:

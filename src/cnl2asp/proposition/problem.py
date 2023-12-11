@@ -36,8 +36,14 @@ class Problem(Component):
     def add_constant(self, constant: ConstantComponent):
         self._constants.append(constant)
 
-    def get_constant(self) -> list[ConstantComponent]:
+    def get_constants(self) -> list[ConstantComponent]:
         return self._constants
+
+    def is_constant(self, name: str) -> bool:
+        for constant in self._constants:
+            if name == constant.name:
+                return True
+        return False
 
     @staticmethod
     def add_signature(entity: EntityComponent):

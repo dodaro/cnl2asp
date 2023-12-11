@@ -5,15 +5,16 @@ from typing import TypeVar, Generic, TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from proposition.attribute_component import ValueComponent, RangeValueComponent
-    from proposition.constant_component import ConstantComponent
-    from proposition.problem import Problem
-    from proposition.proposition import Proposition, PreferenceProposition, CardinalityComponent
-    from proposition.aggregate_component import AggregateComponent
-    from proposition.entity_component import EntityComponent
-    from proposition.operation_component import OperationComponent
-    from proposition.relation_component import RelationComponent
-    from proposition.attribute_component import AttributeComponent
+    from cnl2asp.proposition.entity_component import TemporalEntityComponent
+    from cnl2asp.proposition.attribute_component import ValueComponent, RangeValueComponent
+    from cnl2asp.proposition.constant_component import ConstantComponent
+    from cnl2asp.proposition.problem import Problem
+    from cnl2asp.proposition.proposition import Proposition, PreferenceProposition, CardinalityComponent
+    from cnl2asp.proposition.aggregate_component import AggregateComponent
+    from cnl2asp.proposition.entity_component import EntityComponent
+    from cnl2asp.proposition.operation_component import OperationComponent
+    from cnl2asp.proposition.relation_component import RelationComponent
+    from cnl2asp.proposition.attribute_component import AttributeComponent
 
 ProblemConverter = TypeVar('ProblemConverter')
 DomainDefinitionConverter = TypeVar('DomainDefinitionConverter')
@@ -73,6 +74,11 @@ class Converter(ABC, Generic[ProblemConverter,
         """Convert entity"""
 
     @abstractmethod
+    def convert_temporal_entity(self, temporal_entity: TemporalEntityComponent):
+        "Convert temporal entity"
+
+
+    @abstractmethod
     def convert_aggregate(self, aggregate: AggregateComponent) -> AggregateConverter:
         """Convert aggregate"""
 
@@ -88,9 +94,11 @@ class Converter(ABC, Generic[ProblemConverter,
     def convert_constant(self, constant: ConstantComponent) -> ConstantConverter:
         """Convert constant"""
 
+    @abstractmethod
     def convert_value(self, value: ValueComponent) -> ValueConverter:
         """Convert value"""
 
+    @abstractmethod
     def convert_range_value(self, value: RangeValueComponent) -> ValueConverter:
         """Convert range value"""
 
