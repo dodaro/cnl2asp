@@ -1,3 +1,4 @@
+from cnl2asp.ASP_elements.asp_aggregate import ASPAggregate
 from cnl2asp.ASP_elements.asp_attribute import ASPAttribute
 from cnl2asp.ASP_elements.asp_element import ASPElement
 from cnl2asp.ASP_elements.asp_atom import ASPAtom

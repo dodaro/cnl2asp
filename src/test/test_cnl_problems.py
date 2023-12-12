@@ -263,7 +263,7 @@ time(7,"7").
 time(8,"8").
 time(9,"9").
 time(10,"10").
-{rotation(J1,J2,A,AI,TM_TM): joint(J1), joint(J2), angle(A), link(J1,J2), position(J1,AI,TM_TM)} <= 1 :- TM_TM > 0, time(TM_TM,_).
+{rotation(J1,J2,A,AI,T): joint(J1), joint(J2), angle(A), link(J1,J2), position(J1,AI,T)} <= 1 :- T > 0, time(T,_).
 :- T >= timemax, rotation(_,_,_,_,T).
 :- J1 <= J2, rotation(J1,J2,_,_,_).
 :- (A)/360 = (AI)/360, rotation(_,_,A,AI,_).

@@ -75,6 +75,11 @@ class Converter(ABC, Generic[ProblemConverter,
         """Convert entity"""
 
     @abstractmethod
+    def convert_temporal_entity(self, temporal_entity: TemporalEntityComponent):
+        "Convert temporal entity"
+
+
+    @abstractmethod
     def convert_aggregate(self, aggregate: AggregateComponent) -> AggregateConverter:
         """Convert aggregate"""
 
@@ -90,9 +95,11 @@ class Converter(ABC, Generic[ProblemConverter,
     def convert_constant(self, constant: ConstantComponent) -> ConstantConverter:
         """Convert constant"""
 
+    @abstractmethod
     def convert_value(self, value: ValueComponent) -> ValueConverter:
         """Convert value"""
 
+    @abstractmethod
     def convert_range_value(self, value: RangeValueComponent) -> ValueConverter:
         """Convert range value"""
 

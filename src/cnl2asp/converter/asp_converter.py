@@ -36,6 +36,10 @@ class EntityToAtom:
         self.entity = entity
         self.atom = atom
 
+def is_arithmetic_operator(operator):
+    if operator <= Operators.DIVISION:
+        return True
+    return False
 
 class ForbiddenLink:
     def __init__(self, entity_1: EntityComponent, entity_2: EntityComponent, attribute_1: AttributeComponent,
@@ -66,6 +70,8 @@ class ASPConverter(Converter[ASPProgram,
         self._program: ASPProgram = ASPProgram()
         self._atoms_in_current_rule: list[EntityToAtom] = []  # variable used to track the conversion entity -> atom
         self._created_fields: list[str] = []
+        self._aggregates: list[ASPAggregate] = []
+        self._operations: list[ASPOperation] = []
         self._forbidden_links: list[ForbiddenLink] = []
         self._converted_complex_entities: list[str] = [] # name of complex entities already converted, used to track if their values have been already converted.
 
@@ -93,7 +99,7 @@ class ASPConverter(Converter[ASPProgram,
         return result
 
     def convert_specification(self, specification: SpecificationComponent):
-        for constant in specification.get_constant():
+        for constant in specification.get_constants():
             constant.convert(self)
         for problem in specification.get_problems():
             self._asp_encoding.add_program(problem.convert(self))
@@ -111,6 +117,8 @@ class ASPConverter(Converter[ASPProgram,
         self._atoms_in_current_rule = []
         self._created_fields = []
         self._forbidden_links = []
+        self._aggregates = []
+        self._operations = []
 
     def convert_proposition(self, proposition: Proposition) -> ASPRule:
         # Create a new signature for each new entity
@@ -125,11 +133,20 @@ class ASPConverter(Converter[ASPProgram,
         if proposition.cardinality:
             cardinality = proposition.cardinality.convert(self)
         if proposition.requisite:
-            body = proposition.requisite.convert(self)
+            body: ASPConjunction = proposition.requisite.convert(self)
         if proposition.relations:
             for relation in proposition.relations:
                 relation.convert(self)
+        self.__move_operations(body)
         return ASPRule(body, head, cardinality)
+
+    def __move_operations(self, body):
+        for operation in self._operations:
+            for operand in operation.operands:
+                for aggregate in self._aggregates:
+                    if operand in aggregate.get_discriminant_attributes_value():
+                        aggregate.body.add_element(operation)
+                        body.remove_element(operation)
 
     def convert_preference_proposition(self, preference: PreferenceProposition) -> ASPWeakConstraint:
         rule = self.convert_proposition(preference)
@@ -150,12 +167,12 @@ class ASPConverter(Converter[ASPProgram,
         return cardinality.lower_bound, cardinality.upper_bound
 
     def convert_condition(self, condition: ConditionComponent) -> ASPConjunction:
-        return self.create_conjunction(condition.components)
+        return self.__create_conjunction(condition.components)
 
     def convert_requisite(self, requisite: RequisiteComponent) -> ASPConjunction:
-        return self.create_conjunction(requisite.components)
+        return self.__create_conjunction(requisite.components)
 
-    def create_conjunction(self, components: list[Component]) -> ASPConjunction:
+    def __create_conjunction(self, components: list[Component]) -> ASPConjunction:
         asp_conjunction = ASPConjunction([])
         for component in components:
             asp_conjunction.add_element(component.convert(self))
@@ -176,7 +193,7 @@ class ASPConverter(Converter[ASPProgram,
             self._converted_complex_entities.append(temporal_entity.name)
         return self.convert_entity(temporal_entity)
 
-    def has_single_key(self, entity: EntityComponent) -> bool:
+    def __has_single_key(self, entity: EntityComponent) -> bool:
         entity_keys = entity.get_keys()
         return len(entity_keys) == 1 and \
                entity.get_attributes_by_name_and_origin(entity_keys[0].name, entity_keys[0].origin)[0].value == Utility.ASP_NULL_VALUE
@@ -185,7 +202,7 @@ class ASPConverter(Converter[ASPProgram,
         unmatched_discriminant_attributes = []
         # create a variable to match discriminant attribute with the atoms attributes with the same name
         for attribute in discriminant:
-            discriminant_value = Utility.ASP_NULL_VALUE
+            discriminant_value = attribute.value
             attributes_to_be_equal_discriminant_value = [attribute]
             attribute_matched = False
             for atom in body.get_atom_list():
@@ -232,13 +249,36 @@ class ASPConverter(Converter[ASPProgram,
             discriminant = self._match_discriminant_attributes_with_body(discriminant, body)
         else:
             self._match_discriminant_atom_with_body(discriminant, body)
-        return ASPAggregate(aggregate.operation, discriminant, body)
+        aggregate = ASPAggregate(aggregate.operation, discriminant, body)
+        self._aggregates.append(aggregate)
+        return aggregate
 
-    def is_list_of_aggregates(self, operands) -> bool:
+    def _is_list_of_aggregates(self, operands) -> bool:
         for operand in operands:
             if not isinstance(operand, ASPAggregate):
                 return False
         return True
+
+    def _convert_operation_of_list_of_aggregate(self, operation, operands):
+        operations: list[ASPOperation] = []
+        fields: list[ASPValue] = []
+        for operand in operands:
+            new_field = ASPValue(Utility.create_unique_identifier().upper())
+            operations.append(ASPOperation(Operators.EQUALITY, operand, new_field))
+            fields.append(new_field)
+        for i, field_1 in enumerate(fields):
+            for j, field_2 in enumerate(fields[i + 1:]):
+                operations.append(ASPOperation(operation.operator, field_1, field_2))
+        for operation in operations:
+            self._operations.append(operation)
+        return operations
+
+    def _convert_between_operation_without_aggregate(self, operation, operands):
+        operation1 = ASPOperation(operation.operator, operands[0], operands[1])
+        operation2 = ASPOperation(operation.operator, operands[1], operands[2])
+        self._operations.append(operation1)
+        self._operations.append(operation2)
+        return ASPConjunction([operation1, operation2])
 
     def convert_operation(self, operation: OperationComponent) -> ASPOperation | [ASPOperation]:
         operands = []
@@ -249,20 +289,16 @@ class ASPConverter(Converter[ASPProgram,
             operands.append(operand.convert(self))
         if is_operation_on_angle:
             return ASPAngleOperation(operation.operator, *operands)
-        if self.is_list_of_aggregates(operands):
-            operations: list[ASPOperation] = []
-            fields: list[ASPValue] = []
-            for operand in operands:
-                new_field = ASPValue(Utility.create_unique_identifier().upper())
-                operations.append(ASPOperation(Operators.EQUALITY, operand, new_field))
-                fields.append(new_field)
-            for i, field_1 in enumerate(fields):
-                for j, field_2 in enumerate(fields[i + 1:]):
-                    operations.append(ASPOperation(operation.operator, field_1, field_2))
-            return operations
+        if self._is_list_of_aggregates(operands):
+            return self._convert_operation_of_list_of_aggregate(operation, operands)
+        if not is_arithmetic_operator(operation.operator) and len(operands) == 3 \
+                and not isinstance(operands[1], ASPAggregate) and operation.operator < Operators.CONJUNCTION:
+            return self._convert_between_operation_without_aggregate(operation, operands)
         if operation.operator >= Operators.CONJUNCTION:
             return ASPTemporalFormula([ASPTemporalOperation(operation.operator, *operands)])
-        return ASPOperation(operation.operator, *operands)
+        operation = ASPOperation(operation.operator, *operands)
+        self._operations.append(operation)
+        return operation
 
     def convert_attribute(self, attribute: AttributeComponent) -> ASPAttribute:
         return ASPAttribute(attribute.name, attribute.value.convert(self), attribute.origin,

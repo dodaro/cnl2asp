@@ -21,28 +21,31 @@ class Operators(Enum):
     LESS_THAN = 7
     GREATER_THAN_OR_EQUAL_TO = 8
     LESS_THAN_OR_EQUAL_TO = 9
-    CONJUNCTION = 10
-    DISJUNCTION = 11
-    LEFT_IMPLICATION = 12
-    RIGHT_IMPLICATION = 13
-    EQUIVALENCE = 14
-    NEGATION = 15
-    PREVIOUS = 16
-    WEAK_PREVIOUS = 17
-    TRIGGER = 18
-    ALWAYS_BEFORE = 19
-    SINCE = 20
-    EVENTUALLY_BEFORE = 21
-    PRECEDE = 22
-    WEAK_PRECEDE = 23
-    NEXT = 24
-    WEAK_NEXT = 25
-    RELEASE = 26
-    ALWAYS_AFTER = 27
-    UNTIL = 28
-    EVENTUALLY_AFTER = 29
-    FOLLOW = 30
-    WEAK_FOLLOW = 31
+    BETWEEN = 10
+    NOTBETWEEN = 11
+    ABSOLUTE_VALUE = 12
+    CONJUNCTION = 13
+    DISJUNCTION = 14
+    LEFT_IMPLICATION = 15
+    RIGHT_IMPLICATION = 16
+    EQUIVALENCE = 17
+    NEGATION = 18
+    PREVIOUS = 19
+    WEAK_PREVIOUS = 20
+    TRIGGER = 21
+    ALWAYS_BEFORE = 22
+    SINCE = 23
+    EVENTUALLY_BEFORE = 24
+    PRECEDE = 25
+    WEAK_PRECEDE = 26
+    NEXT = 27
+    WEAK_NEXT = 28
+    RELEASE = 29
+    ALWAYS_AFTER = 30
+    UNTIL = 31
+    EVENTUALLY_AFTER = 32
+    FOLLOW = 33
+    WEAK_FOLLOW = 34
 
     def __lt__(self, other):
         if self.__class__ is other.__class__:
@@ -56,7 +59,8 @@ operators_negation = {
     Operators.GREATER_THAN: Operators.LESS_THAN_OR_EQUAL_TO,
     Operators.LESS_THAN: Operators.GREATER_THAN_OR_EQUAL_TO,
     Operators.GREATER_THAN_OR_EQUAL_TO: Operators.LESS_THAN,
-    Operators.LESS_THAN_OR_EQUAL_TO: Operators.GREATER_THAN
+    Operators.LESS_THAN_OR_EQUAL_TO: Operators.GREATER_THAN,
+    Operators.BETWEEN: Operators.NOTBETWEEN
 }
 
 
@@ -64,10 +68,27 @@ class OperationComponent(Component):
     def __init__(self, operator: Operators, *operands: Component):
         self.operator = operator
         self.operands = []
+        if self.operator == Operators.BETWEEN:
+            operands = self.between_operator(operands)
         for operand in operands:
             if not isinstance(operand, Component):
                 operand = ValueComponent(operand)
             self.operands.append(operand)
+
+
+    def between_operator(self, operands):
+        operands = list(operands)
+        if self.operator == Operators.BETWEEN:
+            self.operator = Operators.LESS_THAN_OR_EQUAL_TO
+        elif self.operator == Operators.NOTBETWEEN:
+            raise NotImplemented("Operator not between not implemented")
+        for operand in operands:
+            if isinstance(operand, list):
+                operands.insert(0, operand[0])
+                operands.append(operand[1])
+                operands.remove(operand)
+        return operands
+
 
     def get_entities(self) -> list[EntityComponent]:
         entities = []

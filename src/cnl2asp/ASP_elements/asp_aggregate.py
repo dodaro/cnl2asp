@@ -1,3 +1,4 @@
+from cnl2asp.ASP_elements.asp_atom import ASPAtom
 from cnl2asp.ASP_elements.asp_element import ASPElement
 from cnl2asp.ASP_elements.asp_attribute import ASPAttribute
 from cnl2asp.ASP_elements.asp_conjunction import ASPConjunction
@@ -22,6 +23,16 @@ class ASPAggregate(ASPElement):
 
     def remove_element(self, element: ASPElement):
         self.body.remove_element(element)
+
+    def get_discriminant_attributes_value(self):
+        attributes = []
+        for elem in self.discriminant:
+            if isinstance(elem, ASPAttribute):
+                attributes.append(elem.value)
+            elif isinstance(elem, ASPAtom):
+                for attribute in elem.attributes:
+                    attributes.append(attribute)
+        return attributes
 
     def __str__(self) -> str:
         return f'#{ASPAggregate.symbols[self.operation]}{{' \

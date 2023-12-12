@@ -11,7 +11,8 @@ from lark import Transformer, v_args
 
 from cnl2asp.exception.cnl2asp_exceptions import LabelNotFound, ParserError, AttributeNotFound, EntityNotFound, \
     EntityNotFound, CompilationError, DuplicatedTypedEntity, AttributeGenericError
-from cnl2asp.parser.command import SubstituteVariable, Command, DurationClause, CreateSignature
+from cnl2asp.parser.command import SubstituteVariable, Command, DurationClause, CreateSignature, \
+        RespectivelySubstituteVariable
 from cnl2asp.parser.proposition_builder import PropositionBuilder, PreferencePropositionBuilder
 from cnl2asp.specification.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent, AttributeOrigin
 from cnl2asp.specification.component import Component
@@ -66,7 +67,7 @@ class CNLTransformer(Transformer):
                 return self._new_field_value(f'{name}{last_num}')
             self._defined_variables.append(result)
             return ValueComponent(result)
-        return ValueComponent(f'X_{str(uuid4()).replace("-", "_")}')
+        return ValueComponent(f'X_{str(uuid4()).replace("-", "_").upper()}')
 
     def start(self, elem) -> SpecificationComponent:
         self._specification.add_problem(self._problem)
@@ -268,17 +269,6 @@ class CNLTransformer(Transformer):
                     object_list[idx] = entity_signature
         self._proposition.add_new_knowledge(NewKnowledgeComponent(verb,
                                                                   ConditionComponent([])))
-        # In this proposition we have a particular construction of the signature
-        # we always have subjects and objects keys linked to the verb
-        for key in SignatureManager.get_signature(subject.name).get_keys():
-            verb.attributes.append(key.copy())
-        for entity in object_list:
-            for key in entity.get_keys():
-                copy = key.copy()
-                copy.value = ValueComponent(Utility.NULL_VALUE)
-                verb.attributes.append(copy)
-        signature = self._proposition.create_new_signature(verb)
-        SignatureManager.add_signature(signature)
         self._proposition.add_requisite_list(object_list)
         for proposition in self._proposition.get_propositions():
             if subject.label or subject.attributes:
@@ -489,11 +479,13 @@ class CNLTransformer(Transformer):
         except KeyError as e:
             raise CompilationError(str(e), meta.line)
         subject: EntityComponent = elem[0]
-        new_var = self._new_field_value('_'.join([temporal_entity.name, subject.name]))
-        try:
-            subject.set_attributes_value([AttributeComponent(temporal_entity.name, ValueComponent(new_var), AttributeOrigin(temporal_entity.name))])
-        except:
-            CompilationError(f'Compilation error in line {meta.line}')
+        new_var = subject.get_attributes_by_name_and_origin(temporal_entity.name, AttributeOrigin(temporal_entity.name))[0]
+        if new_var.value == Utility.NULL_VALUE:
+            new_var = self._new_field_value('_'.join([temporal_entity.name, subject.name]))
+            try:
+                subject.set_attributes_value([AttributeComponent(temporal_entity.name, ValueComponent(new_var), AttributeOrigin(temporal_entity.name))])
+            except:
+                raise CompilationError(f'Compilation error in line {meta.line}')
         operator = elem[1]
         self._proposition.add_requisite(subject)
         operation = OperationComponent(operator, new_var, ValueComponent(temporal_value))
@@ -512,6 +504,9 @@ class CNLTransformer(Transformer):
     def variable_substitution(self, elem):
         self._delayed_operations.append(SubstituteVariable(self._proposition, elem[0], elem[1]))
 
+    def variable_respectively_substitution(self, elem):
+        self._delayed_operations.append(RespectivelySubstituteVariable(self._proposition, elem[0], elem[1]))
+
     def string_list(self, elem):
         return [ValueComponent(string) for string in elem]
 
@@ -523,24 +518,27 @@ class CNLTransformer(Transformer):
         self._proposition.add_requisite(entity)
         return entity.get_attributes_by_name_and_origin(attribute.name, attribute.origin)[0]
 
-    def arithmetic_operation_comparison(self, elem):
-        arithmetic = OperationComponent(elem[0], *[x for x in elem[1:-2]])
-        comparison = OperationComponent(elem[-2], arithmetic, elem[-1])
+    def comparison_operand(self, elem):
+        return elem[0]
+
+    def cnl_in_absolute_value(self, elem):
+        return True
+
+    def comparison_operand_list(self, elem):
+        return elem
+
+    def arithmetic_operand(self, elem):
+        operation = OperationComponent(elem[0], elem[2], *elem[3:])
+        if elem[1]:
+            return OperationComponent(Operators.ABSOLUTE_VALUE, operation)
+        return operation
+
+    def comparison(self, elem):
+        comparison = OperationComponent(elem[1], elem[0], elem[2])
+        if elem[3] and isinstance(elem[0], AggregateComponent):
+            elem[0].body += elem[3]
         self._proposition.add_requisite(comparison)
         return comparison
-
-    def variable_comparison(self, elem):
-        variable_comparison = OperationComponent(elem[1], elem[0], elem[2])
-        self._proposition.add_requisite(variable_comparison)
-        return variable_comparison
-
-    def aggregate_comparison(self, elem):
-        aggregate = elem[0]
-        if elem[3]:
-            aggregate.body += elem[3]
-        aggregate = OperationComponent(elem[1], aggregate, elem[2])
-        self._proposition.add_requisite(aggregate)
-        return aggregate
 
     def simple_aggregate(self, elem):
         discriminant = [elem[1]]
@@ -554,10 +552,6 @@ class CNLTransformer(Transformer):
         aggregate = AggregateComponent(elem[0], discriminant, body)
         return aggregate
 
-    def aggregate_range(self, elem):
-        operation = OperationComponent(Operators.LESS_THAN_OR_EQUAL_TO, elem[1], elem[0], elem[2])
-        self._proposition.add_requisite(operation)
-        return operation
 
     def aggregate_active_clause(self, elem) -> AggregateComponent:
         discriminant = [elem[1], elem[2]] if elem[2] else [elem[1]]
@@ -755,6 +749,7 @@ class CNLTransformer(Transformer):
             entity.set_attributes_value(parameter_list, self._proposition)
         except AttributeNotFound as e:
             raise CompilationError(str(e), meta.line)
+        entity.set_label_as_key_value()
         if entity_temporal_order_constraint:
             self.temporal_constraint(meta, [entity] + entity_temporal_order_constraint)
         if define_subsequent_event:
@@ -762,7 +757,6 @@ class CNLTransformer(Transformer):
                 self.__substitute_subsequent_event(entity, define_subsequent_event[0], define_subsequent_event[1])
             except TypeNotFound as e:
                 raise CompilationError(str(e), meta.line)
-        entity.set_label_as_key_value()
         return entity
 
     @v_args(meta=True)
@@ -837,9 +831,9 @@ class CNLTransformer(Transformer):
     @v_args(meta=True)
     def verb(self, meta, elem):
         elem[2] = elem[2][0:-1] if elem[2][-1] == 's' else elem[2]  # remove 3rd person final 's'
-        verb_name = '_'.join([elem[2], elem[4]]) if elem[4] else elem[2]
+        verb_name = '_'.join([elem[2], elem[6]]) if elem[6] else elem[2]
         verb_name = verb_name.lower()
-        entity = self.simple_entity(meta, verb_name, '', None, None, elem[3], new_definition=True)
+        entity = self.simple_entity(meta, verb_name, '', elem[3], elem[4], elem[5], new_definition=True)
         if elem[1]:
             entity = self.entity([elem[1], entity])
         if elem[0]:
@@ -911,12 +905,14 @@ class CNLTransformer(Transformer):
             return Operators.GREATER_THAN
         if operator == "less than":
             return Operators.LESS_THAN
-        if operator == "greater than or equal to":
+        if operator == "greater than or equal to" or operator == "at least":
             return Operators.GREATER_THAN_OR_EQUAL_TO
-        if operator == "less than or equal to":
+        if operator == "less than or equal to" or operator == "at most":
             return Operators.LESS_THAN_OR_EQUAL_TO
         if operator == "not after":
             return Operators.LESS_THAN_OR_EQUAL_TO
+        if operator == "between":
+            return Operators.BETWEEN
 
     def ARITHMETIC_OPERATOR(self, elem):
         operator = elem.value

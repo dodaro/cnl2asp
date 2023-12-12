@@ -164,26 +164,34 @@ _CNL_AFTER: "after"
 ORDERING_OPERATOR: _CNL_BEFORE | _CNL_AFTER
 
 terminal_clauses: (_CNL_COMMA? (whenever_clause
-                   | where_clause
+                   | _CNL_WHERE where_clause
                    | when_clause))+
 
 _CNL_WHERE: "where"
 _CNL_ONE_OF: _CNL_ONE " " _CNL_OF
-where_clause: _CNL_WHERE comparison (_CNL_AND comparison)*
-               | _CNL_WHERE VARIABLE COPULA _CNL_ONE_OF string_list -> variable_substitution
+where_clause: comparison (_CNL_AND comparison)*
+            | VARIABLE COPULA _CNL_ONE_OF string_list -> variable_substitution
+            | VARIABLE COPULA _CNL_RESPECTIVELY _CNL_ONE_OF string_list -> variable_respectively_substitution
+            | where_clause _CNL_AND where_clause
 string_list: STRING (_CNL_COMMA STRING)*
 
 parameter_entity_link: _CNL_THE? parameter _CNL_OF _CNL_THE entity
 _CNL_BETWEEN: "between"
-comparison:  ARITHMETIC_OPERATOR _CNL_BETWEEN (EXPRESSION | STRING | parameter_entity_link) (_CNL_COMMA _CNL_AND? (EXPRESSION | STRING | parameter_entity_link))+ _CNL_IS COMPARISON_OPERATOR (STRING | EXPRESSION | parameter_entity_link) -> arithmetic_operation_comparison
-            | aggregate_clause _CNL_IS COMPARISON_OPERATOR (STRING | EXPRESSION | aggregate_clause) [such_that_clause] -> aggregate_comparison
-            | aggregate_clause _CNL_IS _CNL_BETWEEN (EXPRESSION | STRING | parameter_entity_link) _CNL_AND (EXPRESSION | STRING | parameter_entity_link) -> aggregate_range
-            | (EXPRESSION | STRING | parameter_entity_link) _CNL_IS COMPARISON_OPERATOR (STRING | EXPRESSION | parameter_entity_link) -> variable_comparison
+_CNL_ABSOLUTE: "absolute"
+_CNL_VALUE: "value"
+cnl_in_absolute_value: _CNL_IN " " _CNL_ABSOLUTE " " _CNL_VALUE
+comparison_operand: EXPRESSION
+                    | STRING
+                    | parameter_entity_link
+                    | aggregate_clause
+                    | comparison_operand _CNL_AND comparison_operand -> comparison_operand_list
+                    | ARITHMETIC_OPERATOR [cnl_in_absolute_value] _CNL_BETWEEN comparison_operand (_CNL_COMMA _CNL_AND? comparison_operand)+ -> arithmetic_operand
+comparison:  comparison_operand _CNL_IS COMPARISON_OPERATOR comparison_operand [such_that_clause]
 
 _CNL_OCCURRENCES: "occurrences"
 aggregate_clause: AGGREGATE_OPERATOR _CNL_OF entity _CNL_OCCURRENCES? -> simple_aggregate
                 | AGGREGATE_OPERATOR _CNL_OF? parameter _CNL_OF entity -> simple_aggregate_with_parameter
-                | AGGREGATE_OPERATOR _CNL_OF? parameter [_CNL_COMMA (_CNL_FOR_EACH | _CNL_IN) parameter _CNL_COMMA] (_CNL_THAT COPULA verb [conjunctive_object_list]) -> aggregate_active_clause
+                | AGGREGATE_OPERATOR _CNL_OF? parameter [_CNL_COMMA (_CNL_FOR_EACH | _CNL_IN) parameter _CNL_COMMA] (_CNL_THAT COPULA? verb [conjunctive_object_list]) -> aggregate_active_clause
                 | AGGREGATE_OPERATOR _CNL_OF? parameter [parameter_list] [_CNL_COMMA (_CNL_FOR_EACH | _CNL_IN) parameter _CNL_COMMA] (_CNL_WHERE entity COPULA? verb [conjunctive_object_list] _CNL_COMMA?)+ -> aggregate_passive_clause
 
 _CNL_SUCH: "such"
@@ -238,6 +246,7 @@ COMPARISON_OPERATOR: _CNL_THE_SAME_AS
           | _CNL_AT_LEAST
           | _CNL_AT_MOST
           | _CNL_NOT_AFTER
+          | _CNL_BETWEEN
 
 weak_constraint_proposition: cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison | simple_clause ) [weak_optimization_operator] [terminal_clauses]
                            | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT aggregate_clause [weak_optimization_operator] [terminal_clauses] -> preference_with_aggregate_clause
@@ -282,11 +291,10 @@ complex_entity: complex_entity_parameter _CNL_IN STRING -> generic_element
 complex_entity_parameter: _CNL_AN _CNL_ELEMENT [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]
 
 TELINGO_ENTITY_TEMPORAL_OPERATOR: "previously" | "subsequently" | "initially"
+verb.1: [VERB_NEGATION] [TELINGO_ENTITY_TEMPORAL_OPERATOR] _CNL_INDEFINITE_ARTICLE? STRING [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list] [VERB_PREPOSITION]
 
 entity_temporal_order_constraint: _CNL_THAT _CNL_IS ORDERING_OPERATOR temporal_value
 define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE
-
-verb.1: [VERB_NEGATION] [TELINGO_ENTITY_TEMPORAL_OPERATOR] _CNL_INDEFINITE_ARTICLE? STRING [parameter_list] [VERB_PREPOSITION]
 
 parameter_list.1: PARAMETER_PREPOSITION parameter (_CNL_COMMA _CNL_AND? PARAMETER_PREPOSITION parameter)*
 _CNL_RESPECT: "respect"
@@ -304,7 +312,7 @@ COPULA: "be " | "be a " | "be an "
       | "has " | "has a " | "has an "
 SHIFT_OPERATOR: _CNL_THE " " ("next" | "previous")
 
-PARAMETER_NAME: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[a-z][A-Za-z0-9\_]+/i //has to start with lower case letter
+PARAMETER_NAME: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[a-z][A-Za-z0-9\_]+/ //has to start with lower case letter
 STRING: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[A-Za-z0-9\_]+/i
 VARIABLE: UCASE_LETTER (UCASE_LETTER | INT | "_")*
 PARAMETER_PREPOSITION: _CNL_BY | "with"

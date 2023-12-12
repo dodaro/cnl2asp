@@ -36,5 +36,4 @@ class Problem(Component):
 
     def copy(self):
         propositions = [proposition.copy() for proposition in self._propositions]
-        constants = [constant.copy() for constant in self._constants]
-        return Problem(self.name, propositions, constants)
+        return Problem(self.name, propositions)

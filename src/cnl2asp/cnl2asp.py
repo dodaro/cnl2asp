@@ -1,18 +1,22 @@
 from __future__ import annotations
+
+import collections
 import os
-import traceback
 from typing import TextIO
+
 from lark import Lark, UnexpectedCharacters
 from lark.exceptions import VisitError
 
 from cnl2asp.ASP_elements.asp_program import ASPProgram
-from cnl2asp.exception.cnl2asp_exceptions import ParserError
+from cnl2asp.converter.cnl2json_converter import Cnl2jsonConverter
+from cnl2asp.exception.cnl2asp_exceptions import ParserError, EntityNotFound
 from cnl2asp.specification.attribute_component import AttributeComponent
 from cnl2asp.specification.entity_component import EntityComponent
 from cnl2asp.converter.asp_converter import ASPConverter
 from cnl2asp.parser.parser import CNLTransformer
 from cnl2asp.specification.problem import Problem
 from cnl2asp.specification.signaturemanager import SignatureManager
+from cnl2asp.specification.specification import SpecificationComponent
 
 
 class Symbol:
@@ -33,15 +37,44 @@ class Symbol:
 
 
 class Cnl2asp:
-
-    def __init__(self, input_file: TextIO):
-        self.input_file = input_file
+    def __init__(self, cnl_input: TextIO | str):
+        if isinstance(cnl_input, str):
+            self.cnl_input = cnl_input
+        else:
+            self.cnl_input = cnl_input.read()
 
     def __parse_input(self):
         cnl_parser = Lark(open(os.path.join(os.path.dirname(__file__), "grammar.lark"), "r").read(),
                           propagate_positions=True)
-        problem: Problem = CNLTransformer().transform(cnl_parser.parse(self.input_file.read()))
-        return problem
+        specification: SpecificationComponent = CNLTransformer().transform(cnl_parser.parse(self.cnl_input))
+        return specification
+
+    def __is_predicate(self, name: str):
+        try:
+            SignatureManager.get_signature(name)
+            return True
+        except:
+            return False
+
+    def __get_predicate(self, entity_name: str, attribute: AttributeComponent):
+        split_name = attribute.name.split('_')
+        if len(split_name) > 1:
+            for name in split_name:
+                if self.__is_predicate(name):
+                    return SignatureManager.get_signature(name)
+        signature_name = attribute.name
+        if attribute.origin != entity_name:
+            signature_name = attribute.origin.name
+        if self.__is_predicate(signature_name):
+            return SignatureManager.get_signature(signature_name)
+        return None
+
+
+    def cnl_to_json(self):
+        problem = self.__parse_input()
+        converter = Cnl2jsonConverter()
+        json = problem.convert(converter)
+        return json
 
     def check_syntax(self) -> bool:
         if self.__parse_input():
@@ -50,17 +83,16 @@ class Cnl2asp:
 
     def compile(self) -> str:
         try:
-            problem: Problem = self.__parse_input()
+            specification: SpecificationComponent = self.__parse_input()
         except UnexpectedCharacters as e:
-            self.input_file.seek(0)
-            print(ParserError(e.char, e.line, e.column, e.get_context(self.input_file.read()), list(e.allowed)))
+            print(ParserError(e.char, e.line, e.column, e.get_context(self.cnl_input), list(e.allowed)))
             return ''
         except VisitError as e:
-            print(e.orig_exc)
+            print(e.args[0])
             return ''
         try:
             asp_converter: ASPConverter = ASPConverter()
-            program: ASPProgram = problem.convert(asp_converter)
+            program: ASPProgram = specification.convert(asp_converter)
             SignatureManager().signatures = []
             return str(program)
         except Exception as e:

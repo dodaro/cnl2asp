@@ -19,7 +19,7 @@ class SpecificationComponent(Component):
     def add_constant(self, constant: ConstantComponent):
         self._constants.append(constant)
 
-    def get_constant(self) -> list[ConstantComponent]:
+    def get_constants(self) -> list[ConstantComponent]:
         return self._constants
 
 

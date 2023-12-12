@@ -21,7 +21,8 @@ class ASPOperation(ASPElement):
         Operators.GREATER_THAN: '>',
         Operators.LESS_THAN: '<',
         Operators.GREATER_THAN_OR_EQUAL_TO: '>=',
-        Operators.LESS_THAN_OR_EQUAL_TO: '<='
+        Operators.LESS_THAN_OR_EQUAL_TO: '<=',
+        Operators.ABSOLUTE_VALUE: '|'
     }
 
     def __init__(self, operator: Operators, *operands: ASPElement):
