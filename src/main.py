@@ -1,6 +1,4 @@
 import argparse
-import json
-import traceback
 
 
 from cnl2asp.cnl2asp import Cnl2asp
@@ -30,7 +28,7 @@ if __name__ == '__main__':
         if cnl2asp.check_syntax():
             print("Input file fits the grammar.")
     elif args.cnl2json:
-        print(json.dumps(cnl2asp.cnl_to_json()))
+        print(cnl2asp.cnl_to_json())
     else:
         asp_encoding = cnl2asp.compile()
         try:

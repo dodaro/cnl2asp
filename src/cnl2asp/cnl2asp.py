@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import collections
+import json
 import os
 from typing import TextIO
 
@@ -73,8 +74,8 @@ class Cnl2asp:
     def cnl_to_json(self):
         problem = self.__parse_input()
         converter = Cnl2jsonConverter()
-        json = problem.convert(converter)
-        return json
+        cnl_to_json = problem.convert(converter)
+        return json.dumps(cnl_to_json)
 
     def check_syntax(self) -> bool:
         if self.__parse_input():
