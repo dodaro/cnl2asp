@@ -304,8 +304,8 @@ COPULA: "be " | "be a " | "be an "
       | "has " | "has a " | "has an "
 SHIFT_OPERATOR: _CNL_THE " " ("next" | "previous")
 
-PARAMETER_NAME: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|at|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[a-z][A-Za-z0-9\_]+/i //has to start with lower case letter
-STRING: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|at|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[A-Za-z0-9\_]+/i
+PARAMETER_NAME: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[a-z][A-Za-z0-9\_]+/i //has to start with lower case letter
+STRING: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[A-Za-z0-9\_]+/i
 VARIABLE: UCASE_LETTER (UCASE_LETTER | INT | "_")*
 PARAMETER_PREPOSITION: _CNL_BY | "with"
 VERB_PREPOSITION: _CNL_BY | "to" | "in"
