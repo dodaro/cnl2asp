@@ -100,7 +100,7 @@ class ASPAtom(ASPElement):
     def __eq__(self, other):
         if not isinstance(other, ASPAtom):
             return False
-        return self.name == other.name and self.attributes == other.attributes
+        return self.name == other.name and self.attributes == other.attributes and self.is_initial == other.is_initial and self.is_after == other.is_after and self.is_before == other.is_before
 
     def __repr__(self):
         return str(self)

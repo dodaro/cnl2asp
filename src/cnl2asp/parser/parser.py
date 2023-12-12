@@ -80,9 +80,9 @@ class CNLTransformer(Transformer):
         if elem == "The following propositions apply in the initial state:":
             self._problem.name = 'initial'
         elif elem == "The following propositions always apply except in the initial state:":
-            self._problem.name = 'always'
-        elif elem == "The following propositions always apply:":
             self._problem.name = 'dynamic'
+        elif elem == "The following propositions always apply:":
+            self._problem.name = 'always'
         elif elem == "The following propositions apply in the final state:":
             self._problem.name = 'final'
 
@@ -836,10 +836,12 @@ class CNLTransformer(Transformer):
 
     @v_args(meta=True)
     def verb(self, meta, elem):
-        elem[1] = elem[1][0:-1] if elem[1][-1] == 's' else elem[1]  # remove 3rd person final 's'
-        verb_name = '_'.join([elem[1], elem[3]]) if elem[3] else elem[1]
+        elem[2] = elem[2][0:-1] if elem[2][-1] == 's' else elem[2]  # remove 3rd person final 's'
+        verb_name = '_'.join([elem[2], elem[4]]) if elem[4] else elem[2]
         verb_name = verb_name.lower()
-        entity = self.simple_entity(meta, verb_name, '', None, None, elem[2], new_definition=True)
+        entity = self.simple_entity(meta, verb_name, '', None, None, elem[3], new_definition=True)
+        if elem[1]:
+            entity = self.entity([elem[1], entity])
         if elem[0]:
             entity.negated = True
         self._delayed_operations.append(CreateSignature(self._proposition, entity))
