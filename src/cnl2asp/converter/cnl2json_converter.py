@@ -45,12 +45,12 @@ class Cnl2jsonConverter(Converter):
             component.convert(self)
         for component in proposition.requisite.components:
             component.convert(self)
+        for delayed_operation in self._delayed_operations:
+            self._convert_delayed_operation(delayed_operation)
         for key, value in self._json_assignment.items():
             self._json_assignment.update({key: list(value)})
         for key, value in self._json_constant.items():
             self._json_constant.update({key: list(value)})
-        for delayed_operation in self._delayed_operations:
-            self._convert_delayed_operation(delayed_operation)
         self._json["assignments"].append(dict(self._json_assignment))
         self._json["constants"].append(dict(self._json_constant))
 
