@@ -1,0 +1,37 @@
+A location is identified by a name.
+An item is identified by an id.
+A farmer is identified by an item.
+A route is identified by a starting location, and by an arriving location.
+
+The following propositions always apply:
+An item is one of fox, beans, goose.
+There is a farmer with item id 1.
+There is a location left_bank.
+There is a location right_bank.
+There is a route with starting location equal to left_bank, with arriving location equal to right_bank.
+There is a route with starting location equal to right_bank, with arriving location equal to left_bank.
+Item fox eats item goose.
+Item goose eats item beans.
+
+The following propositions apply in the initial state:
+Item fox is at location left_bank.
+Item goose is at location left_bank.
+Item beans are at location left_bank.
+Farmer F is at location left_bank.
+
+The following propositions always apply except in the initial state:
+Every item I can be moved.
+It is prohibited that the number of items that are moved is greater than 1.
+
+Item X is at location B, when item X is previously at location A and also item X is moved, whenever there is a route with starting location A, with arriving location B.
+Item X is at location A, when item X is previously at location A and also item X is not moved.
+Farmer F is at location B, when farmer F is previously at location A, whenever there is a route with starting location A, with arriving location B.
+It is prohibited that item X is moved, when farmer F is previously at location A and also item X is not previously at location A.
+
+The following propositions always apply:
+It is prohibited that item X is at location A and also item X is at location B, where A is different from B.
+
+It is prohibited that item X is at location A and also item Y is at location A, when item X eats item Y and also farmer F is not at location A.
+
+The following propositions apply in the final state:
+It is required that item X is at location right_bank.
