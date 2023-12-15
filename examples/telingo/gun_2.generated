@@ -1,0 +1,16 @@
+#program initial.
+gun("unloaded").
+:- &tel {>* (~ (gun("loaded") & gun("shooting")))}.
+
+#program always.
+shooter(1).
+
+#program dynamic.
+gun("shooting") | gun("loading") | gun("waiting") :- shooter(X).
+gun("loaded") :- gun("loading").
+gun("loaded") :- not gun("unloaded"), 'gun("loaded").
+gun("unloaded") :- gun("shooting"), 'gun("loaded"), not gun("broken").
+gun("unloaded") :- 'gun("unloaded"), not gun("loaded").
+:- gun("loading"), 'gun("loaded").
+gun("broken") :- gun("shooting"), not not &tel {(<* gun("unloaded")) & (< (<? gun("shooting")))}.
+gun("broken") :- 'gun("broken").

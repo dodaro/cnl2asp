@@ -2,7 +2,6 @@ A disk is identified by an id.
 A peg is identified by an id.
 A goal is identified by a disk, and by a peg.
 
-Every disk X can be on exactly 1 peg 1, where X is greater than 0.
 
 The following propositions always apply:
 There is a disk with id 0.
@@ -18,12 +17,16 @@ There is a goal with disk id 3, with peg 3.
 There is a goal with disk id 2, with peg 3.
 There is a goal with disk id 1, with peg 3.
 
+The following propositions apply in the initial state:
+Disk X is on peg 1, where X is greater than 0.
+
 The following propositions always apply except in the initial state:
 Whenever there is a disk D, then D can be moved to a peg.
 It is required that the number of disks that are moved to a peg is equal to 1.
 
 A disk D is on a peg P when disk D is moved to peg P.
-A disk D is on a peg P when disk D is previously on peg P and also disk D is not moved to.
+A disk D is moved when disk D is moved to a peg P.
+A disk D is on a peg P when disk D is previously on peg P and also disk D is not moved.
 
 A disk X is blocked in peg P when disk D is previously on peg P, where X is equal to D-1.
 A disk X is blocked in peg P when disk D is blocked in peg P, where X is equal to D-1.

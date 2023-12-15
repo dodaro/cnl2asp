@@ -110,7 +110,7 @@ _CNL_HAVE: "have"
 _CNL_WE: "we"
 cnl_whenever_we_have_that: _CNL_WHENEVER " " _CNL_WE " " _CNL_HAVE " " _CNL_THAT
 whenever_clause: cnl_whenever_there_is [VERB_NEGATION] entity
-                | cnl_whenever_there_is telingo_operation -> whenever_telingo_operation
+                | _CNL_WHENEVER telingo_operation -> whenever_telingo_operation
                 | cnl_whenever_we_have_that comparison -> whenever_with_comparison
 _CNL_THEN: "then"
 _CNL_OR: "or"
@@ -119,7 +119,7 @@ then_clause: _CNL_THEN entity ASSIGNMENT_VERB COPULA? [cardinality] predicate (_
 _CNL_HOLD: "hold" | "holds"
 hold_condition: _CNL_THAT [VERB_NEGATION] TELINGO_TEMPORAL_OPERATOR _CNL_HOLD
                 | _CNL_THAT [VERB_NEGATION] _CNL_HOLD TELINGO_TEMPORAL_OPERATOR
-telingo_operation: [VERB_NEGATION] [TELINGO_TEMPORAL_OPERATOR] telingo_operand [hold_condition] [TELINGO_DUAL_OPERATOR telingo_operation]
+telingo_operation: _CNL_THERE " " _CNL_IS [VERB_NEGATION] [TELINGO_TEMPORAL_OPERATOR] telingo_operand [hold_condition] [TELINGO_DUAL_OPERATOR telingo_operation]
 TELINGO_TEMPORAL_OPERATOR: "always" | "eventually" | "before" | "since before" | "after" | "since after"
 TELINGO_DUAL_OPERATOR: "and" | "or" | "implies" | "imply" | "equivalent" | "trigger" | "since" | "precede" | "release" | "until" | "follow"
 
@@ -147,7 +147,7 @@ constraint_proposition: constraint_operator (comparison [terminal_clauses]
                                             | temporal_constraint [(_CNL_COMMA whenever_clause)+])
 
 there_is_clause: _CNL_THERE " " _CNL_IS [VERB_NEGATION] entity
-                | _CNL_THERE " " _CNL_IS telingo_operation -> telingo_there_is
+                | telingo_operation -> telingo_there_is
 
 simple_clause_conjunction.-1: simple_clause_wrv (_CNL_AND _CNL_ALSO simple_clause_wrv)*
 when_then_clause: when_clause _CNL_THEN simple_clause_conjunction

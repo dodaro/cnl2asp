@@ -1,4 +1,3 @@
-// The following propositions always apply except in the initial state:
 An object is identified by an id.
 A vehicle is identified by a object.
 A truck is identified by a object.

@@ -14,7 +14,7 @@ Monkey M is at location door.
 Box B is at location window.
 
 The following propositions always apply except in the initial state:
-Whenever there is monkey M, then M must walk to a location X or push to a location X or climb or grasp.
+Whenever there is a monkey M, then M must walk to a location X or push to a location X or climb or grasp.
 A monkey M has moved, when monkey M is at location X and also monkey M is previously at location Y, where X is different from Y.
 A box B has moved, when box B is at location X and also box B is previously at location Y, where X is different from Y.
 Monkey M is at location X when monkey M is previously at location X and also monkey M has not moved.
@@ -34,7 +34,6 @@ It is prohibited that monkey M climb box B when monkey M is previously on box B.
 It is prohibited that monkey M climbs box B when monkey M is at location X and also box B is at location Y, where X is different from Y.
 A monkey M is at location X when monkey M push to location X.
 A box B is at location X when monkey M push to location X, box B.
-
 
 The following propositions apply in the final state:
 It is required that monkey M gets banana B.

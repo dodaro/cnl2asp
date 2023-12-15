@@ -1,0 +1,13 @@
+#program initial.
+gun("unloaded").
+
+#program always.
+shooter(1).
+
+#program dynamic.
+gun("shooting") | gun("loading") | gun("waiting") :- shooter(X).
+gun("loaded") :- gun("loading").
+gun("loaded") :- not gun("unloaded"), 'gun("loaded").
+gun("unloaded") :- gun("shooting"), 'gun("loaded").
+gun("unloaded") :- 'gun("unloaded"), not gun("loaded").
+:- gun("loading"), 'gun("loaded").
