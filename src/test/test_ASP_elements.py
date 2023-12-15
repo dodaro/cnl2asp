@@ -47,7 +47,7 @@ class TestASPElements(unittest.TestCase):
         rule = ASPRule(body, [head])
         # choice without cardinality
         self.assertEqual(str(rule),
-                         '{head(FIELD): condition(FIELD), condition2(FIELD)} :- body(FIELD), body2(FIELD).\n',
+                         '1 <= {head(FIELD): condition(FIELD), condition2(FIELD)} <= 1 :- body(FIELD), body2(FIELD).\n',
                          'Incorrect choice without cardinality print.')
 
     def test_choice_with_cardinality_to_string(self):
@@ -94,7 +94,7 @@ class TestASPElements(unittest.TestCase):
         program.add_constant(('time', '10'))
         self.assertEqual(str(program),
                          '#const time = 10.\n'
-                         '{head(FIELD): condition(FIELD), condition2(FIELD)} :- body(FIELD), body2(FIELD).\n',
+                         '1 <= {head(FIELD): condition(FIELD), condition2(FIELD)} <= 1 :- body(FIELD), body2(FIELD).\n',
                          'Incorrect choice without cardinality print.')
 
     def test_weak_constraint(self):

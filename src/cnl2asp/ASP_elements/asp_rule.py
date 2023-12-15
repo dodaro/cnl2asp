@@ -67,21 +67,30 @@ class ASPRule(ASPElement):
                     break
         return to_remove
 
+    def _is_choice_rule(self):
+        if self.cardinality:
+            return True
+        for head in self.head:
+            if str(head.condition):
+                return True
+        return False
+
     def __str__(self) -> str:
         rule = ''
+        separator = ' | '
+        if self._is_choice_rule():
+            separator = " ; "
         if self.head:
             for idx, element in enumerate(self.head):
                 if idx > 0:
-                    rule += ' | '
+                    rule += separator
                 rule += str(element)
             if self.cardinality:
                 rule = f'{str(self.cardinality[0]) + " <= " if self.cardinality[0] else ""}' \
                        f'{{{rule}}}' \
                        f'{" <= " + str(self.cardinality[1]) if self.cardinality[1] else ""}'
-            else:
-                for head in self.head:
-                    if str(head.condition):
-                        rule = f'{{{rule}}}'
+            elif self._is_choice_rule():
+                rule = f'{{{rule}}}'
         rule = rule.strip()
         if self.body.conjunction:
             rule += f'{" " if self.head else ""}:- '
