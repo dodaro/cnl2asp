@@ -41,6 +41,16 @@ def is_arithmetic_operator(operator):
         return True
     return False
 
+operators_negation = {
+    Operators.EQUALITY: Operators.INEQUALITY,
+    Operators.INEQUALITY: Operators.EQUALITY,
+    Operators.GREATER_THAN: Operators.LESS_THAN_OR_EQUAL_TO,
+    Operators.LESS_THAN: Operators.GREATER_THAN_OR_EQUAL_TO,
+    Operators.GREATER_THAN_OR_EQUAL_TO: Operators.LESS_THAN,
+    Operators.LESS_THAN_OR_EQUAL_TO: Operators.GREATER_THAN,
+    Operators.BETWEEN: Operators.NOTBETWEEN
+}
+
 class ForbiddenLink:
     def __init__(self, entity_1: EntityComponent, entity_2: EntityComponent, attribute_1: AttributeComponent,
                  attribute_2: AttributeComponent):
@@ -282,6 +292,8 @@ class ASPConverter(Converter[ASPProgram,
 
     def convert_operation(self, operation: OperationComponent) -> ASPOperation | [ASPOperation]:
         operands = []
+        if operation.negated and operation.operator < Operators.CONJUNCTION:
+            operation.operator = operators_negation[operation.operator]
         is_operation_on_angle = False
         for operand in operation.operands:
             if operand.is_angle():
@@ -295,7 +307,7 @@ class ASPConverter(Converter[ASPProgram,
                 and not isinstance(operands[1], ASPAggregate) and operation.operator < Operators.CONJUNCTION:
             return self._convert_between_operation_without_aggregate(operation, operands)
         if operation.operator >= Operators.CONJUNCTION:
-            return ASPTemporalFormula([ASPTemporalOperation(operation.operator, *operands)])
+            return ASPTemporalFormula([ASPTemporalOperation(operation.operator, *operands)], operation.negated)
         operation = ASPOperation(operation.operator, *operands)
         self._operations.append(operation)
         return operation

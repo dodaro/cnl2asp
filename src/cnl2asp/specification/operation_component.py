@@ -31,43 +31,34 @@ class Operators(Enum):
     EQUIVALENCE = 17
     NEGATION = 18
     PREVIOUS = 19
-    WEAK_PREVIOUS = 20
-    TRIGGER = 21
-    ALWAYS_BEFORE = 22
-    SINCE = 23
-    EVENTUALLY_BEFORE = 24
-    PRECEDE = 25
-    WEAK_PRECEDE = 26
-    NEXT = 27
-    WEAK_NEXT = 28
-    RELEASE = 29
-    ALWAYS_AFTER = 30
-    UNTIL = 31
-    EVENTUALLY_AFTER = 32
-    FOLLOW = 33
-    WEAK_FOLLOW = 34
+    BEFORE = 20
+    WEAK_PREVIOUS = 21
+    TRIGGER = 22
+    ALWAYS_BEFORE = 23
+    SINCE = 24
+    EVENTUALLY_BEFORE = 25
+    PRECEDE = 26
+    WEAK_PRECEDE = 27
+    NEXT = 28
+    AFTER = 29
+    WEAK_NEXT = 30
+    RELEASE = 31
+    ALWAYS_AFTER = 32
+    UNTIL = 33
+    EVENTUALLY_AFTER = 34
+    FOLLOW = 35
+    WEAK_FOLLOW = 36
 
     def __lt__(self, other):
         if self.__class__ is other.__class__:
             return self.value < other.value
         return NotImplemented
 
-
-operators_negation = {
-    Operators.EQUALITY: Operators.INEQUALITY,
-    Operators.INEQUALITY: Operators.EQUALITY,
-    Operators.GREATER_THAN: Operators.LESS_THAN_OR_EQUAL_TO,
-    Operators.LESS_THAN: Operators.GREATER_THAN_OR_EQUAL_TO,
-    Operators.GREATER_THAN_OR_EQUAL_TO: Operators.LESS_THAN,
-    Operators.LESS_THAN_OR_EQUAL_TO: Operators.GREATER_THAN,
-    Operators.BETWEEN: Operators.NOTBETWEEN
-}
-
-
 class OperationComponent(Component):
     def __init__(self, operator: Operators, *operands: Component):
         self.operator = operator
         self.operands = []
+        self.negated = False
         if self.operator == Operators.BETWEEN:
             operands = self.between_operator(operands)
         for operand in operands:
@@ -110,4 +101,4 @@ class OperationComponent(Component):
         return False
 
     def negate(self):
-        self.operator = operators_negation[self.operator]
+        self.negated = True

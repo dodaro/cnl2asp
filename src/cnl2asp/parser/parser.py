@@ -313,6 +313,9 @@ class CNLTransformer(Transformer):
             elem[1].negated = True
         self._proposition.add_requisite(elem[1])
 
+    def whenever_telingo_operation(self, elem):
+        self.whenever_clause([None] + elem)
+
     def then_clause(self, elem) -> [EntityComponent | str, Proposition]:
         subject = elem[0]
         # if can and not cardinality we have a
@@ -324,31 +327,36 @@ class CNLTransformer(Transformer):
 
 
     def telingo_operation(self, elem):
-        operand = elem[1]
-        if elem[2][0]:
+        operand = elem[2]
+        if elem[3] and elem[3][0]:
             operand = OperationComponent(Operators.NEGATION, operand)
-        if elem[0] and elem[2][1]:
-            TELINGO_TEMPORAL_RELATIONSHIP = elem[0].removeprefix('since ')
-            TELINGO_TEMPORAL_OPERATOR = elem[2][1].removeprefix('since ')
+        if elem[1] and elem[3] and elem[3][1]:
+            TELINGO_TEMPORAL_RELATIONSHIP = elem[1].removeprefix('since ')
+            TELINGO_TEMPORAL_OPERATOR = elem[3][1].removeprefix('since ')
             operator = f'{TELINGO_TEMPORAL_RELATIONSHIP}_{TELINGO_TEMPORAL_OPERATOR}' if TELINGO_TEMPORAL_OPERATOR == 'before' or TELINGO_TEMPORAL_OPERATOR == 'after' else f'{TELINGO_TEMPORAL_OPERATOR}_{TELINGO_TEMPORAL_RELATIONSHIP}'
+            operation = OperationComponent(Operators[operator.upper()], operand)
+        elif elem[1]:
+            operator = elem[1]
             operation = OperationComponent(Operators[operator.upper()], operand)
         else:
             operation = operand
-        TELINGO_DUAL_OPERATOR = elem[3]
-        telingo_operation = elem[4]
+        TELINGO_DUAL_OPERATOR = elem[4]
+        telingo_operation = elem[5]
         if TELINGO_DUAL_OPERATOR:
             operation = OperationComponent(TELINGO_DUAL_OPERATOR, operation, telingo_operation)
-        if elem[2][1] == 'since before':
+        if elem[3] and elem[3][1] == 'since before':
             operation = OperationComponent(Operators.PREVIOUS, operation)
-        elif elem[2][1] == 'since after':
+        elif elem[3] and elem[3][1] == 'since after':
             operation = OperationComponent(Operators.NEXT, operation)
+        if elem[0]:
+            operation.negated = True
         return operation
 
     def hold_condition(self, elem):
         if elem[0] == True:
             return True, elem[1]
         else:
-            return False, elem[0]
+            return False, elem[1]
 
     def telingo_operand(self, elem):
         if not elem[1]:
