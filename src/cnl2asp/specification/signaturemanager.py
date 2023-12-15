@@ -2,6 +2,8 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
+from cnl2asp.utility.utility import Utility
+
 from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, DuplicatedTypedEntity
 from cnl2asp.specification.attribute_component import ValueComponent
 from cnl2asp.specification.entity_component import EntityType
@@ -18,6 +20,15 @@ class SignatureManager:
         pass
 
     @staticmethod
+    def set_entity_to_null(entity):
+        for attribute in entity.get_keys_and_attributes():
+            attribute.value = ValueComponent(Utility.NULL_VALUE)
+        entity.negated = False
+        entity.is_initial = False
+        entity.is_after = False
+        entity.is_before = False
+
+    @staticmethod
     def add_signature(entity: EntityComponent):
         entity = entity.copy()
         # Update previous declared signatures
@@ -30,8 +41,7 @@ class SignatureManager:
                 signature.attributes.sort(key=lambda x: x.name)
             except:
                 pass
-        for attribute in entity.get_keys_and_attributes():
-            attribute.value = ValueComponent(Utility.NULL_VALUE)
+        SignatureManager.set_entity_to_null(entity)
         SignatureManager.signatures.append(entity)
 
     @staticmethod

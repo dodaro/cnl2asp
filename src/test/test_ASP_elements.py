@@ -100,7 +100,8 @@ class TestASPElements(unittest.TestCase):
         encoding.add_constant(('time', '10'))
         self.assertEqual(str(encoding).strip(),
                          '#const time = 10.\n'
-                         '{head(FIELD): condition(FIELD), condition2(FIELD)} :- body(FIELD), body2(FIELD).')
+                         '{head(FIELD): condition(FIELD), condition2(FIELD)} :- body(FIELD), body2(FIELD).',
+                         'Incorrect choice without cardinality print.')
 
     def test_weak_constraint(self):
         weak_constraint = ASPWeakConstraint(
