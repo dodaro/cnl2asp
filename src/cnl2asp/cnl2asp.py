@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import collections
 import os
+from enum import Enum
 from typing import TextIO
 
 from lark import Lark, UnexpectedCharacters
@@ -11,16 +12,20 @@ from cnl2asp.ASP_elements.asp_program import ASPProgram
 from cnl2asp.converter.cnl2json_converter import Cnl2jsonConverter
 from cnl2asp.exception.cnl2asp_exceptions import ParserError, EntityNotFound
 from cnl2asp.proposition.attribute_component import AttributeComponent
-from cnl2asp.proposition.entity_component import EntityComponent
+from cnl2asp.proposition.entity_component import EntityComponent, EntityType
 from cnl2asp.converter.asp_converter import ASPConverter
 from cnl2asp.parser.parser import CNLTransformer
 from cnl2asp.proposition.problem import Problem
 from cnl2asp.proposition.signaturemanager import SignatureManager
-from cnl2asp.utility.utility import Utility
+
+
+class SymbolType(Enum):
+    DEFAULT = 0
+    TEMPORAL = 1
 
 
 class Symbol:
-    def __init__(self, predicate: str, keys: list[str | Symbol], attributes: list[str | Symbol]):
+    def __init__(self, predicate: str, keys: list[str | Symbol], attributes: list[str | Symbol], symbol_type: SymbolType):
         """
         Class for representing the concepts (ASP atoms) structure.
 
@@ -31,6 +36,7 @@ class Symbol:
         self.predicate = predicate
         self.keys = keys
         self.attributes = attributes
+        self.symbol_type = symbol_type
 
     def __repr__(self):
         return f'{self.predicate}({self.attributes})'
@@ -100,6 +106,9 @@ class Cnl2asp:
             return ''
 
     def __convert_attribute(self, entity_name: str, attribute: AttributeComponent) -> str | Symbol:
+        entity_type = SymbolType.DEFAULT
+        if SignatureManager.is_temporal_entity(entity_name):
+            entity_type = SymbolType.TEMPORAL
         if attribute.origin and entity_name != attribute.origin.name:
             return Symbol(attribute.origin.name,
                           [self.__convert_attribute(entity_name, AttributeComponent(attribute.name,
@@ -107,7 +116,9 @@ class Cnl2asp:
                                                                                     attribute.origin.origin))],
                           [self.__convert_attribute(entity_name, AttributeComponent(attribute.name,
                                                                                     attribute.value,
-                                                                                    attribute.origin.origin))])
+                                                                                    attribute.origin.origin))],
+                          entity_type
+                          )
         return attribute.name
 
     def __convert_signature(self, entity: EntityComponent) -> Symbol:
