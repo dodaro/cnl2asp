@@ -25,7 +25,7 @@ class SymbolType(Enum):
 
 
 class Symbol:
-    def __init__(self, predicate: str, keys: list[str | Symbol], attributes: list[str | Symbol], symbol_type: SymbolType):
+    def __init__(self, predicate: str, keys: list[str | Symbol], attributes: list[str | Symbol], symbol_type: SymbolType = SymbolType.DEFAULT):
         """
         Class for representing the concepts (ASP atoms) structure.
 
