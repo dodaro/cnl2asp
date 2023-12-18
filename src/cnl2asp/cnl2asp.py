@@ -25,7 +25,7 @@ class SymbolType(Enum):
 
 
 class Symbol:
-    def __init__(self, predicate: str, keys: list[str | Symbol], attributes: list[str | Symbol], symbol_type: SymbolType = SymbolType.DEFAULT):
+    def __init__(self, predicate: str, keys: list[str | Symbol], attributes: list[str | Symbol], symbol_type: SymbolType):
         """
         Class for representing the concepts (ASP atoms) structure.
 
@@ -126,10 +126,13 @@ class Cnl2asp:
         attributes = []
         for attribute in entity.get_attributes():
             attributes.append(self.__convert_attribute(entity.name, attribute))
+        entity_type = SymbolType.DEFAULT
+        if SignatureManager.is_temporal_entity(entity.name):
+            entity_type = SymbolType.TEMPORAL
         if entity.get_attributes() != entity.get_keys():
             for key in entity.get_keys():
                 keys.append(self.__convert_attribute(entity.name, key))
-        return Symbol(entity.name, keys, keys + attributes)
+        return Symbol(entity.name, keys, keys + attributes, entity_type)
 
     def get_symbols(self) -> list[Symbol]:
         self.compile()
