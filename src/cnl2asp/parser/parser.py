@@ -605,7 +605,7 @@ class CNLTransformer(Transformer):
             return True
         return False
 
-    def _is_variable(self, string: str) -> bool:
+    def is_variable(string: str) -> bool:
         if string.isupper():
             return True
         return False
@@ -664,7 +664,7 @@ class CNLTransformer(Transformer):
     def generic_element(self, meta, elem):
         try:
             entity: SetEntityComponent = SignatureManager.get_signature(elem[1])
-            if not self._is_variable(elem[0].value):
+            if not CNLTransformer.is_variable(elem[0].value):
                 if not entity.is_value_in_set(elem[0].value):
                     raise AttributeGenericError(f'Value \"{elem[0].value}\" not declared '
                                          f'in set {entity.get_entity_identifier()}')

@@ -233,7 +233,7 @@ COMPARISON_OPERATOR: _CNL_THE_SAME_AS
           | _CNL_BETWEEN
 
 weak_constraint_proposition: cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison | simple_clause ) [weak_optimization_operator] [terminal_clauses]
-                           | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT aggregate_clause [weak_optimization_operator] [terminal_clauses] -> preference_with_aggregate_clause
+                           | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison_operand | aggregate_clause) [weak_optimization_operator] [terminal_clauses] -> preference_with_aggregate_clause
                            | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT whenever_clauses_list _CNL_COMMA VARIABLE weak_optimization_operator [terminal_clauses] -> preference_with_variable_minimization
 whenever_clauses_list: whenever_clause (_CNL_COMMA whenever_clause)*
 

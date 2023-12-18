@@ -3,6 +3,7 @@ from __future__ import annotations
 import random
 import re
 
+from cnl2asp.parser.parser import CNLTransformer
 from multipledispatch import dispatch
 
 from cnl2asp.ASP_elements.asp_aggregate import ASPAggregate
@@ -138,7 +139,8 @@ class ASPConverter(Converter[ASPProgram,
 
     def convert_preference_proposition(self, preference: PreferenceProposition) -> ASPWeakConstraint:
         rule = self.convert_proposition(preference)
-        discriminant = [attribute.convert(self) for attribute in preference.discriminant]
+        discriminant = [attribute.convert(self) for attribute in preference.discriminant if
+                        CNLTransformer.is_variable(attribute.value)]
         weight = preference.weight
         if preference.type == PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION:
             weight = '-' + preference.weight.upper()
