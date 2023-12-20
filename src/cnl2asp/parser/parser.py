@@ -29,7 +29,7 @@ from cnl2asp.proposition.operation_component import Operators, OperationComponen
 from cnl2asp.proposition.signaturemanager import SignatureManager
 from cnl2asp.utility.utility import Utility
 from cnl2asp.exception.cnl2asp_exceptions import TypeNotFound
-
+import inflect
 
 class QUANTITY_OPERATOR(Enum):
     EXACTLY = 0
@@ -775,7 +775,7 @@ class CNLTransformer(Transformer):
     def STRING(self, elem) -> ValueComponent:
         if self._is_label(elem.value):
             return ValueComponent(elem.value)
-        return ValueComponent(elem.value.removesuffix('s'))
+        return ValueComponent(elem.value)
 
     def PREPOSITION(self, preposition) -> None:
         return preposition
@@ -825,7 +825,8 @@ class CNLTransformer(Transformer):
             return Operators.DIVISION
 
     def PARAMETER_NAME(self, elem):
-        return elem.value
+        parameter = inflect.engine().singular_noun(elem.value)
+        return parameter if parameter else elem.value
 
     def TEMPORAL_TYPE(self, elem):
         if elem == "minutes" or elem == "minute":
@@ -911,9 +912,3 @@ class CNLTransformer(Transformer):
 
     def cnl_as_little_as_possible(self, elem) -> None:
         return PREFERENCE_PROPOSITION_TYPE.MINIMIZATION
-    #
-    # def (self, elem) -> None:
-    #     return lark.Discard
-    #
-    # def (self, elem) -> None:
-    #     return lark.Discard

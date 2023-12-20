@@ -11,6 +11,7 @@ from cnl2asp.proposition.attribute_component import AttributeComponent, ValueCom
 from cnl2asp.proposition.component import Component
 from cnl2asp.utility.utility import Utility
 from cnl2asp.proposition.relation_component import RelationComponent
+from nltk.stem import WordNetLemmatizer
 
 if TYPE_CHECKING:
     from cnl2asp.parser.proposition_builder import PropositionBuilder

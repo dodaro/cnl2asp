@@ -165,7 +165,7 @@ _CNL_ABSOLUTE: "absolute"
 _CNL_VALUE: "value"
 cnl_in_absolute_value: _CNL_IN " " _CNL_ABSOLUTE " " _CNL_VALUE
 comparison_operand: EXPRESSION
-                    | STRING
+                    | PARAMETER_NAME
                     | parameter_entity_link
                     | aggregate_clause
                     | comparison_operand _CNL_AND comparison_operand -> comparison_operand_list
@@ -261,7 +261,7 @@ optimization_operator: CNL_MINIMIZED | CNL_MAXIMIZED
 cardinality: QUANTITY_OPERATOR STRING -> single_quantity_cardinality
            | _CNL_BETWEEN STRING _CNL_AND STRING -> range_quantity_cardinality
 conjunctive_object_list.-1: entity ((_CNL_COMMA _CNL_AND?) entity)*
-predicate: verb [cardinality] _CNL_SUCH_THAT_THERE_IS? [conjunctive_object_list] [_CNL_FOR (NUMBER | VARIABLE) STRING] -> predicate_with_objects
+predicate: verb [cardinality] _CNL_SUCH_THAT_THERE_IS? [conjunctive_object_list] [_CNL_FOR (NUMBER | VARIABLE) PARAMETER_NAME] -> predicate_with_objects
            | verb [cardinality] _CNL_SUCH_THAT_THERE_IS? simple_clause_wrv -> predicate_with_simple_clause
 
 simple_clause_wrv.-2: entity COPULA? verb [conjunctive_object_list]
