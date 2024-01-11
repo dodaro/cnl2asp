@@ -1,0 +1,21 @@
+{before_operator(LMNT_D)} :- not not &tel {< element(LMNT_D)}.
+{triggers_operator(A,B)} :- not not &tel {element(A) <* element(B)}.
+{alwaysbefore_operator(LMNT_D)} :- not not &tel {<* element(LMNT_D)}.
+{since_operator(A,B)} :- not not &tel {element(A) <? element(B)}.
+{eventuallybefore_operator(LMNT_D)} :- not not &tel {<? element(LMNT_D)}.
+
+{after_operator(LMNT_D)} :- not not &tel {> element(LMNT_D)}.
+{releases_operator(A,B)} :- not not &tel {element(A) >* element(B)}.
+{alwaysafter_operator(LMNT_D)} :- not not &tel {>* element(LMNT_D)}.
+{until_operator(A,B)} :- not not &tel {element(A) >? element(B)}.
+{eventuallyafter_operator(LMNT_D)} :- not not &tel {>? element(LMNT_D)}.
+
+{conjunction(A,B)} :- not not &tel {element(A) & element(B)}.
+{disjunction(A,B)} :- not not &tel {element(A) | element(B)}.
+{implication(A,B)} :- not not &tel {element(A) <- element(B)}.
+{equivalence(A,B)} :- not not &tel {element(A) <> element(B)}.
+{negation(A)} :- not not &tel {~ element(A)}.
+{true(A)} :- not not &tel {element(A) & &true}.
+{false(A)} :- not not &tel {element(A) & &false}.
+{initial(A)} :- not not &tel {element(A) & &initial}.
+{final(A)} :- not not &tel {element(A) & &final}.

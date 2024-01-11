@@ -119,12 +119,47 @@ class ASPTemporalOperation(ASPOperation):
         if len(self.operands) > 1:
             return f'{super(ASPTemporalOperation, self).__str__()}'
         else:
-            # return f'{self._operator_to_symbol(self.operator)} {self.operands[0]}'
             string = ''
             string += f'{self._operator_to_symbol(self.operator)} '
-            operand = self.operands[0]
+            operand = str(self.operands[0])
             if not isinstance(operand, ASPOperation):
-                string += str(operand)
+                string += operand
             else:
-                string += f'({str(operand)})'
+                string += f'({operand})'
+            return string
+
+
+    def temporal_formula_string(self) -> str:
+        string = ''
+        if len(self.operands) > 1:
+            for operand in self.operands:
+                operand_to_string = str(operand)
+                # replacing atoms starting with initially or finally symbols
+                # in the future it might be the case to have different to_string methods
+                # based on the context also for the other components
+                if operand_to_string.startswith("__"):
+                    operand_to_string = operand_to_string.replace("__", ">> ", 1)
+                elif operand_to_string.startswith("_"):
+                    operand_to_string = operand_to_string.replace("_", "<< ", 1)
+                if not isinstance(operand, ASPOperation):
+                    string += operand_to_string
+                else:
+                    string += f'({operand_to_string})'
+                string += f' {self._operator_to_symbol(self.operator)} '
+            return string.removesuffix(f' {self._operator_to_symbol(self.operator)} ')
+        else:
+            string = ''
+            string += f'{self._operator_to_symbol(self.operator)} '
+            operand_to_string = str(self.operands[0])
+            # replacing atoms starting with initially or finally symbols
+            # in the future it might be the case to have different to_string methods
+            # based on the context also for the other components
+            if operand_to_string.startswith("__"):
+                operand_to_string = operand_to_string.replace("__", ">> ", 1)
+            elif operand_to_string.startswith("_"):
+                operand_to_string = operand_to_string.replace("_", "<< ", 1)
+            if not isinstance(self.operands[0], ASPOperation):
+                string += operand_to_string
+            else:
+                string += f'({operand_to_string})'
             return string

@@ -9,13 +9,14 @@ from .asp_element import ASPElement
 
 class ASPAtom(ASPElement):
     def __init__(self, name: str, attributes: list[ASPAttribute], negated: bool = False,
-                 is_before: bool = False, is_after: bool = False, is_initial: bool = False):
+                 is_before: bool = False, is_after: bool = False, is_initial: bool = False, is_final: bool = False):
         self.name = name
         self.attributes = attributes
         self.negated = negated
         self.is_before = is_before
         self.is_after = is_after
         self.is_initial = is_initial
+        self.is_final = is_final
 
     def set_attributes_value(self, attributes: list[ASPAttribute]):
         for attribute in attributes:
@@ -69,6 +70,7 @@ class ASPAtom(ASPElement):
         string += 'not ' if self.negated else ''
         string += '\'' if self.is_before else ''
         string += '_' if self.is_initial else ''
+        string += '__' if self.is_final else ''
         string += f'{self.name}'
         string += '\'' if self.is_after else ''
         string += '('

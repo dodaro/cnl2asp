@@ -9,4 +9,4 @@ class ASPTemporalFormula(ASPElement):
 
     def __str__(self):
         res = "not " if self.negated else ""
-        return f'{res}&tel {{{" ".join([str(formula).replace("not", "~") for formula in self.operations])}}}'
+        return f'{res}&tel {{{" ".join([formula.temporal_formula_string() for formula in self.operations])}}}'

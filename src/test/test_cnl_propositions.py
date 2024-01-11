@@ -452,5 +452,11 @@ It is prohibited that a nurse works in the 1st element in shift.''', ''':- nurse
         The following propositions apply in the final state:
         There is a node with id 2.''', '''#program initial.\nnode(1).\n\n#program final.\nnode(2).''')
 
+    def test_initially_inside_temporal_formulas(self):
+        self.check_input_to_output("""A tourist is identified by a name.
+A city is identified by a name.
+
+Whenever there is initially a tourist or the true constant, then we can have a movement.""", """{movement(TRST_NM)} :- not not &tel {<< tourist(TRST_NM) | &true}.""")
+
 if __name__ == '__main__':
     unittest.main()

@@ -386,7 +386,7 @@ class CNLTransformer(Transformer):
             return Operators.DISJUNCTION
         elif elem == "implies" or elem == "imply":
             return Operators.LEFT_IMPLICATION
-        elif elem == "equivalent":
+        elif elem == "equivalent to":
             return Operators.EQUIVALENCE
         elif elem == "trigger" or elem == "triggers":
             return Operators.TRIGGER
@@ -706,6 +706,8 @@ class CNLTransformer(Transformer):
             elem[1].is_after = True
         elif elem[0] == "initially":
             elem[1].is_initial = True
+        elif elem[0] == "finally":
+            elem[1].is_final = True
         return elem[1]
 
     def TELINGO_ENTITY_TEMPORAL_OPERATOR(self, elem):

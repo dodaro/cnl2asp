@@ -98,7 +98,7 @@ class ASPRule(ASPElement):
                 rule += f' '
                 for elem in body.split(','):
                     if elem.strip().startswith('&tel'):
-                        body = body.replace(elem, f' not not {elem.strip()}')
+                        body = body.replace(elem, f'not not {elem.strip()}')
             rule += f':- {body}'
         rule += '.\n'
         return rule

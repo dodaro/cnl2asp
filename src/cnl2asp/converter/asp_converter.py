@@ -190,7 +190,7 @@ class ASPConverter(Converter[ASPProgram,
 
     def convert_entity(self, entity: EntityComponent) -> ASPAtom:
         atom = ASPAtom(entity.name, [attribute.convert(self) for attribute in entity.keys + entity.attributes],
-                       entity.negated, entity.is_before, entity.is_after, entity.is_initial)
+                       entity.negated, entity.is_before, entity.is_after, entity.is_initial, entity.is_final)
         self._atoms_in_current_rule.append(EntityToAtom(entity, atom))
         return atom
 

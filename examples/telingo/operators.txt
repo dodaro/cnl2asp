@@ -1,0 +1,28 @@
+An element is identified by an id.
+
+// Formulas referring to the past
+Whenever there is before an element, then we can have a before_operator.
+Whenever there is element A triggers element B, then we can have a triggers_operator.
+Whenever there is before an element that always holds, then we can have a alwaysbefore_operator.
+Whenever there is element A since element B, then we can have a since_operator.
+Whenever there is before an element that eventually holds, then we can have a eventuallybefore_operator.
+
+// Formulas referring to the future
+Whenever there is after an element, then we can have an after_operator.
+Whenever there is element A releases element B, then we can have a releases_operator.
+Whenever there is after an element that always holds, then we can have a alwaysafter_operator.
+Whenever there is element A until element B, then we can have a until_operator.
+Whenever there is after an element that eventually holds, then we can have a eventuallyafter_operator.
+
+// Boolean formulas
+Whenever there is an element A and an element B, then we can have a conjunction.
+Whenever there is an element A or an element B, then we can have a disjunction.
+Whenever there is an element A implies an element B, then we can have an implication.
+Whenever there is an element A equivalent to an element B, then we can have an equivalence.
+Whenever there is an element A that do not always holds, then we can have a negation.
+
+// Constants
+Whenever there is an element A and the true constant, then we can have a true.
+Whenever there is an element A and the false constant, then we can have a false.
+Whenever there is an element A and it is the initial state, then we can have a initial.
+Whenever there is an element A and it is the final state, then we can have a final.
