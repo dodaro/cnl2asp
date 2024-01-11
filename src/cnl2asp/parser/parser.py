@@ -363,6 +363,15 @@ class CNLTransformer(Transformer):
         else:
             return OperationComponent(elem[1], elem[0], elem[2])
 
+    def TELINGO_CONSTANT(self, elem):
+        if elem == "it is the initial state":
+            return ValueComponent("&initial")
+        if elem == "it is the final state":
+            return ValueComponent("&final")
+        if elem == "the true constant":
+            return ValueComponent("&true")
+        if elem == "the false constant":
+            return ValueComponent("&false")
 
     def TELINGO_TEMPORAL_RELATIONSHIP(self, elem):
         return elem.value
@@ -848,8 +857,6 @@ class CNLTransformer(Transformer):
 
     def telingo_verb(self, elem):
         verb: EntityComponent = elem[2]
-        if elem[0]:
-            verb = OperationComponent(Operators.NEGATION, verb)
         if elem[1] and elem[3]:
             TELINGO_TEMPORAL_RELATIONSHIP = elem[1].removeprefix('since ')
             TELINGO_TEMPORAL_OPERATOR = elem[3].removeprefix('since ')
@@ -857,6 +864,8 @@ class CNLTransformer(Transformer):
         else:
             operator = elem[1]
         operation = OperationComponent(Operators[operator.upper()], verb)
+        if elem[0]:
+            operation.negated = True
         return operation
 
     def cnl_it_is_preferred(self, elem):

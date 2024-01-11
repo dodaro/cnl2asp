@@ -3,13 +3,8 @@ from __future__ import annotations
 from typing import Any
 
 from cnl2asp.converter.converter_interface import Converter
-from cnl2asp.specification.attribute_component import ValueComponent
 from cnl2asp.specification.component import Component
-from cnl2asp.specification.constant_component import ConstantComponent
-from cnl2asp.specification.entity_component import EntityComponent
 from cnl2asp.specification.proposition import Proposition
-from cnl2asp.specification.signaturemanager import SignatureManager
-from cnl2asp.utility.utility import Utility
 
 
 class Problem(Component):

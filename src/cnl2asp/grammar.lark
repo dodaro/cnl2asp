@@ -124,8 +124,11 @@ TELINGO_TEMPORAL_OPERATOR: "always" | "eventually" | "before" | "since before" |
 TELINGO_DUAL_OPERATOR: "and" | "or" | "implies" | "imply" | "equivalent" | "trigger" | "triggers" | "since" | "precede" | "releases" | "until" | "follow"
 
 telingo_operand: entity [TELINGO_DUAL_OPERATOR telingo_operand]
-                | "is the initial state" -> initial_state_constant
-                | "is the final state" -> final_state_constant
+                | TELINGO_CONSTANT [TELINGO_DUAL_OPERATOR telingo_operand]
+TELINGO_CONSTANT: "it is the initial state"
+                | "it is the final state"
+                | "the true constant"
+                | "the false constant"
 
 fact_proposition: _CNL_THERE _CNL_IS entity
 
@@ -291,7 +294,7 @@ complex_entity: complex_entity_parameter _CNL_IN STRING -> generic_element
               | _CNL_THE NUMBER ("st" | "nd" | "rd" | "th") _CNL_ELEMENT [EXPRESSION] _CNL_IN STRING -> list_index_element
 complex_entity_parameter: _CNL_AN _CNL_ELEMENT [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]
 
-TELINGO_ENTITY_TEMPORAL_OPERATOR: "previously" | "subsequently" | "initially"
+TELINGO_ENTITY_TEMPORAL_OPERATOR: "previously" | "subsequently" | "initially" | "finally"
 verb.1: [VERB_NEGATION] [TELINGO_ENTITY_TEMPORAL_OPERATOR] _CNL_INDEFINITE_ARTICLE? STRING [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list] [VERB_PREPOSITION]
        | [VERB_NEGATION] TELINGO_TEMPORAL_OPERATOR verb [TELINGO_TEMPORAL_OPERATOR] -> telingo_verb
 entity_temporal_order_constraint: _CNL_THAT _CNL_IS ORDERING_OPERATOR temporal_value
