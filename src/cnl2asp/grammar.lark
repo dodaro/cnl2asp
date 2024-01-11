@@ -121,9 +121,11 @@ hold_condition: _CNL_THAT [VERB_NEGATION] TELINGO_TEMPORAL_OPERATOR _CNL_HOLD
                 | _CNL_THAT [VERB_NEGATION] _CNL_HOLD TELINGO_TEMPORAL_OPERATOR
 telingo_operation: _CNL_THERE " " _CNL_IS [VERB_NEGATION] [TELINGO_TEMPORAL_OPERATOR] telingo_operand [hold_condition] [TELINGO_DUAL_OPERATOR telingo_operation]
 TELINGO_TEMPORAL_OPERATOR: "always" | "eventually" | "before" | "since before" | "after" | "since after"
-TELINGO_DUAL_OPERATOR: "and" | "or" | "implies" | "imply" | "equivalent" | "trigger" | "since" | "precede" | "release" | "until" | "follow"
+TELINGO_DUAL_OPERATOR: "and" | "or" | "implies" | "imply" | "equivalent" | "trigger" | "triggers" | "since" | "precede" | "releases" | "until" | "follow"
 
 telingo_operand: entity [TELINGO_DUAL_OPERATOR telingo_operand]
+                | "is the initial state" -> initial_state_constant
+                | "is the final state" -> final_state_constant
 
 fact_proposition: _CNL_THERE _CNL_IS entity
 
@@ -279,7 +281,6 @@ cardinality: QUANTITY_OPERATOR STRING -> single_quantity_cardinality
 conjunctive_object_list.-1: entity ((_CNL_COMMA _CNL_AND?) entity)*
 predicate: verb [cardinality] _CNL_SUCH_THAT_THERE_IS? [conjunctive_object_list] [_CNL_FOR (NUMBER | VARIABLE) STRING] -> predicate_with_objects
            | verb [cardinality] _CNL_SUCH_THAT_THERE_IS? simple_clause_wrv -> predicate_with_simple_clause
-
 simple_clause_wrv.-2: entity COPULA? verb [conjunctive_object_list]
 
 ?entity: TELINGO_ENTITY_TEMPORAL_OPERATOR? (simple_entity | complex_entity)
@@ -292,7 +293,7 @@ complex_entity_parameter: _CNL_AN _CNL_ELEMENT [EXPRESSION] [COMPARISON_OPERATOR
 
 TELINGO_ENTITY_TEMPORAL_OPERATOR: "previously" | "subsequently" | "initially"
 verb.1: [VERB_NEGATION] [TELINGO_ENTITY_TEMPORAL_OPERATOR] _CNL_INDEFINITE_ARTICLE? STRING [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list] [VERB_PREPOSITION]
-
+       | [VERB_NEGATION] TELINGO_TEMPORAL_OPERATOR verb [TELINGO_TEMPORAL_OPERATOR] -> telingo_verb
 entity_temporal_order_constraint: _CNL_THAT _CNL_IS ORDERING_OPERATOR temporal_value
 define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE
 

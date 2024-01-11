@@ -111,10 +111,10 @@ class Proposition(Component):
         # add all the keys of all the entities related with the new entity
         for relation in self.relations:
             to_be_related_with = None
-            if relation.entity_1 == new_entity:
-                to_be_related_with = relation.entity_2
-            elif relation.entity_2 == new_entity:
-                to_be_related_with = relation.entity_1
+            if relation.relation_component_1 == new_entity:
+                to_be_related_with = relation.relation_component_2
+            elif relation.relation_component_2 == new_entity:
+                to_be_related_with = relation.relation_component_1
             if to_be_related_with:
 
                 if len(to_be_related_with.get_keys_and_attributes()) == 1 and \

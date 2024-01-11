@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import collections
 import os
+import traceback
 from typing import TextIO
 
 from lark import Lark, UnexpectedCharacters
@@ -97,6 +98,7 @@ class Cnl2asp:
             return str(program)
         except Exception as e:
             print("Error in asp conversion:", str(e))
+            traceback.print_exception(e)
             return ''
 
     def __convert_attribute(self, entity_name: str, attribute: AttributeComponent) -> str | Symbol:

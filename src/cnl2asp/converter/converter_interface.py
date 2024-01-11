@@ -3,6 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TypeVar, Generic, TYPE_CHECKING
 
+from cnl2asp.specification.component import Component
 
 if TYPE_CHECKING:
     from cnl2asp.specification.entity_component import TemporalEntityComponent
@@ -104,7 +105,7 @@ class Converter(ABC, Generic[ProblemConverter,
         """Convert range value"""
 
     @abstractmethod
-    def convert_relation(self, relation: RelationComponent) -> RelationConverter:
+    def convert_relation(self, relation_component_1: Component, relation_component_2: Component) -> RelationConverter:
         """Convert relation"""
 
     @abstractmethod

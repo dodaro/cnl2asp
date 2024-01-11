@@ -360,28 +360,43 @@ class ASPConverter(Converter[ASPProgram,
                     pass
         return forbidden_links
 
-    def convert_relation(self, relation: RelationComponent, new_knowledge: NewKnowledgeComponent = None) -> None:
+    def convert_relation(self, relation_component_1: Component, relation_component_2: Component, new_knowledge: NewKnowledgeComponent = None) -> None:
+        relation_entities_1 = relation_component_1.get_entities()
+        if len(relation_entities_1) > 1:
+            for entities in relation_entities_1:
+                self.convert_relation(entities, relation_component_2)
+        else:
+            relation_component_1 = relation_entities_1[0]
+            relation_entities_2 = relation_component_2.get_entities()
+            if len(relation_entities_2) > 1:
+                for entities in relation_entities_2:
+                    self.convert_relation(relation_component_1, entities)
+            else:
+                self.entity_to_atoms_and_link(relation_component_1, relation_entities_2[0])
+
+
+    def entity_to_atoms_and_link(self, entity_1: EntityComponent, entity_2: EntityComponent, new_knowledge: NewKnowledgeComponent = None):
         atom_1 = None
         atom_2 = None
         for pair in self._atoms_in_current_rule:
             # look for the exactly same entity
-            if pair.entity is relation.entity_1:
+            if pair.entity is entity_1:
                 atom_1 = pair.atom
-            if pair.entity is relation.entity_2:
+            if pair.entity is entity_2:
                 atom_2 = pair.atom
         # if entity not found, search for a copy
         if not atom_1:
             for pair in self._atoms_in_current_rule:
-                if pair.entity == relation.entity_1:
+                if pair.entity == entity_1:
                     atom_1 = pair.atom
         if not atom_2:
             for pair in self._atoms_in_current_rule:
-                if pair.entity == relation.entity_2:
+                if pair.entity == entity_2:
                     atom_2 = pair.atom
         if not atom_1 or not atom_2:
-            raise Exception(f'Relation between {relation.entity_1.name} and {relation.entity_2.name} not found.')
-        forbidden_links = self.get_forbidden_link(relation.entity_1, relation.entity_2)
-        self._link_two_atoms(relation, atom_1, atom_2, forbidden_links)
+            raise Exception(f'Relation between {entity_1.name} and {entity_2.name} not found.')
+        forbidden_links = self.get_forbidden_link(entity_1, entity_2)
+        self._link_two_atoms(entity_1, entity_2, atom_1, atom_2, forbidden_links)
 
     def get_forbidden_link(self, entity_1, entity_2) -> list[ASPAttribute]:
         forbidden_attributes = []
@@ -391,17 +406,17 @@ class ASPConverter(Converter[ASPProgram,
                 forbidden_attributes += [forbidden_link.attribute_1, forbidden_link.attribute_2]
         return forbidden_attributes
 
-    def _link_two_atoms(self, relation: RelationComponent, atom_1: ASPAtom, atom_2: ASPAtom,
+    def _link_two_atoms(self, entity_1: EntityComponent, entity_2: EntityComponent, atom_1: ASPAtom, atom_2: ASPAtom,
                         forbidden_links: list[ASPAttribute] = None):
         if forbidden_links is None:
             forbidden_links = []
         linked_attributes: list[ASPAttribute] = forbidden_links  # list of already linked attributes
-        for key in relation.entity_1.get_keys():
+        for key in entity_1.get_keys():
             atom_1_keys = atom_1.get_attributes_list_by_name_and_origin(key.name, key.origin)
             for atom_1_key in atom_1_keys:
                 self._link_atom_to_attribute(atom_2, atom_1_key, atom_1, linked_attributes)
 
-        for key in relation.entity_2.get_keys():
+        for key in entity_2.get_keys():
             atom_2_keys = atom_2.get_attributes_list_by_name_and_origin(key.name, key.origin)
             for atom_2_key in atom_2_keys:
                 if atom_2_key in linked_attributes:

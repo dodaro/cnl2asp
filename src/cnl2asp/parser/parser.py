@@ -50,7 +50,6 @@ class CNLTransformer(Transformer):
         self._problem: Problem = Problem()
         self._proposition: PropositionBuilder = PropositionBuilder()
         self._delayed_operations: list[Command] = []
-        self._operation_parameter_queue: list[OperationComponent] = []
         self._defined_variables: list[str] = []
 
     def _new_field_value(self, name: str = '') -> ValueComponent:
@@ -376,19 +375,17 @@ class CNLTransformer(Transformer):
             return Operators.CONJUNCTION
         elif elem == "or":
             return Operators.DISJUNCTION
-        elif elem == "implies":
-            return Operators.LEFT_IMPLICATION
-        elif elem == "imply":
+        elif elem == "implies" or elem == "imply":
             return Operators.LEFT_IMPLICATION
         elif elem == "equivalent":
             return Operators.EQUIVALENCE
-        elif elem == "trigger":
+        elif elem == "trigger" or elem == "triggers":
             return Operators.TRIGGER
         elif elem == "since":
             return Operators.SINCE
         elif elem == "precede":
             return Operators.PRECEDE
-        elif elem == "release":
+        elif elem == "release" or elem == "releases":
             return Operators.RELEASE
         elif elem == "until":
             return Operators.UNTIL
@@ -848,6 +845,19 @@ class CNLTransformer(Transformer):
             entity.negated = True
         self._delayed_operations.append(CreateSignature(self._proposition, entity))
         return entity
+
+    def telingo_verb(self, elem):
+        verb: EntityComponent = elem[2]
+        if elem[0]:
+            verb = OperationComponent(Operators.NEGATION, verb)
+        if elem[1] and elem[3]:
+            TELINGO_TEMPORAL_RELATIONSHIP = elem[1].removeprefix('since ')
+            TELINGO_TEMPORAL_OPERATOR = elem[3].removeprefix('since ')
+            operator = f'{TELINGO_TEMPORAL_RELATIONSHIP}_{TELINGO_TEMPORAL_OPERATOR}' if TELINGO_TEMPORAL_OPERATOR == 'before' or TELINGO_TEMPORAL_OPERATOR == 'after' else f'{TELINGO_TEMPORAL_OPERATOR}_{TELINGO_TEMPORAL_RELATIONSHIP}'
+        else:
+            operator = elem[1]
+        operation = OperationComponent(Operators[operator.upper()], verb)
+        return operation
 
     def cnl_it_is_preferred(self, elem):
         self._proposition = PreferencePropositionBuilder()
