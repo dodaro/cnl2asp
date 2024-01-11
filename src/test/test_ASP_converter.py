@@ -65,7 +65,7 @@ class TestASPConverter(unittest.TestCase):
         self.assertEqual(str(atom_1), 'entity_1(_)')
         atom_2 = entity_2.convert(asp_converter)
         self.assertEqual(str(atom_2), 'entity_2(_,_)')
-        asp_converter._link_two_atoms(relation, atom_1, atom_2)
+        asp_converter._link_two_atoms(relation.relation_component_1, relation.relation_component_2, atom_1, atom_2)
         self.assertEqual(str(atom_1), 'entity_1(NTTY_2_FLD1)')
         self.assertEqual(str(atom_2), 'entity_2(NTTY_2_FLD1,_)')
 

@@ -33,6 +33,7 @@ A disk X is blocked in peg P when disk D is blocked in peg P, where X is equal t
 
 It is prohibited that a disk D is moved to a peg P, when a disk X is blocked in peg P, where X is equal to D-1.
 It is prohibited that a disk D is moved to a peg P1, when disk D is previously on peg P2 and also disk D is blocked in peg P2.
+//It is prohibited that the number of disk D that are on a peg P is different from 1, whenever there is a disk with id D greater than 0.
 
 The following propositions apply in the final state:
 It is prohibited that disk D is not on peg P, whenever there is a goal with disk id D, with peg id P.
