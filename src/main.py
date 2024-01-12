@@ -14,6 +14,7 @@ if __name__ == '__main__':
                         help='Print atoms with functions. ' +
                              'Each attribute is converted into a function,' +
                              'if an entity with same name has been defined')
+    parser.add_argument('--debug', action='store_true')
     parser.add_argument('input_file')
     parser.add_argument('output_file', type=str, nargs='?', default='out.txt')
     args = parser.parse_args()
@@ -24,7 +25,7 @@ if __name__ == '__main__':
     output_file = args.output_file
 
     in_file = open(input_file, 'r')
-    cnl2asp = Cnl2asp(in_file)
+    cnl2asp = Cnl2asp(in_file, args.debug)
 
     if args.check_syntax:
         if cnl2asp.check_syntax():

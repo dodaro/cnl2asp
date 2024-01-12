@@ -38,7 +38,8 @@ class Symbol:
 
 
 class Cnl2asp:
-    def __init__(self, cnl_input: TextIO | str):
+    def __init__(self, cnl_input: TextIO | str, debug: bool = False):
+        self._debug = debug
         if isinstance(cnl_input, str):
             self.cnl_input = cnl_input
         else:
@@ -90,6 +91,8 @@ class Cnl2asp:
             return ''
         except VisitError as e:
             print(e.args[0])
+            if self._debug:
+                traceback.print_exception(e)
             return ''
         try:
             asp_converter: ASPConverter = ASPConverter()
@@ -98,7 +101,8 @@ class Cnl2asp:
             return str(program)
         except Exception as e:
             print("Error in asp conversion:", str(e))
-            traceback.print_exception(e)
+            if self._debug:
+                traceback.print_exception(e)
             return ''
 
     def __convert_attribute(self, entity_name: str, attribute: AttributeComponent) -> str | Symbol:
