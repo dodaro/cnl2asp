@@ -123,9 +123,7 @@ connected_to(3,X) :- node(3), node(X), X = 2.
 1 <= {assigned_to(ND_D,CLR_D): color(CLR_D)} <= 1 :- node(ND_D).
 :- connected_to(X,Y), node(X), assigned_to(X,C), node(Y), assigned_to(Y,C), color(C).''')
 
-    @patch('cnl2asp.parser.parser.uuid4')
-    def test_input_file(self, mock_uuid):
-        mock_uuid.return_value = 'TOT'
+    def test_input_file(self):
         self.check_input_to_output('''A movie is identified by an id, and has a title, a director, and a year.
 A director is identified by a name.
 A topMovie is identified by an id.
@@ -194,14 +192,12 @@ scoreassignment(I,1) | scoreassignment(I,2) | scoreassignment(I,3) :- movie(I,_,
 :- work_in(X,P1), pub(P1), waiter(X), work_in(X,P2), pub(P2), P1 != P2.
 :- V != 3, movie(I,"spielberg",_,_), scoreassignment(I,V).
 :- waiter(PYD_D), not payed(PYD_D).
-:~ #count{D: serve(_,D)} = X_TOT. [-X_TOT@1]
+:~ #count{D: serve(_,D)} = CNT. [-CNT@1]
 :~ V = 1, scoreassignment(I,V), topmovie(I). [1@3,I,V]
 :~ topmovie(I), scoreassignment(I,V). [-V@2,I,V]
-:~ #sum{VL: scoreassignment(_,VL)} = X_TOT. [-X_TOT@2]''')
+:~ #sum{VL: scoreassignment(_,VL)} = SM. [-SM@2]''')
 
-    @patch('cnl2asp.utility.utility.uuid4')
-    def test_integer_sets(self, mock_uuid):
-        mock_uuid.side_effect = ['TOT1', 'TOT2']
+    def test_integer_sets(self):
         self.check_input_to_output('''set1 is a set.
 set2 is a set.
 A match is identified by a first, and by a second.
@@ -222,7 +218,7 @@ positivematch(X,Y) :- Y < X, match(X,Y).
 negativematch(X,Y) :- Y > X, match(X,Y).
 :- #count{match(E,MTCH_SCND): match(E,MTCH_SCND)} != 1, set("set1",E).
 :- #count{match(MTCH_FRST,E): match(MTCH_FRST,E)} != 1, set("set2",E).
-:- #count{positivematch(PSTVMTCH_FRST,PSTVMTCH_SCND): positivematch(PSTVMTCH_FRST,PSTVMTCH_SCND)} = X_TOT1, #count{negativematch(NGTVMTCH_FRST,NGTVMTCH_SCND): negativematch(NGTVMTCH_FRST,NGTVMTCH_SCND)} = X_TOT2, X_TOT1 != X_TOT2.''')
+:- #count{positivematch(PSTVMTCH_FRST,PSTVMTCH_SCND): positivematch(PSTVMTCH_FRST,PSTVMTCH_SCND)} = CNT, #count{negativematch(NGTVMTCH_FRST,NGTVMTCH_SCND): negativematch(NGTVMTCH_FRST,NGTVMTCH_SCND)} = CNT1, CNT != CNT1.''')
 
     def test_mao(self):
         self.check_input_to_output('''A time is a temporal concept expressed in steps ranging from 0 to 10.
@@ -278,9 +274,7 @@ time(10,"10").
 :- (A1)/360 != (A2)/360, position(J1,A1,T), position(J1,A2,T+1), J2 > J1, T <= timemax, rotation(J2,_,_,_,T).
 :- (A1)/360 != (A2)/360, goal(J,A1), position(J,A2,timemax).''')
 
-    @patch('cnl2asp.parser.parser.uuid4')
-    def test_maxclique(self, mock_uuid):
-        mock_uuid.return_value = 'TOT'
+    def test_maxclique(self):
         self.check_input_to_output('''A node goes from 1 to 5.
 Node 1 is connected to node X, where X is one of 2, 3.
 Node 2 is connected to node X, where X is one of 1, 3, 4, 5.
@@ -309,11 +303,9 @@ connected_to(5,X) :- node(5), node(X), X = 3.
 connected_to(5,X) :- node(5), node(X), X = 4.
 {chosen(ND_D)} :- node(ND_D).
 :- not connected_to(X,Y), node(X), chosen(X), node(Y), chosen(Y), X != Y.
-:~ #count{D: chosen(D)} = X_TOT. [-X_TOT@3]''')
+:~ #count{D: chosen(D)} = CNT. [-CNT@3]''')
 
-    @patch('cnl2asp.utility.utility.uuid4')
-    def test_undirected_graph(self, mock_uuid):
-        mock_uuid.side_effect = ['TOT1', 'TOT2', 'TOT1', 'TOT2']
+    def test_undirected_graph(self):
         self.check_input_to_output('''A node is identified by an id, and by a weight.
 An edge is identified by a first node id, and by a second node id.
 A set is identified by an id.
@@ -356,8 +348,8 @@ edge(1,3).
 edge(4,5).
 1 <= {assigned_to(ND_D,ST_D,ND_WGHT): set(ST_D)} <= 1 :- node(ND_D,ND_WGHT).
 :- node(N1,SSGND_T_WGHT), assigned_to(N1,S1,SSGND_T_WGHT), node(N2,SSGND_T_WGHT1), assigned_to(N2,S1,SSGND_T_WGHT1), set(S1), edge(N1,N2).
-:- #count{D: assigned_to(D,S1,_), set(S1)} = X_TOT1, #count{D1: assigned_to(D1,S2,_), set(S2)} = X_TOT2, X_TOT1 <= X_TOT2, S1 = 1, S2 = 2.
-:- #sum{WGHT: assigned_to(_,S2,WGHT), set(S2)} = X_TOT1, #sum{WGHT1: assigned_to(_,S1,WGHT1), set(S1)} = X_TOT2, X_TOT1 < X_TOT2, S1 = 1, S2 = 2.''')
+:- #count{D: assigned_to(D,S1,_), set(S1)} = CNT, #count{D1: assigned_to(D1,S2,_), set(S2)} = CNT1, CNT <= CNT1, S1 = 1, S2 = 2.
+:- #sum{WGHT: assigned_to(_,S2,WGHT), set(S2)} = SM, #sum{WGHT1: assigned_to(_,S1,WGHT1), set(S1)} = SM1, SM < SM1, S1 = 1, S2 = 2.''')
 
     def test_aggregate_range(self):
         self.check_input_to_output('''A top_Movie is identified by an id.

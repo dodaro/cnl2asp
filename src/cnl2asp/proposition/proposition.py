@@ -93,11 +93,14 @@ class Proposition(Component):
     # Data structure for representing the sentences
     def __init__(self, new_knowledge: list[NewKnowledgeComponent] = None,
                  cardinality: CardinalityComponent = None, requisite: RequisiteComponent = None,
-                 relations: list[RelationComponent] = None):
+                 relations: list[RelationComponent] = None, defined_attributes: list[AttributeComponent] = None):
+        if defined_attributes is None:
+            defined_attributes = []
         self.new_knowledge = new_knowledge if new_knowledge else []
         self.cardinality = cardinality if cardinality else None
         self.requisite = requisite if requisite else RequisiteComponent([])
         self.relations = relations if relations else []
+        self.defined_attributes = defined_attributes
 
     def is_empty(self) -> bool:
         return len(self.new_knowledge) == 0 and len(self.requisite.components) == 0 and len(self.relations) == 0
@@ -183,7 +186,8 @@ class Proposition(Component):
         cardinality = self.cardinality.copy() if self.cardinality else None
         requisite = self.requisite.copy()
         relations = [relation.copy() for relation in self.relations]
-        return Proposition(new_knowledge, cardinality, requisite, relations)
+        defined_attributes = [attribute.copy() for attribute in self.defined_attributes]
+        return Proposition(new_knowledge, cardinality, requisite, relations, defined_attributes)
 
 
 class PREFERENCE_PROPOSITION_TYPE(Enum):

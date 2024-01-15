@@ -137,14 +137,12 @@ A scoreAssignment is identified by a movie, and by a value.
 It is preferred, with medium priority, that whenever there is a topMovie with id I, whenever there is a scoreAssignment with movie I, and with value V, V is maximized.
                 ''',''':~ topmovie(I), scoreassignment(I,V). [-V@2,I,V]''')
 
-    @patch('cnl2asp.parser.parser.uuid4')
-    def test_weak_constraint_with(self, mock_uuid):
-        mock_uuid.return_value = 'X'
+    def test_weak_constraint_with(self):
         self.check_input_to_output('''A movie is identified by an id, and has a title, a director, and a year.
 A director is identified by a name.
 A topMovie is identified by an id.
 A scoreAssignment is identified by a movie, and by a value.
-It is preferred, with medium priority, that the total value of a scoreAssignment is minimized.''', ''':~ #sum{VL: scoreassignment(_,VL)} = X_X. [X_X@2]''')
+It is preferred, with medium priority, that the total value of a scoreAssignment is minimized.''', ''':~ #sum{VL: scoreassignment(_,VL)} = SM. [SM@2]''')
 
     def test_variable_substitution(self):
         self.check_input_to_output('''
@@ -330,7 +328,7 @@ It is required that the desired angle A of the rotation R is different from the 
 A patient is identified by an id, and has a preference.
 An assignment is identified by a patient, by a day, and by a timeslot.
 It is required that the number of patient that have an assignment with day D, with timeslot TS is less than the number of patient that have an assignment with day D+1, with timeslot TS.''',
-                         ''':- #count{D1: assignment(D1,D,TS)} = X_X, #count{D2: assignment(D2,D+1,TS)} = X_Y, X_X >= X_Y.''')
+                         ''':- #count{D1: assignment(D1,D,TS)} = CNT, #count{D2: assignment(D2,D+1,TS)} = CNT1, CNT >= CNT1.''')
 
 
     def test_do_not_link_choice_elements_with_body(self):
@@ -410,14 +408,12 @@ day(6,"07/01/2022").
     def test_simple_definition(self):
         self.check_input_to_output( '''John is a waiter.''','waiter("John").')
 
-    @patch('cnl2asp.utility.utility.uuid4')
-    def test_simple_aggregate(self, mock_uuid):
-        mock_uuid.side_effect = ['TOT1', 'TOT2', 'TOT1', 'TOT2']
+    def test_simple_aggregate(self):
         self.check_input_to_output( '''A positivematch is identified by a match.
 A negativematch is identified by a match.
 It is required that the number of positivematch is equal to the number of negativematch.
-It is required that the number of positivematch occurrences is equal to the number of negativematch occurrences.''',''':- #count{positivematch(PSTVMTCH_MTCH): positivematch(PSTVMTCH_MTCH)} = X_TOT1, #count{negativematch(NGTVMTCH_MTCH): negativematch(NGTVMTCH_MTCH)} = X_TOT2, X_TOT1 != X_TOT2.
-:- #count{positivematch(PSTVMTCH_MTCH): positivematch(PSTVMTCH_MTCH)} = X_TOT1, #count{negativematch(NGTVMTCH_MTCH): negativematch(NGTVMTCH_MTCH)} = X_TOT2, X_TOT1 != X_TOT2.''')
+It is required that the number of positivematch occurrences is equal to the number of negativematch occurrences.''',''':- #count{positivematch(PSTVMTCH_MTCH): positivematch(PSTVMTCH_MTCH)} = CNT, #count{negativematch(NGTVMTCH_MTCH): negativematch(NGTVMTCH_MTCH)} = CNT1, CNT != CNT1.
+:- #count{positivematch(PSTVMTCH_MTCH): positivematch(PSTVMTCH_MTCH)} = CNT, #count{negativematch(NGTVMTCH_MTCH): negativematch(NGTVMTCH_MTCH)} = CNT1, CNT != CNT1.''')
 
     def test_parameter_entity_link(self):
         self.check_input_to_output( '''Node is identified by an id.

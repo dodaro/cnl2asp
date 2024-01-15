@@ -1,8 +1,3 @@
-from functools import singledispatchmethod
-from uuid import uuid4
-
-from multipledispatch import dispatch
-
 from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, EntityNotFound, LabelNotFound
 from cnl2asp.proposition.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent
 from cnl2asp.proposition.component import Component
@@ -79,7 +74,6 @@ class PropositionBuilder:
         copy.add_requisite([new_knowledge.new_entity])  # add the support entity to the new proposition requisite
         copy.new_knowledge[0].condition = ConditionComponent()
         copy.cardinality = None
-        starting_value = Utility.NULL_VALUE
         for copy_new_knowledge in copy.new_knowledge:
             # find the starting value of the temporal attribute
             try:
@@ -112,6 +106,10 @@ class PropositionBuilder:
 
     def add_discriminant(self, discriminant: list[AttributeComponent]):
         pass
+
+    def add_defined_attributes(self, defined_attributes: list[AttributeComponent]):
+        for proposition in self.get_propositions():
+            proposition.defined_attributes += defined_attributes
 
 
 class PreferencePropositionBuilder(PropositionBuilder):

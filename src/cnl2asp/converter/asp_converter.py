@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-import random
 import re
 
 from cnl2asp.parser.parser import CNLTransformer
-from multipledispatch import dispatch
 
 from cnl2asp.ASP_elements.asp_aggregate import ASPAggregate
 from cnl2asp.ASP_elements.asp_atom import ASPAtom
@@ -115,6 +113,7 @@ class ASPConverter(Converter[ASPProgram,
         head = []
         cardinality = None
         body = None
+        self._created_fields = proposition.defined_attributes
         if proposition.new_knowledge:
             for new_knowledge in proposition.new_knowledge:
                 head.append(new_knowledge.convert(self))
@@ -133,7 +132,7 @@ class ASPConverter(Converter[ASPProgram,
         for operation in self._operations:
             for operand in operation.operands:
                 for aggregate in self._aggregates:
-                    if operand in aggregate.get_discriminant_attributes_value():
+                    if operand in aggregate.get_discriminant_attributes_value() and not aggregate in operation.operands:
                         aggregate.body.add_element(operation)
                         body.remove_element(operation)
 
@@ -253,7 +252,7 @@ class ASPConverter(Converter[ASPProgram,
         operations: list[ASPOperation] = []
         fields: list[ASPValue] = []
         for operand in operands:
-            new_field = ASPValue(Utility.create_unique_identifier().upper())
+            new_field = ASPValue(self.create_new_field_value(operand.operation.name))
             operations.append(ASPOperation(Operators.EQUALITY, operand, new_field))
             fields.append(new_field)
         for i, field_1 in enumerate(fields):

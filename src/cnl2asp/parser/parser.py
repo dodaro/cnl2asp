@@ -3,8 +3,6 @@ import re
 import string
 
 from enum import Enum
-from typing import Any
-from uuid import uuid4
 
 import lark
 from lark import Transformer, v_args
@@ -65,7 +63,6 @@ class CNLTransformer(Transformer):
                 return self._new_field_value(f'{name}{last_num}')
             self._defined_variables.append(result)
             return ValueComponent(result)
-        return ValueComponent(f'X_{str(uuid4()).replace("-", "_").upper()}')
 
     def start(self, elem) -> Problem:
         return self._problem
@@ -168,6 +165,7 @@ class CNLTransformer(Transformer):
             command.execute()
         if elem[0]:
             self._problem.add_signature(elem[0])
+        self._proposition.add_defined_attributes(self._defined_variables)
         self._problem.add_propositions(self._proposition.get_propositions())
         self._clear()
 
@@ -270,6 +268,7 @@ class CNLTransformer(Transformer):
             for proposition in self._proposition.get_propositions():
                 if len(proposition.new_knowledge) > 1:
                     proposition.cardinality = None
+            self._proposition.add_defined_attributes(self._defined_variables)
             self._problem.add_propositions(self._proposition.get_propositions())
             self._clear()
         except Exception as e:
@@ -500,7 +499,7 @@ class CNLTransformer(Transformer):
 
     def preference_with_aggregate_clause(self, elem):
         if elem[3]:
-            new_var = self._new_field_value()
+            new_var = self._new_field_value(elem[3].operation.name)
             self._proposition.add_requisite(OperationComponent(Operators.EQUALITY, elem[3], new_var))
             self._proposition.add_weight(new_var)
 
@@ -577,6 +576,7 @@ class CNLTransformer(Transformer):
         else:
             name = '_'.join(name)
         value = parameter[-4] if parameter[-4] else Utility.NULL_VALUE
+        self._defined_variables.append(value)
         operations = []
         if parameter[-3]:
             if parameter[-3] == Operators.EQUALITY and value == Utility.NULL_VALUE:
@@ -650,7 +650,9 @@ class CNLTransformer(Transformer):
             entity.set_attributes_value(parameter_list, self._proposition)
         except AttributeNotFound as e:
             raise CompilationError(str(e), meta.line)
-        entity.set_label_as_key_value()
+        if entity.label_is_key_value():
+            entity.set_label_as_key_value()
+            self._defined_variables.append(ValueComponent(entity.label))
         if entity_temporal_order_constraint:
             self.temporal_constraint(meta, [entity] + entity_temporal_order_constraint)
         if define_subsequent_event:

@@ -49,12 +49,8 @@ class EntityComponent(Component):
         return False
 
     def set_label_as_key_value(self):
-        # we consider the label value as the value of the key in case the entity has only one key and
-        # has no values
-        if self.label_is_key_value():
-            self.set_attributes_value(
-                [AttributeComponent(self.get_keys()[0].name,
-                                    ValueComponent(self.label), self.get_keys()[0].origin)])
+        self.set_attributes_value([AttributeComponent(self.get_keys()[0].name,
+                                   ValueComponent(self.label), self.get_keys()[0].origin)])
 
     def set_name(self, name: str):
         self.name = name
