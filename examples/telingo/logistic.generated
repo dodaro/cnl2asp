@@ -32,7 +32,6 @@ loaded(P) :- loaded_in(P,V), vehicle(V), package(P).
 loaded_in(P,V) :- load(V,P), package(P), vehicle(V).
 :- vehicle(V1), load(V1,P), vehicle(V2), load(V2,P), package(P), V1 != V2.
 :- load(V,P), package(P), 'deposited_in(P,L), vehicle(V), not 'at(V,L), location(L).
-:- load(V,P), package(P), 'loaded_in(P,V), vehicle(V).
 :- vehicle(V), load(V,P), package(P), 'loaded(P).
 :- unload(V,P), package(P), not 'loaded_in(P,V), vehicle(V).
 cargo(V) :- load(V,P), package(P), vehicle(V).

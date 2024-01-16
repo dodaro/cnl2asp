@@ -22,7 +22,6 @@ A package P is loaded, when package P is loaded in a vehicle V.
 A package P is loaded in vehicle V, when a vehicle V loads package P.
 It is prohibited that a vehicle V1 loads a package P and also vehicle V2 loads package P, where V1 is different from V2.
 It is prohibited that a vehicle V load a package P, when package P is previously deposited in location L and also vehicle V is not previously at location L.
-It is prohibited that a vehicle V load a package P, when package P is previously loaded in vehicle V.
 It is prohibited that a vehicle V load a package P, when package P is previously loaded.
 
 It is prohibited that a vehicle V unload a package P when package P is not previously loaded in vehicle V.
