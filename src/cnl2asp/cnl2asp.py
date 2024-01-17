@@ -39,7 +39,7 @@ class Symbol:
         self.symbol_type = symbol_type
 
     def __repr__(self):
-        return f'{self.predicate}({self.attributes})'
+        return f'{self.predicate}({self.attributes}), {self.symbol_type.name}\n'
 
 
 class Cnl2asp:
@@ -105,10 +105,12 @@ class Cnl2asp:
             print("Error in asp conversion:", str(e))
             return ''
 
+    def __get_type(self, name: str):
+        if SignatureManager.is_temporal_entity(name):
+            return SymbolType.TEMPORAL
+        return SymbolType.DEFAULT
+
     def __convert_attribute(self, entity_name: str, attribute: AttributeComponent) -> str | Symbol:
-        entity_type = SymbolType.DEFAULT
-        if SignatureManager.is_temporal_entity(entity_name):
-            entity_type = SymbolType.TEMPORAL
         if attribute.origin and entity_name != attribute.origin.name:
             return Symbol(attribute.origin.name,
                           [self.__convert_attribute(entity_name, AttributeComponent(attribute.name,
@@ -117,7 +119,7 @@ class Cnl2asp:
                           [self.__convert_attribute(entity_name, AttributeComponent(attribute.name,
                                                                                     attribute.value,
                                                                                     attribute.origin.origin))],
-                          entity_type
+                          self.__get_type(attribute.origin.name)
                           )
         return attribute.name
 
