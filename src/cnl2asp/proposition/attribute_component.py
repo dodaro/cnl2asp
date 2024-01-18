@@ -2,8 +2,12 @@ from __future__ import annotations
 
 from typing import Any, TYPE_CHECKING
 
+import inflect
+
 from cnl2asp.converter.converter_interface import Converter
 from cnl2asp.proposition.component import Component
+from cnl2asp.proposition.name_component import NameComponent
+
 if TYPE_CHECKING:
     from cnl2asp.proposition.operation_component import OperationComponent
 
@@ -42,10 +46,9 @@ class RangeValueComponent(ValueComponent):
         return RangeValueComponent(self)
 
 
-
 class AttributeOrigin:
     def __init__(self, name: str, origin: AttributeOrigin = None):
-        self.name = name
+        self.name = NameComponent(str(name))
         self.origin = origin
         if origin and self.name == origin.name:
             # avoid nesting same origin
@@ -60,8 +63,8 @@ class AttributeOrigin:
 
     def __str__(self):
         if self.origin:
-            return self.name + ' ' + str(self.origin)
-        return self.name
+            return str(self.name) + ' ' + str(self.origin)
+        return str(self.name)
 
     def __eq__(self, other):
         if not isinstance(other, AttributeOrigin):
@@ -95,14 +98,25 @@ class AttributeComponent(Component):
                  operations: list[OperationComponent] = None):
         if operations is None:
             operations = []
-        self.name = name
+        self._name = NameComponent(str(name))
         # origin of the attribute, the entity from which it has been taken
         self.origin = attribute_origin
         self.value = AngleValueComponent(value) if self.is_angle() else value
         self.operations = operations
 
+    def name_match(self, name: str) -> bool:
+        if self._name == name:
+            return True
+        return False
+
+    def set_name(self, name: str):
+        self._name = NameComponent(name)
+
+    def get_name(self):
+        return str(self._name)
+
     def removesuffix(self, suffix: str):
-        self.name = self.name.removesuffix(suffix)
+        self._name.removesuffix(suffix)
 
     def convert(self, converter: Converter):
         return converter.convert_attribute(self)
@@ -111,16 +125,15 @@ class AttributeComponent(Component):
         self.operations.append(operation)
 
     def copy(self) -> Any:
-        return AttributeComponent(self.name, self.value.copy(), self.origin)
+        return AttributeComponent(self.get_name(), self.value.copy(), self.origin)
 
     def is_angle(self) -> bool:
-        return 'angle' in self.name or (self.origin.is_angle() if self.origin else False)
+        return 'angle' in self.get_name() or (self.origin.is_angle() if self.origin else False)
 
     def __eq__(self, other):
         if not isinstance(other, AttributeComponent):
             return False
-        return self.name == other.name and self.value == other.value
+        return self._name == other._name and self.value == other.value
 
     def __str__(self):
-        return str(self.origin) + ' ' + self.name
-
+        return str(self.origin) + ' ' + self.get_name()

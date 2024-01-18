@@ -124,40 +124,40 @@ class Proposition(Component):
                         to_be_related_with.label not in linked_entities:
                     for key in to_be_related_with.get_keys():
                         if not new_entity.has_attribute_value(key.value):
-                            signature.attributes.append(AttributeComponent(key.name, ValueComponent(Utility.NULL_VALUE),
-                                                                           AttributeOrigin(to_be_related_with.name,
+                            signature.attributes.append(AttributeComponent(key.get_name(), ValueComponent(Utility.NULL_VALUE),
+                                                                           AttributeOrigin(to_be_related_with.get_name(),
                                                                                            key.origin)))
                 if to_be_related_with.label not in linked_entities:
                     linked_entities.append(to_be_related_with.label)
                 for key in to_be_related_with.get_keys():
                     if key.value != Utility.NULL_VALUE and signature.has_attribute_value(key.value):
                         try:
-                            new_entity.get_attributes_by_name_and_origin(key.name, AttributeOrigin(signature.name))[
+                            new_entity.get_attributes_by_name_and_origin(key.get_name(), AttributeOrigin(signature.get_name()))[
                                 0].origin = key.origin
-                            signature.get_attributes_by_name_and_origin(key.name, AttributeOrigin(signature.name))[
+                            signature.get_attributes_by_name_and_origin(key.get_name(), AttributeOrigin(signature.get_name()))[
                                 0].origin = key.origin
                         except:
                             pass
                     try:
-                        signature.get_attributes_by_name_and_origin(key.name, key.origin)
+                        signature.get_attributes_by_name_and_origin(key.get_name(), key.origin)
                     except AttributeNotFound:
                         try:
-                            attribute = signature.get_attributes_by_name(key.name)[0]
-                            if attribute.value == key.value and attribute.origin.name == signature.name \
+                            attribute = signature.get_attributes_by_name(key.get_name())[0]
+                            if attribute.value == key.value and attribute.origin.name == signature.get_name() \
                                     and not attribute.origin.origin:
-                                new_entity.get_attributes_by_name(key.name)[0].origin = key.origin
+                                new_entity.get_attributes_by_name(key.get_name())[0].origin = key.origin
                                 attribute.origin = key.origin
                             else:
                                 raise AttributeNotFound('')
                         except AttributeNotFound:
-                            signature.attributes.append(AttributeComponent(key.name, ValueComponent(Utility.NULL_VALUE),
-                                                                           AttributeOrigin(to_be_related_with.name,
+                            signature.attributes.append(AttributeComponent(key.get_name(), ValueComponent(Utility.NULL_VALUE),
+                                                                           AttributeOrigin(to_be_related_with.get_name(),
                                                                                            key.origin)))
-        signature.attributes.sort(key=lambda x: x.name)
+        signature.attributes.sort(key=lambda x: x.get_name())
         if not signature.attributes:
             signature.attributes.append(
                 AttributeComponent(Utility.DEFAULT_ATTRIBUTE, ValueComponent(Utility.NULL_VALUE),
-                                   AttributeOrigin(signature.name)))
+                                   AttributeOrigin(signature.get_name())))
         for attribute in signature.get_keys_and_attributes():
             attribute.value = ValueComponent(Utility.NULL_VALUE)
         return signature
@@ -167,7 +167,7 @@ class Proposition(Component):
 
     def get_entity_by_name(self, name: str):
         for entity in self.get_entities():
-            if entity.name == name:
+            if entity.get_name() == name:
                 return entity
         raise EntityNotFound(f'Entity {name} not found.')
 

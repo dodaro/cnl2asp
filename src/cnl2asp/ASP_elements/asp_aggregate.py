@@ -28,7 +28,7 @@ class ASPAggregate(ASPElement):
         attributes = []
         for elem in self.discriminant:
             if isinstance(elem, ASPAttribute):
-                attributes.append(elem.value)
+                attributes.append(elem.get_value())
             elif isinstance(elem, ASPAtom):
                 for attribute in elem.attributes:
                     attributes.append(attribute)

@@ -1,5 +1,5 @@
 from uuid import uuid4
-
+import inflect
 
 class Utility:
     NULL_VALUE = '_'
@@ -15,3 +15,7 @@ class Utility:
     def create_unique_identifier():
         return 'x_' + str(uuid4()).replace('-', '_')
 
+    @staticmethod
+    def get_singular(string: str) -> str:
+        singular = inflect.engine().singular_noun(string)
+        return singular if singular else string
