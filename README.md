@@ -9,6 +9,7 @@ The compiler is written in the Python (>= 3.10) programming language.
 ## Dependencies
 
 - lark
+- inflect
 
 ## Usage
 
