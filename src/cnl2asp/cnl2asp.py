@@ -63,12 +63,12 @@ class Cnl2asp:
             return False
 
     def __get_predicate(self, entity_name: str, attribute: AttributeComponent):
-        split_name = attribute.name.split('_')
+        split_name = attribute.get_name().split('_')
         if len(split_name) > 1:
             for name in split_name:
                 if self.__is_predicate(name):
                     return SignatureManager.get_signature(name)
-        signature_name = attribute.name
+        signature_name = attribute.get_name()
         if attribute.origin != entity_name:
             signature_name = attribute.origin.name
         if self.__is_predicate(signature_name):
@@ -91,7 +91,7 @@ class Cnl2asp:
         try:
             problem: Problem = self.__parse_input()
         except UnexpectedCharacters as e:
-            print(ParserError(e.char, e.line, e.column, e.get_context(self.cnl_input), list(e.allowed)))
+            print(ParserError(e.char, e.line, e.column, e.get_context(self.cnl_input), self.cnl_input.splitlines()[e.line-1], list(e.allowed)))
             return ''
         except VisitError as e:
             print(e.args[0])
@@ -113,28 +113,28 @@ class Cnl2asp:
     def __convert_attribute(self, entity_name: str, attribute: AttributeComponent) -> str | Symbol:
         if attribute.origin and entity_name != attribute.origin.name:
             return Symbol(attribute.origin.name,
-                          [self.__convert_attribute(entity_name, AttributeComponent(attribute.name,
+                          [self.__convert_attribute(entity_name, AttributeComponent(attribute.get_name(),
                                                                                     attribute.value,
                                                                                     attribute.origin.origin))],
-                          [self.__convert_attribute(entity_name, AttributeComponent(attribute.name,
+                          [self.__convert_attribute(entity_name, AttributeComponent(attribute.get_name(),
                                                                                     attribute.value,
                                                                                     attribute.origin.origin))],
                           self.__get_type(attribute.origin.name)
                           )
-        return attribute.name
+        return attribute.get_name()
 
     def __convert_signature(self, entity: EntityComponent) -> Symbol:
         keys = []
         attributes = []
         for attribute in entity.get_attributes():
-            attributes.append(self.__convert_attribute(entity.name, attribute))
+            attributes.append(self.__convert_attribute(entity.get_name(), attribute))
         entity_type = SymbolType.DEFAULT
-        if SignatureManager.is_temporal_entity(entity.name):
+        if SignatureManager.is_temporal_entity(entity.get_name()):
             entity_type = SymbolType.TEMPORAL
         if entity.get_attributes() != entity.get_keys():
             for key in entity.get_keys():
-                keys.append(self.__convert_attribute(entity.name, key))
-        return Symbol(entity.name, keys, keys + attributes, entity_type)
+                keys.append(self.__convert_attribute(entity.get_name(), key))
+        return Symbol(entity.get_name(), keys, keys + attributes, entity_type)
 
     def get_symbols(self) -> list[Symbol]:
         self.compile()
