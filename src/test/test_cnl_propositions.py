@@ -403,7 +403,7 @@ day(6,"07/01/2022").
         A rotation is identified by a first joint, by a second joint, by a desired angle, by a current angle, and by a time.
         A goal is identified by a joint, and by an angle.
         It is required that the angle A1 of the position P1 is equal to the angle A2 of the position P2, whenever there is a position P1 with joint J1, with angle A1, and with time T, whenever there is a position P2 with joint J1, and with angle A2, and with the next step respect to T, whenever there is a rotation with first joint J2 greater than J1, and with time T not after timemax.
-        ''',':- (A1)/360 != (A2)/360, position(J1,A1,T), position(J1,A2,T+1), J2 > J1, T <= "timemax", rotation(J2,_,_,_,T).')
+        ''',':- (A1)/360 != (A2)/360, position(J1,A1,T), position(J1,A2,T+1), rotation(J2,_,_,_,T), J2 > J1, T <= "timemax".')
 
     def test_simple_definition(self):
         self.check_input_to_output( '''John is a waiter.''','waiter("John").')
@@ -424,7 +424,7 @@ It is required that the id of the node is greater than the id of the vertex.''',
         self.check_input_to_output('''set1 is a set.
 set2 is a set.
 set1 contains 1, 2, 3.
-it is prohibited that X is equal to 1, whenever there is an element X in set1, whenever there is an element Y greater than 2 in set2.''', ''':- X = 1, set("set1",X), Y > 2, set("set2",Y).''')
+it is prohibited that X is equal to 1, whenever there is an element X in set1, whenever there is an element Y greater than 2 in set2.''', ''':- X = 1, set("set1",X), set("set2",Y), Y > 2.''')
 
     def test_list_element_order(self):
         self.check_input_to_output('''shift is a list.

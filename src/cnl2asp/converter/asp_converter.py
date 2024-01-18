@@ -118,17 +118,29 @@ class ASPConverter(Converter[ASPProgram,
         self._created_fields = proposition.defined_attributes
         if proposition.new_knowledge:
             for new_knowledge in proposition.new_knowledge:
-                head.append(new_knowledge.convert(self))
                 self._forbidden_links += self.forbidden_links(new_knowledge, proposition.requisite)
+                new_knowledge = new_knowledge.convert(self)
+                self.add_atoms_operations(new_knowledge.condition)
+                head.append(new_knowledge)
         if proposition.cardinality:
             cardinality = proposition.cardinality.convert(self)
         if proposition.requisite:
             body: ASPConjunction = proposition.requisite.convert(self)
+            self.add_atoms_operations(body)
         if proposition.relations:
             for relation in proposition.relations:
                 relation.convert(self)
         self.__move_operations(body)
         return ASPRule(body, head, cardinality)
+
+    def add_atoms_operations(self, context):
+        atoms_operations = []
+        for atom in context.get_atom_list():
+            for attribute in atom.attributes:
+                for operation in attribute.operations:
+                    if str(operation) not in atoms_operations:
+                        atoms_operations.append(str(operation))
+                        context.add_element(operation)
 
     def __move_operations(self, body):
         for operation in self._operations:
@@ -291,8 +303,8 @@ class ASPConverter(Converter[ASPProgram,
 
     def convert_attribute(self, attribute: AttributeComponent) -> ASPAttribute:
         attribute_name = inflect.engine().singular_noun(attribute.get_name()) if inflect.engine().singular_noun(attribute.get_name()) else attribute.get_name()
-        return ASPAttribute(attribute_name, attribute.value.convert(self), attribute.origin,
-                            [operation.convert(self) for operation in attribute.operations])
+        operations = [operation.convert(self) for operation in attribute.operations]
+        return ASPAttribute(attribute_name, attribute.value.convert(self), attribute.origin, operations)
 
     def convert_constant(self, constant: ConstantComponent) -> None:
         if constant.value and constant.value.isalpha():

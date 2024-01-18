@@ -93,10 +93,10 @@ timeslot(36,"01:30 PM").
 1 <= {assignment_to(DY_DY,RGSTRTN_D,0,TMSLT_TMSLT): day(DY_DY,_), timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(RGSTRTN_D,0,_,_,_,_,_).
 1 <= {assignment_to(D+W,P,OR,TMSLT_TMSLT): timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(P,OR,W,_,_,_,_), assignment(P,OR-1,D,_), day(D+W,_).
 :- registration(_,_,_,RGSTRTN_DRTN_F_TH_FRST_PHS,RGSTRTN_DRTN_F_TH_SCND_PHS,RGSTRTN_DRTN_F_TH_THRD_PHS,_), assignment(_,_,_,T), RGSTRTN_DRTN_F_TH_FRST_PHS + RGSTRTN_DRTN_F_TH_SCND_PHS + RGSTRTN_DRTN_F_TH_THRD_PHS <= T, registration(RGSTRTN_D,RGSTRTN_RDR,_,RGSTRTN_DRTN_F_TH_FRST_PHS,RGSTRTN_DRTN_F_TH_SCND_PHS,RGSTRTN_DRTN_F_TH_THRD_PHS,_), assignment(RGSTRTN_D,RGSTRTN_RDR,_,T).
-1 <= {x_support(D,S,P,SSGNMNT_RDR,T): seat(S,_)} <= 1 :- patient(P,_), assignment(P,SSGNMNT_RDR,D,T), PH4 > 0, registration(P,SSGNMNT_RDR,_,_,_,_,PH4).
+1 <= {x_support(D,S,P,SSGNMNT_RDR,T): seat(S,_)} <= 1 :- patient(P,_), assignment(P,SSGNMNT_RDR,D,T), registration(P,SSGNMNT_RDR,_,_,_,_,PH4), PH4 > 0.
 position_in(D,S,P,SSGNMNT_RDR,T..T+PH4) :- patient(P,_), assignment(P,SSGNMNT_RDR,D,T), registration(P,SSGNMNT_RDR,_,_,_,_,PH4), x_support(D,S,P,SSGNMNT_RDR,T).
 :- #count{D1: position_in(D,S,D1,_,TS), seat(S,_), day(D,_), timeslot(TS,_)} >= 2, day(D,_), timeslot(TS,_), seat(S,_).
-:- assignment(_,_,_,TMSLT_SSGNMNT), TMSLT_SSGNMNT <= 23, DRTN_F_TH_FRTH_PHS > 50, registration(RGSTRTN_D,RGSTRTN_RDR,_,_,_,_,DRTN_F_TH_FRTH_PHS), assignment(RGSTRTN_D,RGSTRTN_RDR,_,TMSLT_SSGNMNT).
+:- assignment(_,_,_,TMSLT_SSGNMNT), TMSLT_SSGNMNT <= 23, registration(RGSTRTN_D,RGSTRTN_RDR,_,_,_,_,DRTN_F_TH_FRTH_PHS), assignment(RGSTRTN_D,RGSTRTN_RDR,_,TMSLT_SSGNMNT), DRTN_F_TH_FRTH_PHS > 50.
 :~ patient(P,T), position_in(_,S,P,_,_), seat(S,T). [1@3,T,T]''')
 
     def test_graph_coloring(self):
@@ -176,7 +176,7 @@ work_in("John",1) :- waiter("John"), pub(1).
 serve("John","alcoholic") :- waiter("John"), drink("alcoholic").
 working(W) :- serve(W,DRNK_D), drink(DRNK_D), waiter(W).
 topmovie(X) :- movie(X,"spielberg",_,_).
-{topmovie(I): movie(I,X,_,_)} <= 1 :- X != "spielberg", director(X).
+{topmovie(I): movie(I,X,_,_)} <= 1 :- director(X), X != "spielberg".
 scoreassignment(I,3) | scoreassignment(I,2) :- movie(I,"nolan",_,_).
 movie(1,"spielberg","jurassicPark",1993).
 movie(1,"spielberg","jurassicPark",1993).
@@ -214,8 +214,8 @@ It is required that the number of match occurrences with second E is equal to 1,
 
 It is required that the number of positivematch is equal to the number of negativematch.''',
                                    '''{match(X,Y)} :- set("set1",X), set("set2",Y).
-positivematch(X,Y) :- Y < X, match(X,Y).
-negativematch(X,Y) :- Y > X, match(X,Y).
+positivematch(X,Y) :- match(X,Y), Y < X.
+negativematch(X,Y) :- match(X,Y), Y > X.
 :- #count{match(E,MTCH_SCND): match(E,MTCH_SCND)} != 1, set("set1",E).
 :- #count{match(MTCH_FRST,E): match(MTCH_FRST,E)} != 1, set("set2",E).
 :- #count{positivematch(PSTVMTCH_FRST,PSTVMTCH_SCND): positivematch(PSTVMTCH_FRST,PSTVMTCH_SCND)} = CNT, #count{negativematch(NGTVMTCH_FRST,NGTVMTCH_SCND): negativematch(NGTVMTCH_FRST,NGTVMTCH_SCND)} = CNT1, CNT != CNT1.''')
@@ -263,15 +263,15 @@ time(10,"10").
 :- T >= timemax, rotation(_,_,_,_,T).
 :- J1 <= J2, rotation(J1,J2,_,_,_).
 :- (A)/360 = (AI)/360, rotation(_,_,A,AI,_).
-:- (A + granularity)/360 != (AI)/360, (A)/360 > (0)/360, (AI)/360 > (A)/360, rotation(_,_,A,AI,_).
-:- (AI + granularity)/360 != (A)/360, (A)/360 > (AI)/360, (AI)/360 > (0)/360, rotation(_,_,A,AI,_).
+:- (A + granularity)/360 != (AI)/360, rotation(_,_,A,AI,_), (A)/360 > (0)/360, (AI)/360 > (A)/360.
+:- (AI + granularity)/360 != (A)/360, rotation(_,_,A,AI,_), (A)/360 > (AI)/360, (AI)/360 > (0)/360.
 :- (360 - granularity)/360 != (A)/360, rotation(_,_,A,0,_).
-:- (360 - granularity)/360 != (AI)/360, (A)/360 = (0)/360, rotation(_,_,A,AI,_).
+:- (360 - granularity)/360 != (AI)/360, rotation(_,_,A,AI,_), (A)/360 = (0)/360.
 1 <= {position_to(J,T,A): angle(A)} <= 1 :- joint(J), time(T,_).
-:- (A1)/360 != (A2)/360, position(J,A1,T), position(J,A2,T+1), T <= timemax, not rotation(_,_,_,_,T).
+:- (A1)/360 != (A2)/360, position(J,A1,T), position(J,A2,T+1), not rotation(_,_,_,_,T), T <= timemax.
 :- (A1)/360 != (A2)/360, position(J1,A1,T), rotation(J1,_,A2,_,T-1).
-:- (AN)/360 != (|AC+(A-AP)+360|)/360, time(T,_), position(J1,AN,T+1), rotation(J2,_,_,AP,T), J1 > J2, position(J1,AC,T).
-:- (A1)/360 != (A2)/360, position(J1,A1,T), position(J1,A2,T+1), J2 > J1, T <= timemax, rotation(J2,_,_,_,T).
+:- (AN)/360 != (|AC+(A-AP)+360|)/360, time(T,_), position(J1,AN,T+1), rotation(J2,_,_,AP,T), position(J1,AC,T), J1 > J2.
+:- (A1)/360 != (A2)/360, position(J1,A1,T), position(J1,A2,T+1), rotation(J2,_,_,_,T), J2 > J1, T <= timemax.
 :- (A1)/360 != (A2)/360, goal(J,A1), position(J,A2,timemax).''')
 
     def test_maxclique(self):

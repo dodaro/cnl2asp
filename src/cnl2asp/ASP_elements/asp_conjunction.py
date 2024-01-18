@@ -33,7 +33,10 @@ class ASPConjunction(ASPElement):
         self.conjunction.remove(element)
 
     def get_atom_list(self) -> list[ASPElement]:
-        return self.conjunction
+        atom_list = []
+        for x in self.conjunction:
+            atom_list += x.get_atom_list()
+        return atom_list
 
     def __str__(self) -> str:
         return ', '.join([str(x) for x in self.conjunction])

@@ -59,9 +59,6 @@ class ASPAtom(ASPElement):
 
     def __str__(self) -> str:
         string = ''
-        for attribute in self.attributes:
-            for operation in attribute.operations:
-                string += f'{str(operation)}, '
         string += 'not ' if self.negated else ''
         string += f'{self.name}('
         if Utility.PRINT_WITH_FUNCTIONS:
