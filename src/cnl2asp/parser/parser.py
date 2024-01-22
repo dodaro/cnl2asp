@@ -152,6 +152,7 @@ class CNLTransformer(Transformer):
 
     @v_args(meta=True)
     def complex_concept_elements_definition(self, meta, elem):
+        elem[0] = elem[0].lower()
         try:
             entity: ComplexEntityComponent = SignatureManager.remove_signature(elem[0])
             entity.values = elem[1]
