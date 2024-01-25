@@ -110,7 +110,9 @@ First of all, a *WHENEVER_CLAUSE* is defined as follows:
 
 .. code-block:: text
     
-    WHENEVER_CLAUSE -> "Whenever there is" ENTITY
+    WHENEVER_CLAUSE -> "Whenever there is" NEGATION? ENTITY
+
+This proposition allows you to define a condition (in ASP, it adds elements to a rule body), and *NEGATION* is optional and is equal to "not" allowing to negate the condition.
 
 A Whenever-then proposition is:
 

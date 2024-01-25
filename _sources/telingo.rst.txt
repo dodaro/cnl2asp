@@ -16,10 +16,10 @@ Temporal program parts.
 ------------------------------------------------
 Telingo defines four program parts namely:
 
-- initial which applies only to the first state,
-- always which applies to all states,
-- dynamic which applies to all states except the initial state,
-- final which applies only to the last state.
+- initial, which applies only to the first state,
+- always, which applies to all states,
+- dynamic, which applies to all states except the initial state,
+- final, which applies only to the last state.
 
 In our CNL, the same result is obtained by:
 
@@ -27,7 +27,7 @@ In our CNL, the same result is obtained by:
 
     program -> TEMPORAL_PART? (standard_proposition END_OF_LINE)+
 
-where *TEMPORAL_PART* is the token used to express the temporal program, *STANDARD_PROPOSITION*, with the + symbol, in the propositions presented in the previous chapters.
+where *TEMPORAL_PART* is the token used to express the temporal program, *STANDARD_PROPOSITION*, with the + symbol, is the propositions presented in the previous chapters.
 More in detail, *TEMPORAL_PART* is defined as:
 
 .. code-block:: text
@@ -38,7 +38,7 @@ More in detail, *TEMPORAL_PART* is defined as:
                    | "The following propositions apply in the final state:"
 
 intuitively, the sentences respectively correspond to the initial, always, dynamic and final programs.
-Moreover, as *TEMPORAL_PART* is optional, when it is not defined, no programs are defined and the propositions are considered part of initial when running the Telingo solver or we have a normal ASP encoding.
+Moreover, as *TEMPORAL_PART* is optional, when it is not defined, no programs are defined. Telingo's consider rules out of program parts as part of initial.
 
 Referring to an atom in the previous, subsequent and initial state
 ---------------------------------------------------------------------
@@ -96,13 +96,14 @@ where *TELINGO_TEMPORAL_OPERATOR* and *HOLD_CONDITION*, together, allow to speci
     TELINGO_TEMPORAL_OPERATOR -> "always" | "eventually" | "before" | "since before" | "after" | "since after"
     HOLD_CONDITION -> ("that" VERB_NEGATION? TELINGO_TEMPORAL_OPERATOR "hold")
                     | ("that" VERB_NEGATION? "hold" TELINGO_TEMPORAL_OPERATOR)
-
+                    
+where *VERB_NEGATION* is one of "do not", "does not", "not" and allow you to negate the *HOLD_CONDITION*.
 Instead, the optional elements *TELINGO_BINARY_OPERATOR* and *TELINGO_OPERATION* are used to concatenate Telingo formulas.
 In particular, *TELINGO_BINARY_OPERATOR* includes all the temporal and boolean operators that accept two operands:
 
 .. code-block:: text
 
-    TELINGO_DUAL_OPERATOR -> "and" | "or" | "implies" | "imply" | "equivalent" | "trigger" | "since" | "precede" | "release" | "until" | "follow"
+    TELINGO_BINARY_OPERATOR -> "and" | "or" | "implies" | "imply" | "equivalent" | "trigger" | "since" | "precede" | "release" | "until" | "follow"
 
 Finally, TELINGO_OPERAND is defined as:
 
@@ -115,9 +116,21 @@ Finally, TELINGO_OPERAND is defined as:
                       | "the true constant"
                       | "the false constant"
 
-therefore, a *TELINGO_OPERAND* can be an *ENTITY*, that is a concept of the problem, or a *TELINGO_CONSTANT*
-that is one of those defined in the table below in the *boolean formulas* section, while the optional *TELINGO_BINARY_OPERATOR* *TELINGO_OPERAND* are used for the concatenation.
-The TELINGO_FORMULA are supported in WHENEVER_CLAUSE (:doc:`defining_new_concepts`) and CONSTRAINT_PRPOPOSITION (:doc:`constraints`).
+therefore, a *TELINGO_OPERAND* can be an *ENTITY* or a *TELINGO_CONSTANT*
+that is one of those defined in the table below in *boolean formulas* section, while the optional part made of *(TELINGO_BINARY_OPERATOR TELINGO_OPERAND)* is used for concatenation.
+The *TELINGO_FORMULA* are supported in *WHENEVER_CLAUSE* (:doc:`defining_new_concepts`) and *CONSTRAINT_PRPOPOSITION* (:doc:`constraints`).
+Thus, *WHENEEVER_CLAUSE* is extended as follow:
+
+.. code-block:: text
+
+    WHENEVER_CLAUSE: "Whenever there is" NEGATION? ENTITY
+                  | "Whenever" TELINGO_FORMULA
+
+and in constraints it is added :code:`"there is" TEMPORAL_FORMULA` as follows:
+
+.. code-block:: text
+
+    CONSTRAINT_PROPOSITION -> CONSTRAINT_OPERATOR (COMPARISON | THERE_IS_ENTITY | THERE_IS_TEMPORAL_FORMULA)
 
 Examples:
 

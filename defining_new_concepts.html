@@ -117,9 +117,10 @@ scoreassignment<span class="p">(</span><span class="nv">I</span><span class="p">
 <section id="whenever-then-propositions">
 <h2>Whenever/Then propositions<a class="headerlink" href="#whenever-then-propositions" title="Link to this heading">¶</a></h2>
 <p>First of all, a <em>WHENEVER_CLAUSE</em> is defined as follows:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>WHENEVER_CLAUSE -&gt; &quot;Whenever there is&quot; ENTITY
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>WHENEVER_CLAUSE -&gt; &quot;Whenever there is&quot; NEGATION? ENTITY
 </pre></div>
 </div>
+<p>This proposition allows you to define a condition (in ASP, it adds elements to a rule body), and <em>NEGATION</em> is optional and is equal to “not” allowing to negate the condition.</p>
 <p>A Whenever-then proposition is:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>WHENEVER_THAN_CLAUSE -&gt; LIST_OF_WHENEVER_CLAUSE &quot;then&quot; ENTITY ASSIGNMENT_VERB AUXILIARY_VERB? [CARDINALITY] NEW_DEFINITION LIST_OF_ENTITIES
 </pre></div>

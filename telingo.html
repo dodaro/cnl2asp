@@ -45,16 +45,16 @@ Telingo makes use of clingo’s input language and adds three main elements:</p>
 <h2>Temporal program parts.<a class="headerlink" href="#temporal-program-parts" title="Link to this heading">¶</a></h2>
 <p>Telingo defines four program parts namely:</p>
 <ul class="simple">
-<li><p>initial which applies only to the first state,</p></li>
-<li><p>always which applies to all states,</p></li>
-<li><p>dynamic which applies to all states except the initial state,</p></li>
-<li><p>final which applies only to the last state.</p></li>
+<li><p>initial, which applies only to the first state,</p></li>
+<li><p>always, which applies to all states,</p></li>
+<li><p>dynamic, which applies to all states except the initial state,</p></li>
+<li><p>final, which applies only to the last state.</p></li>
 </ul>
 <p>In our CNL, the same result is obtained by:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>program -&gt; TEMPORAL_PART? (standard_proposition END_OF_LINE)+
 </pre></div>
 </div>
-<p>where <em>TEMPORAL_PART</em> is the token used to express the temporal program, <em>STANDARD_PROPOSITION</em>, with the + symbol, in the propositions presented in the previous chapters.
+<p>where <em>TEMPORAL_PART</em> is the token used to express the temporal program, <em>STANDARD_PROPOSITION</em>, with the + symbol, is the propositions presented in the previous chapters.
 More in detail, <em>TEMPORAL_PART</em> is defined as:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>TEMPORAL_PART -&gt; &quot;The following propositions apply in the initial state:&quot;
                | &quot;The following propositions always apply:&quot;
@@ -63,7 +63,7 @@ More in detail, <em>TEMPORAL_PART</em> is defined as:</p>
 </pre></div>
 </div>
 <p>intuitively, the sentences respectively correspond to the initial, always, dynamic and final programs.
-Moreover, as <em>TEMPORAL_PART</em> is optional, when it is not defined, no programs are defined and the propositions are considered part of initial when running the Telingo solver or we have a normal ASP encoding.</p>
+Moreover, as <em>TEMPORAL_PART</em> is optional, when it is not defined, no programs are defined. Telingo’s consider rules out of program parts as part of initial.</p>
 </section>
 <section id="referring-to-an-atom-in-the-previous-subsequent-and-initial-state">
 <h2>Referring to an atom in the previous, subsequent and initial state<a class="headerlink" href="#referring-to-an-atom-in-the-previous-subsequent-and-initial-state" title="Link to this heading">¶</a></h2>
@@ -108,9 +108,10 @@ HOLD_CONDITION -&gt; (&quot;that&quot; VERB_NEGATION? TELINGO_TEMPORAL_OPERATOR 
                 | (&quot;that&quot; VERB_NEGATION? &quot;hold&quot; TELINGO_TEMPORAL_OPERATOR)
 </pre></div>
 </div>
-<p>Instead, the optional elements <em>TELINGO_BINARY_OPERATOR</em> and <em>TELINGO_OPERATION</em> are used to concatenate Telingo formulas.
+<p>where <em>VERB_NEGATION</em> is one of “do not”, “does not”, “not” and allow you to negate the <em>HOLD_CONDITION</em>.
+Instead, the optional elements <em>TELINGO_BINARY_OPERATOR</em> and <em>TELINGO_OPERATION</em> are used to concatenate Telingo formulas.
 In particular, <em>TELINGO_BINARY_OPERATOR</em> includes all the temporal and boolean operators that accept two operands:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>TELINGO_DUAL_OPERATOR -&gt; &quot;and&quot; | &quot;or&quot; | &quot;implies&quot; | &quot;imply&quot; | &quot;equivalent&quot; | &quot;trigger&quot; | &quot;since&quot; | &quot;precede&quot; | &quot;release&quot; | &quot;until&quot; | &quot;follow&quot;
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>TELINGO_BINARY_OPERATOR -&gt; &quot;and&quot; | &quot;or&quot; | &quot;implies&quot; | &quot;imply&quot; | &quot;equivalent&quot; | &quot;trigger&quot; | &quot;since&quot; | &quot;precede&quot; | &quot;release&quot; | &quot;until&quot; | &quot;follow&quot;
 </pre></div>
 </div>
 <p>Finally, TELINGO_OPERAND is defined as:</p>
@@ -122,9 +123,18 @@ TELINGO_CONSTANT -&gt; &quot;it is the initial state&quot;
                   | &quot;the false constant&quot;
 </pre></div>
 </div>
-<p>therefore, a <em>TELINGO_OPERAND</em> can be an <em>ENTITY</em>, that is a concept of the problem, or a <em>TELINGO_CONSTANT</em>
-that is one of those defined in the table below in the <em>boolean formulas</em> section, while the optional <em>TELINGO_BINARY_OPERATOR</em> <em>TELINGO_OPERAND</em> are used for the concatenation.
-The TELINGO_FORMULA are supported in WHENEVER_CLAUSE (<a class="reference internal" href="defining_new_concepts.html"><span class="doc">Defining new concepts</span></a>) and CONSTRAINT_PRPOPOSITION (<a class="reference internal" href="constraints.html"><span class="doc">Constraints</span></a>).</p>
+<p>therefore, a <em>TELINGO_OPERAND</em> can be an <em>ENTITY</em> or a <em>TELINGO_CONSTANT</em>
+that is one of those defined in the table below in <em>boolean formulas</em> section, while the optional part made of <em>(TELINGO_BINARY_OPERATOR TELINGO_OPERAND)</em> is used for concatenation.
+The <em>TELINGO_FORMULA</em> are supported in <em>WHENEVER_CLAUSE</em> (<a class="reference internal" href="defining_new_concepts.html"><span class="doc">Defining new concepts</span></a>) and <em>CONSTRAINT_PRPOPOSITION</em> (<a class="reference internal" href="constraints.html"><span class="doc">Constraints</span></a>).
+Thus, <em>WHENEEVER_CLAUSE</em> is extended as follow:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>WHENEVER_CLAUSE: &quot;Whenever there is&quot; NEGATION? ENTITY
+              | &quot;Whenever&quot; TELINGO_FORMULA
+</pre></div>
+</div>
+<p>and in constraints it is added <code class="code docutils literal notranslate"><span class="pre">&quot;there</span> <span class="pre">is&quot;</span> <span class="pre">TEMPORAL_FORMULA</span></code> as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>CONSTRAINT_PROPOSITION -&gt; CONSTRAINT_OPERATOR (COMPARISON | THERE_IS_ENTITY | THERE_IS_TEMPORAL_FORMULA)
+</pre></div>
+</div>
 <p>Examples:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Whenever there is a gun shooting, whenever there is before a gun unloaded that always holds and there is eventually a gun shooting that holds since before, then we must have a gun with status equal to broken.
 It is prohibited that there is after a gun loaded and a gun shooting that does not always hold.

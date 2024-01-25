@@ -46,10 +46,10 @@
 </ul>
 <section id="where-clause">
 <h2>WHERE_CLAUSE<a class="headerlink" href="#where-clause" title="Link to this heading">¶</a></h2>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>where_clause -&gt; comparison (&quot;and&quot; comparison)*
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>where_clause -&gt; COMPARISON (&quot;and&quot; COMPARISON)*
             | VARIABLE &quot;is one of&quot; STRING_LIST
-            | VARIABLE &quot;is respectively one of&quot; string_list
-            | where_clause &quot;and&quot; where_clause
+            | VARIABLE &quot;is respectively one of&quot; STRING_LIST
+            | WHERE_CLAUSE &quot;and&quot; WHERE_CLAUSE
 </pre></div>
 </div>
 <p>This clause allows you to add a list of comparisons, substitute a variable with a list of values (this leads to the creation of multiple rules) or concatenate different <em>WHERE_CLAUSE</em>.</p>

@@ -20,10 +20,10 @@ WHERE_CLAUSE
 
 .. code-block:: text
 
-    where_clause -> comparison ("and" comparison)*
+    where_clause -> COMPARISON ("and" COMPARISON)*
                 | VARIABLE "is one of" STRING_LIST 
-                | VARIABLE "is respectively one of" string_list 
-                | where_clause "and" where_clause
+                | VARIABLE "is respectively one of" STRING_LIST
+                | WHERE_CLAUSE "and" WHERE_CLAUSE
 
 This clause allows you to add a list of comparisons, substitute a variable with a list of values (this leads to the creation of multiple rules) or concatenate different *WHERE_CLAUSE*.
 

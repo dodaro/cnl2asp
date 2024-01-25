@@ -112,7 +112,7 @@ CONSTRAINTS:
 
 .. code-block:: text
 
-    CONSTRAINT_PROPOSITION -> CONSTRAINT_OPERATOR (COMPARISON | THERE_IS_ENTITY).
+    CONSTRAINT_PROPOSITION -> CONSTRAINT_OPERATOR (COMPARISON | THERE_IS_ENTITY)
 
 where *THERE_IS_CLAUSE* is :code:`"there is" ENTITY`.
 Instead, *CONSTRAINT_OPERATOR* is one of "it is prohibited that" or "it is required that". 
