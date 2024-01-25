@@ -49,7 +49,7 @@ class ASPRule(ASPElement):
 
     def _remove_duplicates(self):
         if self.body:
-            to_remove = self._get_duplicates(self.body.get_atom_list(), self.body.get_atom_list())
+            to_remove = self._get_duplicates(self.body.conjunction, self.body.conjunction)
             for elem in to_remove:
                 self.body.remove_element(elem)
         for head in self.head:

@@ -1,5 +1,10 @@
 from __future__ import annotations
+
 import re
+
+import inflect
+
+from cnl2asp.parser.parser import CNLTransformer
 
 from cnl2asp.ASP_elements.asp_aggregate import ASPAggregate
 from cnl2asp.ASP_elements.asp_atom import ASPAtom
@@ -136,31 +141,45 @@ class ASPConverter(Converter[ASPProgram,
         head = []
         cardinality = None
         body = None
+        self._created_fields = proposition.defined_attributes
         if proposition.new_knowledge:
             for new_knowledge in proposition.new_knowledge:
-                head.append(new_knowledge.convert(self))
                 self._forbidden_links += self.forbidden_links(new_knowledge, proposition.requisite)
+                new_knowledge = new_knowledge.convert(self)
+                self.add_atoms_operations(new_knowledge.condition)
+                head.append(new_knowledge)
         if proposition.cardinality:
             cardinality = proposition.cardinality.convert(self)
         if proposition.requisite:
             body: ASPConjunction = proposition.requisite.convert(self)
+            self.add_atoms_operations(body)
         if proposition.relations:
             for relation in proposition.relations:
                 relation.convert(self)
         self.__move_operations(body)
         return ASPRule(body, head, cardinality)
 
+    def add_atoms_operations(self, context):
+        atoms_operations = []
+        for atom in context.get_atom_list():
+            for attribute in atom.attributes:
+                for operation in attribute.operations:
+                    if str(operation) not in atoms_operations:
+                        atoms_operations.append(str(operation))
+                        context.add_element(operation)
+
     def __move_operations(self, body):
         for operation in self._operations:
             for operand in operation.operands:
                 for aggregate in self._aggregates:
-                    if operand in aggregate.get_discriminant_attributes_value():
+                    if operand in aggregate.get_discriminant_attributes_value() and not aggregate in operation.operands:
                         aggregate.body.add_element(operation)
                         body.remove_element(operation)
 
     def convert_preference_proposition(self, preference: PreferenceProposition) -> ASPWeakConstraint:
         rule = self.convert_proposition(preference)
-        discriminant = [attribute.convert(self) for attribute in preference.discriminant]
+        discriminant = [attribute.convert(self) for attribute in preference.discriminant if
+                        CNLTransformer.is_variable(attribute.value)]
         weight = preference.weight
         if preference.type == PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION:
             weight = '-' + preference.weight.upper()
@@ -189,30 +208,30 @@ class ASPConverter(Converter[ASPProgram,
         return asp_conjunction
 
     def convert_entity(self, entity: EntityComponent) -> ASPAtom:
-        atom = ASPAtom(entity.name, [attribute.convert(self) for attribute in entity.keys + entity.attributes],
+        atom = ASPAtom(entity.get_name(), [attribute.convert(self) for attribute in entity.keys + entity.attributes],
                        entity.negated, entity.is_before, entity.is_after, entity.is_initial, entity.is_final)
         self._atoms_in_current_rule.append(EntityToAtom(entity, atom))
         return atom
 
     def convert_temporal_entity(self, temporal_entity: TemporalEntityComponent):
-        if temporal_entity.name not in self._converted_complex_entities:
+        if temporal_entity.get_name() not in self._converted_complex_entities:
             for value, idx in temporal_entity.values.items():
-                self._program.add_rule(ASPRule(head=[ASPRuleHead(ASPAtom(temporal_entity.name,
-                                                                       [ASPAttribute(temporal_entity.name, ASPValue(idx)),
+                self._program.add_rule(ASPRule(head=[ASPRuleHead(ASPAtom(temporal_entity.get_name(),
+                                                                       [ASPAttribute(temporal_entity.get_name().removesuffix('s'), ASPValue(idx)),
                                                                         ASPAttribute('value', ASPValue(f'\"{value}\"'))]))]))
-            self._converted_complex_entities.append(temporal_entity.name)
+            self._converted_complex_entities.append(temporal_entity.get_name())
         return self.convert_entity(temporal_entity)
 
     def __has_single_key(self, entity: EntityComponent) -> bool:
         entity_keys = entity.get_keys()
         return len(entity_keys) == 1 and \
-               entity.get_attributes_by_name_and_origin(entity_keys[0].name, entity_keys[0].origin)[0].value == Utility.ASP_NULL_VALUE
+               entity.get_attributes_by_name_and_origin(entity_keys[0].get_name(), entity_keys[0].origin)[0].value == Utility.ASP_NULL_VALUE
 
     def _match_discriminant_attributes_with_body(self, discriminant: list, body: ASPConjunction):
         unmatched_discriminant_attributes = []
         # create a variable to match discriminant attribute with the atoms attributes with the same name
         for attribute in discriminant:
-            discriminant_value = attribute.value
+            discriminant_value = attribute.get_value()
             attributes_to_be_equal_discriminant_value = [attribute]
             attribute_matched = False
             for atom in body.get_atom_list():
@@ -224,10 +243,10 @@ class ASPConverter(Converter[ASPProgram,
                 if atom_matched_attributes:
                     attribute_matched = True
                     atom_matched_attribute = atom_matched_attributes[0]
-                    if atom_matched_attribute.value != Utility.ASP_NULL_VALUE:
-                        if discriminant_value != Utility.ASP_NULL_VALUE and discriminant_value != atom_matched_attribute.value:
+                    if not atom_matched_attribute.is_null():
+                        if not discriminant_value.is_null() and discriminant_value != atom_matched_attribute.value:
                             continue
-                        discriminant_value = atom_matched_attribute.value
+                        discriminant_value = atom_matched_attribute.get_value()
                     attributes_to_be_equal_discriminant_value.append(atom_matched_attribute)
             if not attribute_matched:
                 unmatched_discriminant_attributes.append(attribute)
@@ -235,13 +254,13 @@ class ASPConverter(Converter[ASPProgram,
                     discriminant += [attribute.convert(self) for attribute in
                                      SignatureManager.get_signature(attribute.name).get_keys()]
                 except EntityNotFound:
-                    raise Exception(f"Impossible to use attribute \"{attribute.origin} {attribute.name}\" in aggregate.")
+                    raise Exception(f"Impossible to use attribute \"{attribute.origin} {attribute}\" in aggregate.")
             discriminant = [attribute for attribute in discriminant if
                             attribute not in unmatched_discriminant_attributes]
-            if discriminant_value == Utility.ASP_NULL_VALUE:
+            if discriminant_value.is_null():
                 discriminant_value = ASPValue(self.create_new_field_value(attribute.name))
             for attribute_to_set in attributes_to_be_equal_discriminant_value:
-                attribute_to_set.value = discriminant_value
+                attribute_to_set.set_value(discriminant_value)
         return discriminant
 
     def _match_discriminant_atom_with_body(self, discriminant: list[ASPAtom], body: ASPConjunction):
@@ -273,7 +292,7 @@ class ASPConverter(Converter[ASPProgram,
         operations: list[ASPOperation] = []
         fields: list[ASPValue] = []
         for operand in operands:
-            new_field = ASPValue(Utility.create_unique_identifier().upper())
+            new_field = ASPValue(self.create_new_field_value(operand.operation.name))
             operations.append(ASPOperation(Operators.EQUALITY, operand, new_field))
             fields.append(new_field)
         for i, field_1 in enumerate(fields):
@@ -313,8 +332,9 @@ class ASPConverter(Converter[ASPProgram,
         return operation
 
     def convert_attribute(self, attribute: AttributeComponent) -> ASPAttribute:
-        return ASPAttribute(attribute.name, attribute.value.convert(self), attribute.origin,
-                            [operation.convert(self) for operation in attribute.operations])
+        attribute_name = inflect.engine().singular_noun(attribute.get_name()) if inflect.engine().singular_noun(attribute.get_name()) else attribute.get_name()
+        operations = [operation.convert(self) for operation in attribute.operations]
+        return ASPAttribute(attribute_name, attribute.value.convert(self), attribute.origin, operations)
 
     def convert_constant(self, constant: ConstantComponent) -> None:
         if constant.value and constant.value.isalpha():
@@ -340,7 +360,7 @@ class ASPConverter(Converter[ASPProgram,
             for condition in new_knowledge.condition.get_entities():
                 for condition_key in condition.get_keys():
                     try:
-                        attributes = new_entity.get_attributes_by_name(condition_key.name)
+                        attributes = new_entity.get_attributes_by_name(condition_key.get_name())
                         for attribute in attributes:
                             if is_same_origin(attribute.origin, condition_key.origin):
                                 new_knowledge_links.append(attribute)
@@ -350,7 +370,7 @@ class ASPConverter(Converter[ASPProgram,
         for attribute in new_knowledge_links:
             for requisite_entity in requisite.get_entities():
                 try:
-                    requisite_entity_attributes = requisite_entity.get_attributes_by_name(attribute.name)
+                    requisite_entity_attributes = requisite_entity.get_attributes_by_name(attribute.get_name())
                     for requisite_entity_attribute in requisite_entity_attributes:
                         if is_same_origin(attribute.origin, requisite_entity_attribute.origin):
                             forbidden_links.append(
@@ -394,7 +414,7 @@ class ASPConverter(Converter[ASPProgram,
                 if pair.entity == entity_2:
                     atom_2 = pair.atom
         if not atom_1 or not atom_2:
-            raise Exception(f'Relation between {entity_1.name} and {entity_2.name} not found.')
+            raise Exception(f'Relation between {entity_1.get_name()} and {entity_2.get_name()} not found.')
         forbidden_links = self.get_forbidden_link(entity_1, entity_2)
         self._link_two_atoms(entity_1, entity_2, atom_1, atom_2, forbidden_links)
 
@@ -412,12 +432,12 @@ class ASPConverter(Converter[ASPProgram,
             forbidden_links = []
         linked_attributes: list[ASPAttribute] = forbidden_links  # list of already linked attributes
         for key in entity_1.get_keys():
-            atom_1_keys = atom_1.get_attributes_list_by_name_and_origin(key.name, key.origin)
+            atom_1_keys = atom_1.get_attributes_list_by_name_and_origin(key.get_name(), key.origin)
             for atom_1_key in atom_1_keys:
                 self._link_atom_to_attribute(atom_2, atom_1_key, atom_1, linked_attributes)
 
         for key in entity_2.get_keys():
-            atom_2_keys = atom_2.get_attributes_list_by_name_and_origin(key.name, key.origin)
+            atom_2_keys = atom_2.get_attributes_list_by_name_and_origin(key.get_name(), key.origin)
             for atom_2_key in atom_2_keys:
                 if atom_2_key in linked_attributes:
                     continue
@@ -427,21 +447,21 @@ class ASPConverter(Converter[ASPProgram,
                                 attribute: ASPAttribute, atom_2: ASPAtom, linked_attributes: list[ASPAttribute]):
         atom_1_attributes = atom_1.get_attributes_list(attribute.name)
         for atom_1_attribute in atom_1_attributes:
-            if (atom_1_attribute.value != '_' and atom_2.has_attribute(atom_1_attribute)) or (attribute.value != '_' and atom_1.has_attribute(attribute)):
+            if (not atom_1_attribute.is_null() and atom_2.has_attribute(atom_1_attribute)) or (not attribute.is_null() and atom_1.has_attribute(attribute)):
                 continue
             if atom_1_attribute in linked_attributes:
                 continue
             if is_same_origin(atom_1_attribute.origin, attribute.origin):
                 # if both attributes have a value, skip it. The next attribute should be the correct one
                 new_var = ASPValue(self.create_new_field_value('_'.join([atom_1.name, attribute.name])))
-                if attribute.value != Utility.ASP_NULL_VALUE and atom_1_attribute.value != Utility.ASP_NULL_VALUE:
+                if not attribute.is_null() and not atom_1_attribute.is_null():
                     continue
-                if attribute.value != Utility.ASP_NULL_VALUE:
-                    new_var = attribute.value
-                if atom_1_attribute.value != Utility.ASP_NULL_VALUE:
-                    new_var = atom_1_attribute.value
+                if not attribute.is_null():
+                    new_var = attribute.get_value()
+                if not atom_1_attribute.is_null():
+                    new_var = atom_1_attribute.get_value()
                 atom_1.set_attributes_value([ASPAttribute(attribute.name, new_var, attribute.origin)])
-                attribute.value = new_var
+                attribute.set_value(new_var)
                 # add the two linked attribute keys to the already linked attributes list
                 linked_attributes.append(attribute)
                 linked_attributes.append(atom_1_attribute)

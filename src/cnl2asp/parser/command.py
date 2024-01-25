@@ -63,7 +63,7 @@ class CreateSignature(Command):
 
     def execute(self):
         try:
-            signature = SignatureManager.get_signature(self.entity.name)
+            signature = SignatureManager.get_signature(self.entity.get_name())
         except:
             signature = self.proposition.create_new_signature(self.entity)
             SignatureManager.add_signature(signature)

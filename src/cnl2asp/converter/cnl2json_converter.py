@@ -114,12 +114,12 @@ class Cnl2jsonConverter(Converter):
 
 
     def _get_predicate(self, entity_name: str, attribute: AttributeComponent):
-        split_name = attribute.name.split('_')
+        split_name = attribute.get_name().split('_')
         if len(split_name) > 1:
             for name in split_name:
                 if self._is_predicate(name):
                     return SignatureManager.get_signature(name)
-        signature_name = attribute.name
+        signature_name = attribute.get_name()
         if attribute.origin != entity_name:
             signature_name = attribute.origin.name
         if self._is_predicate(signature_name):
@@ -127,14 +127,14 @@ class Cnl2jsonConverter(Converter):
         return None
 
     def convert_entity(self, entity: EntityComponent):
-        self._json_assignment[entity.name] = set()
+        self._json_assignment[entity.get_name()] = set()
         for attribute in entity.get_keys_and_attributes():
             if attribute.value != Utility.NULL_VALUE:
-                predicate = self._get_predicate(entity.name, attribute)
+                predicate = self._get_predicate(entity.get_name(), attribute)
                 if predicate:
-                    self._json_assignment[predicate.name].add(attribute.value)
+                    self._json_assignment[predicate.get_name()].add(attribute.value)
                 else:
-                    self._json_assignment[entity.name].add(attribute.value)
+                    self._json_assignment[entity.get_name()].add(attribute.value)
 
     def convert_temporal_entity(self, temporal_entity: TemporalEntityComponent):
         self.convert_entity(temporal_entity)

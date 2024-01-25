@@ -13,6 +13,6 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages('src', exclude=['test*']),
     package_data={'': ['grammar.lark']},
-    install_requires=['lark'],
+    install_requires=['lark', 'inflect'],
     python_requires=">=3.10"
 )

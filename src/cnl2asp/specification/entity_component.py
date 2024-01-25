@@ -7,10 +7,12 @@ from typing import Any, TYPE_CHECKING
 
 from cnl2asp.exception.cnl2asp_exceptions import AttributeNotFound
 from cnl2asp.converter.converter_interface import Converter, EntityConverter
-from cnl2asp.specification.attribute_component import AttributeComponent, ValueComponent, AttributeOrigin, is_same_origin
+from cnl2asp.specification.attribute_component import AttributeComponent, ValueComponent, \
+    AttributeOrigin, is_same_origin
 from cnl2asp.specification.component import Component
-from cnl2asp.utility.utility import Utility
+from cnl2asp.specification.name_component import NameComponent
 from cnl2asp.specification.relation_component import RelationComponent
+from cnl2asp.utility.utility import Utility
 
 if TYPE_CHECKING:
     from cnl2asp.parser.proposition_builder import PropositionBuilder
@@ -30,13 +32,13 @@ class EntityComponent(Component):
     def __init__(self, name: str, label: str, keys: list[AttributeComponent], attributes: list[AttributeComponent],
                  negated: bool = False, entity_type: EntityType = EntityType.GENERIC,
                  is_before: bool = False, is_after: bool = False, is_initial: bool = False, is_final: bool = False):
-        self.name = name
+        self._name = NameComponent(name)
         self.label = label
         self.keys = keys if keys else []
         self.attributes = attributes if attributes else []
         for attribute in self.attributes:
             if attribute.origin is None:
-                attribute.origin = AttributeOrigin(self.name)
+                attribute.origin = AttributeOrigin(self.get_name())
         self.negated = negated
         self.entity_type = entity_type
         self.is_before = is_before
@@ -44,24 +46,20 @@ class EntityComponent(Component):
         self.is_initial = is_initial
         self.is_final = is_final
 
-    def removesuffix(self, string: str):
-        pass
-
     def label_is_key_value(self):
         if self.label and len(self.get_keys()) == 1 and self.get_keys()[0].value == Utility.NULL_VALUE:
             return True
         return False
 
     def set_label_as_key_value(self):
-        # we consider the label value as the value of the key in case the entity has only one key and
-        # has no values
-        if self.label_is_key_value():
-            self.set_attributes_value(
-                [AttributeComponent(self.get_keys()[0].name,
-                                    ValueComponent(self.label), self.get_keys()[0].origin)])
+        self.set_attributes_value([AttributeComponent(self.get_keys()[0].get_name(),
+                                   ValueComponent(self.label), self.get_keys()[0].origin)])
 
     def set_name(self, name: str):
-        self.name = name
+        self._name = NameComponent(name)
+
+    def get_name(self):
+        return str(self._name)
 
     def is_initialized(self) -> bool:
         if self.get_keys_and_attributes():
@@ -81,7 +79,7 @@ class EntityComponent(Component):
         self.negated = not self.negated
 
     def get_entity_identifier(self):
-        return self.name
+        return self._name
 
     def get_keys(self) -> list[AttributeComponent]:
         return self.keys if self.keys else self.attributes
@@ -100,10 +98,10 @@ class EntityComponent(Component):
                 proposition.add_relations([RelationComponent(self, attribute)])
             else:
                 if attribute.origin:
-                    entity_attributes = self.get_attributes_by_name_and_origin(attribute.name, attribute.origin)
+                    entity_attributes = self.get_attributes_by_name_and_origin(attribute.get_name(), attribute.origin)
                 else:
-                    origin = AttributeOrigin(self.name)
-                    entity_attributes = self.get_attributes_by_name_and_origin(attribute.name, origin)
+                    origin = AttributeOrigin(str(self.get_name()))
+                    entity_attributes = self.get_attributes_by_name_and_origin(attribute.get_name(), origin)
                     # entity_attributes = self.get_attributes_by_name(attribute.name)
                 for entity_attribute in entity_attributes:
                     entity_attribute.value = attribute.value
@@ -116,14 +114,14 @@ class EntityComponent(Component):
 
     def get_attributes_by_name_and_origin(self, name: str, origin: AttributeOrigin = None) -> list[AttributeComponent]:
         attributes = []
-        origin = AttributeOrigin(self.name) if not origin else origin
+        origin = AttributeOrigin(self.get_name()) if not origin else origin
         for attribute in self.get_keys_and_attributes():
-            if attribute.name == name and is_same_origin(attribute.origin, origin):
+            if attribute.name_match(name) and is_same_origin(attribute.origin, origin):
                 attributes.append(attribute)
         if attributes:
             return attributes
         else:
-            error_msg = f'Entity \"{self.name}\" do not contain attribute \"{origin} {name}\".'
+            error_msg = f'Entity \"{self.get_name()}\" do not contain attribute \"{origin} {name}\".'
             try:
                 hint = self.get_attributes_by_name(name)
                 error_msg += f'\nDid you mean \"{hint[0]}\"?'
@@ -134,16 +132,16 @@ class EntityComponent(Component):
     def get_attributes_by_name(self, name: str) -> list[AttributeComponent]:
         attributes = []
         for attribute in self.get_keys_and_attributes():
-            if attribute.name == name:
+            if attribute.name_match(name):
                 attributes.append(attribute)
         if attributes:
             return attributes
-        raise AttributeNotFound(f'Entity \"{self.name}\" do not contain attribute \"{name}\".')
+        raise AttributeNotFound(f'Entity \"{self.get_name()}\" do not contain attribute \"{name}\".')
 
     def copy(self) -> EntityComponent:
         keys = [key.copy() for key in self.keys]
         attributes = [attribute.copy() for attribute in self.attributes]
-        return EntityComponent(self.name, self.label, keys,
+        return EntityComponent(self.get_name(), self.label, keys,
                                attributes, self.negated, self.entity_type)
 
     def get_entities(self) -> list[EntityComponent]:
@@ -155,7 +153,7 @@ class EntityComponent(Component):
     def __eq__(self, other):
         if not isinstance(other, EntityComponent):
             return False
-        return self.name == other.name \
+        return self._name == other._name \
                and self.label == other.label \
                and self.keys == other.keys \
                and self.attributes == other.attributes \
@@ -179,7 +177,7 @@ class TemporalEntityComponent(EntityComponent):
         temporal_value_id = self.values.get(value)
         if temporal_value_id is not None:
             return temporal_value_id
-        raise KeyError(f'Value "{value}" out of "{self.name}" range')
+        raise KeyError(f'Value "{value}" out of "{self.get_name()}" range')
 
     def _compute_values(self, lhs_value: ValueComponent, rhs_value: ValueComponent,
                         step: ValueComponent) -> dict:
@@ -223,7 +221,7 @@ class TemporalEntityComponent(EntityComponent):
                     elements[i] = counter
                     counter += 1
         except:
-            raise Exception(f"Entity {self.name}, entity type do not match {lhs_value} and {rhs_value}")
+            raise Exception(f"Entity {self.get_name()}, entity type do not match {lhs_value} and {rhs_value}")
         return elements
 
     def is_temporal_entity(self) -> bool:
@@ -233,7 +231,7 @@ class TemporalEntityComponent(EntityComponent):
         return self.keys[0]
 
     def copy(self) -> Any:
-        copy = TemporalEntityComponent(self.name, self.label, None,
+        copy = TemporalEntityComponent(self.get_name(), self.label, None,
                                        None, None, self.entity_type, self.values)
         copy.set_attributes_value(super(TemporalEntityComponent, self).copy().attributes)
         copy.set_attributes_value(super(TemporalEntityComponent, self).copy().keys)

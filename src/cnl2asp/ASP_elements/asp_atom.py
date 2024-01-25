@@ -24,8 +24,8 @@ class ASPAtom(ASPElement):
             atom_attributes = self.get_attributes_list(attribute.name, attribute.origin)
             for atom_attribute in atom_attributes:
                 # update only the first occurrence
-                if atom_attribute.isnull():
-                    atom_attribute.value = attribute.value
+                if atom_attribute.is_null():
+                    atom_attribute.set_value(attribute.get_value())
                     break
 
     def get_atom_list(self) -> list[ASPAtom]:
@@ -64,9 +64,6 @@ class ASPAtom(ASPElement):
 
     def __str__(self) -> str:
         string = ''
-        for attribute in self.attributes:
-            for operation in attribute.operations:
-                string += f'{str(operation)}, '
         string += 'not ' if self.negated else ''
         string += '\'' if self.is_before else ''
         string += '_' if self.is_initial else ''
@@ -81,14 +78,14 @@ class ASPAtom(ASPElement):
                     continue
                 visited.append(attribute1)
                 if attribute1.origin and attribute1.origin.name != self.name:
-                    tmp_atom = ASPAtom(attribute1.origin.name, [ASPAttribute(attribute1.name, attribute1.value,
+                    tmp_atom = ASPAtom(attribute1.origin.name, [ASPAttribute(attribute1.name, attribute1.get_value(),
                                                                              attribute1.origin.origin)])
                     for attribute2 in self.attributes:
                         if attribute2 in visited:
                             continue
                         if attribute2.origin and attribute1.origin.name == attribute2.origin.name:
                             visited.append(attribute2)
-                            tmp_atom.attributes.append(ASPAttribute(attribute2.name, attribute2.value,
+                            tmp_atom.attributes.append(ASPAttribute(attribute2.name, attribute2.get_value(),
                                                                     attribute2.origin.origin))
                     string += str(tmp_atom) + ','
                 else:

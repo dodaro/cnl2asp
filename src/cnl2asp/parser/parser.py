@@ -3,8 +3,6 @@ import re
 import string
 
 from enum import Enum
-from typing import Any
-from uuid import uuid4
 
 import lark
 from lark import Transformer, v_args
@@ -30,7 +28,6 @@ from cnl2asp.specification.signaturemanager import SignatureManager
 from cnl2asp.specification.specification import SpecificationComponent
 from cnl2asp.utility.utility import Utility
 from cnl2asp.exception.cnl2asp_exceptions import TypeNotFound
-
 
 class QUANTITY_OPERATOR(Enum):
     EXACTLY = 0
@@ -66,7 +63,6 @@ class CNLTransformer(Transformer):
                 return self._new_field_value(f'{name}{last_num}')
             self._defined_variables.append(result)
             return ValueComponent(result)
-        return ValueComponent(f'X_{str(uuid4()).replace("-", "_").upper()}')
 
     def start(self, elem) -> SpecificationComponent:
         self._specification.add_problem(self._problem)
@@ -132,7 +128,7 @@ class CNLTransformer(Transformer):
             res = []
             for key in keys:
                 key_origin = AttributeOrigin(origin.name, key.origin)
-                res.append(AttributeComponent(key.name, ValueComponent(Utility.NULL_VALUE), key_origin))
+                res.append(AttributeComponent(key.get_name(), ValueComponent(Utility.NULL_VALUE), key_origin))
             return res
         else:
             name = '_'.join(name)
@@ -168,6 +164,7 @@ class CNLTransformer(Transformer):
 
     @v_args(meta=True)
     def complex_concept_elements_definition(self, meta, elem):
+        elem[0] = elem[0].lower()
         try:
             entity: ComplexEntityComponent = SignatureManager.remove_signature(elem[0])
             entity.values = elem[1]
@@ -180,6 +177,7 @@ class CNLTransformer(Transformer):
             command.execute()
         if elem[0]:
             SignatureManager.add_signature(elem[0])
+        self._proposition.add_defined_attributes(self._defined_variables)
         self._problem.add_propositions(self._proposition.get_propositions())
         self._clear()
 
@@ -203,7 +201,7 @@ class CNLTransformer(Transformer):
             signature = SignatureManager.get_signature(name)
             attributes = signature.get_keys_and_attributes()
             if len(attributes) == 1:
-                attribute_name = attributes[0].name
+                attribute_name = attributes[0].get_name()
         except EntityNotFound:
             pass
         entity = EntityComponent(name, '', [],
@@ -242,7 +240,7 @@ class CNLTransformer(Transformer):
     def enumerative_definition_clause(self, elem):
         subject = elem[0]
         try:
-            signature = SignatureManager.get_signature(subject.name)
+            signature = SignatureManager.get_signature(subject.get_name())
         except:
             signature = self._proposition.create_new_signature(subject)
             SignatureManager.add_signature(signature)
@@ -256,13 +254,13 @@ class CNLTransformer(Transformer):
             SignatureManager.add_signature(elem[0])  # we can have new definitions in subject position for this proposition
         else:
             # subject is an attribute value of the verb
-            verb.attributes.append(AttributeComponent('id', ValueComponent(subject.name), AttributeOrigin(verb.name)))
+            verb.attributes.append(AttributeComponent('id', ValueComponent(subject.get_name()), AttributeOrigin(verb.get_name())))
         object_list = elem[2] if elem[2] else []
         for idx, object_entity in enumerate(object_list):
             # replace the object elements with the proper signature if same of the subject
             for entity in object_entity.get_entities():
-                if entity.name == subject.name:
-                    entity_signature = SignatureManager.get_signature(entity.name)
+                if entity.get_name() == subject.get_name():
+                    entity_signature = SignatureManager.get_signature(entity.get_name())
                     entity_signature.label = entity.label
                     entity_signature.set_attributes_value(entity.get_keys_and_attributes())
                     object_list[idx] = entity_signature
@@ -282,6 +280,7 @@ class CNLTransformer(Transformer):
             for proposition in self._proposition.get_propositions():
                 if len(proposition.new_knowledge) > 1:
                     proposition.cardinality = None
+            self._proposition.add_defined_attributes(self._defined_variables)
             self._problem.add_propositions(self._proposition.get_propositions())
             self._clear()
         except Exception as e:
@@ -493,11 +492,11 @@ class CNLTransformer(Transformer):
         except KeyError as e:
             raise CompilationError(str(e), meta.line)
         subject: EntityComponent = elem[0]
-        new_var = subject.get_attributes_by_name_and_origin(temporal_entity.name, AttributeOrigin(temporal_entity.name))[0]
+        new_var = subject.get_attributes_by_name_and_origin(temporal_entity.get_name(), AttributeOrigin(temporal_entity.get_name()))[0]
         if new_var.value == Utility.NULL_VALUE:
-            new_var = self._new_field_value('_'.join([temporal_entity.name, subject.name]))
+            new_var = self._new_field_value('_'.join([temporal_entity.get_name(), subject.get_name()]))
             try:
-                subject.set_attributes_value([AttributeComponent(temporal_entity.name, ValueComponent(new_var), AttributeOrigin(temporal_entity.name))])
+                subject.set_attributes_value([AttributeComponent(temporal_entity.get_name(), ValueComponent(new_var), AttributeOrigin(temporal_entity.get_name()))])
             except:
                 raise CompilationError(f'Compilation error in line {meta.line}')
         operator = elem[1]
@@ -527,10 +526,10 @@ class CNLTransformer(Transformer):
     @v_args(inline=True)
     def parameter_entity_link(self, attribute: AttributeComponent, entity: EntityComponent):
         if attribute.value == Utility.NULL_VALUE:
-            attribute.value = self._new_field_value('_'.join([entity.name, attribute.name]))
+            attribute.value = self._new_field_value('_'.join([entity.get_name(), str(attribute.get_name())]))
             entity.set_attributes_value([attribute])
         self._proposition.add_requisite(entity)
-        return entity.get_attributes_by_name_and_origin(attribute.name, attribute.origin)[0]
+        return entity.get_attributes_by_name_and_origin(attribute.get_name(), attribute.origin)[0]
 
     def comparison_operand(self, elem):
         return elem[0]
@@ -601,7 +600,7 @@ class CNLTransformer(Transformer):
 
     def preference_with_aggregate_clause(self, elem):
         if elem[3]:
-            new_var = self._new_field_value()
+            new_var = self._new_field_value(elem[3].operation.name)
             self._proposition.add_requisite(OperationComponent(Operators.EQUALITY, elem[3], new_var))
             self._proposition.add_weight(new_var)
 
@@ -665,7 +664,7 @@ class CNLTransformer(Transformer):
         name = parameter[:-4]
         try:
             entity = self._proposition.get_entity_by_label(parameter[-4])
-            if entity.name == name[0]:
+            if entity.get_name() == name[0]:
                 return entity
         except LabelNotFound:
             pass
@@ -674,10 +673,11 @@ class CNLTransformer(Transformer):
         origin = self._parameter_origin_builder(name)
         if origin and not name:
             # if origin and not name the user imply the key of the last "origin"
-            name = SignatureManager.get_signature(parameter[-5]).get_keys()[0].name
+            name = SignatureManager.get_signature(parameter[-5]).get_keys()[0].get_name()
         else:
             name = '_'.join(name)
         value = parameter[-4] if parameter[-4] else Utility.NULL_VALUE
+        self._defined_variables.append(value)
         operations = []
         if parameter[-3]:
             if parameter[-3] == Operators.EQUALITY and value == Utility.NULL_VALUE:
@@ -694,7 +694,7 @@ class CNLTransformer(Transformer):
 
     def parameter_temporal_ordering(self, elem):
         temporal_entity = SignatureManager.get_signature_from_type(elem[1])
-        return AttributeComponent(temporal_entity.name, ValueComponent(f'{elem[2]}{elem[0]}1'), AttributeOrigin(temporal_entity.name))
+        return AttributeComponent(temporal_entity.get_name(), ValueComponent(f'{elem[2]}{elem[0]}1'), AttributeOrigin(temporal_entity.get_name()))
 
     def EXPRESSION(self, elem):
         return ''.join(elem)
@@ -720,7 +720,7 @@ class CNLTransformer(Transformer):
             return True
         return False
 
-    def _is_variable(self, string: str) -> bool:
+    def is_variable(string: str) -> bool:
         if string.isupper():
             return True
         return False
@@ -755,7 +755,6 @@ class CNLTransformer(Transformer):
             except EntityNotFound as e:
                 # this is the case that we are defining a new entity
                 if new_definition:
-                    #parameter_list.sort(key=lambda x: x.name)
                     entity = EntityComponent(name, label, [],
                                              [attribute for attribute in parameter_list if
                                               isinstance(attribute, AttributeComponent)])
@@ -765,7 +764,9 @@ class CNLTransformer(Transformer):
             entity.set_attributes_value(parameter_list, self._proposition)
         except AttributeNotFound as e:
             raise CompilationError(str(e), meta.line)
-        entity.set_label_as_key_value()
+        if entity.label_is_key_value():
+            entity.set_label_as_key_value()
+            self._defined_variables.append(ValueComponent(entity.label))
         if entity_temporal_order_constraint:
             self.temporal_constraint(meta, [entity] + entity_temporal_order_constraint)
         if define_subsequent_event:
@@ -779,12 +780,12 @@ class CNLTransformer(Transformer):
     def generic_element(self, meta, elem):
         try:
             entity: SetEntityComponent = SignatureManager.get_signature(elem[1])
-            if not self._is_variable(elem[0].value):
+            if not CNLTransformer.is_variable(elem[0].value):
                 if not entity.is_value_in_set(elem[0].value):
                     raise AttributeGenericError(f'Value \"{elem[0].value}\" not declared '
                                          f'in set {entity.get_entity_identifier()}')
             attribute = elem[0]
-            attribute.name = 'element'
+            attribute.set_name('element')
             entity.set_attributes_value([elem[0]])
             return entity
         except EntityNotFound as e:
@@ -797,7 +798,7 @@ class CNLTransformer(Transformer):
         except EntityNotFound as e:
             raise CompilationError(str(e), meta.line)
         if entity.entity_type != EntityType.LIST:
-            raise CompilationError(f"Entity {entity.name} is not a list.", meta.line)
+            raise CompilationError(f"Entity {entity.get_name()} is not a list.", meta.line)
         try:
             element_variable: ValueComponent = elem[1] if elem[1] else self._new_field_value('element')
             if elem[2] == Operators.GREATER_THAN: # ordering_operator == 'after'
@@ -815,7 +816,7 @@ class CNLTransformer(Transformer):
         except EntityNotFound as e:
             raise CompilationError(str(e), meta.line)
         if entity.entity_type != EntityType.LIST:
-            raise CompilationError(f"Entity {entity.name} is not a list.", meta.line)
+            raise CompilationError(f"Entity {entity.get_name()} is not a list.", meta.line)
         element_variable = elem[1] if elem[1] else self._new_field_value('element')
         entity.set_index_value(int(elem[0])-1, element_variable)
         return entity
@@ -827,9 +828,9 @@ class CNLTransformer(Transformer):
     def __substitute_subsequent_event(self, entity, operator: str, entity_type: EntityType):
         attribute_name = ''
         for attribute in entity.get_keys_and_attributes():
-            if SignatureManager.is_temporal_entity(attribute.name) and \
-                    SignatureManager.get_signature(attribute.name).entity_type == entity_type:
-                attribute_name = attribute.name
+            if SignatureManager.is_temporal_entity(attribute.get_name()) and \
+                    SignatureManager.get_signature(attribute.get_name()).entity_type == entity_type:
+                attribute_name = attribute.get_name()
         for declared_entity in self._proposition.get_entities():
             if not declared_entity is entity:
                 try:
@@ -839,7 +840,7 @@ class CNLTransformer(Transformer):
                     return
                 except AttributeNotFound:
                     pass
-        raise TypeNotFound(f'Entity "{entity.name}" do not have type {entity_type}')
+        raise TypeNotFound(f'Entity "{entity.get_name()}" do not have type {entity_type}')
 
     def define_subsequent_event(self, elem):
         return elem[0], elem[1]
@@ -905,7 +906,7 @@ class CNLTransformer(Transformer):
     def STRING(self, elem) -> ValueComponent:
         if self._is_label(elem.value):
             return ValueComponent(elem.value)
-        return ValueComponent(elem.value.removesuffix('s'))
+        return ValueComponent(elem.value)
 
     def PREPOSITION(self, preposition) -> None:
         return preposition
@@ -955,7 +956,8 @@ class CNLTransformer(Transformer):
             return Operators.DIVISION
 
     def PARAMETER_NAME(self, elem):
-        return elem.value
+        parameter = elem.value
+        return parameter if parameter else elem.value
 
     def TEMPORAL_TYPE(self, elem):
         if elem == "minutes" or elem == "minute":
@@ -1041,9 +1043,3 @@ class CNLTransformer(Transformer):
 
     def cnl_as_little_as_possible(self, elem) -> None:
         return PREFERENCE_PROPOSITION_TYPE.MINIMIZATION
-    #
-    # def (self, elem) -> None:
-    #     return lark.Discard
-    #
-    # def (self, elem) -> None:
-    #     return lark.Discard

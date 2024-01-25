@@ -19,8 +19,6 @@ class AggregateComponent(Component):
     def __init__(self, operation: AggregateOperation, discriminant: list[AttributeComponent], body: list[Component]):
         self.operation = operation
         self.discriminant = discriminant
-        for value in self.discriminant:
-            value.removesuffix('s')
         self.body = body
 
     def convert(self, converter: Converter) -> AggregateConverter:

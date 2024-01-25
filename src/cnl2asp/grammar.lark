@@ -186,7 +186,7 @@ _CNL_ABSOLUTE: "absolute"
 _CNL_VALUE: "value"
 cnl_in_absolute_value: _CNL_IN " " _CNL_ABSOLUTE " " _CNL_VALUE
 comparison_operand: EXPRESSION
-                    | STRING
+                    | PARAMETER_NAME
                     | parameter_entity_link
                     | aggregate_clause
                     | comparison_operand _CNL_AND comparison_operand -> comparison_operand_list
@@ -254,7 +254,7 @@ COMPARISON_OPERATOR: _CNL_THE_SAME_AS
           | _CNL_BETWEEN
 
 weak_constraint_proposition: cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison | simple_clause ) [weak_optimization_operator] [terminal_clauses]
-                           | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT aggregate_clause [weak_optimization_operator] [terminal_clauses] -> preference_with_aggregate_clause
+                           | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison_operand | aggregate_clause) [weak_optimization_operator] [terminal_clauses] -> preference_with_aggregate_clause
                            | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT whenever_clauses_list _CNL_COMMA VARIABLE weak_optimization_operator [terminal_clauses] -> preference_with_variable_minimization
 whenever_clauses_list: whenever_clause (_CNL_COMMA whenever_clause)*
 
@@ -282,7 +282,7 @@ optimization_operator: CNL_MINIMIZED | CNL_MAXIMIZED
 cardinality: QUANTITY_OPERATOR STRING -> single_quantity_cardinality
            | _CNL_BETWEEN STRING _CNL_AND STRING -> range_quantity_cardinality
 conjunctive_object_list.-1: entity ((_CNL_COMMA _CNL_AND?) entity)*
-predicate: verb [cardinality] _CNL_SUCH_THAT_THERE_IS? [conjunctive_object_list] [_CNL_FOR (NUMBER | VARIABLE) STRING] -> predicate_with_objects
+predicate: verb [cardinality] _CNL_SUCH_THAT_THERE_IS? [conjunctive_object_list] [_CNL_FOR (NUMBER | VARIABLE) PARAMETER_NAME] -> predicate_with_objects
            | verb [cardinality] _CNL_SUCH_THAT_THERE_IS? simple_clause_wrv -> predicate_with_simple_clause
 simple_clause_wrv.-2: entity COPULA? verb [conjunctive_object_list]
 
@@ -292,7 +292,7 @@ _CNL_ELEMENT: "element"
 complex_entity: complex_entity_parameter _CNL_IN STRING -> generic_element
               | _CNL_THE STRING _CNL_ELEMENT? [EXPRESSION] ORDERING_OPERATOR STRING -> list_element_order
               | _CNL_THE NUMBER ("st" | "nd" | "rd" | "th") _CNL_ELEMENT [EXPRESSION] _CNL_IN STRING -> list_index_element
-complex_entity_parameter: _CNL_AN _CNL_ELEMENT [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]
+complex_entity_parameter: _CNL_AN _CNL_ELEMENT [EXPRESSION] [COMPARISON_OPERATOR EXPRESSION [STRING]]
 
 TELINGO_ENTITY_TEMPORAL_OPERATOR: "previously" | "subsequently" | "initially" | "finally"
 verb.1: [VERB_NEGATION] [TELINGO_ENTITY_TEMPORAL_OPERATOR] _CNL_INDEFINITE_ARTICLE? STRING [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list] [VERB_PREPOSITION]
@@ -303,10 +303,10 @@ define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE
 parameter_list.1: PARAMETER_PREPOSITION parameter (_CNL_COMMA _CNL_AND? PARAMETER_PREPOSITION parameter)*
 _CNL_RESPECT: "respect"
 _CNL_RESPECT_TO: _CNL_RESPECT " " _CNL_TO
-parameter.-1: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+ [EXPRESSION] [COMPARISON_OPERATOR STRING [STRING]]
+parameter.-1: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+ [EXPRESSION] [COMPARISON_OPERATOR (EXPRESSION | STRING) [STRING]]
               | SHIFT_OPERATOR TEMPORAL_TYPE _CNL_RESPECT_TO VARIABLE -> parameter_temporal_ordering
 
-EXPRESSION: (VARIABLE | NUMBER | "+" | "-"| "*" | "/" | "\\" | "(" | ")" | "|")+
+EXPRESSION: (VARIABLE | NUMBER | "+" | "-"| "*" | "/" | "\\" | "(" | ")" | "|" )+
 
 ASSIGNMENT_VERB: "can" | "must"
 COPULA: "be " | "be a " | "be an "

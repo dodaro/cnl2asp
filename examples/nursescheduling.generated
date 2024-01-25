@@ -1,0 +1,34 @@
+#const maxHour = 1692.
+#const minHour = 1687.
+#const maxDay = 82.
+#const maxNight = 61.
+#const minDay = 74.
+#const minNight = 58.
+#const balanceNurseDay = 78.
+#const balanceNurseAfternoon = 78.
+#const balanceNurseNight = 60.
+nurse(1..numberOfNurse).
+day(1..365).
+1 <= {work_in(DY_D,NRS_D,SHFT_D): shift(SHFT_D,_,_)} <= 1 :- day(DY_D), nurse(NRS_D).
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} > M, day(D), S = "morning", M = maxNurseMorning.
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} > M, day(D), S = "afternoon", M = maxNurseAfternoon.
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} > M, day(D), S = "night", M = maxNurseNight.
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} < M, S = "morning", M = minNurseMorning.
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} < M, S = "afternoon", M = minNurseAfternoon.
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} < M, S = "night", M = minNurseNight.
+:- nurse(WRK_N_D), #sum{HR,D: work_in(D,WRK_N_D,S), shift(S,_,HR)} > maxHour.
+:- nurse(WRK_N_D), #sum{HR,D: work_in(D,WRK_N_D,S), shift(S,_,HR)} < minHour.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,"vacation")} != 30.
+:- work_in(D,N,S1), shift(S1,N1,_), nurse(N), work_in(D+1,N,S2), N2 < N1, shift(S2,N2,_), shift(X,"morning",_), shift(Y,"night",_), X <= S1, S1 <= Y.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,"rest"), shift("rest",_,_), D <= D2} < 2, day(D2), ['D2+13', 'D2'] < 353.
+:- not work_in(D,N,"specrest"), shift("specrest",_,_), nurse(N), #count{D1: work_in(D1,N,"night"), shift("night",_,_), D-2 <= D1, D1 <= D-1} = 2, day(D).
+:- work_in(D,N,"specrest"), shift("specrest",_,_), nurse(N), #count{D1: work_in(D1,N,"night"), shift("night",_,_), D-2 <= D1, D1 <= D-1} != 2, day(D).
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} > M, S = "morning", M = maxDay.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} > M, S = "afternoon", M = maxDay.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} > M, S = "night", M = maxNight.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} < M, S = "morning", M = minDay.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} < M, S = "afternoon", M = minDay.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} < M, S = "night", M = minNight.
+:~ nurse(N), DAYS = #count{D: work_in(D,N,WRK_N_D1), shift(WRK_N_D1,_,_)}, minDay <= DAYS, DAYS <= maxDay, |B - DAYS| = X_3D8946C9_A5E5_450A_BAC9_A599FF81DC3F, B = balanceNurseDay, S = "morning". [X_3D8946C9_A5E5_450A_BAC9_A599FF81DC3F@3,N]
+:~ nurse(N), DAYS = #count{D: work_in(D,N,WRK_N_D1), shift(WRK_N_D1,_,_)}, minDay <= DAYS, DAYS <= maxDay, |B - DAYS| = X_3D8946C9_A5E5_450A_BAC9_A599FF81DC3F, B = balanceNurseAfternoon, S = "afternoon". [X_3D8946C9_A5E5_450A_BAC9_A599FF81DC3F@3,N]
+:~ nurse(N), DAYS = #count{D: work_in(D,N,"night"), shift("night",_,_)}, minNight <= DAYS, DAYS <= maxNight, |balanceNurseNight - DAYS| = X_5B0D0194_72A9_453E_A638_9295F93330FB. [X_5B0D0194_72A9_453E_A638_9295F93330FB@3,N]

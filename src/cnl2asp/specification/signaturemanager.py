@@ -34,11 +34,11 @@ class SignatureManager:
         # Update previous declared signatures
         for signature in SignatureManager.signatures:
             try:
-                attributes = signature.get_attributes_by_name(entity.name)
+                attributes = signature.get_attributes_by_name(entity.get_name())
                 for attribute in attributes:
                     signature.attributes.remove(attribute)
                 signature.attributes += entity.get_keys()
-                signature.attributes.sort(key=lambda x: x.name)
+                signature.attributes.sort(key=lambda x: x.get_name())
             except:
                 pass
         SignatureManager.set_entity_to_null(entity)
