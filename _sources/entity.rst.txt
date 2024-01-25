@@ -1,0 +1,62 @@
+Entity
+===============================
+
+To recall the concepts defined in the :doc:`concepts_definition`, you have to use the *ENTITY* element.
+
+*ENTITY* is defined as:
+
+.. code-block:: text
+
+    ENTITY -> NAME LABEL? ATTRIBUTES?
+
+where *NAME* is a string, *LABEL* is a temporary name which, inside a statement, can be used to refer to that entity, and *ATTRIBUTES* is a comma-separated list of *ATTRIBUTE*.
+*ATTRIBUTE* is defined as follows:
+
+.. code-block:: text
+
+    ATTRIBUTE -> "with" ATTRIBUTE_NAME VALUE? ATTRIBUTE_COMPARISON? ("," ATTRIBUTE)?
+
+the "*with*" keyword is used to access the attributes of the entity,
+*ATTRIBUTE_NAME* is a string that should recall an attribute defined for that entity, and *VALUE*, optional, is an uppercase string or a math operation with the meaning of giving a value to that attribute.
+*ATTRIBUTE_COMPARISON* allows you to compare the attribute with other attributes values or constants and it is defined as follows:
+
+.. code-block:: text
+
+    ATTRIBUTE_COMPARISON -> COMPARISON_OPERATOR (MATH_EXPRESSION | STRING) 
+    COMPARISON_OPERATOR -> "the same as" | "different from" | "equal to" | "more than" | "greater than" | "less than" | "greater than or equal to" | "less than or equal to" | "at least" | "at most" | "not after" | "between"
+
+therefore, an *ATTRIBUTE_COMPARISON* is made of an operator (one of the listed above) and a *STRING*, i.e. a string value or a constant, or a *MATH_EXPRESSION*.
+
+Examples:
+
+.. code-block:: text
+
+    (1) a movie M 
+    (2) a movie with id MOVIEID
+    (3) a movie with id MOVIEID, with duration 100
+    (4) a movie with id MOVIEID+1
+    (5) a movie with id MOVIEID greater than X
+    (6) a movie with id MOVIEID greater than mycostant
+
+-----------------------------
+Corresponding ASP:
+-----------------------------
+
+Considering the following definition:
+
+.. code-block:: text
+
+    A movie is identified by an id, and has a duration.
+
+The previous sentences are translated into:
+
+.. code-block:: clingo
+
+    (1) movie(M,_)
+    (2) movie(MOVIEID,_)
+    (3) movie(MOVIEID,100)
+    (4) movie(MOVIEID+1,_)
+    (5) movie(MOVIDEID,_), MOVIDEID > X
+    (6) movie(MOVIDEID,_), MOVIDEID > mycostant
+
+In the first sentence, M is defined as the label of the entity *movie*. However, in case the entity has just one key or is defined by just one attribute, the tool sets that key (or the single attribute) equal to the value of the label.

@@ -1,0 +1,42 @@
+Getting start
+=========================
+Our cnl specification consists of two main blocks. 
+In the first block, you have to define all the concepts of the problem, where in our context a concept is a thing, a place, a person or an object that is used to model entities of the application domain of the CNL (see :doc:`concepts_definition`).
+The second block, on the other hand, constitutes the rules of the problem, i.e. the assignments and constraints.
+
+Each block is made of a series of propositions, each one ending with a "." (dot).
+
+How to read the documentation
+-----------------------------
+Each section explains a feature of the CNL with examples and the corresponding ASP translation.
+Some sections include parts of the CNL grammar. In such case, the following syntax is used:
+
+.. code-block:: text
+
+    STATEMENT_NAME -> "terminal symbol" VARIABLE? STAR_QUANTIFIER* PLUS+ | SOMETHING_ELSE
+
+where STATEMENT_NAME is the name given to the statement, terminal symbols are between "" (quotation marks), and VARIABLE is a reference to other STATEMENT_NAME.
+Finally, the ? (question mark) means that the previous element is optional, the * (asterisk) means that the preceding element can match zero or more times, the + (plus) must match at least once, and the | (vertical bar) is the or symbol, thus the statement can support the previous or the following element.
+
+
+Command line usage
+------------------------------
+
+The basic usage is:
+
+.. code-block:: bash
+
+    python main.py input.txt out.txt
+
+where input.txt is the input file containing the CNL specification, while out.txt is optional and represents the path in which the output should be saved.
+In case the output file is not provided, the tool generates a new file called "out.txt".
+
+**Flags:**
+
+- :code:`-c` or :code:`--check-syntax`, when provided the tool gives in output a meaningful message specifying if the input is recognised by CNL2ASP grammar,
+- :code:`-p` or :code:`--print-with-functions`, whenever an attribute of an atom is declared to be an entity, the tool prints that attribute as a function with the entity name as function name,
+- :code:`--symbols`, return the list of all the defined entities with their corresponding attributes. 
+
+**Dependencies:**
+- lark
+- inflect

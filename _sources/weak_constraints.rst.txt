@@ -1,0 +1,37 @@
+Weak Constraints
+============================
+
+Weak constraints are similar to constraints, but add some elements in order to be able to specify the optimization.
+
+.. code-block:: text
+
+    WEAK_CONSTRAINT -> "It is preferred" OPTIMIZATION_SATEMENT? PRIORITY_LEVEL "that" (COMPARISON | SIMPLE_DEFINITION | AGGREGATE | LIST_OF_WHENEVER_CLAUSES) (ATTRIBUTE "is" ("maximized" | "minimized"))?.
+
+where:
+
+- *OPTIMIZATION_STATEMENT* is one of "as much as possible" or "as little as possible" with the meaning of maximizing or minimizing
+- *PRIORITY_LEVEL* is one of "low priority", "high priority" or "medium priority" distinguishing three different priority levels
+- *COMPARISON*, *SIMPLE_DEFINITION*, *AGGREGATE*, *LIST_OF_WHENEVER_CLAUSE* are constructions presented in the previous chapters
+- *(ATTRIBUTE "is" ("maximized" | "minimized"))?* is used to specify what attribute has to be maximized or minimized.
+
+In case you do not provide explicitly the attribute to maximize or minimize (last bullet point above), the tool sets as weight a new variable in case of *AGGREGATE* or weight equal 1 in case of *COMPARISON* or *LIST_OF_WHENEVER_CLAUSES*.
+
+Examples:
+
+.. code-block:: text
+    
+    It is preferred with low priority that the number of drinks that are served is maximized.
+    It is preferred as much as possible with low priority that the number of drinks that are served is equal to 1.
+    It is preferred, with medium priority, that whenever there is a topMovie with id I, whenever there is a scoreAssignment with movie I, and with value V, V is maximized.
+
+-----------------------------
+Corresponding ASP:
+-----------------------------
+
+.. code-block:: clingo 
+
+    :~ #count{NM: served(NM)} = CNT. [-CNT@1]
+    :~ #count{NM: served(NM)} = 1. [1@1]
+    :~ topmovie(I), scoreassignment(I,V). [-V@2,I,V]
+
+Note that the attributes in the optimization level are all the attributes provided in the proposition.

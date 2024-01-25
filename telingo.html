@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Temporal Extension &#8212; CNL2ASP</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=51b770b3"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Typed Entities" href="typed_entities.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="temporal-extension">
+<h1>Temporal Extension<a class="headerlink" href="#temporal-extension" title="Link to this heading">¶</a></h1>
+<p>The grammar of CNL2ASP also supports temporal operators, and in particular, those defined in the Telingo’s input language.
+Telingo makes use of clingo’s input language and adds three main elements:</p>
+<ol class="arabic simple">
+<li><p>some program parts whose rules apply in particular states;</p></li>
+<li><p>being able to refer to an atom in the previous, subsequent and initial state; </p></li>
+<li><p>temporal formulas.</p></li>
+</ol>
+<p>An overview of the Telingo’s features can be seen in <a class="reference external" href="https://github.com/potassco/telingo/tree/master">Telingo</a>.</p>
+<section id="temporal-program-parts">
+<h2>Temporal program parts.<a class="headerlink" href="#temporal-program-parts" title="Link to this heading">¶</a></h2>
+<p>Telingo defines four program parts namely:</p>
+<ul class="simple">
+<li><p>initial which applies only to the first state,</p></li>
+<li><p>always which applies to all states,</p></li>
+<li><p>dynamic which applies to all states except the initial state,</p></li>
+<li><p>final which applies only to the last state.</p></li>
+</ul>
+<p>In our CNL, the same result is obtained by:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>program -&gt; TEMPORAL_PART? (standard_proposition END_OF_LINE)+
+</pre></div>
+</div>
+<p>where <em>TEMPORAL_PART</em> is the token used to express the temporal program, <em>STANDARD_PROPOSITION</em>, with the + symbol, in the propositions presented in the previous chapters.
+More in detail, <em>TEMPORAL_PART</em> is defined as:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>TEMPORAL_PART -&gt; &quot;The following propositions apply in the initial state:&quot;
+               | &quot;The following propositions always apply:&quot;
+               | &quot;The following propositions always apply except in the initial state:&quot;
+               | &quot;The following propositions apply in the final state:&quot;
+</pre></div>
+</div>
+<p>intuitively, the sentences respectively correspond to the initial, always, dynamic and final programs.
+Moreover, as <em>TEMPORAL_PART</em> is optional, when it is not defined, no programs are defined and the propositions are considered part of initial when running the Telingo solver or we have a normal ASP encoding.</p>
+</section>
+<section id="referring-to-an-atom-in-the-previous-subsequent-and-initial-state">
+<h2>Referring to an atom in the previous, subsequent and initial state<a class="headerlink" href="#referring-to-an-atom-in-the-previous-subsequent-and-initial-state" title="Link to this heading">¶</a></h2>
+<p>To refer to a concept in the previous, subsequent and initial state, the <em>ENTITY</em> token has been extended with a terminal symbol, that we called <em>TELINGO_ENTITY_STATE</em>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ENTITY -&gt; TELINGO_ENTITY_STATE ENTITY_DECLARATION
+</pre></div>
+</div>
+<p>where in <em>ENTITY_DECLARATION</em> we have all the elements presented in <a class="reference internal" href="entity.html"><span class="doc">Entity</span></a>, and <em>TELINGO_ENTITY_STATE</em> is one of <code class="code docutils literal notranslate"><span class="pre">previously</span></code>, <code class="code docutils literal notranslate"><span class="pre">subsequently</span></code> or <code class="code docutils literal notranslate"><span class="pre">initially</span></code>.</p>
+<p>Examples:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Whenever there is previously a gun unloaded, whenever there is not a gun loaded then we must have a gun with status equal to unloaded.
+It is prohibited that there is a gun loading, whenever there is not subsequently a gun loaded.
+It is required that a truck T moves in a city C, when truck T is initially located in city C.
+</pre></div>
+</div>
+<section id="corresponding-asp">
+<h3>Corresponding ASP<a class="headerlink" href="#corresponding-asp" title="Link to this heading">¶</a></h3>
+<p>Considering the following definitions:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A gun is identified by a status.
+A truck is identified by an id.
+A city is identified by an id.
+Located_in is identified by a truck, and by a city.
+Move_in is identified by a truck, and by a city.
+</pre></div>
+</div>
+<p>The previous example is translated into:</p>
+<div class="highlight-clingo notranslate"><div class="highlight"><pre><span></span>gun<span class="p">(</span><span class="s2">&quot;unloaded&quot;</span><span class="p">)</span> <span class="p">:-</span> &#39;gun<span class="p">(</span><span class="s2">&quot;unloaded&quot;</span><span class="p">),</span> <span class="k">not</span> gun<span class="p">(</span><span class="s2">&quot;loaded&quot;</span><span class="p">).</span>
+<span class="p">:-</span> gun<span class="p">(</span><span class="s2">&quot;loading&quot;</span><span class="p">),</span> <span class="k">not</span> gun&#39;<span class="p">(</span><span class="s2">&quot;loaded&quot;</span><span class="p">).</span>
+<span class="p">:-</span> <span class="k">not</span> move_in<span class="p">(</span><span class="nv">T</span><span class="p">,</span><span class="nv">C</span><span class="p">),</span> truck<span class="p">(</span><span class="nv">T</span><span class="p">),</span> <span class="nv">_</span>located_in<span class="p">(</span><span class="nv">T</span><span class="p">,</span><span class="nv">C</span><span class="p">),</span> city<span class="p">(</span><span class="nv">C</span><span class="p">).</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="temporal-formulas">
+<h2>Temporal formulas.<a class="headerlink" href="#temporal-formulas" title="Link to this heading">¶</a></h2>
+<p>A temporal formula is defined as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>TELINGO_FORMULA -&gt; &quot;there is&quot; VERB_NEGATION? TELINGO_TEMPORAL_OPERATOR? TELINGO_OPERAND HOLD_CONDITION? (TELINGO_BINARY_OPERATOR TELINGO_FORMULA)?
+</pre></div>
+</div>
+<p>where <em>TELINGO_TEMPORAL_OPERATOR</em> and <em>HOLD_CONDITION</em>, together, allow to specify in which time frame the formula holds, e.g. the A since B operator or the A always after B operator (a full list of the supported Telingo’s operators is available in the <a class="reference external" href="https://github.com/potassco/telingo/tree/master">Telingo GitHub repository</a>), and are defined as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>TELINGO_TEMPORAL_OPERATOR -&gt; &quot;always&quot; | &quot;eventually&quot; | &quot;before&quot; | &quot;since before&quot; | &quot;after&quot; | &quot;since after&quot;
+HOLD_CONDITION -&gt; (&quot;that&quot; VERB_NEGATION? TELINGO_TEMPORAL_OPERATOR &quot;hold&quot;)
+                | (&quot;that&quot; VERB_NEGATION? &quot;hold&quot; TELINGO_TEMPORAL_OPERATOR)
+</pre></div>
+</div>
+<p>Instead, the optional elements <em>TELINGO_BINARY_OPERATOR</em> and <em>TELINGO_OPERATION</em> are used to concatenate Telingo formulas.
+In particular, <em>TELINGO_BINARY_OPERATOR</em> includes all the temporal and boolean operators that accept two operands:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>TELINGO_DUAL_OPERATOR -&gt; &quot;and&quot; | &quot;or&quot; | &quot;implies&quot; | &quot;imply&quot; | &quot;equivalent&quot; | &quot;trigger&quot; | &quot;since&quot; | &quot;precede&quot; | &quot;release&quot; | &quot;until&quot; | &quot;follow&quot;
+</pre></div>
+</div>
+<p>Finally, TELINGO_OPERAND is defined as:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>TELINGO_OPERAND -&gt; ENTITY (TELINGO_BINARY_OPERATOR TELINGO_OPERAND)?
+                 | TELINGO_CONSTANT (TELINGO_DUAL_OPERATOR telingo_operand)?
+TELINGO_CONSTANT -&gt; &quot;it is the initial state&quot;
+                  | &quot;it is the final state&quot;
+                  | &quot;the true constant&quot;
+                  | &quot;the false constant&quot;
+</pre></div>
+</div>
+<p>therefore, a <em>TELINGO_OPERAND</em> can be an <em>ENTITY</em>, that is a concept of the problem, or a <em>TELINGO_CONSTANT</em>
+that is one of those defined in the table below in the <em>boolean formulas</em> section, while the optional <em>TELINGO_BINARY_OPERATOR</em> <em>TELINGO_OPERAND</em> are used for the concatenation.
+The TELINGO_FORMULA are supported in WHENEVER_CLAUSE (<a class="reference internal" href="defining_new_concepts.html"><span class="doc">Defining new concepts</span></a>) and CONSTRAINT_PRPOPOSITION (<a class="reference internal" href="constraints.html"><span class="doc">Constraints</span></a>).</p>
+<p>Examples:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Whenever there is a gun shooting, whenever there is before a gun unloaded that always holds and there is eventually a gun shooting that holds since before, then we must have a gun with status equal to broken.
+It is prohibited that there is after a gun loaded and a gun shooting that does not always hold.
+</pre></div>
+</div>
+<p>In the first sentence, the keyword <em>before</em> is used with <em>always holds</em>, and <em>eventually</em> with <em>holds since before</em> which respectively define the Telingo’s operator <em>always before</em> and <em>eventually before</em>, while in the second example the keyword <em>after</em> with <em>not always hold</em> define the operator <em>always after</em> followed by the boolean negation. Moreover, there is also the boolean conjunction inside the formula, which is represented by the <em>and</em>.</p>
+<section id="id1">
+<h3>Corresponding ASP<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<p>Such sentences are translated into:</p>
+<div class="highlight-clingo notranslate"><div class="highlight"><pre><span></span>gun<span class="p">(</span><span class="s2">&quot;broken&quot;</span><span class="p">)</span> <span class="p">:-</span> gun<span class="p">(</span><span class="s2">&quot;shooting&quot;</span><span class="p">),</span> <span class="k">not</span> <span class="k">not</span> <span class="k">&amp;tel</span> <span class="p">{(</span><span class="o">&lt;*</span> gun<span class="p">(</span><span class="s2">&quot;unloaded&quot;</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">&lt;</span> <span class="p">(</span><span class="o">&lt;?</span> gun<span class="p">(</span><span class="s2">&quot;shooting&quot;</span><span class="p">)))}.</span>
+<span class="p">:-</span> <span class="k">&amp;tel</span> <span class="p">{</span><span class="o">&gt;*</span> <span class="p">(</span><span class="o">~</span> <span class="p">(</span>gun<span class="p">(</span><span class="s2">&quot;loaded&quot;</span><span class="p">)</span> <span class="o">&amp;</span> gun<span class="p">(</span><span class="s2">&quot;shooting&quot;</span><span class="p">)))}.</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>In the following tables, it is given an overview of the temporal operators supported in Telingo, the corresponding representation in our CNL and an informal description of the operator’s semantic.</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Telingo</p></td>
+<td><p>CNL</p></td>
+<td><p>Description</p></td>
+</tr>
+<tr class="row-even"><td colspan="3"><p><strong>Formulas referring to the past</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>&lt; A</p></td>
+<td><p>before A</p></td>
+<td><p>A has to be true in the previous state</p></td>
+</tr>
+<tr class="row-even"><td><p>&lt;: A</p></td>
+<td><p>before A or it is the initial state</p></td>
+<td><p>A has to be true in the previous state or it is the initial state</p></td>
+</tr>
+<tr class="row-odd"><td><p>A &lt;* B</p></td>
+<td><p>A trigger(s) B</p></td>
+<td><p>B has to be true since the state in which A is true</p></td>
+</tr>
+<tr class="row-even"><td><p>&lt;* A</p></td>
+<td><p>before A that always holds / always A that holds since before</p></td>
+<td><p>A has to be true in all the previous states</p></td>
+</tr>
+<tr class="row-odd"><td><p>A &lt;? B</p></td>
+<td><p>A since B</p></td>
+<td><p>B has to be true since the state (or the following one) in which A is true</p></td>
+</tr>
+<tr class="row-even"><td><p>&lt;? A</p></td>
+<td><p>before A that eventually holds / eventually A that holds since before</p></td>
+<td><p>A has to be true in at least one of the previous states</p></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><p><strong>Formulas referring to the future</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>&gt; A</p></td>
+<td><p>after A</p></td>
+<td><p>A has to be true in the next state</p></td>
+</tr>
+<tr class="row-odd"><td><p>&gt;: A</p></td>
+<td><p>after A or it is the final state</p></td>
+<td><p>A has to be true in the next state or it is the final state</p></td>
+</tr>
+<tr class="row-even"><td><p>A &gt;* B</p></td>
+<td><p>A release(s) B</p></td>
+<td><p>B has to be true until the state in which A is true</p></td>
+</tr>
+<tr class="row-odd"><td><p>&gt;* A</p></td>
+<td><p>after A that always holds / always A that holds since after</p></td>
+<td><p>A has to be true in all the next states</p></td>
+</tr>
+<tr class="row-even"><td><p>A &gt;? B</p></td>
+<td><p>A until B</p></td>
+<td><p>B has to be true until the state (or the previous one) in which A is true</p></td>
+</tr>
+<tr class="row-odd"><td><p>&gt;? A</p></td>
+<td><p>after A that eventually holds / eventually A that holds since after</p></td>
+<td><p>A has to be true in at least one of the next states</p></td>
+</tr>
+<tr class="row-even"><td colspan="3"><p><strong>Boolean formulas</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>A &amp; B</p></td>
+<td><p>A and B</p></td>
+<td><p>logical conjunction</p></td>
+</tr>
+<tr class="row-even"><td><p>A | B</p></td>
+<td><p>A or B</p></td>
+<td><p>logical disjunction</p></td>
+</tr>
+<tr class="row-odd"><td><p>A -&gt; B</p></td>
+<td><p>A imply(ies) B</p></td>
+<td><p>logical implication</p></td>
+</tr>
+<tr class="row-even"><td><p>A &lt;- B</p></td>
+<td><p>B imply(ies) A</p></td>
+<td><p>logical implication</p></td>
+</tr>
+<tr class="row-odd"><td><p>A &lt;&gt; B</p></td>
+<td><p>A equivalent B</p></td>
+<td><p>logical equivalence</p></td>
+</tr>
+<tr class="row-even"><td><p>~ A</p></td>
+<td><p>not (do not, does not,..) A</p></td>
+<td><p>logical negation</p></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><p><strong>Constants</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>&amp;true</p></td>
+<td><p>the true constant</p></td>
+<td><p>boolean constant true</p></td>
+</tr>
+<tr class="row-odd"><td><p>&amp;false</p></td>
+<td><p>the false constant</p></td>
+<td><p>boolean constant false</p></td>
+</tr>
+<tr class="row-even"><td><p>&amp;initial</p></td>
+<td><p>is the initial state</p></td>
+<td><p>true if it is the initial state, false otherwise</p></td>
+</tr>
+<tr class="row-odd"><td><p>&amp;final</p></td>
+<td><p>is the final state</p></td>
+<td><p>true if it is the final state, false otherwise</p></td>
+</tr>
+<tr class="row-even"><td><p>&lt;&lt; A</p></td>
+<td><p>initially A</p></td>
+<td><p>A has to be true in the initial state</p></td>
+</tr>
+<tr class="row-odd"><td><p>&gt;&gt; A</p></td>
+<td><p>finally A</p></td>
+<td><p>B has to be true in the initial state</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CNL2ASP</a></h1>
+
+
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_start.html">Getting start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts_definition.html">Concepts definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Constants definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="entity.html">Entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defining_new_concepts.html">Defining new concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weak_constraints.html">Weak Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminal_clauses.html">Terminal clauses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typed_entities.html">Typed Entities</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Temporal Extension</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CNL2ASP.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

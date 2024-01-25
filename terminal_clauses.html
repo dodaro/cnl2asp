@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Terminal clauses &#8212; CNL2ASP</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=51b770b3"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Typed Entities" href="typed_entities.html" />
+    <link rel="prev" title="Weak Constraints" href="weak_constraints.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="terminal-clauses">
+<h1>Terminal clauses<a class="headerlink" href="#terminal-clauses" title="Link to this heading">¶</a></h1>
+<p>It is possible to extend the <a class="reference internal" href="defining_new_concepts.html"><span class="doc">Defining new concepts</span></a> and the <a class="reference internal" href="constraints.html"><span class="doc">Constraints</span></a> propositions with <em>TERMINAL_CLAUSES</em>.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>TERMINAL_CLAUSES -&gt; (WHENEVER_CLAUSE | &quot;where&quot; WHERE_CLAUSE | WHEN_CLAUSE)+
+</pre></div>
+</div>
+<p>where:</p>
+<ul class="simple">
+<li><p>WHENEVER_CLAUSE adds a condition to the rule, and is the same presented in <a class="reference internal" href="defining_new_concepts.html"><span class="doc">Defining new concepts</span></a>;</p></li>
+<li><p>WHERE_CLAUSE is a construction used to add a condition or substitute variables;</p></li>
+<li><p>WHEN_CLAUSE again adds a condition.</p></li>
+</ul>
+<section id="where-clause">
+<h2>WHERE_CLAUSE<a class="headerlink" href="#where-clause" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>where_clause -&gt; comparison (&quot;and&quot; comparison)*
+            | VARIABLE &quot;is one of&quot; STRING_LIST
+            | VARIABLE &quot;is respectively one of&quot; string_list
+            | where_clause &quot;and&quot; where_clause
+</pre></div>
+</div>
+<p>This clause allows you to add a list of comparisons, substitute a variable with a list of values (this leads to the creation of multiple rules) or concatenate different <em>WHERE_CLAUSE</em>.</p>
+<p>The difference between “one of” and “respectively one of” is explained starting from the following example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>It is prohibited that the number of days where a nurse works in shift S is more than M, where S is one of morning, afternoon, night and M is respectively one of maxDay, maxDay, maxNight.
+</pre></div>
+</div>
+<p>The first substitution of <em>S</em> creates 3 rules, one for each value “morning”, “afternoon”, “night”.
+Then, if you want to substitute another variable, M in the example, if you use “one of”, it leads to 3 more rules for each rule that is a sort of cartesian product of each value of S with each value of M.
+However, in case you want, for each value of S, to give a corresponding value of M you can use the keyword “respectively”.</p>
+<section id="corresponding-asp">
+<h3>Corresponding ASP:<a class="headerlink" href="#corresponding-asp" title="Link to this heading">¶</a></h3>
+<p>Considering that minNurseMorning, minNurseAfternoon, minNurseNight are some defined constants.
+The previous proposition is translated into:</p>
+<div class="highlight-clingo notranslate"><div class="highlight"><pre><span></span><span class="p">:-</span> <span class="k">#count</span><span class="p">{</span><span class="nv">D1</span><span class="p">:</span> work_in<span class="p">(</span><span class="nv">D</span><span class="p">,</span><span class="nv">D1</span><span class="p">,</span><span class="nv">S</span><span class="p">),</span> shift<span class="p">(</span><span class="nv">S</span><span class="p">,</span><span class="nv">_</span><span class="p">,</span><span class="nv">_</span><span class="p">),</span> day<span class="p">(</span><span class="nv">D</span><span class="p">)}</span> <span class="o">&lt;</span> <span class="nv">M</span><span class="p">,</span> <span class="nv">S</span> <span class="o">=</span> <span class="s2">&quot;morning&quot;</span><span class="p">,</span> <span class="nv">M</span> <span class="o">=</span> minNurseMorning<span class="p">.</span>
+<span class="p">:-</span> <span class="k">#count</span><span class="p">{</span><span class="nv">D1</span><span class="p">:</span> work_in<span class="p">(</span><span class="nv">D</span><span class="p">,</span><span class="nv">D1</span><span class="p">,</span><span class="nv">S</span><span class="p">),</span> shift<span class="p">(</span><span class="nv">S</span><span class="p">,</span><span class="nv">_</span><span class="p">,</span><span class="nv">_</span><span class="p">),</span> day<span class="p">(</span><span class="nv">D</span><span class="p">)}</span> <span class="o">&lt;</span> <span class="nv">M</span><span class="p">,</span> <span class="nv">S</span> <span class="o">=</span> <span class="s2">&quot;afternoon&quot;</span><span class="p">,</span> <span class="nv">M</span> <span class="o">=</span> minNurseAfternoon<span class="p">.</span>
+<span class="p">:-</span> <span class="k">#count</span><span class="p">{</span><span class="nv">D1</span><span class="p">:</span> work_in<span class="p">(</span><span class="nv">D</span><span class="p">,</span><span class="nv">D1</span><span class="p">,</span><span class="nv">S</span><span class="p">),</span> shift<span class="p">(</span><span class="nv">S</span><span class="p">,</span><span class="nv">_</span><span class="p">,</span><span class="nv">_</span><span class="p">),</span> day<span class="p">(</span><span class="nv">D</span><span class="p">)}</span> <span class="o">&lt;</span> <span class="nv">M</span><span class="p">,</span> <span class="nv">S</span> <span class="o">=</span> <span class="s2">&quot;night&quot;</span><span class="p">,</span> <span class="nv">M</span> <span class="o">=</span> minNurseNight<span class="p">.</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="when-clause">
+<h2>WHEN_CLAUSE<a class="headerlink" href="#when-clause" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>WHEN_CLASUE -&gt; &quot;when&quot; SIMPLE_CLAUSE_LIST
+</pre></div>
+</div>
+<p>This clause adds a condition. It is made of a terminal symbol “when” and a list of <em>SIMPLE_CLAUSE</em> that is a simple proposition made of:</p>
+<ul class="simple">
+<li><p>a subject (<em>ENTITY</em>),</p></li>
+<li><p>an <em>AUXILIARY_VERB</em>,</p></li>
+<li><p>a verb (an <em>ENTITY</em>),</p></li>
+<li><p>a list of objects (<em>LIST_OF_ENTITIES</em>)</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Waiter W is working when waiter W serves a drink.
+</pre></div>
+</div>
+<section id="id1">
+<h3>Corresponding ASP:<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<div class="highlight-clingo notranslate"><div class="highlight"><pre><span></span>working<span class="p">(</span><span class="nv">W</span><span class="p">)</span> <span class="p">:-</span> serve<span class="p">(</span><span class="nv">W</span><span class="p">,</span><span class="nv">DRNK_D</span><span class="p">),</span> drink<span class="p">(</span><span class="nv">DRNK_D</span><span class="p">),</span> waiter<span class="p">(</span><span class="nv">W</span><span class="p">).</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CNL2ASP</a></h1>
+
+
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_start.html">Getting start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts_definition.html">Concepts definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Constants definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="entity.html">Entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defining_new_concepts.html">Defining new concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weak_constraints.html">Weak Constraints</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Terminal clauses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typed_entities.html">Typed Entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="telingo.html">Temporal Extension</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CNL2ASP.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

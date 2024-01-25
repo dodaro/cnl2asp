@@ -1,0 +1,111 @@
+Typed Entities
+============================
+
+There are some special entity types supported in CNL2ASP. 
+In particular, we currently support temporal entities, lists and sets.
+
+Temporal Entities
+----------------------------
+
+Temporal entities are in the form:
+
+.. code-block:: text
+    
+    TEMPORAL_CONCEPT -> NAME "is a temporal concept expressed in" TEMPORAL_TYPE "ranging from" TEMPORAL_VALUE "to" TEMPORAL_VALUE ("with a length of" NUMBER ("minutes" | "days")?)?
+
+where *TEMPORAL_TYPE* can be one of "days", "minutes", "steps". You also have to provide a starting value and ending value, which can be dates or numbers in case of minutes and steps.
+Moreover, it is possibile to provide an incremental value with the last part.
+
+Examples:
+
+.. code-block:: text
+
+    A timeslot is a temporal concept expressed in minutes ranging from 07:30 AM to 01:30 PM with a length of 10 minutes.
+    A time is a temporal concept expressed in steps ranging from 0 to 10.
+    
+the tool will generate all the values between the range provided and allows you to perform some particular temporal operations:
+    
+.. code-block:: text
+
+    It is required that the assignment A is after 11:20 AM, ...
+
+where the tool takes the corresponding generated id for the value "11:20 AM" and sets it to its value + 1.
+
+Corresponding ASP:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Suppose that scoreAssignment is defined as follows:
+
+.. code-block:: text
+
+    An assignment is identified by a timeslot.
+
+It is necessary to have an attribute that is defined as a temporal concept, in this case *timeslot*. The previous example result is:
+
+.. code-block:: clingo 
+
+    assignment(TMSLT_SSGNMNT), TMSLT_SSGNMNT <= 23, ...
+
+Note the usage of the "It is required" and the "<=".
+
+
+Set
+----------------------------
+
+First of all, we have to define a set and, optionally, the elements of the set.
+
+| :code:`Graph is a set.` (set definition)
+| :code:`Graph contains node1, node2, node3.` (set initialization)
+
+Then, to use a set the following construction is supported:
+
+.. code-block:: text
+
+    SET_ENTITY -> "an element" (EXPRESSION)? (ATTRIBUTE_COMPARISON)? "in" NAME
+
+Examples:
+
+.. code-block:: text
+
+    Whenever there is an element X in graph,
+
+
+Corresponding ASP:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: clingo
+
+     set("graph",X)
+
+Note that the name provided is used as identifier for the graph.
+
+List
+----------------------------
+
+Lists are similar to sets but they extend some possible operations.
+
+First of all the definition:
+
+
+| :code:`shift is a list.` (list definition)
+| :code:`shift contains morning, afternoon, night.` (list initialization)
+
+Then, the usage:
+
+.. code-block:: text
+
+    Whenever there is an element X in shift, ...
+    It is prohibited that a nurse works in the shift element after night.
+    It is prohibited that a nurse works in the 1st element in shift.
+
+
+Corresponding ASP:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: clingo
+
+    list("shift",LST_NDX,X).
+    :- nurse(WRK_N_D), work_in(WRK_N_D,LMNT,"shift"), list("shift",LMNT,"morning").
+    :- nurse(WRK_N_D), work_in(WRK_N_D,LMNT,"shift"), list("shift",LMNT,"morning").
+
+Note that list entities have arity 3, where one is the list identifier that is the name provided in the definition, one is the index of the element and the last one is the value of the element.

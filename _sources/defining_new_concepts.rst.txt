@@ -1,0 +1,147 @@
+Defining new concepts
+==============================
+
+This chapter presents how to define new concepts. You can link defined entities and create a new knowledge.
+This is represented by the **NEW_DEFINITION** token. This token is very similar to *ENTITY* introduced in the previous chapter. However, while *ENTITY* must be defined in the :doc:`concepts_definition`, this does not hold for *NEW_DEFINITION*. Moreover, *NEW_DEFINITION* name can be followed by a proposition. This is the case of a verb, e.g. work in, assigned to...
+As propositions, the tool currently accepts: "to", "by", "in".
+
+**Note that as said above, since it is a new knowledge, it is possible to not define these concepts in the concepts definition.**
+If the new concept is not defined, the structure is computed as follows:
+
+- all the keys of the entities defined as a condition are added to the new definition;
+- you can define specific attributes with the "with ATTRIBUTE_NAME VALUE";
+- if an attribute is already included it is discarded.
+
+Simple definition
+------------------------------
+
+The simplest way to define a new concept is:
+
+.. code-block:: text
+
+    SIMPLE_DEFINITION -> ENTITY AUXILIARY_VERB? NEW_DEFINITION LIST_OF_ENTITIES?.
+
+where *AUXILIARY_VERB* can be one of the verbs to be, to have, and to do and the optional *LIST_OF_ENTITIES* is a comma separated list of *ENTITY*.
+
+Examples:
+
+
+| :code:`An author has written a movie.` (NEW_DEFINITION = written)
+| :code:`Waiter Alice is working in a pub.` (NEW_DEFINITION = working_in)
+| :code:`Director Spielberg has written a movie with name equal to JurassicPark.` (NEW_DEFINITION = written)
+
+Note the usage of the proposition *in* in the second sentence.
+
+
+Corresponding ASP:
+^^^^^^^^^^^^^^^^^^^^^^^^^
+Considering the following definitions:
+
+.. code-block:: text
+
+    An author is identified by a name.
+    A waiter is identified by a name.
+    A director is identified by a name.
+    A movie is identified by a name.
+
+The previous examples are translated into:
+
+.. code-block:: clingo
+
+    written(MOVIDE_NAME,AUTHOR_NAME) :- movie(MOVIDE_NAME), author(AUTHOR_NAME).
+    working_in("Alice",PB_NM) :- waiter("Alice"), pub(PB_NM).
+    written("spielberg","jurassicPark") :- movie("jurassicPark"), author("spielberg").
+
+Note that in both sentences, written has been defined by the tool taking the keys of the entities in the body.
+
+
+Quantified choice proposition
+------------------------------
+A quantified choice proposition is defined as follows:
+
+.. code-block:: text
+
+    QUANTIFIED_CHOICE_PROPOSITION -> ("Every" | "Any") ENTITY ASSIGNMENT_VERB AUXILIARY_VERB? NEW_DEFINITION CARDINALITY? LIST_OF_ENTITIES?.
+ 
+where *ASSIGNMENT_VERB* is one of "can" and "must". 
+The difference between "can" and "must", is that with "must" whenever the condition is satisfied there is the *NEW_DEFINITION*, instead, with *can* whenever the condition is satisfied you can have or not the *NEW_DEFINITION* (this corresponds to the ASP assignment and ASP choice rules).
+Moreover, with *can*, you can define a *CARDINALITY*:
+
+.. code-block:: text
+
+    CARDINALITY -> ("exactly" | "at most" | "at least") STRING
+                 | "between" STRING "and" STRING
+
+Finally, LIST_OF_*ENTITIES* is a comma-separated list of *ENTITY*.
+
+Examples:
+
+.. code-block:: text
+
+    Every patron can drink in exactly 1 pub.
+    Every waiter can serve a drink.
+    Every movie with name I must have a scoreAssignment with movie I, with value 5.
+
+Corresponding ASP:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Considering the following definitions:
+
+.. code-block:: text
+
+    A patron is identified by a name.
+    A pub is identified by a name.
+    A waiter is identified by a name.
+    A drink is identified by a name.
+
+The previous example is translated into:
+
+.. code-block:: clingo
+
+    1 <= {drink_in(PATRON_NAME,PUB_NAME): pub(PUB_NAME)} <= 1 :- patron(PATRON_NAME).
+    {serve(WAITER_NAME,DRINK_NAME): drink(DRINK_NAME)} :- waiter(WAITER_NAME).
+    scoreassignment(I,5) :- movie(I).
+
+Note that the scoreAssignment structure has been explicitly declared using the *with ATTRIBUTE_NAME VALUE* statement. 
+
+Whenever/Then propositions
+------------------------------
+
+First of all, a *WHENEVER_CLAUSE* is defined as follows:
+
+.. code-block:: text
+    
+    WHENEVER_CLAUSE -> "Whenever there is" ENTITY
+
+A Whenever-then proposition is:
+
+.. code-block:: text
+    
+    WHENEVER_THAN_CLAUSE -> LIST_OF_WHENEVER_CLAUSE "then" ENTITY ASSIGNMENT_VERB AUXILIARY_VERB? [CARDINALITY] NEW_DEFINITION LIST_OF_ENTITIES
+
+where, as previously, *LIST_OF_ENTITIES* is a comma separated list of *ENTITY*.
+
+Examples:
+
+.. code-block:: text
+    
+    Whenever there is a movie with director equal to spielberg, with id X then we must have a topmovie with id X. (in this example we have an ENTITY = *we*, it is possibile to use pronouns and in that case, it is ignored and not converted into any entity)
+    Whenever there is a movie M, then M can be assigned to exactly 1 director.
+
+The *whenever there is* is used to define the condition, that, if satisfied, defines the new concept.
+
+
+Corresponding ASP:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Considering the following definitions:
+
+.. code-block:: text
+
+    A movie is identified by an id, and has a name.
+    A director is identified by a name.
+
+The previous example is translated into:
+
+.. code-block:: clingo
+
+    topmovie(X) :- movie(X,"JurassikPark").
+    1 <= {assigned_to(M,DRCTR_NM): director(DRCTR_NM)} <= 1 :- movie(M,_).

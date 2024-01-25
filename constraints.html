@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Constraints &#8212; CNL2ASP</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=51b770b3"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Weak Constraints" href="weak_constraints.html" />
+    <link rel="prev" title="Defining new concepts" href="defining_new_concepts.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="constraints">
+<h1>Constraints<a class="headerlink" href="#constraints" title="Link to this heading">¶</a></h1>
+<p>Before describing the constraints some building blocks must be added: <em>AGGREGATE</em> and <em>COMPARISON</em>.</p>
+<section id="aggregates">
+<h2>AGGREGATES:<a class="headerlink" href="#aggregates" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>AGGREGATE -&gt; aggregate_clause: AGGREGATE_OPERATOR &quot;of&quot; ENTITY
+           | AGGREGATE_OPERATOR &quot;of&quot;? parameter &quot;of&quot; ENTITY
+           | AGGREGATE_OPERATOR &quot;of&quot; ATTRIBUTE &quot;that&quot; AUXILIARY_VERB? ENTITY LIST_OF_ENTITIES?
+           | AGGREGATE_OPERATOR &quot;of&quot; ATTRIBUTE &quot;where&quot; ENTITY AUXILIARY_VERB? ENTITY LIST_OF_ENTITIES?
+</pre></div>
+</div>
+<p>The tool accepts some equivalent constructions, you can choose the more suitable to your context.</p>
+<p>The list of <em>AGGREGATE_OPERATOR</em> supported is the following:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>AGGREGATE_OPERATOR -&gt; &quot;the&quot; ( &quot;number&quot; | &quot;total&quot; | &quot;highest&quot; | &quot;lowest&quot; | &quot;biggest&quot; | &quot;smallest&quot;)
+</pre></div>
+</div>
+<p>Each one corresponding to an ASP aggregate operator, respectively #count, #sum, #max, #min, #max, #min.</p>
+<p>Examples:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>the number of waiters
+the total value of a scoreAssignment
+the number of waiters that work in a pub
+the number of pub where a waiter work in
+</pre></div>
+</div>
+<section id="corresponding-asp">
+<h3>Corresponding ASP:<a class="headerlink" href="#corresponding-asp" title="Link to this heading">¶</a></h3>
+<p>Considering the following definitions:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A pub is identified by a name.
+A waiter is identified by a name.
+A scoreAssignment is identified by a movie name, by a value.
+A work_in is identified by a waiter name, and by a pub.
+</pre></div>
+</div>
+<p>The previous example is translated into:</p>
+<div class="highlight-clingo notranslate"><div class="highlight"><pre><span></span><span class="k">#count</span><span class="p">{</span>waiter<span class="p">(</span><span class="nv">WTR_NM</span><span class="p">):</span> waiter<span class="p">(</span><span class="nv">WTR_NM</span><span class="p">)}</span>
+<span class="k">#count</span><span class="p">{</span>waiter<span class="p">(</span><span class="nv">WTR_NM</span><span class="p">):</span> waiter<span class="p">(</span><span class="nv">WTR_NM</span><span class="p">)}</span>
+<span class="k">#sum</span><span class="p">{</span><span class="nv">VL</span><span class="p">:</span> scoreassignment<span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="nv">VL</span><span class="p">)}</span>
+<span class="k">#count</span><span class="p">{</span><span class="nv">NM</span><span class="p">:</span> work_in<span class="p">(</span><span class="nv">NM</span><span class="p">,</span><span class="nv">WRK_N_NM</span><span class="p">),</span> pub<span class="p">(</span><span class="nv">WRK_N_NM</span><span class="p">)}</span>
+waiter<span class="p">(</span><span class="nv">WRK_N_NM</span><span class="p">),</span> <span class="k">#count</span><span class="p">{</span><span class="nv">NM</span><span class="p">:</span> work_in<span class="p">(</span><span class="nv">WRK_N_NM</span><span class="p">,</span><span class="nv">NM</span><span class="p">)}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="comparisons">
+<h2>COMPARISONS:<a class="headerlink" href="#comparisons" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>COMPARISON -&gt; COMPARISON_OPERAND &quot;is&quot; COMPARISON_OPERATOR COMPARISON_OPERAND
+</pre></div>
+</div>
+<p>Here, three different <em>COMPARISON_OPERAND</em> types are supported: <em>AGGREGATE</em>, <em>ARITHMETIC_EXPRESSION</em>, <em>ATTRIBUTE</em>,
+where <em>ARITHMETIC_EXPRESSION</em> can be written by words (“the sum of..”) or by math symbols (A + B).
+Moreover, <em>COMPARISON_OPERAND</em> can be concatenated through <code class="code docutils literal notranslate"><span class="pre">COMPARISON_OPERAND</span> <span class="pre">&quot;and&quot;</span> <span class="pre">COMPARISON_OPERAND</span></code>.
+While, <em>COMPARISON_OPERAND</em> is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>COMPARISON_OPERATOR -&gt; &quot;the same as&quot; | &quot;different from&quot; | &quot;equal to&quot; | &quot;more than&quot; | &quot;greater than&quot; | &quot;less than&quot; | &quot;greater than or equal to&quot; | &quot;at least&quot; | &quot;at most&quot; | &quot;between&quot;
+</pre></div>
+</div>
+<p>with the intuitive meaning: “=”, “!=”, “=”, “&gt;”, “&gt;”, “&lt;”, “&gt;=”, “&gt;”, “&lt;”, “value_1 &lt; FIRST OPERAND &lt; value_2”</p>
+<p>Examples:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>X is equal to Y
+V is equal to 3
+the total value of a scoreAssignment with movie name X is equal to 1
+the sum between A, and B is equal to 1
+</pre></div>
+</div>
+<p>Finally, for <em>ARITHMETIC_EXPRESSION</em> you can recall ATTRIBUTES of entities by their label. An example is provided below.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>the sum between the value of the scoreAssignment A, and the value of the scoreAssignment B is equal to 1
+</pre></div>
+</div>
+<p>then, you can use A and B to access these two distinct (even if they have the same name, because of the different label) entities.</p>
+<section id="id1">
+<h3>Corresponding ASP:<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<div class="highlight-clingo notranslate"><div class="highlight"><pre><span></span><span class="nv">X</span> <span class="o">=</span> <span class="nv">Y</span>
+<span class="nv">V</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="k">#sum</span><span class="p">{</span><span class="nv">VL</span><span class="p">:</span> scoreassignment<span class="p">(</span><span class="nv">X</span><span class="p">,</span><span class="nv">VL</span><span class="p">)}</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="nv">A</span> <span class="o">+</span> <span class="nv">B</span> <span class="o">=</span> <span class="mi">1</span>
+scoreassignment<span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="nv">SCRSSGNMNT_VL</span><span class="p">),</span> scoreassignment<span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="nv">SCRSSGNMNT_VL1</span><span class="p">),</span> <span class="nv">SCRSSGNMNT_VL</span> <span class="o">+</span> <span class="nv">SCRSSGNMNT_VL1</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id2">
+<h2>CONSTRAINTS:<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>CONSTRAINT_PROPOSITION -&gt; CONSTRAINT_OPERATOR (COMPARISON | THERE_IS_ENTITY).
+</pre></div>
+</div>
+<p>where <em>THERE_IS_CLAUSE</em> is <code class="code docutils literal notranslate"><span class="pre">&quot;there</span> <span class="pre">is&quot;</span> <span class="pre">ENTITY</span></code>.
+Instead, <em>CONSTRAINT_OPERATOR</em> is one of “it is prohibited that” or “it is required that”.
+Indeed, one is the opposite of the others, and in case of “it is required that” the tool negates the subsequent part.</p>
+<p>Examples:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>It is prohibited that the number of waiters that work in a pub is less than 3.
+It is prohibited that the total value of a scoreAssignment with movie id X is equal to 1.
+It is prohibited that there is a scoreAssignment with value V less than 1.
+</pre></div>
+</div>
+<p>The same can be written with the “it is required that” operator:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>It is required that the number of waiters that work in a pub is less than 3.
+It is required that the lowest value of a scoreAssignment with movie id X is equal to 1.
+It is required that there is a scoreAssignment with value V less than 1.
+</pre></div>
+</div>
+<section id="id3">
+<h3>Corresponding ASP:<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<div class="highlight-clingo notranslate"><div class="highlight"><pre><span></span><span class="p">:-</span> <span class="k">#count</span><span class="p">{</span><span class="nv">NM</span><span class="p">:</span> work_in<span class="p">(</span><span class="nv">NM</span><span class="p">,</span><span class="nv">WRK_N_NM</span><span class="p">),</span> pub<span class="p">(</span><span class="nv">WRK_N_NM</span><span class="p">)}</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">.</span>
+<span class="p">:-</span> <span class="k">#sum</span><span class="p">{</span><span class="nv">VL</span><span class="p">:</span> scoreassignment<span class="p">(</span><span class="nv">X</span><span class="p">,</span><span class="nv">VL</span><span class="p">)}</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span>
+<span class="p">:-</span> <span class="nv">V</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">,</span> scoreassignment<span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="nv">V</span><span class="p">).</span>
+
+<span class="p">:-</span> <span class="k">#count</span><span class="p">{</span><span class="nv">NM</span><span class="p">:</span> work_in<span class="p">(</span><span class="nv">NM</span><span class="p">,</span><span class="nv">WRK_N_NM</span><span class="p">),</span> pub<span class="p">(</span><span class="nv">WRK_N_NM</span><span class="p">)}</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">.</span>
+<span class="p">:-</span> <span class="k">#sum</span><span class="p">{</span><span class="nv">VL</span><span class="p">:</span> scoreassignment<span class="p">(</span><span class="nv">X</span><span class="p">,</span><span class="nv">VL</span><span class="p">)}</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">.</span>
+<span class="p">:-</span> <span class="nv">V</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">,</span> scoreassignment<span class="p">(</span><span class="nv">_</span><span class="p">,</span><span class="nv">V</span><span class="p">).</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CNL2ASP</a></h1>
+
+
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_start.html">Getting start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts_definition.html">Concepts definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Constants definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="entity.html">Entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defining_new_concepts.html">Defining new concepts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weak_constraints.html">Weak Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminal_clauses.html">Terminal clauses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typed_entities.html">Typed Entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="telingo.html">Temporal Extension</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CNL2ASP.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

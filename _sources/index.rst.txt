@@ -1,0 +1,30 @@
+.. cnl2asp documentation master file, created by
+   sphinx-quickstart on Thu Jan 18 14:49:03 2024.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to CNL2ASP's documentation!
+===================================
+
+A prototype for a Controlled Natural Language based on English.
+A document written in this language is compiled into an equivalent version expressed in Answer Set Programming.
+The compiler is written in the Python (>= 3.10) programming language.
+
+Indices and tables
+----------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   getting_start
+   concepts_definition
+   constants
+   entity
+   defining_new_concepts
+   constraints
+   weak_constraints
+   terminal_clauses
+   typed_entities
+   telingo
+
+

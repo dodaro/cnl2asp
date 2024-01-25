@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Defining new concepts &#8212; CNL2ASP</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=51b770b3"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Constraints" href="constraints.html" />
+    <link rel="prev" title="Entity" href="entity.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="defining-new-concepts">
+<h1>Defining new concepts<a class="headerlink" href="#defining-new-concepts" title="Link to this heading">¶</a></h1>
+<p>This chapter presents how to define new concepts. You can link defined entities and create a new knowledge.
+This is represented by the <strong>NEW_DEFINITION</strong> token. This token is very similar to <em>ENTITY</em> introduced in the previous chapter. However, while <em>ENTITY</em> must be defined in the <a class="reference internal" href="concepts_definition.html"><span class="doc">Concepts definition</span></a>, this does not hold for <em>NEW_DEFINITION</em>. Moreover, <em>NEW_DEFINITION</em> name can be followed by a proposition. This is the case of a verb, e.g. work in, assigned to…
+As propositions, the tool currently accepts: “to”, “by”, “in”.</p>
+<p><strong>Note that as said above, since it is a new knowledge, it is possible to not define these concepts in the concepts definition.</strong>
+If the new concept is not defined, the structure is computed as follows:</p>
+<ul class="simple">
+<li><p>all the keys of the entities defined as a condition are added to the new definition;</p></li>
+<li><p>you can define specific attributes with the “with ATTRIBUTE_NAME VALUE”;</p></li>
+<li><p>if an attribute is already included it is discarded.</p></li>
+</ul>
+<section id="simple-definition">
+<h2>Simple definition<a class="headerlink" href="#simple-definition" title="Link to this heading">¶</a></h2>
+<p>The simplest way to define a new concept is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SIMPLE_DEFINITION -&gt; ENTITY AUXILIARY_VERB? NEW_DEFINITION LIST_OF_ENTITIES?.
+</pre></div>
+</div>
+<p>where <em>AUXILIARY_VERB</em> can be one of the verbs to be, to have, and to do and the optional <em>LIST_OF_ENTITIES</em> is a comma separated list of <em>ENTITY</em>.</p>
+<p>Examples:</p>
+<div class="line-block">
+<div class="line"><code class="code docutils literal notranslate"><span class="pre">An</span> <span class="pre">author</span> <span class="pre">has</span> <span class="pre">written</span> <span class="pre">a</span> <span class="pre">movie.</span></code> (NEW_DEFINITION = written)</div>
+<div class="line"><code class="code docutils literal notranslate"><span class="pre">Waiter</span> <span class="pre">Alice</span> <span class="pre">is</span> <span class="pre">working</span> <span class="pre">in</span> <span class="pre">a</span> <span class="pre">pub.</span></code> (NEW_DEFINITION = working_in)</div>
+<div class="line"><code class="code docutils literal notranslate"><span class="pre">Director</span> <span class="pre">Spielberg</span> <span class="pre">has</span> <span class="pre">written</span> <span class="pre">a</span> <span class="pre">movie</span> <span class="pre">with</span> <span class="pre">name</span> <span class="pre">equal</span> <span class="pre">to</span> <span class="pre">JurassicPark.</span></code> (NEW_DEFINITION = written)</div>
+</div>
+<p>Note the usage of the proposition <em>in</em> in the second sentence.</p>
+<section id="corresponding-asp">
+<h3>Corresponding ASP:<a class="headerlink" href="#corresponding-asp" title="Link to this heading">¶</a></h3>
+<p>Considering the following definitions:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>An author is identified by a name.
+A waiter is identified by a name.
+A director is identified by a name.
+A movie is identified by a name.
+</pre></div>
+</div>
+<p>The previous examples are translated into:</p>
+<div class="highlight-clingo notranslate"><div class="highlight"><pre><span></span>written<span class="p">(</span><span class="nv">MOVIDE_NAME</span><span class="p">,</span><span class="nv">AUTHOR_NAME</span><span class="p">)</span> <span class="p">:-</span> movie<span class="p">(</span><span class="nv">MOVIDE_NAME</span><span class="p">),</span> author<span class="p">(</span><span class="nv">AUTHOR_NAME</span><span class="p">).</span>
+working_in<span class="p">(</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span><span class="nv">PB_NM</span><span class="p">)</span> <span class="p">:-</span> waiter<span class="p">(</span><span class="s2">&quot;Alice&quot;</span><span class="p">),</span> pub<span class="p">(</span><span class="nv">PB_NM</span><span class="p">).</span>
+written<span class="p">(</span><span class="s2">&quot;spielberg&quot;</span><span class="p">,</span><span class="s2">&quot;jurassicPark&quot;</span><span class="p">)</span> <span class="p">:-</span> movie<span class="p">(</span><span class="s2">&quot;jurassicPark&quot;</span><span class="p">),</span> author<span class="p">(</span><span class="s2">&quot;spielberg&quot;</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>Note that in both sentences, written has been defined by the tool taking the keys of the entities in the body.</p>
+</section>
+</section>
+<section id="quantified-choice-proposition">
+<h2>Quantified choice proposition<a class="headerlink" href="#quantified-choice-proposition" title="Link to this heading">¶</a></h2>
+<p>A quantified choice proposition is defined as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>QUANTIFIED_CHOICE_PROPOSITION -&gt; (&quot;Every&quot; | &quot;Any&quot;) ENTITY ASSIGNMENT_VERB AUXILIARY_VERB? NEW_DEFINITION CARDINALITY? LIST_OF_ENTITIES?.
+</pre></div>
+</div>
+<p>where <em>ASSIGNMENT_VERB</em> is one of “can” and “must”.
+The difference between “can” and “must”, is that with “must” whenever the condition is satisfied there is the <em>NEW_DEFINITION</em>, instead, with <em>can</em> whenever the condition is satisfied you can have or not the <em>NEW_DEFINITION</em> (this corresponds to the ASP assignment and ASP choice rules).
+Moreover, with <em>can</em>, you can define a <em>CARDINALITY</em>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>CARDINALITY -&gt; (&quot;exactly&quot; | &quot;at most&quot; | &quot;at least&quot;) STRING
+             | &quot;between&quot; STRING &quot;and&quot; STRING
+</pre></div>
+</div>
+<p>Finally, LIST_OF_*ENTITIES* is a comma-separated list of <em>ENTITY</em>.</p>
+<p>Examples:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Every patron can drink in exactly 1 pub.
+Every waiter can serve a drink.
+Every movie with name I must have a scoreAssignment with movie I, with value 5.
+</pre></div>
+</div>
+<section id="id1">
+<h3>Corresponding ASP:<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<p>Considering the following definitions:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A patron is identified by a name.
+A pub is identified by a name.
+A waiter is identified by a name.
+A drink is identified by a name.
+</pre></div>
+</div>
+<p>The previous example is translated into:</p>
+<div class="highlight-clingo notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="p">{</span>drink_in<span class="p">(</span><span class="nv">PATRON_NAME</span><span class="p">,</span><span class="nv">PUB_NAME</span><span class="p">):</span> pub<span class="p">(</span><span class="nv">PUB_NAME</span><span class="p">)}</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="p">:-</span> patron<span class="p">(</span><span class="nv">PATRON_NAME</span><span class="p">).</span>
+<span class="p">{</span>serve<span class="p">(</span><span class="nv">WAITER_NAME</span><span class="p">,</span><span class="nv">DRINK_NAME</span><span class="p">):</span> drink<span class="p">(</span><span class="nv">DRINK_NAME</span><span class="p">)}</span> <span class="p">:-</span> waiter<span class="p">(</span><span class="nv">WAITER_NAME</span><span class="p">).</span>
+scoreassignment<span class="p">(</span><span class="nv">I</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="p">:-</span> movie<span class="p">(</span><span class="nv">I</span><span class="p">).</span>
+</pre></div>
+</div>
+<p>Note that the scoreAssignment structure has been explicitly declared using the <em>with ATTRIBUTE_NAME VALUE</em> statement.</p>
+</section>
+</section>
+<section id="whenever-then-propositions">
+<h2>Whenever/Then propositions<a class="headerlink" href="#whenever-then-propositions" title="Link to this heading">¶</a></h2>
+<p>First of all, a <em>WHENEVER_CLAUSE</em> is defined as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>WHENEVER_CLAUSE -&gt; &quot;Whenever there is&quot; ENTITY
+</pre></div>
+</div>
+<p>A Whenever-then proposition is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>WHENEVER_THAN_CLAUSE -&gt; LIST_OF_WHENEVER_CLAUSE &quot;then&quot; ENTITY ASSIGNMENT_VERB AUXILIARY_VERB? [CARDINALITY] NEW_DEFINITION LIST_OF_ENTITIES
+</pre></div>
+</div>
+<p>where, as previously, <em>LIST_OF_ENTITIES</em> is a comma separated list of <em>ENTITY</em>.</p>
+<p>Examples:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Whenever there is a movie with director equal to spielberg, with id X then we must have a topmovie with id X. (in this example we have an ENTITY = *we*, it is possibile to use pronouns and in that case, it is ignored and not converted into any entity)
+Whenever there is a movie M, then M can be assigned to exactly 1 director.
+</pre></div>
+</div>
+<p>The <em>whenever there is</em> is used to define the condition, that, if satisfied, defines the new concept.</p>
+<section id="id2">
+<h3>Corresponding ASP:<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<p>Considering the following definitions:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A movie is identified by an id, and has a name.
+A director is identified by a name.
+</pre></div>
+</div>
+<p>The previous example is translated into:</p>
+<div class="highlight-clingo notranslate"><div class="highlight"><pre><span></span>topmovie<span class="p">(</span><span class="nv">X</span><span class="p">)</span> <span class="p">:-</span> movie<span class="p">(</span><span class="nv">X</span><span class="p">,</span><span class="s2">&quot;JurassikPark&quot;</span><span class="p">).</span>
+<span class="mi">1</span> <span class="o">&lt;=</span> <span class="p">{</span>assigned_to<span class="p">(</span><span class="nv">M</span><span class="p">,</span><span class="nv">DRCTR_NM</span><span class="p">):</span> director<span class="p">(</span><span class="nv">DRCTR_NM</span><span class="p">)}</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="p">:-</span> movie<span class="p">(</span><span class="nv">M</span><span class="p">,</span><span class="nv">_</span><span class="p">).</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CNL2ASP</a></h1>
+
+
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_start.html">Getting start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts_definition.html">Concepts definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Constants definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="entity.html">Entity</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Defining new concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weak_constraints.html">Weak Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminal_clauses.html">Terminal clauses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typed_entities.html">Typed Entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="telingo.html">Temporal Extension</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CNL2ASP.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

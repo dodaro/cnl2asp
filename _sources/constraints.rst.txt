@@ -1,0 +1,149 @@
+Constraints
+=========================
+
+Before describing the constraints some building blocks must be added: *AGGREGATE* and *COMPARISON*.
+
+-----------------------------
+AGGREGATES:
+-----------------------------
+
+.. code-block:: text
+
+    AGGREGATE -> aggregate_clause: AGGREGATE_OPERATOR "of" ENTITY
+               | AGGREGATE_OPERATOR "of"? parameter "of" ENTITY
+               | AGGREGATE_OPERATOR "of" ATTRIBUTE "that" AUXILIARY_VERB? ENTITY LIST_OF_ENTITIES?
+               | AGGREGATE_OPERATOR "of" ATTRIBUTE "where" ENTITY AUXILIARY_VERB? ENTITY LIST_OF_ENTITIES?
+               
+The tool accepts some equivalent constructions, you can choose the more suitable to your context.
+
+The list of *AGGREGATE_OPERATOR* supported is the following:
+
+.. code-block:: text
+
+  AGGREGATE_OPERATOR -> "the" ( "number" | "total" | "highest" | "lowest" | "biggest" | "smallest")
+
+Each one corresponding to an ASP aggregate operator, respectively #count, #sum, #max, #min, #max, #min.
+
+Examples:
+
+.. code-block:: text
+
+  the number of waiters
+  the total value of a scoreAssignment
+  the number of waiters that work in a pub
+  the number of pub where a waiter work in
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Corresponding ASP:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Considering the following definitions:
+
+.. code-block:: text
+
+  A pub is identified by a name.
+  A waiter is identified by a name.
+  A scoreAssignment is identified by a movie name, by a value.
+  A work_in is identified by a waiter name, and by a pub.
+
+The previous example is translated into:
+
+.. code-block:: clingo
+
+  #count{waiter(WTR_NM): waiter(WTR_NM)}
+  #count{waiter(WTR_NM): waiter(WTR_NM)}
+  #sum{VL: scoreassignment(_,VL)} 
+  #count{NM: work_in(NM,WRK_N_NM), pub(WRK_N_NM)}
+  waiter(WRK_N_NM), #count{NM: work_in(WRK_N_NM,NM)}
+
+
+-----------------------------
+COMPARISONS:
+-----------------------------
+
+.. code-block:: text
+
+    COMPARISON -> COMPARISON_OPERAND "is" COMPARISON_OPERATOR COMPARISON_OPERAND
+
+Here, three different *COMPARISON_OPERAND* types are supported: *AGGREGATE*, *ARITHMETIC_EXPRESSION*, *ATTRIBUTE*, 
+where *ARITHMETIC_EXPRESSION* can be written by words ("the sum of..") or by math symbols (A + B).
+Moreover, *COMPARISON_OPERAND* can be concatenated through :code:`COMPARISON_OPERAND "and" COMPARISON_OPERAND`.
+While, *COMPARISON_OPERAND* is:
+
+.. code-block:: text
+
+    COMPARISON_OPERATOR -> "the same as" | "different from" | "equal to" | "more than" | "greater than" | "less than" | "greater than or equal to" | "at least" | "at most" | "between"
+
+with the intuitive meaning: "=", "!=", "=", ">", ">", "<", ">=", ">", "<", "value_1 < FIRST OPERAND < value_2"
+
+Examples:
+
+.. code-block:: text
+
+  X is equal to Y
+  V is equal to 3
+  the total value of a scoreAssignment with movie name X is equal to 1
+  the sum between A, and B is equal to 1
+
+Finally, for *ARITHMETIC_EXPRESSION* you can recall ATTRIBUTES of entities by their label. An example is provided below.
+
+.. code-block:: text
+
+  the sum between the value of the scoreAssignment A, and the value of the scoreAssignment B is equal to 1
+
+then, you can use A and B to access these two distinct (even if they have the same name, because of the different label) entities.
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Corresponding ASP:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: clingo
+
+  X = Y
+  V = 3
+  #sum{VL: scoreassignment(X,VL)} = 1
+  A + B = 1
+  scoreassignment(_,SCRSSGNMNT_VL), scoreassignment(_,SCRSSGNMNT_VL1), SCRSSGNMNT_VL + SCRSSGNMNT_VL1 = 1 
+
+
+-----------------------------
+CONSTRAINTS:
+-----------------------------
+
+.. code-block:: text
+
+    CONSTRAINT_PROPOSITION -> CONSTRAINT_OPERATOR (COMPARISON | THERE_IS_ENTITY).
+
+where *THERE_IS_CLAUSE* is :code:`"there is" ENTITY`.
+Instead, *CONSTRAINT_OPERATOR* is one of "it is prohibited that" or "it is required that". 
+Indeed, one is the opposite of the others, and in case of "it is required that" the tool negates the subsequent part.
+
+Examples:
+
+.. code-block:: text
+    
+    It is prohibited that the number of waiters that work in a pub is less than 3.
+    It is prohibited that the total value of a scoreAssignment with movie id X is equal to 1.
+    It is prohibited that there is a scoreAssignment with value V less than 1.
+
+The same can be written with the "it is required that" operator:
+
+.. code-block:: text 
+
+  It is required that the number of waiters that work in a pub is less than 3.
+  It is required that the lowest value of a scoreAssignment with movie id X is equal to 1.
+  It is required that there is a scoreAssignment with value V less than 1.
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Corresponding ASP:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: clingo
+
+  :- #count{NM: work_in(NM,WRK_N_NM), pub(WRK_N_NM)} < 3.
+  :- #sum{VL: scoreassignment(X,VL)} = 1.
+  :- V < 1, scoreassignment(_,V).
+
+  :- #count{NM: work_in(NM,WRK_N_NM), pub(WRK_N_NM)} >= 3.
+  :- #sum{VL: scoreassignment(X,VL)} != 1.
+  :- V >= 1, scoreassignment(_,V).

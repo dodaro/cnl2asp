@@ -1,0 +1,49 @@
+Concepts definition
+=========================
+
+In order to define an entity the tool accepts the following format:
+
+.. code-block::
+
+    DEFINITION -> ("A" | "An") ENTITY_NAME "has" ATTRIBUTES
+
+Example:
+
+.. code-block:: text
+
+    A movie has an id, and a time duration.
+
+| In this example:
+|   *movie* is the **name** of the entity;
+|   *id*, and *time duration* are the **attributes**. 
+| Therefore, every time *movie* is used, it is recognised as an entity with *id* and *time duration* as attributes.
+
+Attributes and names can be made of letters, numbers and "_" (underscore).
+Note that attribute names can also be multiple words and have to start with a lowercase letter.
+
+Moreover, yuo can define some attributes as keys as in the following example:
+
+.. code-block:: text
+
+    A movie is identified by an id, and has a name, and a duration.
+
+In this case, *id* is saved as a **key** that is the attribute that **identifies** *movie*.
+
+
+**Why keys?**
+Intuitively, keys are the attributes that identify a concept.
+The tool also supports a sort of inheritance concept, you can define a concept as an attribute of another concept. Consider the following example:
+
+.. code-block:: text
+
+    A location is identified by an address, and by a number.
+    A city is identified by a name, and has a location.
+
+This results in *city* having as attribute a *name*, a *location address* and a *location number*, since *location* is identified by an *address* and a *number*.
+
+Moreover, the concepts defined here can be used to define new concepts (see :doc:`defining_new_concepts`). These derived concepts can be not declared here and will have some primitives entities as condition, in this case, the tool creates the new definition starting from the keys of the primitives.
+
+-----------------------------
+Corresponding ASP:
+-----------------------------
+A concept definition does not have an actual ASP translation. Here, you are defining the structure of the atoms, their predicates and fields. This is saved in memory, and the tool will recall these structures to rewrite the CNL into ASP.

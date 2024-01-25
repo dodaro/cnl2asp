@@ -1,0 +1,31 @@
+Constants definition
+============================
+
+In order to define a constant the following statement is accepted:
+
+.. code-block:: text
+
+    CONSTANT -> NAME "is a constant" ("equal to" STRING)?
+
+where *NAME* is a string that identifies the constant. Constants can be initialized with a value or not.
+In case you want to initialize the constant, include the second part :code:`("equal to" STRING)?`. Values can be strings or numbers.
+
+Examples:
+
+.. code-block:: text
+
+    minKelvinTemperature is a constant equal to 0.
+    acceptableTemperature is a constant.
+    
+
+-----------------------------
+Corresponding ASP:
+-----------------------------
+
+The first sentence of the previous example is translated into:
+
+.. code-block::
+
+    #const minKelvinTemperature = 0.
+
+In both cases, in the translation of the CNL into ASP, the constants are maintained with their name in the ASP encoding, e.g. in atoms' fields, aggregates...

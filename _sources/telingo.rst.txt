@@ -1,0 +1,180 @@
+Temporal Extension
+==============================
+
+The grammar of CNL2ASP also supports temporal operators, and in particular, those defined in the Telingo's input language.
+Telingo makes use of clingo's input language and adds three main elements:
+
+1. some program parts whose rules apply in particular states;
+2. being able to refer to an atom in the previous, subsequent and initial state; \
+3. temporal formulas.
+
+An overview of the Telingo's features can be seen in `Telingo <https://github.com/potassco/telingo/tree/master>`_.
+
+
+
+Temporal program parts.
+------------------------------------------------
+Telingo defines four program parts namely:
+
+- initial which applies only to the first state,
+- always which applies to all states,
+- dynamic which applies to all states except the initial state,
+- final which applies only to the last state.
+
+In our CNL, the same result is obtained by:
+
+.. code-block:: text
+
+    program -> TEMPORAL_PART? (standard_proposition END_OF_LINE)+
+
+where *TEMPORAL_PART* is the token used to express the temporal program, *STANDARD_PROPOSITION*, with the + symbol, in the propositions presented in the previous chapters.
+More in detail, *TEMPORAL_PART* is defined as:
+
+.. code-block:: text
+
+    TEMPORAL_PART -> "The following propositions apply in the initial state:"
+                   | "The following propositions always apply:"
+                   | "The following propositions always apply except in the initial state:"
+                   | "The following propositions apply in the final state:"
+
+intuitively, the sentences respectively correspond to the initial, always, dynamic and final programs.
+Moreover, as *TEMPORAL_PART* is optional, when it is not defined, no programs are defined and the propositions are considered part of initial when running the Telingo solver or we have a normal ASP encoding.
+
+Referring to an atom in the previous, subsequent and initial state
+---------------------------------------------------------------------
+
+To refer to a concept in the previous, subsequent and initial state, the *ENTITY* token has been extended with a terminal symbol, that we called *TELINGO_ENTITY_STATE*:
+
+.. code-block:: text
+
+    ENTITY -> TELINGO_ENTITY_STATE ENTITY_DECLARATION
+
+where in *ENTITY_DECLARATION* we have all the elements presented in :doc:`entity`, and *TELINGO_ENTITY_STATE* is one of :code:`previously`, :code:`subsequently` or :code:`initially`.
+
+Examples:
+
+.. code-block:: text
+
+    Whenever there is previously a gun unloaded, whenever there is not a gun loaded then we must have a gun with status equal to unloaded.
+    It is prohibited that there is a gun loading, whenever there is not subsequently a gun loaded.
+    It is required that a truck T moves in a city C, when truck T is initially located in city C.
+
+Corresponding ASP
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Considering the following definitions:
+
+.. code-block:: text
+
+    A gun is identified by a status.
+    A truck is identified by an id.
+    A city is identified by an id.
+    Located_in is identified by a truck, and by a city.
+    Move_in is identified by a truck, and by a city.
+
+The previous example is translated into:
+
+.. code-block:: clingo
+
+    gun("unloaded") :- 'gun("unloaded"), not gun("loaded").
+    :- gun("loading"), not gun'("loaded").
+    :- not move_in(T,C), truck(T), _located_in(T,C), city(C).
+
+Temporal formulas.
+------------------------------------------
+
+A temporal formula is defined as follows:
+
+.. code-block:: text
+
+    TELINGO_FORMULA -> "there is" VERB_NEGATION? TELINGO_TEMPORAL_OPERATOR? TELINGO_OPERAND HOLD_CONDITION? (TELINGO_BINARY_OPERATOR TELINGO_FORMULA)?
+
+where *TELINGO_TEMPORAL_OPERATOR* and *HOLD_CONDITION*, together, allow to specify in which time frame the formula holds, e.g. the A since B operator or the A always after B operator (a full list of the supported Telingo's operators is available in the `Telingo GitHub repository <https://github.com/potassco/telingo/tree/master>`_), and are defined as follows:
+
+.. code-block:: text
+
+    TELINGO_TEMPORAL_OPERATOR -> "always" | "eventually" | "before" | "since before" | "after" | "since after"
+    HOLD_CONDITION -> ("that" VERB_NEGATION? TELINGO_TEMPORAL_OPERATOR "hold")
+                    | ("that" VERB_NEGATION? "hold" TELINGO_TEMPORAL_OPERATOR)
+
+Instead, the optional elements *TELINGO_BINARY_OPERATOR* and *TELINGO_OPERATION* are used to concatenate Telingo formulas.
+In particular, *TELINGO_BINARY_OPERATOR* includes all the temporal and boolean operators that accept two operands:
+
+.. code-block:: text
+
+    TELINGO_DUAL_OPERATOR -> "and" | "or" | "implies" | "imply" | "equivalent" | "trigger" | "since" | "precede" | "release" | "until" | "follow"
+
+Finally, TELINGO_OPERAND is defined as:
+
+.. code-block:: text
+
+    TELINGO_OPERAND -> ENTITY (TELINGO_BINARY_OPERATOR TELINGO_OPERAND)?
+                     | TELINGO_CONSTANT (TELINGO_DUAL_OPERATOR telingo_operand)?
+    TELINGO_CONSTANT -> "it is the initial state"
+                      | "it is the final state"
+                      | "the true constant"
+                      | "the false constant"
+
+therefore, a *TELINGO_OPERAND* can be an *ENTITY*, that is a concept of the problem, or a *TELINGO_CONSTANT*
+that is one of those defined in the table below in the *boolean formulas* section, while the optional *TELINGO_BINARY_OPERATOR* *TELINGO_OPERAND* are used for the concatenation.
+The TELINGO_FORMULA are supported in WHENEVER_CLAUSE (:doc:`defining_new_concepts`) and CONSTRAINT_PRPOPOSITION (:doc:`constraints`).
+
+Examples:
+
+.. code-block:: text
+
+    Whenever there is a gun shooting, whenever there is before a gun unloaded that always holds and there is eventually a gun shooting that holds since before, then we must have a gun with status equal to broken.
+    It is prohibited that there is after a gun loaded and a gun shooting that does not always hold.
+
+In the first sentence, the keyword *before* is used with *always holds*, and *eventually* with *holds since before* which respectively define the Telingo's operator *always before* and *eventually before*, while in the second example the keyword *after* with *not always hold* define the operator *always after* followed by the boolean negation. Moreover, there is also the boolean conjunction inside the formula, which is represented by the *and*.
+
+Corresponding ASP
+^^^^^^^^^^^^^^^^^^^
+
+Such sentences are translated into:
+
+.. code-block:: clingo
+
+    gun("broken") :- gun("shooting"), not not &tel {(<* gun("unloaded")) & (< (<? gun("shooting")))}.
+    :- &tel {>* (~ (gun("loaded") & gun("shooting")))}.
+
+Overview
+-----------------------------------------
+
+In the following tables, it is given an overview of the temporal operators supported in Telingo, the corresponding representation in our CNL and an informal description of the operator's semantic.
+
+========== ====================================================================== ===========================================================================
+Telingo     CNL                                                                    Description
+**Formulas referring to the past**
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+ < A        before A                                                               A has to be true in the previous state
+ <: A       before A or it is the initial state                                    A has to be true in the previous state or it is the initial state
+ A <* B     A trigger(s) B                                                         B has to be true since the state in which A is true
+ <* A       before A that always holds / always A that holds since before          A has to be true in all the previous states
+ A <? B     A since B                                                              B has to be true since the state (or the following one) in which A is true
+ <? A       before A that eventually holds / eventually A that holds since before  A has to be true in at least one of the previous states
+**Formulas referring to the future**
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+ > A        after A                                                                A has to be true in the next state
+ >: A       after A or it is the final state                                       A has to be true in the next state or it is the final state
+ A >* B     A release(s) B                                                         B has to be true until the state in which A is true
+ >* A       after A that always holds / always A that holds since after            A has to be true in all the next states
+ A >? B     A until B                                                              B has to be true until the state (or the previous one) in which A is true
+ >? A       after A that eventually holds / eventually A that holds since after    A has to be true in at least one of the next states
+**Boolean formulas**
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+ A & B      A and B                                                                logical conjunction
+ A | B      A or B                                                                 logical disjunction
+ A -> B     A imply(ies) B                                                         logical implication
+ A <- B     B imply(ies) A                                                         logical implication
+ A <> B     A equivalent B                                                         logical equivalence
+ ~ A        not (do not, does not,..) A                                            logical negation
+**Constants**
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+ &true      the true constant                                                      boolean constant true
+ &false     the false constant                                                     boolean constant false
+ &initial   is the initial state                                                   true if it is the initial state, false otherwise
+ &final     is the final state                                                     true if it is the final state, false otherwise
+ << A       initially A                                                            A has to be true in the initial state
+ >> A       finally A                                                              B has to be true in the initial state
+========== ====================================================================== ===========================================================================

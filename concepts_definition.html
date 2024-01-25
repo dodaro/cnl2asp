@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Concepts definition &#8212; CNL2ASP</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=51b770b3"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Constants definition" href="constants.html" />
+    <link rel="prev" title="Getting start" href="getting_start.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="concepts-definition">
+<h1>Concepts definition<a class="headerlink" href="#concepts-definition" title="Link to this heading">¶</a></h1>
+<p>In order to define an entity the tool accepts the following format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DEFINITION</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span> <span class="o">|</span> <span class="s2">&quot;An&quot;</span><span class="p">)</span> <span class="n">ENTITY_NAME</span> <span class="s2">&quot;has&quot;</span> <span class="n">ATTRIBUTES</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A movie has an id, and a time duration.
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">In this example:</div>
+<div class="line-block">
+<div class="line"><em>movie</em> is the <strong>name</strong> of the entity;</div>
+<div class="line"><em>id</em>, and <em>time duration</em> are the <strong>attributes</strong>.</div>
+</div>
+<div class="line">Therefore, every time <em>movie</em> is used, it is recognised as an entity with <em>id</em> and <em>time duration</em> as attributes.</div>
+</div>
+<p>Attributes and names can be made of letters, numbers and “_” (underscore).
+Note that attribute names can also be multiple words and have to start with a lowercase letter.</p>
+<p>Moreover, yuo can define some attributes as keys as in the following example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A movie is identified by an id, and has a name, and a duration.
+</pre></div>
+</div>
+<p>In this case, <em>id</em> is saved as a <strong>key</strong> that is the attribute that <strong>identifies</strong> <em>movie</em>.</p>
+<p><strong>Why keys?</strong>
+Intuitively, keys are the attributes that identify a concept.
+The tool also supports a sort of inheritance concept, you can define a concept as an attribute of another concept. Consider the following example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A location is identified by an address, and by a number.
+A city is identified by a name, and has a location.
+</pre></div>
+</div>
+<p>This results in <em>city</em> having as attribute a <em>name</em>, a <em>location address</em> and a <em>location number</em>, since <em>location</em> is identified by an <em>address</em> and a <em>number</em>.</p>
+<p>Moreover, the concepts defined here can be used to define new concepts (see <a class="reference internal" href="defining_new_concepts.html"><span class="doc">Defining new concepts</span></a>). These derived concepts can be not declared here and will have some primitives entities as condition, in this case, the tool creates the new definition starting from the keys of the primitives.</p>
+<section id="corresponding-asp">
+<h2>Corresponding ASP:<a class="headerlink" href="#corresponding-asp" title="Link to this heading">¶</a></h2>
+<p>A concept definition does not have an actual ASP translation. Here, you are defining the structure of the atoms, their predicates and fields. This is saved in memory, and the tool will recall these structures to rewrite the CNL into ASP.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CNL2ASP</a></h1>
+
+
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_start.html">Getting start</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Concepts definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Constants definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="entity.html">Entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defining_new_concepts.html">Defining new concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weak_constraints.html">Weak Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminal_clauses.html">Terminal clauses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typed_entities.html">Typed Entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="telingo.html">Temporal Extension</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CNL2ASP.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

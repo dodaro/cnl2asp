@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Entity &#8212; CNL2ASP</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=51b770b3"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Defining new concepts" href="defining_new_concepts.html" />
+    <link rel="prev" title="Constants definition" href="constants.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="entity">
+<h1>Entity<a class="headerlink" href="#entity" title="Link to this heading">¶</a></h1>
+<p>To recall the concepts defined in the <a class="reference internal" href="concepts_definition.html"><span class="doc">Concepts definition</span></a>, you have to use the <em>ENTITY</em> element.</p>
+<p><em>ENTITY</em> is defined as:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ENTITY -&gt; NAME LABEL? ATTRIBUTES?
+</pre></div>
+</div>
+<p>where <em>NAME</em> is a string, <em>LABEL</em> is a temporary name which, inside a statement, can be used to refer to that entity, and <em>ATTRIBUTES</em> is a comma-separated list of <em>ATTRIBUTE</em>.
+<em>ATTRIBUTE</em> is defined as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ATTRIBUTE -&gt; &quot;with&quot; ATTRIBUTE_NAME VALUE? ATTRIBUTE_COMPARISON? (&quot;,&quot; ATTRIBUTE)?
+</pre></div>
+</div>
+<p>the “<em>with</em>” keyword is used to access the attributes of the entity,
+<em>ATTRIBUTE_NAME</em> is a string that should recall an attribute defined for that entity, and <em>VALUE</em>, optional, is an uppercase string or a math operation with the meaning of giving a value to that attribute.
+<em>ATTRIBUTE_COMPARISON</em> allows you to compare the attribute with other attributes values or constants and it is defined as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ATTRIBUTE_COMPARISON -&gt; COMPARISON_OPERATOR (MATH_EXPRESSION | STRING)
+COMPARISON_OPERATOR -&gt; &quot;the same as&quot; | &quot;different from&quot; | &quot;equal to&quot; | &quot;more than&quot; | &quot;greater than&quot; | &quot;less than&quot; | &quot;greater than or equal to&quot; | &quot;less than or equal to&quot; | &quot;at least&quot; | &quot;at most&quot; | &quot;not after&quot; | &quot;between&quot;
+</pre></div>
+</div>
+<p>therefore, an <em>ATTRIBUTE_COMPARISON</em> is made of an operator (one of the listed above) and a <em>STRING</em>, i.e. a string value or a constant, or a <em>MATH_EXPRESSION</em>.</p>
+<p>Examples:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(1) a movie M
+(2) a movie with id MOVIEID
+(3) a movie with id MOVIEID, with duration 100
+(4) a movie with id MOVIEID+1
+(5) a movie with id MOVIEID greater than X
+(6) a movie with id MOVIEID greater than mycostant
+</pre></div>
+</div>
+<section id="corresponding-asp">
+<h2>Corresponding ASP:<a class="headerlink" href="#corresponding-asp" title="Link to this heading">¶</a></h2>
+<p>Considering the following definition:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>A movie is identified by an id, and has a duration.
+</pre></div>
+</div>
+<p>The previous sentences are translated into:</p>
+<div class="highlight-clingo notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> movie<span class="p">(</span><span class="nv">M</span><span class="p">,</span><span class="nv">_</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">2</span><span class="p">)</span> movie<span class="p">(</span><span class="nv">MOVIEID</span><span class="p">,</span><span class="nv">_</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">3</span><span class="p">)</span> movie<span class="p">(</span><span class="nv">MOVIEID</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">4</span><span class="p">)</span> movie<span class="p">(</span><span class="nv">MOVIEID</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="nv">_</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">5</span><span class="p">)</span> movie<span class="p">(</span><span class="nv">MOVIDEID</span><span class="p">,</span><span class="nv">_</span><span class="p">),</span> <span class="nv">MOVIDEID</span> <span class="o">&gt;</span> <span class="nv">X</span>
+<span class="p">(</span><span class="mi">6</span><span class="p">)</span> movie<span class="p">(</span><span class="nv">MOVIDEID</span><span class="p">,</span><span class="nv">_</span><span class="p">),</span> <span class="nv">MOVIDEID</span> <span class="o">&gt;</span> mycostant
+</pre></div>
+</div>
+<p>In the first sentence, M is defined as the label of the entity <em>movie</em>. However, in case the entity has just one key or is defined by just one attribute, the tool sets that key (or the single attribute) equal to the value of the label.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CNL2ASP</a></h1>
+
+
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_start.html">Getting start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts_definition.html">Concepts definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Constants definition</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defining_new_concepts.html">Defining new concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weak_constraints.html">Weak Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminal_clauses.html">Terminal clauses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typed_entities.html">Typed Entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="telingo.html">Temporal Extension</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CNL2ASP.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

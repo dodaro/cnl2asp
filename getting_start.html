@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Getting start &#8212; CNL2ASP</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=51b770b3"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Concepts definition" href="concepts_definition.html" />
+    <link rel="prev" title="Welcome to CNL2ASP’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="getting-start">
+<h1>Getting start<a class="headerlink" href="#getting-start" title="Link to this heading">¶</a></h1>
+<p>Our cnl specification consists of two main blocks.
+In the first block, you have to define all the concepts of the problem, where in our context a concept is a thing, a place, a person or an object that is used to model entities of the application domain of the CNL (see <a class="reference internal" href="concepts_definition.html"><span class="doc">Concepts definition</span></a>).
+The second block, on the other hand, constitutes the rules of the problem, i.e. the assignments and constraints.</p>
+<p>Each block is made of a series of propositions, each one ending with a “.” (dot).</p>
+<section id="how-to-read-the-documentation">
+<h2>How to read the documentation<a class="headerlink" href="#how-to-read-the-documentation" title="Link to this heading">¶</a></h2>
+<p>Each section explains a feature of the CNL with examples and the corresponding ASP translation.
+Some sections include parts of the CNL grammar. In such case, the following syntax is used:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>STATEMENT_NAME -&gt; &quot;terminal symbol&quot; VARIABLE? STAR_QUANTIFIER* PLUS+ | SOMETHING_ELSE
+</pre></div>
+</div>
+<p>where STATEMENT_NAME is the name given to the statement, terminal symbols are between “” (quotation marks), and VARIABLE is a reference to other STATEMENT_NAME.
+Finally, the ? (question mark) means that the previous element is optional, the * (asterisk) means that the preceding element can match zero or more times, the + (plus) must match at least once, and the | (vertical bar) is the or symbol, thus the statement can support the previous or the following element.</p>
+</section>
+<section id="command-line-usage">
+<h2>Command line usage<a class="headerlink" href="#command-line-usage" title="Link to this heading">¶</a></h2>
+<p>The basic usage is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>main.py<span class="w"> </span>input.txt<span class="w"> </span>out.txt
+</pre></div>
+</div>
+<p>where input.txt is the input file containing the CNL specification, while out.txt is optional and represents the path in which the output should be saved.
+In case the output file is not provided, the tool generates a new file called “out.txt”.</p>
+<p><strong>Flags:</strong></p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">-c</span></code> or <code class="code docutils literal notranslate"><span class="pre">--check-syntax</span></code>, when provided the tool gives in output a meaningful message specifying if the input is recognised by CNL2ASP grammar,</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">-p</span></code> or <code class="code docutils literal notranslate"><span class="pre">--print-with-functions</span></code>, whenever an attribute of an atom is declared to be an entity, the tool prints that attribute as a function with the entity name as function name,</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">--symbols</span></code>, return the list of all the defined entities with their corresponding attributes.</p></li>
+</ul>
+<p><strong>Dependencies:</strong>
+- lark
+- inflect</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CNL2ASP</a></h1>
+
+
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts_definition.html">Concepts definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Constants definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="entity.html">Entity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defining_new_concepts.html">Defining new concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constraints.html">Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weak_constraints.html">Weak Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminal_clauses.html">Terminal clauses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typed_entities.html">Typed Entities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="telingo.html">Temporal Extension</a></li>
+</ul>
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024, CNL2ASP.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
