@@ -253,7 +253,7 @@ class CNLTransformer(Transformer):
                     entity_signature.set_attributes_value(entity.get_keys_and_attributes())
                     object_list[idx] = entity_signature
         self._proposition.add_new_knowledge(NewKnowledgeComponent(verb,
-                                                                  ConditionComponent([])))
+                                                                  ConditionComponent([]), subject, None, object_list))
         self._proposition.add_requisite_list(object_list)
         for proposition in self._proposition.get_propositions():
             if subject.label or subject.attributes:
@@ -306,6 +306,7 @@ class CNLTransformer(Transformer):
         cardinality = CardinalityComponent(None, None) \
             if elem[1] == 'can' and not self._proposition.get_cardinality() else self._proposition.get_cardinality()
         self._proposition.add_cardinality(cardinality)
+        self._proposition.add_subject(subject)
         return subject
 
     def fact_proposition(self, elem):
@@ -317,6 +318,8 @@ class CNLTransformer(Transformer):
             if elem[1] == 'can' and not self._proposition.get_cardinality() else self._proposition.get_cardinality()
         self._proposition.add_cardinality(cardinality)
         self._proposition.add_requisite(subject)
+        self._proposition.add_subject(subject.copy())
+        self._proposition.add_auxiliary_verb(elem[2])
         for proposition in self._proposition.get_propositions():
             self._make_new_knowledge_relations(proposition, [subject])
 
@@ -534,7 +537,8 @@ class CNLTransformer(Transformer):
     def predicate_with_objects(self, elem) -> [NewKnowledgeComponent, CardinalityComponent]:
         verb: EntityComponent = elem[0]
         objects: list[Component] = elem[2]
-        new_knowledge = NewKnowledgeComponent(verb, ConditionComponent(objects))
+        new_knowledge = NewKnowledgeComponent(verb, ConditionComponent(objects), None, None, objects)
+        new_knowledge.objects = objects
         if elem[-1]:
             self._delayed_operations.append(DurationClause(self._proposition, new_knowledge, elem[-2], elem[-1]))
         self._proposition.add_new_knowledge(new_knowledge)
@@ -859,6 +863,9 @@ class CNLTransformer(Transformer):
 
     def COPULA(self, elem):
         return lark.Discard
+
+    def COPULA_WRV(self, elem):
+        return elem
 
     def INDEFINITE_ARTICLE(self, elem):
         return lark.Discard

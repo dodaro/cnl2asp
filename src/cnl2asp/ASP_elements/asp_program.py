@@ -1,6 +1,5 @@
 from cnl2asp.ASP_elements.asp_element import ASPElement
 from cnl2asp.ASP_elements.asp_rule import ASPRule
-from cnl2asp.proposition.signaturemanager import SignatureManager
 
 
 class ASPProgram(ASPElement):

@@ -49,7 +49,7 @@ class Cnl2asp:
         else:
             self.cnl_input = cnl_input.read()
 
-    def __parse_input(self):
+    def parse_input(self):
         cnl_parser = Lark(open(os.path.join(os.path.dirname(__file__), "grammar.lark"), "r").read(),
                           propagate_positions=True)
         problem: Problem = CNLTransformer().transform(cnl_parser.parse(self.cnl_input))
@@ -77,19 +77,19 @@ class Cnl2asp:
 
 
     def cnl_to_json(self):
-        problem = self.__parse_input()
+        problem = self.parse_input()
         converter = Cnl2jsonConverter()
         json = problem.convert(converter)
         return json
 
     def check_syntax(self) -> bool:
-        if self.__parse_input():
+        if self.parse_input():
             return True
         return False
 
     def compile(self) -> str:
         try:
-            problem: Problem = self.__parse_input()
+            problem: Problem = self.parse_input()
         except UnexpectedCharacters as e:
             print(ParserError(e.char, e.line, e.column, e.get_context(self.cnl_input), self.cnl_input.splitlines()[e.line-1], list(e.allowed)))
             return ''
