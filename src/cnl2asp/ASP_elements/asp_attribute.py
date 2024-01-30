@@ -27,6 +27,8 @@ class RangeASPValue(ASPValue):
         return False
 
     def set_value(self, value: ASPValue):
+        if Utility.ASP_NULL_VALUE not in self:
+            return value
         value = self.replace(Utility.ASP_NULL_VALUE, value).replace('..', ' ')
         return RangeASPValue(value)
 

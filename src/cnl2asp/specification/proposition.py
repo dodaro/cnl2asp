@@ -49,15 +49,19 @@ class ConditionComponent(AggregateOfComponents):
 
 
 class NewKnowledgeComponent(Component):
-    def __init__(self, new_knowledge: EntityComponent, condition: ConditionComponent = None):
+    def __init__(self, new_knowledge: EntityComponent, condition: ConditionComponent = None,
+                 subject=None, auxiliary_verb=None, objects=None):
         self.new_entity = new_knowledge
         self.condition = condition if condition else ConditionComponent([])
+        self.subject = subject
+        self.auxiliary_verb = auxiliary_verb
+        self.objects = [x.copy() for x in objects] if objects else None
 
     def convert(self, converter: Converter) -> NewKnowledgeConverter:
         return converter.convert_new_knowledge(self)
 
     def copy(self):
-        return NewKnowledgeComponent(self.new_entity.copy(), self.condition.copy())
+        return NewKnowledgeComponent(self.new_entity.copy(), self.condition.copy(), self.subject, self.auxiliary_verb, self.objects)
 
     def get_entities(self) -> list[EntityComponent]:
         entities = [self.new_entity]

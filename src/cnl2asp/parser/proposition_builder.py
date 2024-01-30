@@ -111,6 +111,14 @@ class PropositionBuilder:
         for proposition in self.get_propositions():
             proposition.defined_attributes += defined_attributes
 
+    def add_auxiliary_verb(self, param):
+        for new_knowledge in self._original_rule.new_knowledge:
+            new_knowledge.auxiliary_verb = param
+
+    def add_subject(self, param):
+        for new_knowledge in self._original_rule.new_knowledge:
+            new_knowledge.subject = param
+
 
 class PreferencePropositionBuilder(PropositionBuilder):
     def __init__(self, proposition: PreferenceProposition = None):

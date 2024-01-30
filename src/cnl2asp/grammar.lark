@@ -132,7 +132,7 @@ TELINGO_CONSTANT: "it is the initial state"
 
 fact_proposition: _CNL_THERE _CNL_IS entity
 
-quantified_choice_proposition: QUANTIFIER entity ASSIGNMENT_VERB COPULA? predicate [(_CNL_COMMA? _CNL_OR predicate)*] [foreach_clause] [terminal_clauses]
+!quantified_choice_proposition: QUANTIFIER entity ASSIGNMENT_VERB COPULA_WRV? predicate [(_CNL_COMMA? _CNL_OR predicate)*] [foreach_clause] [terminal_clauses]
 _CNL_FOR: "for"
 _CNL_EACH: "each"
 _CNL_FOR_EACH: _CNL_FOR " " _CNL_EACH
@@ -314,9 +314,15 @@ COPULA: "be " | "be a " | "be an "
       | "is " | "is a " | "is an "
       | "have " | "have a " | "have an "
       | "has " | "has a " | "has an "
+COPULA_WRV: "be " | "be a " | "be an "
+          | "are " | "are a " | "are an "
+          | "is " | "is a " | "is an "
+          | "have " | "have a " | "have an "
+          | "has " | "has a " | "has an "
+
 SHIFT_OPERATOR: _CNL_THE " " ("next" | "previous")
 
-PARAMETER_NAME: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[a-z][A-Za-z0-9\_]+/ //has to start with lower case letter
+PARAMETER_NAME: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[a-z0-9][A-Za-z0-9\_]+/ //has to start with lower case letter
 STRING: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[A-Za-z0-9\_]+/i
 VARIABLE: UCASE_LETTER (UCASE_LETTER | INT | "_")*
 PARAMETER_PREPOSITION: _CNL_BY | "with"
