@@ -1,8 +1,10 @@
 import argparse
 import json
 
-from cnl2asp.ASP_elements.solver.clingo import Clingo
+from cnl2asp.ASP_elements.solver.clingo_wrapper import Clingo
 from cnl2asp.ASP_elements.solver.clingo_result_parser import ClingoResultParser
+from cnl2asp.ASP_elements.solver.telingo_result_parser import TelingoResultParser
+from cnl2asp.ASP_elements.solver.telingo_wrapper import Telingo
 from cnl2asp.cnl2asp import Cnl2asp
 from cnl2asp.utility.utility import Utility
 
@@ -16,7 +18,7 @@ if __name__ == '__main__':
                              'Each attribute is converted into a function,' +
                              'if an entity with same name has been defined')
     parser.add_argument('--debug', action='store_true')
-    parser.add_argument('--solve', action='store_true', help='Compute the solution of the specified problem')
+    parser.add_argument('--solve', type=str, choices=["clingo", "telingo"], help='call the solver')
     parser.add_argument('input_file')
     parser.add_argument('output_file', type=str, nargs='?', default='out.txt')
     args = parser.parse_args()
@@ -43,14 +45,25 @@ if __name__ == '__main__':
                 if out_file.write(asp_encoding):
                     print("Compilation completed.")
             if args.solve:
-                print("\n*********")
-                print("Running clingo...\n")
-                clingo = Clingo()
-                clingo.load(str(asp_encoding))
-                res = clingo.solve()
-                clingo_res = ClingoResultParser(cnl2asp.parse_input(), res)
-                model = clingo_res.parse_model()
-                print("SOLUTION:\n" + model)
+                if args.solve == "clingo":
+                    solver = Clingo()
+                    print("\n*********")
+                    print(f"Running {args.solve}...\n")
+                    solver.load(str(asp_encoding))
+                    res = solver.solve()
+                    clingo_res = ClingoResultParser(cnl2asp.parse_input(), res)
+                    model = clingo_res.parse_model()
+                    print("SOLUTION:\n" + model)
+                elif args.solve == "telingo":
+                    solver = Telingo()
+                    print("\n*********")
+                    print(f"Running {args.solve}...\n")
+                    solver.load(str(asp_encoding))
+                    res = solver.solve()
+                    telingo_res = TelingoResultParser(cnl2asp.parse_input(), res)
+                    model = telingo_res.parse_model()
+                    print("SOLUTION:\n" + model)
+
         except Exception as e:
             print("Error in writing output", str(e))
 

@@ -53,10 +53,10 @@ class Cnl2asp:
             self.cnl_input = cnl_input.read()
 
     def parse_input(self):
-        cnl_parser = Lark(open(os.path.join(os.path.dirname(__file__), "grammar.lark"), "r").read(),
-                          propagate_positions=True)
-        specification: SpecificationComponent = CNLTransformer().transform(cnl_parser.parse(self.cnl_input))
-        return specification
+        with open(os.path.join(os.path.dirname(__file__), "grammar.lark"), "r") as grammar:
+            cnl_parser = Lark(grammar.read(), propagate_positions=True)
+            specification: SpecificationComponent = CNLTransformer().transform(cnl_parser.parse(self.cnl_input))
+            return specification
 
     def __is_predicate(self, name: str):
         try:

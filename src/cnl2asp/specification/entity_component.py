@@ -102,7 +102,6 @@ class EntityComponent(Component):
                 else:
                     origin = AttributeOrigin(str(self.get_name()))
                     entity_attributes = self.get_attributes_by_name_and_origin(attribute.get_name(), origin)
-                    # entity_attributes = self.get_attributes_by_name(attribute.name)
                 for entity_attribute in entity_attributes:
                     entity_attribute.value = attribute.value
                     entity_attribute.operations = attribute.operations

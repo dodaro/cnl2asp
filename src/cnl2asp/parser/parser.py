@@ -248,14 +248,14 @@ class CNLTransformer(Transformer):
         copy.set_attributes_value(subject.keys + subject.attributes)
         subject.keys = copy.keys
         subject.attributes = copy.attributes
-        verb = elem[1]
+        verb = elem[2]
         if subject.label or subject.attributes:
             self._proposition.add_requisite(subject)
             SignatureManager.add_signature(elem[0])  # we can have new definitions in subject position for this proposition
         else:
             # subject is an attribute value of the verb
             verb.attributes.append(AttributeComponent('id', ValueComponent(subject.get_name()), AttributeOrigin(verb.get_name())))
-        object_list = elem[2] if elem[2] else []
+        object_list = elem[3] if elem[3] else []
         for idx, object_entity in enumerate(object_list):
             # replace the object elements with the proper signature if same of the subject
             for entity in object_entity.get_entities():
@@ -265,7 +265,7 @@ class CNLTransformer(Transformer):
                     entity_signature.set_attributes_value(entity.get_keys_and_attributes())
                     object_list[idx] = entity_signature
         self._proposition.add_new_knowledge(NewKnowledgeComponent(verb,
-                                                                  ConditionComponent([]), subject, None, object_list))
+                                                                  ConditionComponent([]), subject, elem[1], object_list))
         self._proposition.add_requisite_list(object_list)
         for proposition in self._proposition.get_propositions():
             if subject.label or subject.attributes:
@@ -322,6 +322,7 @@ class CNLTransformer(Transformer):
             if elem[1] == 'can' and not self._proposition.get_cardinality() else self._proposition.get_cardinality()
         self._proposition.add_cardinality(cardinality)
         self._proposition.add_subject(subject)
+        self._proposition.add_auxiliary_verb(elem[2])
         return subject
 
 

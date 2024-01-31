@@ -94,7 +94,7 @@ cnl_that_are_equal_to_respectively: _CNL_THAT " " _CNL_ARE " " _CNL_EQUAL_TO " "
 cnl_that_is_equal_to_respectively: _CNL_THAT " " _CNL_IS " " _CNL_EQUAL_TO " " _CNL_RESPECTIVELY
 _CNL_ALSO: "also"
 compounded_match_tail: _CNL_AND _CNL_HAS STRING (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list (_CNL_AND _CNL_ALSO STRING (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list)*
-enumerative_definition_clause: entity COPULA? verb [conjunctive_object_list] [terminal_clauses]
+enumerative_definition_clause: entity [COPULA_WRV] verb [conjunctive_object_list] [terminal_clauses]
 
 standard_proposition: whenever_then_clause_proposition
                     | fact_proposition
@@ -114,7 +114,7 @@ whenever_clause: cnl_whenever_there_is [VERB_NEGATION] entity
                 | cnl_whenever_we_have_that comparison -> whenever_with_comparison
 _CNL_THEN: "then"
 _CNL_OR: "or"
-then_clause: _CNL_THEN entity ASSIGNMENT_VERB COPULA? [cardinality] predicate (_CNL_COMMA? _CNL_OR predicate)*
+then_clause: _CNL_THEN entity ASSIGNMENT_VERB [COPULA_WRV] [cardinality] predicate (_CNL_COMMA? _CNL_OR predicate)*
 
 _CNL_HOLD: "hold" | "holds"
 hold_condition: _CNL_THAT [VERB_NEGATION] TELINGO_TEMPORAL_OPERATOR _CNL_HOLD
@@ -132,7 +132,7 @@ TELINGO_CONSTANT: "it is the initial state"
 
 fact_proposition: _CNL_THERE _CNL_IS entity
 
-!quantified_choice_proposition: QUANTIFIER entity ASSIGNMENT_VERB COPULA_WRV? predicate [(_CNL_COMMA? _CNL_OR predicate)*] [foreach_clause] [terminal_clauses]
+!quantified_choice_proposition: QUANTIFIER entity ASSIGNMENT_VERB [COPULA_WRV] predicate [(_CNL_COMMA? _CNL_OR predicate)*] [foreach_clause] [terminal_clauses]
 _CNL_FOR: "for"
 _CNL_EACH: "each"
 _CNL_FOR_EACH: _CNL_FOR " " _CNL_EACH
