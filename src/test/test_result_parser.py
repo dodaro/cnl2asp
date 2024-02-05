@@ -55,12 +55,12 @@ Node 2 is connected to node 1.
 Node 2 is connected to node 3.
 Node 3 is connected to node 1.
 Node 3 is connected to node 2.
-There is color "red".
-There is color "green".
-There is color "blue".
-Node 3 is assigned to color "red".
-Node 2 is assigned to color "green".
-Node 1 is assigned to color "blue".''')
+There is color red.
+There is color green.
+There is color blue.
+Node 3 is assigned to color red.
+Node 2 is assigned to color green.
+Node 1 is assigned to color blue.''')
 
     def test_monkey_problem(self):
         model = self.compute_telingo_model('''An agent is identified by a name.
@@ -105,47 +105,47 @@ It is required that monkey M gets banana B.''')
         self.assertEqual(model.strip(), '''In the 0 state:
 There is banana 3.
 There is box 2.
-There is location "door".
-There is location "middle".
-There is location "window".
+There is location door.
+There is location middle.
+There is location window.
 There is monkey 1.
-Monkey 1 is at location "door".
-Box 2 is at location "window".
+Monkey 1 is at location door.
+Box 2 is at location window.
 In the 1 state:
 There is banana 3.
 There is box 2.
-There is location "door".
-There is location "middle".
-There is location "window".
+There is location door.
+There is location middle.
+There is location window.
 There is monkey 1.
 Monkey 1 has moved.
-Monkey 1 is at location "window".
-Box 2 is at location "window".
-Monkey 1 walk to location "window".
+Monkey 1 is at location window.
+Box 2 is at location window.
+Monkey 1 walk to location window.
 In the 2 state:
 There is banana 3.
 There is box 2.
 Monkey 1 climb.
-There is location "door".
-There is location "middle".
-There is location "window".
+There is location door.
+There is location middle.
+There is location window.
 There is monkey 1.
 Monkey 1 has moved.
 Box 2 has moved.
-Monkey 1 is at location "middle".
-Box 2 is at location "middle".
+Monkey 1 is at location middle.
+Box 2 is at location middle.
 Monkey 1 is on box 2.
-Monkey 1 push to location "middle".
+Monkey 1 push to location middle.
 In the 3 state:
 There is banana 3.
 There is box 2.
 Monkey 1 grasp.
-There is location "door".
-There is location "middle".
-There is location "window".
+There is location door.
+There is location middle.
+There is location window.
 There is monkey 1.
-Monkey 1 is at location "middle".
-Box 2 is at location "middle".
+Monkey 1 is at location middle.
+Box 2 is at location middle.
 Monkey 1 get banana 3.
 Monkey 1 is on box 2.''')
 
@@ -198,8 +198,8 @@ Farmer 1 is at location left_bank.
 Item beans is at location left_bank.
 Item fox is at location left_bank.
 Item goose is at location left_bank.
-Item goose eat item goose.
-Item beans eat item beans.
+Item fox eat item goose.
+Item goose eat item beans.
 There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
 In the 1 state:
@@ -214,8 +214,8 @@ Farmer 1 is at location right_bank.
 Item beans is at location left_bank.
 Item fox is at location left_bank.
 Item goose is at location right_bank.
-Item goose eat item goose.
-Item beans eat item beans.
+Item fox eat item goose.
+Item goose eat item beans.
 There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
 In the 2 state:
@@ -229,8 +229,8 @@ Farmer 1 is at location left_bank.
 Item beans is at location left_bank.
 Item fox is at location left_bank.
 Item goose is at location right_bank.
-Item goose eat item goose.
-Item beans eat item beans.
+Item fox eat item goose.
+Item goose eat item beans.
 There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
 In the 3 state:
@@ -245,8 +245,8 @@ Farmer 1 is at location right_bank.
 Item beans is at location left_bank.
 Item fox is at location right_bank.
 Item goose is at location right_bank.
-Item goose eat item goose.
-Item beans eat item beans.
+Item fox eat item goose.
+Item goose eat item beans.
 There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
 In the 4 state:
@@ -261,8 +261,8 @@ Farmer 1 is at location left_bank.
 Item beans is at location left_bank.
 Item fox is at location right_bank.
 Item goose is at location left_bank.
-Item goose eat item goose.
-Item beans eat item beans.
+Item fox eat item goose.
+Item goose eat item beans.
 There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
 In the 5 state:
@@ -277,8 +277,8 @@ Farmer 1 is at location right_bank.
 Item beans is at location right_bank.
 Item fox is at location right_bank.
 Item goose is at location left_bank.
-Item goose eat item goose.
-Item beans eat item beans.
+Item fox eat item goose.
+Item goose eat item beans.
 There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
 In the 6 state:
@@ -292,8 +292,8 @@ Farmer 1 is at location left_bank.
 Item beans is at location right_bank.
 Item fox is at location right_bank.
 Item goose is at location left_bank.
-Item goose eat item goose.
-Item beans eat item beans.
+Item fox eat item goose.
+Item goose eat item beans.
 There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
 In the 7 state:
@@ -308,12 +308,12 @@ Farmer 1 is at location right_bank.
 Item beans is at location right_bank.
 Item fox is at location right_bank.
 Item goose is at location right_bank.
-Item goose eat item goose.
-Item beans eat item beans.
+Item fox eat item goose.
+Item goose eat item beans.
 There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.''')
 
-    def test_river_crossing_problem(self):
+    def test_hanoi_problem(self):
         model = self.compute_telingo_model('''A disk is identified by an id.
 A peg is identified by an id.
 A goal is identified by a disk, and by a peg.

@@ -88,9 +88,11 @@ class ClingoResultParser:
         return ""
 
     def _parse_clingo_symbol(self, symbol: clingo.Symbol, entity: EntityComponent):
-        converter = ASPConverter()
         for idx, attribute in enumerate(entity.get_keys_and_attributes()):
-            attribute.value = ValueComponent(symbol.arguments[idx])
+            try:
+                attribute.value = ValueComponent(str(symbol.arguments[idx]).removeprefix('\"').removesuffix('\"'))
+            except AttributeError:
+                attribute.value = ValueComponent(symbol.arguments[idx])
 
     def _attributes_intersection(self, entity_1: EntityComponent, entity_2: EntityComponent):
         matched_attributes = []

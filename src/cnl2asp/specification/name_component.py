@@ -16,7 +16,7 @@ class NameComponent(Component):
 
     def __init__(self, name: str):
         self.name = name
-        self.singular_and_plural_name = [self.__singular(name), self.__plural(name)]
+        self.singular_and_plural_name = [self.__singular(name), self.__plural(name), name]
 
     def removesuffix(self, suffix):
         self.name = self.name.removesuffix(suffix)
