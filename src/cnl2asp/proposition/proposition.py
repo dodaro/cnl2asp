@@ -36,6 +36,12 @@ class AggregateOfComponents(Component):
             entities += entity.get_entities()
         return entities
 
+    def get_entities_to_link_with_new_knowledge(self) -> list[EntityComponent]:
+        entities = []
+        for entity in self.components:
+            entities += entity.get_entities_to_link_with_new_knowledge()
+        return entities
+
 
 class ConditionComponent(AggregateOfComponents):
     def __init__(self, condition: list[Component] = []):
@@ -69,6 +75,11 @@ class NewKnowledgeComponent(Component):
             entities.append(entity)
         return entities
 
+    def get_entities_to_link_with_new_knowledge(self) -> list[EntityComponent]:
+        entities = [self.new_entity]
+        for entity in self.condition.get_entities_to_link_with_new_knowledge():
+            entities.append(entity)
+        return entities
 
 class RequisiteComponent(AggregateOfComponents):
     def __init__(self, requisite: list[Component]):
@@ -185,13 +196,23 @@ class Proposition(Component):
             entities += relation.get_entities()
         return entities
 
+    def get_entities_to_link_with_new_knowledge(self) -> list[EntityComponent]:
+        entities: list[EntityComponent] = []
+        for component in self.requisite.components:
+            entities += component.get_entities_to_link_with_new_knowledge()
+        for new_knowledge in self.new_knowledge:
+            entities += new_knowledge.get_entities_to_link_with_new_knowledge()
+        for relation in self.relations:
+            entities += relation.get_entities_to_link_with_new_knowledge()
+        return entities
+
     def copy(self):
-        new_knowledge = [new_knowledge.copy() for new_knowledge in self.new_knowledge]
-        cardinality = self.cardinality.copy() if self.cardinality else None
-        requisite = self.requisite.copy()
-        relations = [relation.copy() for relation in self.relations]
-        defined_attributes = [attribute.copy() for attribute in self.defined_attributes]
-        return Proposition(new_knowledge, cardinality, requisite, relations, defined_attributes)
+            new_knowledge = [new_knowledge.copy() for new_knowledge in self.new_knowledge]
+            cardinality = self.cardinality.copy() if self.cardinality else None
+            requisite = self.requisite.copy()
+            relations = [relation.copy() for relation in self.relations]
+            defined_attributes = [attribute.copy() for attribute in self.defined_attributes]
+            return Proposition(new_knowledge, cardinality, requisite, relations, defined_attributes)
 
 
 class PREFERENCE_PROPOSITION_TYPE(Enum):

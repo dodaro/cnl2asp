@@ -277,22 +277,18 @@ class CNLTransformer(Transformer):
     def _make_new_knowledge_relations(self, proposition: Proposition, components: list[Component] = None):
         if components:
             for component in components:
-                for entity in component.get_entities():
+                for entity in component.get_entities_to_link_with_new_knowledge():
                     for new_knowledge in proposition.new_knowledge:
                         proposition.relations.append(RelationComponent(new_knowledge.new_entity, entity))
         for new_knowledge in proposition.new_knowledge:
             for condition_entity in new_knowledge.condition.components:
-                for entity in condition_entity.get_entities():
+                for entity in condition_entity.get_entities_to_link_with_new_knowledge():
                     proposition.relations.append(
                             RelationComponent(new_knowledge.new_entity, entity))
 
     def whenever_then_clause_proposition(self, elem):
         for proposition in self._proposition.get_propositions():
-            entities = [elem[1]] if elem[1] else []
-            for components in proposition.requisite.components:
-                for entity in components.get_entities():
-                    entities.append(entity)
-            self._make_new_knowledge_relations(proposition, entities)
+            self._make_new_knowledge_relations(proposition, proposition.requisite.components)
 
     def whenever_clause(self, elem):
         if elem[0]:

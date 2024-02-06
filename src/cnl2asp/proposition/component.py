@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING, Any
 
 
 if TYPE_CHECKING:
-    from proposition.entity_component import EntityComponent
-    from converter.converter_interface import Converter
+    from cnl2asp.proposition.entity_component import EntityComponent
+    from cnl2asp.converter.converter_interface import Converter
 
 
 class Component(ABC):
@@ -19,6 +19,9 @@ class Component(ABC):
         """Return a copy of the component"""
 
     def get_entities(self) -> list[EntityComponent]:
+        return []
+
+    def get_entities_to_link_with_new_knowledge(self) -> list[EntityComponent]:
         return []
 
     def negate(self):

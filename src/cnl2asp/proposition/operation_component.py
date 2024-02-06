@@ -78,6 +78,12 @@ class OperationComponent(Component):
             entities += operand.get_entities()
         return entities
 
+    def get_entities_to_link_with_new_knowledge(self) -> list[EntityComponent]:
+        entities = []
+        for operand in self.operands:
+            entities += operand.get_entities_to_link_with_new_knowledge()
+        return entities
+
     def convert(self, converter: Converter) -> OperationConverter:
         return converter.convert_operation(self)
 

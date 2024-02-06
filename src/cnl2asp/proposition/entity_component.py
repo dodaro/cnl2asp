@@ -12,7 +12,6 @@ from cnl2asp.proposition.component import Component
 from cnl2asp.proposition.name_component import NameComponent
 from cnl2asp.utility.utility import Utility
 from cnl2asp.proposition.relation_component import RelationComponent
-from nltk.stem import WordNetLemmatizer
 
 if TYPE_CHECKING:
     from cnl2asp.parser.proposition_builder import PropositionBuilder
@@ -140,6 +139,9 @@ class EntityComponent(Component):
                                attributes, self.negated, self.entity_type)
 
     def get_entities(self) -> list[EntityComponent]:
+        return [self]
+
+    def get_entities_to_link_with_new_knowledge(self) -> list[EntityComponent]:
         return [self]
 
     def is_temporal_entity(self) -> bool:
