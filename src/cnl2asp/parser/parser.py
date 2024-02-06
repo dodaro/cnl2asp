@@ -19,8 +19,7 @@ from cnl2asp.proposition.entity_component import EntityComponent, EntityType, Te
     SetEntityComponent, ListEntityComponent, ComplexEntityComponent
 from cnl2asp.proposition.problem import Problem
 from cnl2asp.proposition.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, \
-    CardinalityComponent, PREFERENCE_PROPOSITION_TYPE, \
-    PREFERENCE_PRIORITY_LEVEL, PROPOSITION_TYPE
+    CardinalityComponent, PREFERENCE_PROPOSITION_TYPE, PROPOSITION_TYPE
 from cnl2asp.proposition.relation_component import RelationComponent
 from cnl2asp.proposition.aggregate_component import AggregateComponent, AggregateOperation
 from cnl2asp.proposition.operation_component import Operators, OperationComponent
@@ -763,13 +762,16 @@ class CNLTransformer(Transformer):
     def CNL_MAXIMIZED(self, elem):
         return PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION
 
+    def priority_level_number(self, elem):
+        self._proposition.add_level(int(elem[0]))
+
     def PRIORITY_LEVEL(self, elem):
         if elem.value == 'low':
-            self._proposition.add_level(PREFERENCE_PRIORITY_LEVEL.LOW)
+            self._proposition.add_level(1)
         elif elem.value == 'medium':
-            self._proposition.add_level(PREFERENCE_PRIORITY_LEVEL.MEDIUM)
+            self._proposition.add_level(2)
         elif elem.value == 'high':
-            self._proposition.add_level(PREFERENCE_PRIORITY_LEVEL.HIGH)
+            self._proposition.add_level(3)
 
     def NUMBER(self, elem) -> ValueComponent:
         return ValueComponent(elem.value)

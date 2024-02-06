@@ -158,7 +158,7 @@ class ASPConverter(Converter[ASPProgram,
         if preference.type == PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION:
             weight = '-' + preference.weight.upper()
         weak_constraint = ASPWeakConstraint(rule.body, weight,
-                                            preference.level.value, discriminant)
+                                            preference.level, discriminant)
         return weak_constraint
 
     def convert_new_knowledge(self, head: NewKnowledgeComponent) -> ASPRuleHead:

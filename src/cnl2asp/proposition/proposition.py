@@ -220,15 +220,9 @@ class PREFERENCE_PROPOSITION_TYPE(Enum):
     MAXIMIZATION = 1
 
 
-class PREFERENCE_PRIORITY_LEVEL(Enum):
-    LOW = 1
-    MEDIUM = 2
-    HIGH = 3
-
-
 class PreferenceProposition(Proposition):
     def __init__(self, requisite: RequisiteComponent = None, relations: list[RelationComponent] = None,
-                 weight: str = '1', level: PREFERENCE_PRIORITY_LEVEL = PREFERENCE_PRIORITY_LEVEL.LOW,
+                 weight: str = '1', level: int = 1,
                  discriminant: list[AttributeComponent] = None):
         super().__init__(None, None, requisite, relations)
         if discriminant is None:

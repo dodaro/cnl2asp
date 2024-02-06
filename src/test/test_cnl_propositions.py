@@ -440,5 +440,10 @@ A nurse is identified by an id.
 
 It is prohibited that a nurse works in the 1st element in shift.''', ''':- nurse(WRK_N_D), work_in(WRK_N_D,LMNT,"shift"), list("shift",LMNT,"morning").''')
 
+    def test_priority_level_number(self):
+        self.check_input_to_output('''A drink is identified by an id.
+A serve is identified by a drink.
+It is preferred with priority 5 that the number of drinks that are serve is maximized.''', ':~ #count{D: serve(D)} = CNT. [-CNT@5]')
+
 if __name__ == '__main__':
     unittest.main()

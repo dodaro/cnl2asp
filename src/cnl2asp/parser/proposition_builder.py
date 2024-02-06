@@ -3,7 +3,7 @@ from cnl2asp.proposition.attribute_component import AttributeComponent, ValueCom
 from cnl2asp.proposition.component import Component
 from cnl2asp.proposition.entity_component import EntityComponent
 from cnl2asp.proposition.proposition import Proposition, NewKnowledgeComponent, CardinalityComponent, PreferenceProposition, \
-    PREFERENCE_PRIORITY_LEVEL, PREFERENCE_PROPOSITION_TYPE, ConditionComponent
+    PREFERENCE_PROPOSITION_TYPE, ConditionComponent
 from cnl2asp.proposition.relation_component import RelationComponent
 from cnl2asp.utility.utility import Utility
 
@@ -129,7 +129,7 @@ class PreferencePropositionBuilder(PropositionBuilder):
         for proposition in self.get_propositions():
             proposition.weight = weight
 
-    def add_level(self, level: PREFERENCE_PRIORITY_LEVEL):
+    def add_level(self, level: int):
         for proposition in self.get_propositions():
             proposition.level = level
 

@@ -247,6 +247,7 @@ cnl_as_little_as_possible: _CNL_AS " " _CNL_LITTLE " " _CNL_AS " " _CNL_POSSIBLE
 optimization_statement: cnl_as_much_as_possible | cnl_as_little_as_possible
 _CNL_PRIORITY: "priority"
 weak_priority_clause: _CNL_WITH " " PRIORITY_LEVEL " " _CNL_PRIORITY
+                    | _CNL_WITH " " _CNL_PRIORITY " " NUMBER -> priority_level_number
 _CNL_LOW: "low"
 _CNL_MEDIUM: "medium"
 _CNL_HIGH: "high"
