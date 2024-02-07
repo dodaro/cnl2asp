@@ -271,14 +271,14 @@ class ASPConverter(Converter[ASPProgram,
             fields.append(new_field)
         for i, field_1 in enumerate(fields):
             for j, field_2 in enumerate(fields[i + 1:]):
-                operations.append(ASPOperation(operation.operator, field_1, field_2))
+                operations.append(ASPOperation(operation.operation, field_1, field_2))
         for operation in operations:
             self._operations.append(operation)
         return operations
 
     def _convert_between_operation_without_aggregate(self, operation, operands):
-        operation1 = ASPOperation(operation.operator, operands[0], operands[1])
-        operation2 = ASPOperation(operation.operator, operands[1], operands[2])
+        operation1 = ASPOperation(operation.operation, operands[0], operands[1])
+        operation2 = ASPOperation(operation.operation, operands[1], operands[2])
         self._operations.append(operation1)
         self._operations.append(operation2)
         return ASPConjunction([operation1, operation2])
@@ -291,13 +291,13 @@ class ASPConverter(Converter[ASPProgram,
                 is_operation_on_angle = True
             operands.append(operand.convert(self))
         if is_operation_on_angle:
-            return ASPAngleOperation(operation.operator, *operands)
+            return ASPAngleOperation(operation.operation, *operands)
         if self._is_list_of_aggregates(operands):
             return self._convert_operation_of_list_of_aggregate(operation, operands)
-        if not is_arithmetic_operator(operation.operator) and len(operands) == 3 \
+        if not is_arithmetic_operator(operation.operation) and len(operands) == 3 \
                 and not isinstance(operands[1], ASPAggregate):
             return self._convert_between_operation_without_aggregate(operation, operands)
-        operation = ASPOperation(operation.operator, *operands)
+        operation = ASPOperation(operation.operation, *operands)
         self._operations.append(operation)
         return operation
 

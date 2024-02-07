@@ -48,9 +48,9 @@ operators_negation = {
 
 class OperationComponent(Component):
     def __init__(self, operator: Operators, *operands: Component):
-        self.operator = operator
+        self.operation = operator
         self.operands = []
-        if self.operator == Operators.BETWEEN:
+        if self.operation == Operators.BETWEEN:
             operands = self.between_operator(operands)
         for operand in operands:
             if not isinstance(operand, Component):
@@ -60,9 +60,9 @@ class OperationComponent(Component):
 
     def between_operator(self, operands):
         operands = list(operands)
-        if self.operator == Operators.BETWEEN:
-            self.operator = Operators.LESS_THAN_OR_EQUAL_TO
-        elif self.operator == Operators.NOTBETWEEN:
+        if self.operation == Operators.BETWEEN:
+            self.operation = Operators.LESS_THAN_OR_EQUAL_TO
+        elif self.operation == Operators.NOTBETWEEN:
             raise NotImplemented("Operator not between not implemented")
         for operand in operands:
             if isinstance(operand, list):
@@ -89,7 +89,7 @@ class OperationComponent(Component):
 
     def copy(self):
         operands = [component for component in self.operands]
-        return OperationComponent(self.operator, *operands)
+        return OperationComponent(self.operation, *operands)
 
     def is_angle(self) -> False:
         for operand in self.operands:
@@ -98,4 +98,4 @@ class OperationComponent(Component):
         return False
 
     def negate(self):
-        self.operator = operators_negation[self.operator]
+        self.operation = operators_negation[self.operation]
