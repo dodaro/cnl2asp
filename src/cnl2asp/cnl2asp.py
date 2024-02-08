@@ -5,6 +5,7 @@ import os
 from enum import Enum
 from typing import TextIO
 
+from cnl2asp.utility.utility import Utility
 from lark import Lark, UnexpectedCharacters
 from lark.exceptions import VisitError
 
@@ -87,7 +88,8 @@ class Cnl2asp:
             return True
         return False
 
-    def compile(self) -> str:
+    def compile(self, auto_link_entities: bool = True) -> str:
+        Utility.AUTO_ENTITY_LINK = auto_link_entities
         try:
             problem: Problem = self.parse_input()
         except UnexpectedCharacters as e:

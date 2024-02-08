@@ -10,6 +10,7 @@ class Utility:
                        "exactly", "at", "most", "least", "any", "every", "more", "less", "greater", "after", "highest",
                        "lowest", "smallest", "biggest", "sum", "difference", "product", "division", "where", "between",
                        "whenever", "such", "that", "there", "than", "also", "then", "required", "prohibited", "or"]
+    AUTO_ENTITY_LINK = True
 
     @staticmethod
     def create_unique_identifier():

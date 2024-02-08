@@ -274,16 +274,17 @@ class CNLTransformer(Transformer):
             raise CompilationError(str(e), meta.line)
 
     def _make_new_knowledge_relations(self, proposition: Proposition, components: list[Component] = None):
-        if components:
-            for component in components:
-                for entity in component.get_entities_to_link_with_new_knowledge():
-                    for new_knowledge in proposition.new_knowledge:
-                        proposition.relations.append(RelationComponent(new_knowledge.new_entity, entity))
-        for new_knowledge in proposition.new_knowledge:
-            for condition_entity in new_knowledge.condition.components:
-                for entity in condition_entity.get_entities_to_link_with_new_knowledge():
-                    proposition.relations.append(
-                            RelationComponent(new_knowledge.new_entity, entity))
+        if Utility.AUTO_ENTITY_LINK:
+            if components:
+                for component in components:
+                    for entity in component.get_entities_to_link_with_new_knowledge():
+                        for new_knowledge in proposition.new_knowledge:
+                            proposition.relations.append(RelationComponent(new_knowledge.new_entity, entity))
+            for new_knowledge in proposition.new_knowledge:
+                for condition_entity in new_knowledge.condition.components:
+                    for entity in condition_entity.get_entities_to_link_with_new_knowledge():
+                        proposition.relations.append(
+                                RelationComponent(new_knowledge.new_entity, entity))
 
     def whenever_then_clause_proposition(self, elem):
         for proposition in self._proposition.get_propositions():
