@@ -12,7 +12,8 @@ from cnl2asp.exception.cnl2asp_exceptions import LabelNotFound, ParserError, Att
 from cnl2asp.parser.command import SubstituteVariable, Command, DurationClause, CreateSignature, \
         RespectivelySubstituteVariable
 from cnl2asp.parser.proposition_builder import PropositionBuilder, PreferencePropositionBuilder
-from cnl2asp.proposition.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent, AttributeOrigin
+from cnl2asp.proposition.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent, \
+    AttributeOrigin, AngleValueComponent
 from cnl2asp.proposition.component import Component
 from cnl2asp.proposition.constant_component import ConstantComponent
 from cnl2asp.proposition.entity_component import EntityComponent, EntityType, TemporalEntityComponent, \
@@ -585,10 +586,14 @@ class CNLTransformer(Transformer):
             else:
                 if value == Utility.NULL_VALUE:
                     value = self._new_field_value(name)
-                operations = [OperationComponent(parameter[-3], AttributeComponent(name.strip(), ValueComponent(value), origin), parameter[-2])]
+                operations = [OperationComponent(parameter[-3], ValueComponent(value), parameter[-2])]
         if not origin and SignatureManager.is_temporal_entity(name.strip()):
             origin = AttributeOrigin(name.strip())
-        attribute = AttributeComponent(name.strip(), ValueComponent(value), origin, operations)
+        attribute = AttributeComponent(name.strip(), ValueComponent(value), origin)
+        if attribute.is_angle():
+            for operation in operations:
+                operation.operands[0] = AngleValueComponent(value)
+        attribute.operations = operations
         self._proposition.add_discriminant([attribute])
         return attribute
 
