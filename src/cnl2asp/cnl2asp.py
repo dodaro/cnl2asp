@@ -3,6 +3,7 @@ from __future__ import annotations
 import collections
 import os
 from enum import Enum
+from textwrap import indent
 from typing import TextIO
 
 from cnl2asp.utility.utility import Utility
@@ -40,7 +41,8 @@ class Symbol:
         self.symbol_type = symbol_type
 
     def __repr__(self):
-        return f'{self.predicate}({self.attributes}), {self.symbol_type.name}\n'
+        attributes = f'\n{indent(str(self.attributes), "    ")}'
+        return f'\n{self.predicate} [{self.symbol_type.name}]: {indent(attributes, "    ")}'
 
 
 class Cnl2asp:
