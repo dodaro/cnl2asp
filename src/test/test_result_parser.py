@@ -102,52 +102,61 @@ A box B is at location X when monkey M push to location X, box B.
 
 The following propositions apply in the final state:
 It is required that monkey M gets banana B.''')
-        self.assertEqual(model.strip(), '''In the 0 state:
-There is banana 3.
-There is box 2.
-There is location door.
-There is location middle.
-There is location window.
+        self.assertEqual(model.strip(), '''-- In the 0 state:
 There is monkey 1.
+There is location window.
+There is location middle.
+There is location door.
+There is box 2.
+There is banana 3.
 Monkey 1 is at location door.
 Box 2 is at location window.
-In the 1 state:
-There is banana 3.
-There is box 2.
-There is location door.
-There is location middle.
-There is location window.
+-- In the 1 state:
 There is monkey 1.
+There is location window.
+There is location middle.
+There is location door.
+There is box 2.
+There is banana 3.
+Box 2 is at location window.
 Monkey 1 has moved.
 Monkey 1 is at location window.
-Box 2 is at location window.
 Monkey 1 walk to location window.
-In the 2 state:
-There is banana 3.
-There is box 2.
-Monkey 1 climb.
-There is location door.
-There is location middle.
-There is location window.
+-- In the 2 state:
 There is monkey 1.
+There is location window.
+There is location middle.
+There is location door.
+There is box 2.
+There is banana 3.
 Monkey 1 has moved.
 Box 2 has moved.
 Monkey 1 is at location middle.
 Box 2 is at location middle.
-Monkey 1 is on box 2.
 Monkey 1 push to location middle.
-In the 3 state:
-There is banana 3.
-There is box 2.
-Monkey 1 grasp.
-There is location door.
-There is location middle.
-There is location window.
+-- In the 3 state:
 There is monkey 1.
+There is location window.
+There is location middle.
+There is location door.
+There is box 2.
+There is banana 3.
 Monkey 1 is at location middle.
 Box 2 is at location middle.
-Monkey 1 get banana 3.
-Monkey 1 is on box 2.''')
+Monkey 1 climb.
+Monkey 1 is on box 2.
+-- In the 4 state:
+There is monkey 1.
+There is location window.
+There is location middle.
+There is location door.
+There is box 2.
+There is banana 3.
+Monkey 1 is at location middle.
+Box 2 is at location middle.
+Monkey 1 is on box 2.
+Monkey 1 grasp.
+Monkey 1 get banana 3.''')
 
     def test_river_crossing_problem(self):
         model = self.compute_telingo_model('''A location is identified by a name.
@@ -187,75 +196,77 @@ It is prohibited that item X is at location A and also item Y is at location A, 
 
 The following propositions apply in the final state:
 It is required that item X is at location right_bank.''')
-        self.assertEqual(model.strip(), '''In the 0 state:
-There is farmer 1.
-There is item beans.
-There is item fox.
-There is item goose.
-There is location left_bank.
+        self.assertEqual(model.strip(), '''-- In the 0 state:
+There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
+There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is location right_bank.
+There is location left_bank.
+There is item goose.
+There is item fox.
+There is item beans.
+There is farmer 1.
 Farmer 1 is at location left_bank.
 Item beans is at location left_bank.
 Item fox is at location left_bank.
 Item goose is at location left_bank.
 Item fox eat item goose.
 Item goose eat item beans.
-There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
+-- In the 1 state:
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
-In the 1 state:
-There is farmer 1.
-There is item beans.
-There is item fox.
-There is item goose.
-There is location left_bank.
+There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is location right_bank.
-Item goose is moved.
-Farmer 1 is at location right_bank.
+There is location left_bank.
+There is item goose.
+There is item fox.
+There is item beans.
+There is farmer 1.
 Item beans is at location left_bank.
 Item fox is at location left_bank.
-Item goose is at location right_bank.
 Item fox eat item goose.
 Item goose eat item beans.
-There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
+Item goose is moved.
+Farmer 1 is at location right_bank.
+Item goose is at location right_bank.
+-- In the 2 state:
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
-In the 2 state:
-There is farmer 1.
-There is item beans.
-There is item fox.
-There is item goose.
-There is location left_bank.
+There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is location right_bank.
+There is location left_bank.
+There is item goose.
+There is item fox.
+There is item beans.
+There is farmer 1.
 Farmer 1 is at location left_bank.
 Item beans is at location left_bank.
 Item fox is at location left_bank.
 Item goose is at location right_bank.
 Item fox eat item goose.
 Item goose eat item beans.
-There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
+-- In the 3 state:
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
-In the 3 state:
-There is farmer 1.
-There is item beans.
-There is item fox.
-There is item goose.
-There is location left_bank.
+There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is location right_bank.
+There is location left_bank.
+There is item goose.
+There is item fox.
+There is item beans.
+There is farmer 1.
+Farmer 1 is at location right_bank.
+Item beans is at location left_bank.
+Item goose is at location right_bank.
+Item fox eat item goose.
+Item goose eat item beans.
 Item fox is moved.
-Farmer 1 is at location right_bank.
-Item beans is at location left_bank.
 Item fox is at location right_bank.
-Item goose is at location right_bank.
-Item fox eat item goose.
-Item goose eat item beans.
-There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
+-- In the 4 state:
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
-In the 4 state:
-There is farmer 1.
-There is item beans.
-There is item fox.
-There is item goose.
-There is location left_bank.
+There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is location right_bank.
+There is location left_bank.
+There is item goose.
+There is item fox.
+There is item beans.
+There is farmer 1.
 Item goose is moved.
 Farmer 1 is at location left_bank.
 Item beans is at location left_bank.
@@ -263,55 +274,53 @@ Item fox is at location right_bank.
 Item goose is at location left_bank.
 Item fox eat item goose.
 Item goose eat item beans.
-There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
+-- In the 5 state:
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
-In the 5 state:
-There is farmer 1.
-There is item beans.
-There is item fox.
-There is item goose.
-There is location left_bank.
+There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is location right_bank.
+There is location left_bank.
+There is item goose.
+There is item fox.
+There is item beans.
+There is farmer 1.
+Farmer 1 is at location right_bank.
+Item fox is at location right_bank.
+Item goose is at location left_bank.
+Item fox eat item goose.
+Item goose eat item beans.
 Item beans is moved.
-Farmer 1 is at location right_bank.
 Item beans is at location right_bank.
-Item fox is at location right_bank.
-Item goose is at location left_bank.
-Item fox eat item goose.
-Item goose eat item beans.
-There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
+-- In the 6 state:
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
-In the 6 state:
-There is farmer 1.
-There is item beans.
-There is item fox.
-There is item goose.
-There is location left_bank.
+There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is location right_bank.
+There is location left_bank.
+There is item goose.
+There is item fox.
+There is item beans.
+There is farmer 1.
 Farmer 1 is at location left_bank.
 Item beans is at location right_bank.
 Item fox is at location right_bank.
 Item goose is at location left_bank.
 Item fox eat item goose.
 Item goose eat item beans.
-There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
+-- In the 7 state:
 There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.
-In the 7 state:
-There is farmer 1.
-There is item beans.
-There is item fox.
-There is item goose.
-There is location left_bank.
+There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
 There is location right_bank.
+There is location left_bank.
+There is item goose.
+There is item fox.
+There is item beans.
+There is farmer 1.
 Item goose is moved.
 Farmer 1 is at location right_bank.
 Item beans is at location right_bank.
 Item fox is at location right_bank.
 Item goose is at location right_bank.
 Item fox eat item goose.
-Item goose eat item beans.
-There is route with starting_location equal to left_bank, with arriving_location equal to right_bank.
-There is route with starting_location equal to right_bank, with arriving_location equal to left_bank.''')
+Item goose eat item beans.''')
 
     def test_hanoi_problem(self):
         model = self.compute_telingo_model('''A disk is identified by an id.
@@ -353,161 +362,161 @@ It is prohibited that a disk D is moved to a peg P1, when disk D is previously o
 
 The following propositions apply in the final state:
 It is prohibited that disk D is not on peg P, whenever there is a goal with disk id D, with peg id P.''')
-        self.assertEqual(model.strip(), '''In the 0 state:
-There is disk 0.
-There is disk 1.
-There is disk 2.
-There is disk 3.
-There is peg 1.
-There is peg 2.
-There is peg 3.
-There is goal with disk id equal to 1, with peg id equal to 3.
-There is goal with disk id equal to 2, with peg id equal to 3.
+        self.assertEqual(model.strip(), '''-- In the 0 state:
 There is goal with disk id equal to 3, with peg id equal to 3.
+There is goal with disk id equal to 2, with peg id equal to 3.
+There is goal with disk id equal to 1, with peg id equal to 3.
+There is peg 3.
+There is peg 2.
+There is peg 1.
+There is disk 3.
+There is disk 2.
+There is disk 1.
+There is disk 0.
 Disk 1 is on peg 1.
 Disk 2 is on peg 1.
 Disk 3 is on peg 1.
-In the 1 state:
-There is disk 0.
-There is disk 1.
-There is disk 2.
-There is disk 3.
-Disk 3 is moved.
-There is peg 1.
-There is peg 2.
+-- In the 1 state:
+There is goal with disk id equal to 3, with peg id equal to 3.
+There is goal with disk id equal to 2, with peg id equal to 3.
+There is goal with disk id equal to 1, with peg id equal to 3.
 There is peg 3.
+There is peg 2.
+There is peg 1.
+There is disk 3.
+There is disk 2.
+There is disk 1.
+There is disk 0.
+Disk 1 is on peg 1.
+Disk 2 is on peg 1.
+Disk 3 is moved.
 Disk 0 is blocked in peg 1.
 Disk 1 is blocked in peg 1.
 Disk 2 is blocked in peg 1.
-There is goal with disk id equal to 1, with peg id equal to 3.
-There is goal with disk id equal to 2, with peg id equal to 3.
-There is goal with disk id equal to 3, with peg id equal to 3.
 Disk 3 is moved to peg 3.
-Disk 1 is on peg 1.
-Disk 2 is on peg 1.
 Disk 3 is on peg 3.
-In the 2 state:
-There is disk 0.
-There is disk 1.
-There is disk 2.
-There is disk 3.
-Disk 2 is moved.
-There is peg 1.
-There is peg 2.
+-- In the 2 state:
+There is goal with disk id equal to 3, with peg id equal to 3.
+There is goal with disk id equal to 2, with peg id equal to 3.
+There is goal with disk id equal to 1, with peg id equal to 3.
 There is peg 3.
+There is peg 2.
+There is peg 1.
+There is disk 3.
+There is disk 2.
+There is disk 1.
+There is disk 0.
 Disk 0 is blocked in peg 1.
-Disk 0 is blocked in peg 3.
 Disk 1 is blocked in peg 1.
+Disk 1 is on peg 1.
+Disk 3 is on peg 3.
+Disk 2 is moved.
+Disk 0 is blocked in peg 3.
 Disk 1 is blocked in peg 3.
 Disk 2 is blocked in peg 3.
-There is goal with disk id equal to 1, with peg id equal to 3.
-There is goal with disk id equal to 2, with peg id equal to 3.
-There is goal with disk id equal to 3, with peg id equal to 3.
 Disk 2 is moved to peg 2.
+Disk 2 is on peg 2.
+-- In the 3 state:
+There is goal with disk id equal to 3, with peg id equal to 3.
+There is goal with disk id equal to 2, with peg id equal to 3.
+There is goal with disk id equal to 1, with peg id equal to 3.
+There is peg 3.
+There is peg 2.
+There is peg 1.
+There is disk 3.
+There is disk 2.
+There is disk 1.
+There is disk 0.
+Disk 3 is moved.
+Disk 0 is blocked in peg 1.
+Disk 0 is blocked in peg 3.
+Disk 1 is blocked in peg 3.
+Disk 2 is blocked in peg 3.
 Disk 1 is on peg 1.
 Disk 2 is on peg 2.
-Disk 3 is on peg 3.
-In the 3 state:
-There is disk 0.
-There is disk 1.
-There is disk 2.
-There is disk 3.
-Disk 3 is moved.
-There is peg 1.
-There is peg 2.
+Disk 0 is blocked in peg 2.
+Disk 1 is blocked in peg 2.
+Disk 3 is moved to peg 2.
+Disk 3 is on peg 2.
+-- In the 4 state:
+There is goal with disk id equal to 3, with peg id equal to 3.
+There is goal with disk id equal to 2, with peg id equal to 3.
+There is goal with disk id equal to 1, with peg id equal to 3.
 There is peg 3.
+There is peg 2.
+There is peg 1.
+There is disk 3.
+There is disk 2.
+There is disk 1.
+There is disk 0.
 Disk 0 is blocked in peg 1.
 Disk 0 is blocked in peg 2.
-Disk 0 is blocked in peg 3.
 Disk 1 is blocked in peg 2.
-Disk 1 is blocked in peg 3.
-Disk 2 is blocked in peg 3.
-There is goal with disk id equal to 1, with peg id equal to 3.
-There is goal with disk id equal to 2, with peg id equal to 3.
-There is goal with disk id equal to 3, with peg id equal to 3.
-Disk 3 is moved to peg 2.
-Disk 1 is on peg 1.
 Disk 2 is on peg 2.
 Disk 3 is on peg 2.
-In the 4 state:
-There is disk 0.
-There is disk 1.
-There is disk 2.
-There is disk 3.
 Disk 1 is moved.
-There is peg 1.
-There is peg 2.
-There is peg 3.
-Disk 0 is blocked in peg 1.
-Disk 0 is blocked in peg 2.
-Disk 1 is blocked in peg 2.
 Disk 2 is blocked in peg 2.
-There is goal with disk id equal to 1, with peg id equal to 3.
-There is goal with disk id equal to 2, with peg id equal to 3.
-There is goal with disk id equal to 3, with peg id equal to 3.
 Disk 1 is moved to peg 3.
 Disk 1 is on peg 3.
-Disk 2 is on peg 2.
-Disk 3 is on peg 2.
-In the 5 state:
-There is disk 0.
-There is disk 1.
-There is disk 2.
-There is disk 3.
-Disk 3 is moved.
-There is peg 1.
-There is peg 2.
+-- In the 5 state:
+There is goal with disk id equal to 3, with peg id equal to 3.
+There is goal with disk id equal to 2, with peg id equal to 3.
+There is goal with disk id equal to 1, with peg id equal to 3.
 There is peg 3.
+There is peg 2.
+There is peg 1.
+There is disk 3.
+There is disk 2.
+There is disk 1.
+There is disk 0.
+Disk 3 is moved.
 Disk 0 is blocked in peg 2.
 Disk 0 is blocked in peg 3.
 Disk 1 is blocked in peg 2.
 Disk 2 is blocked in peg 2.
-There is goal with disk id equal to 1, with peg id equal to 3.
-There is goal with disk id equal to 2, with peg id equal to 3.
-There is goal with disk id equal to 3, with peg id equal to 3.
-Disk 3 is moved to peg 1.
 Disk 1 is on peg 3.
 Disk 2 is on peg 2.
 Disk 3 is on peg 1.
-In the 6 state:
-There is disk 0.
-There is disk 1.
-There is disk 2.
-There is disk 3.
-Disk 2 is moved.
-There is peg 1.
-There is peg 2.
+Disk 3 is moved to peg 1.
+-- In the 6 state:
+There is goal with disk id equal to 3, with peg id equal to 3.
+There is goal with disk id equal to 2, with peg id equal to 3.
+There is goal with disk id equal to 1, with peg id equal to 3.
 There is peg 3.
+There is peg 2.
+There is peg 1.
+There is disk 3.
+There is disk 2.
+There is disk 1.
+There is disk 0.
+Disk 2 is moved.
 Disk 0 is blocked in peg 1.
 Disk 0 is blocked in peg 2.
 Disk 0 is blocked in peg 3.
 Disk 1 is blocked in peg 1.
 Disk 1 is blocked in peg 2.
 Disk 2 is blocked in peg 1.
-There is goal with disk id equal to 1, with peg id equal to 3.
-There is goal with disk id equal to 2, with peg id equal to 3.
-There is goal with disk id equal to 3, with peg id equal to 3.
-Disk 2 is moved to peg 3.
 Disk 1 is on peg 3.
-Disk 2 is on peg 3.
 Disk 3 is on peg 1.
-In the 7 state:
-There is disk 0.
-There is disk 1.
-There is disk 2.
-There is disk 3.
-Disk 3 is moved.
-There is peg 1.
-There is peg 2.
+Disk 2 is moved to peg 3.
+Disk 2 is on peg 3.
+-- In the 7 state:
+There is goal with disk id equal to 3, with peg id equal to 3.
+There is goal with disk id equal to 2, with peg id equal to 3.
+There is goal with disk id equal to 1, with peg id equal to 3.
 There is peg 3.
+There is peg 2.
+There is peg 1.
+There is disk 3.
+There is disk 2.
+There is disk 1.
+There is disk 0.
+Disk 3 is moved.
 Disk 0 is blocked in peg 1.
 Disk 0 is blocked in peg 3.
 Disk 1 is blocked in peg 1.
 Disk 1 is blocked in peg 3.
 Disk 2 is blocked in peg 1.
-There is goal with disk id equal to 1, with peg id equal to 3.
-There is goal with disk id equal to 2, with peg id equal to 3.
-There is goal with disk id equal to 3, with peg id equal to 3.
 Disk 3 is moved to peg 3.
 Disk 1 is on peg 3.
 Disk 2 is on peg 3.

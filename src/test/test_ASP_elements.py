@@ -47,7 +47,7 @@ class TestASPElements(unittest.TestCase):
         head = ASPRuleHead(new_knowledge, condition)
         body = ASPConjunction([ASPAtom('body', [ASPAttribute('field', ASPValue('FIELD'))]),
                                ASPAtom('body2', [ASPAttribute('field', ASPValue('FIELD'))])])
-        rule = ASPRule(body, [head])
+        rule = ASPRule(body, [head], (None, None))
         # choice without cardinality
         self.assertEqual(str(rule),
                          '{head(FIELD): condition(FIELD), condition2(FIELD)} :- body(FIELD), body2(FIELD).\n',
@@ -91,7 +91,7 @@ class TestASPElements(unittest.TestCase):
         head = ASPRuleHead(new_knowledge, condition)
         body = ASPConjunction([ASPAtom('body', [ASPAttribute('field', ASPValue('FIELD'))]),
                                ASPAtom('body2', [ASPAttribute('field', ASPValue('FIELD'))])])
-        rule = ASPRule(body, [head])
+        rule = ASPRule(body, [head], (None, None))
         program = ASPProgram()
         program.add_rule(rule)
 

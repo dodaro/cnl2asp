@@ -11,7 +11,7 @@ at("door",M) :- monkey(M), location("door").
 at("window",B) :- box(B), location("window").
 
 #program dynamic.
-{walk_to(X,M): location(X) ; push_to(X,M): location(X) ; climb(M) ; grasp(M)} :- monkey(M).
+walk_to(X,M): location(X) ; push_to(X,M): location(X) ; climb(M) ; grasp(M) :- monkey(M).
 moved(M) :- at(X,M), location(X), 'at(Y,M), location(Y), X != Y, monkey(M).
 moved(B) :- at(X,B), location(X), 'at(Y,B), location(Y), X != Y, box(B).
 at(X,M) :- 'at(X,M), not moved(M), monkey(M), location(X).
