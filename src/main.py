@@ -1,5 +1,9 @@
 import argparse
 import json
+import tempfile
+
+from clingo import Control
+from ngo import optimize, auto_detect_input, auto_detect_output
 
 from cnl2asp.ASP_elements.solver.clingo_wrapper import Clingo
 from cnl2asp.ASP_elements.solver.clingo_result_parser import ClingoResultParser
@@ -7,6 +11,7 @@ from cnl2asp.ASP_elements.solver.telingo_result_parser import TelingoResultParse
 from cnl2asp.ASP_elements.solver.telingo_wrapper import Telingo
 from cnl2asp.cnl2asp import Cnl2asp
 from cnl2asp.utility.utility import Utility
+from clingo.ast import parse_files, ProgramBuilder
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -19,6 +24,7 @@ if __name__ == '__main__':
                              'if an entity with same name has been defined')
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--solve', type=str, choices=["clingo", "telingo"], help='call the solver')
+    parser.add_argument('-o', '--optimize', action='store_true', help='optimize the output')
     parser.add_argument('input_file')
     parser.add_argument('output_file', type=str, nargs='?', default='out.txt')
     args = parser.parse_args()
@@ -40,6 +46,8 @@ if __name__ == '__main__':
         print(cnl2asp.get_symbols())
     else:
         asp_encoding = cnl2asp.compile()
+        if args.optimize:
+            asp_encoding = cnl2asp.optimize(asp_encoding)
         try:
             with open(output_file, "w") as out_file:
                 if out_file.write(asp_encoding):

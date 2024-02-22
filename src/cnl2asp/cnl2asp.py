@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import collections
 import os
+import tempfile
 import traceback
 from enum import Enum
 from typing import TextIO
 
+from clingo.ast import parse_files
 from lark import Lark, UnexpectedCharacters
 from lark.exceptions import VisitError
+from ngo import optimize, auto_detect_input, auto_detect_output, Predicate
 
 from cnl2asp.ASP_elements.asp_program import ASPProgram
 from cnl2asp.converter.cnl2json_converter import Cnl2jsonConverter
@@ -111,6 +114,18 @@ class Cnl2asp:
             if self._debug:
                 traceback.print_exception(e)
             return ''
+
+    def optimize(self, asp_encoding: str):
+        prg = []
+        with tempfile.NamedTemporaryFile(mode="w") as file:
+            file.write(asp_encoding)
+            file.seek(0)
+            parse_files([file.name], prg.append)
+            prg = optimize(prg, [Predicate("node",1)], [Predicate("assigned_to",2)])
+            optimized_encoding = ''
+            for stm in prg:
+                optimized_encoding += str(stm) + '\n'
+        return optimized_encoding
 
     def __get_type(self, name: str):
         if SignatureManager.is_temporal_entity(name):
