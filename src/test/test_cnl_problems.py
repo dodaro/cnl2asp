@@ -144,13 +144,13 @@ Waiter John serves a drink alcoholic.
 Waiter W is working when waiter W serves a drink.
 Whenever there is a movie with director equal to spielberg, with id X then we must have a topmovie with id X.
 Whenever there is a director with name X different from spielberg then we can have at most 1 topmovie with id I such that there is a movie with director X, and with id I.
-Whenever there is a movie with id I, with director equal to nolan then we can have a scoreAssignment with movie I, and with value equal to 3 or a scoreAssignment with movie I, and with value equal to 2.
+Whenever there is a movie with id I, with director equal to nolan then we must have a scoreAssignment with movie I, and with value equal to 3 or a scoreAssignment with movie I, and with value equal to 2.
 There is a movie with id equal to 1, with director equal to spielberg, with title equal to jurassicPark, with year equal to 1993.
 There is a movie with id equal to 1, with director equal to spielberg, with year equal to 1993, with title equal to jurassicPark.
 There is a movie with director equal to spielberg, with year equal to 1993, with id equal to 1, with title equal to jurassicPark.
 Every patron can drink in exactly 1 pub for each day.
 Every waiter can serve a drink.
-Every movie with id I can have a scoreAssignment with movie I, and with value equal to 1 or a scoreAssignment with movie I, and with value equal to 2, or a scoreAssignment with movie I, and with value equal to 3.
+Every movie with id I must have a scoreAssignment with movie I, and with value equal to 1 or a scoreAssignment with movie I, and with value equal to 2, or a scoreAssignment with movie I, and with value equal to 3.
 It is prohibited that waiter W1 work in pub P1 and also waiter W2 work in pub P1, where W1 is different from W2.
 It is prohibited that X is equal to Y, whenever there is a movie with id X, and with year equal to 1964, whenever there is a topMovie with id Y.
 It is prohibited that the lowest value of a scoreAssignment with movie id X is equal to 1, whenever there is a topMovie with id X.

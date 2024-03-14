@@ -27,14 +27,13 @@ class ASPRuleHead(ASPElement):
 
 class ASPRule(ASPElement):
     def __init__(self, body: ASPConjunction = ASPConjunction([]), head=None,
-                 cardinality: (int | None, int | None) = None, is_choice_rule=False):
+                 cardinality: (int | None, int | None) = None):
         if head is None:
             head = []
         self.head = head
         self.body = body
         self.cardinality = cardinality
         self._clear_rule()
-        self._is_choice_rule = is_choice_rule
 
     def _clear_rule(self):
         self._remove_duplicates()
@@ -67,10 +66,8 @@ class ASPRule(ASPElement):
     def __str__(self) -> str:
         rule = ''
         separator = ' | '
-        if self._is_choice_rule:
+        if self._is_choice_rule():
             separator = " ; "
-            if len(self.head) > 1:
-                self.cardinality = (1, 1)
         if self.head:
             for idx, element in enumerate(self.head):
                 if idx > 0:
@@ -80,8 +77,6 @@ class ASPRule(ASPElement):
                 rule = f'{str(self.cardinality[0]) + " <= " if self.cardinality[0] else ""}' \
                        f'{{{rule}}}' \
                        f'{" <= " + str(self.cardinality[1]) if self.cardinality[1] else ""}'
-            elif self._is_choice_rule:
-                rule = f'{{{rule}}}'
         rule = rule.strip()
         if self.body.conjunction:
             body = str(self.body)

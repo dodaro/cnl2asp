@@ -278,9 +278,6 @@ class CNLTransformer(Transformer):
         try:
             for command in self._delayed_operations:
                 command.execute()
-            for proposition in self._proposition.get_propositions():
-                if len(proposition.new_knowledge) > 1:
-                    proposition.cardinality = None
             self._proposition.add_defined_attributes(self._defined_variables)
             self._problem.add_propositions(self._proposition.get_propositions())
             self._clear()
@@ -316,8 +313,9 @@ class CNLTransformer(Transformer):
         subject = elem[0]
         # if can and not cardinality we have a
         # choice with cardinality = Null else we take the cardinality
-        cardinality = CardinalityComponent(None, None) \
-            if elem[1] == 'can' and not self._proposition.get_cardinality() else self._proposition.get_cardinality()
+        cardinality = self._proposition.get_cardinality()
+        if elem[1] == 'can' and not self._proposition.get_cardinality():
+            cardinality = CardinalityComponent(None, None)
         self._proposition.add_cardinality(cardinality)
         self._proposition.add_subject(subject)
         return subject
@@ -405,8 +403,9 @@ class CNLTransformer(Transformer):
 
     def quantified_choice_proposition(self, elem):
         subject: EntityComponent = elem[1]
-        cardinality = CardinalityComponent(None, None) \
-            if elem[2] == 'can' and not self._proposition.get_cardinality() else self._proposition.get_cardinality()
+        cardinality = self._proposition.get_cardinality()
+        if elem[2] == 'can' and not self._proposition.get_cardinality():
+            cardinality = CardinalityComponent(None, None)
         self._proposition.add_cardinality(cardinality)
         self._proposition.add_requisite(subject)
         self._proposition.add_subject(subject.copy())
