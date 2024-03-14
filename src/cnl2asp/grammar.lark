@@ -253,7 +253,7 @@ COMPARISON_OPERATOR: _CNL_THE_SAME_AS
           | _CNL_NOT_AFTER
           | _CNL_BETWEEN
 
-weak_constraint_proposition: cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison | simple_clause ) [weak_optimization_operator] [terminal_clauses]
+weak_constraint_proposition: cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison | simple_clause | there_is_clause) [weak_optimization_operator] [terminal_clauses]
                            | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison_operand | aggregate_clause) [weak_optimization_operator] [terminal_clauses] -> preference_with_aggregate_clause
                            | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT whenever_clauses_list _CNL_COMMA VARIABLE weak_optimization_operator [terminal_clauses] -> preference_with_variable_minimization
 whenever_clauses_list: whenever_clause (_CNL_COMMA whenever_clause)*
@@ -268,6 +268,7 @@ cnl_as_little_as_possible: _CNL_AS " " _CNL_LITTLE " " _CNL_AS " " _CNL_POSSIBLE
 optimization_statement: cnl_as_much_as_possible | cnl_as_little_as_possible
 _CNL_PRIORITY: "priority"
 weak_priority_clause: _CNL_WITH " " PRIORITY_LEVEL " " _CNL_PRIORITY
+                    | _CNL_WITH " " _CNL_PRIORITY " " NUMBER -> priority_level_number
 _CNL_LOW: "low"
 _CNL_MEDIUM: "medium"
 _CNL_HIGH: "high"

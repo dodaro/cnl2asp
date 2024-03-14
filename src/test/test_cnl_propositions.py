@@ -454,5 +454,7 @@ A city is identified by a name.
 
 Whenever there is initially a tourist or the true constant, then we can have a movement.""", """{movement(TRST_NM)} :- not not &tel {<< tourist(TRST_NM) | &true}.""")
 
-if __name__ == '__main__':
-    unittest.main()
+    def test_priority_level_number(self):
+        self.check_input_to_output('''A drink is identified by an id.
+A serve is identified by a drink.
+It is preferred with priority 5 that the number of drinks that are serve is maximized.''', ':~ #count{D: serve(D)} = CNT. [-CNT@5]')

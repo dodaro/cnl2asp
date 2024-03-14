@@ -56,10 +56,10 @@ class Operators(Enum):
 
 class OperationComponent(Component):
     def __init__(self, operator: Operators, *operands: Component):
-        self.operator = operator
+        self.operation = operator
         self.operands = []
         self.negated = False
-        if self.operator == Operators.BETWEEN:
+        if self.operation == Operators.BETWEEN:
             operands = self.between_operator(operands)
         for operand in operands:
             if not isinstance(operand, Component):
@@ -69,9 +69,9 @@ class OperationComponent(Component):
 
     def between_operator(self, operands):
         operands = list(operands)
-        if self.operator == Operators.BETWEEN:
-            self.operator = Operators.LESS_THAN_OR_EQUAL_TO
-        elif self.operator == Operators.NOTBETWEEN:
+        if self.operation == Operators.BETWEEN:
+            self.operation = Operators.LESS_THAN_OR_EQUAL_TO
+        elif self.operation == Operators.NOTBETWEEN:
             raise NotImplemented("Operator not between not implemented")
         for operand in operands:
             if isinstance(operand, list):
@@ -87,12 +87,18 @@ class OperationComponent(Component):
             entities += operand.get_entities()
         return entities
 
+    def get_entities_to_link_with_new_knowledge(self) -> list[EntityComponent]:
+        entities = []
+        for operand in self.operands:
+            entities += operand.get_entities_to_link_with_new_knowledge()
+        return entities
+
     def convert(self, converter: Converter) -> OperationConverter:
         return converter.convert_operation(self)
 
     def copy(self):
         operands = [component for component in self.operands]
-        return OperationComponent(self.operator, *operands)
+        return OperationComponent(self.operation, *operands)
 
     def is_angle(self) -> False:
         for operand in self.operands:

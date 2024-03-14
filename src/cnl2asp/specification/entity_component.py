@@ -146,6 +146,9 @@ class EntityComponent(Component):
     def get_entities(self) -> list[EntityComponent]:
         return [self]
 
+    def get_entities_to_link_with_new_knowledge(self) -> list[EntityComponent]:
+        return [self]
+
     def is_temporal_entity(self) -> bool:
         return False
 

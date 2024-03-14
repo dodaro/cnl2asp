@@ -1,25 +1,25 @@
 from __future__ import annotations
 
-import collections
 import os
 import tempfile
 import traceback
 from enum import Enum
+from textwrap import indent
 from typing import TextIO
 
 from clingo.ast import parse_files
+from cnl2asp.utility.utility import Utility
 from lark import Lark, UnexpectedCharacters
 from lark.exceptions import VisitError
-from ngo import optimize, auto_detect_input, auto_detect_output, Predicate
+from ngo import optimize, Predicate
 
 from cnl2asp.ASP_elements.asp_program import ASPProgram
 from cnl2asp.converter.cnl2json_converter import Cnl2jsonConverter
-from cnl2asp.exception.cnl2asp_exceptions import ParserError, EntityNotFound
+from cnl2asp.exception.cnl2asp_exceptions import ParserError
 from cnl2asp.specification.attribute_component import AttributeComponent
 from cnl2asp.specification.entity_component import EntityComponent
 from cnl2asp.converter.asp_converter import ASPConverter
 from cnl2asp.parser.parser import CNLTransformer
-from cnl2asp.specification.problem import Problem
 from cnl2asp.specification.signaturemanager import SignatureManager
 from cnl2asp.specification.specification import SpecificationComponent
 
@@ -44,7 +44,8 @@ class Symbol:
         self.symbol_type = symbol_type
 
     def __repr__(self):
-        return f'{self.predicate}({self.attributes}), {self.symbol_type.name}\n'
+        attributes = f'\n{indent(str(self.attributes), "    ")}'
+        return f'\n{self.predicate} [{self.symbol_type.name}]: {indent(attributes, "    ")}'
 
 
 class Cnl2asp:
@@ -93,7 +94,8 @@ class Cnl2asp:
             return True
         return False
 
-    def compile(self) -> str:
+    def compile(self, auto_link_entities: bool = True) -> str:
+        Utility.AUTO_ENTITY_LINK = auto_link_entities
         try:
             specification: SpecificationComponent = self.parse_input()
         except UnexpectedCharacters as e:

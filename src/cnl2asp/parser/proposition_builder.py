@@ -1,10 +1,10 @@
-from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, EntityNotFound, LabelNotFound
+from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, LabelNotFound
+from cnl2asp.specification.relation_component import RelationComponent
 from cnl2asp.specification.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent
 from cnl2asp.specification.component import Component
 from cnl2asp.specification.entity_component import EntityComponent
-from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, CardinalityComponent, PreferenceProposition, \
-    PREFERENCE_PRIORITY_LEVEL, PREFERENCE_PROPOSITION_TYPE, ConditionComponent
-from cnl2asp.specification.relation_component import RelationComponent
+from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, CardinalityComponent, \
+    PreferenceProposition, PREFERENCE_PROPOSITION_TYPE, ConditionComponent
 from cnl2asp.utility.utility import Utility
 
 
@@ -129,7 +129,7 @@ class PreferencePropositionBuilder(PropositionBuilder):
         for proposition in self.get_propositions():
             proposition.weight = weight
 
-    def add_level(self, level: PREFERENCE_PRIORITY_LEVEL):
+    def add_level(self, level: int):
         for proposition in self.get_propositions():
             proposition.level = level
 

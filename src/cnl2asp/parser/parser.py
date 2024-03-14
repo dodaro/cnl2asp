@@ -12,15 +12,15 @@ from cnl2asp.exception.cnl2asp_exceptions import LabelNotFound, ParserError, Att
 from cnl2asp.parser.command import SubstituteVariable, Command, DurationClause, CreateSignature, \
         RespectivelySubstituteVariable
 from cnl2asp.parser.proposition_builder import PropositionBuilder, PreferencePropositionBuilder
-from cnl2asp.specification.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent, AttributeOrigin
+from cnl2asp.specification.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent, \
+    AttributeOrigin, AngleValueComponent
 from cnl2asp.specification.component import Component
 from cnl2asp.specification.constant_component import ConstantComponent
 from cnl2asp.specification.entity_component import EntityComponent, EntityType, TemporalEntityComponent, \
     SetEntityComponent, ListEntityComponent, ComplexEntityComponent
 from cnl2asp.specification.problem import Problem
 from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, \
-    CardinalityComponent, PREFERENCE_PROPOSITION_TYPE, \
-    PREFERENCE_PRIORITY_LEVEL, PROPOSITION_TYPE
+    CardinalityComponent, PREFERENCE_PROPOSITION_TYPE, PROPOSITION_TYPE
 from cnl2asp.specification.relation_component import RelationComponent
 from cnl2asp.specification.aggregate_component import AggregateComponent, AggregateOperation
 from cnl2asp.specification.operation_component import Operators, OperationComponent
@@ -287,24 +287,21 @@ class CNLTransformer(Transformer):
             raise CompilationError(str(e), meta.line)
 
     def _make_new_knowledge_relations(self, proposition: Proposition, components: list[Component] = None):
-        if components:
-            for component in components:
-                for entity in component.get_entities():
-                    for new_knowledge in proposition.new_knowledge:
-                        proposition.relations.append(RelationComponent(new_knowledge.new_entity, entity))
-        for new_knowledge in proposition.new_knowledge:
-            for condition_entity in new_knowledge.condition.components:
-                for entity in condition_entity.get_entities():
-                    proposition.relations.append(
-                            RelationComponent(new_knowledge.new_entity, entity))
+        if Utility.AUTO_ENTITY_LINK:
+            if components:
+                for component in components:
+                    for entity in component.get_entities_to_link_with_new_knowledge():
+                        for new_knowledge in proposition.new_knowledge:
+                            proposition.relations.append(RelationComponent(new_knowledge.new_entity, entity))
+            for new_knowledge in proposition.new_knowledge:
+                for condition_entity in new_knowledge.condition.components:
+                    for entity in condition_entity.get_entities_to_link_with_new_knowledge():
+                        proposition.relations.append(
+                                RelationComponent(new_knowledge.new_entity, entity))
 
     def whenever_then_clause_proposition(self, elem):
         for proposition in self._proposition.get_propositions():
-            entities = [elem[1]] if elem[1] else []
-            for components in proposition.requisite.components:
-                for entity in components.get_entities():
-                    entities.append(entity)
-            self._make_new_knowledge_relations(proposition, entities)
+            self._make_new_knowledge_relations(proposition, proposition.requisite.components)
 
     def whenever_clause(self, elem):
         if elem[0]:
@@ -690,10 +687,14 @@ class CNLTransformer(Transformer):
             else:
                 if value == Utility.NULL_VALUE:
                     value = self._new_field_value(name)
-                operations = [OperationComponent(parameter[-3], AttributeComponent(name.strip(), ValueComponent(value), origin), parameter[-2])]
+                operations = [OperationComponent(parameter[-3], ValueComponent(value), parameter[-2])]
         if not origin and SignatureManager.is_temporal_entity(name.strip()):
             origin = AttributeOrigin(name.strip())
-        attribute = AttributeComponent(name.strip(), ValueComponent(value), origin, operations)
+        attribute = AttributeComponent(name.strip(), ValueComponent(value), origin)
+        if attribute.is_angle():
+            for operation in operations:
+                operation.operands[0] = AngleValueComponent(value)
+        attribute.operations = operations
         self._proposition.add_discriminant([attribute])
         return attribute
 
@@ -897,13 +898,16 @@ class CNLTransformer(Transformer):
     def CNL_MAXIMIZED(self, elem):
         return PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION
 
+    def priority_level_number(self, elem):
+        self._proposition.add_level(int(elem[0]))
+
     def PRIORITY_LEVEL(self, elem):
         if elem.value == 'low':
-            self._proposition.add_level(PREFERENCE_PRIORITY_LEVEL.LOW)
+            self._proposition.add_level(1)
         elif elem.value == 'medium':
-            self._proposition.add_level(PREFERENCE_PRIORITY_LEVEL.MEDIUM)
+            self._proposition.add_level(2)
         elif elem.value == 'high':
-            self._proposition.add_level(PREFERENCE_PRIORITY_LEVEL.HIGH)
+            self._proposition.add_level(3)
 
     def NUMBER(self, elem) -> ValueComponent:
         return ValueComponent(elem.value)

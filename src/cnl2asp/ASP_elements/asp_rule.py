@@ -69,6 +69,8 @@ class ASPRule(ASPElement):
         separator = ' | '
         if self._is_choice_rule:
             separator = " ; "
+            if len(self.head) > 1:
+                self.cardinality = (1, 1)
         if self.head:
             for idx, element in enumerate(self.head):
                 if idx > 0:
