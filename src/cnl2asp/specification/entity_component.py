@@ -31,7 +31,8 @@ class EntityType(Enum):
 class EntityComponent(Component):
     def __init__(self, name: str, label: str, keys: list[AttributeComponent], attributes: list[AttributeComponent],
                  negated: bool = False, entity_type: EntityType = EntityType.GENERIC,
-                 is_before: bool = False, is_after: bool = False, is_initial: bool = False, is_final: bool = False):
+                 is_before: bool = False, is_after: bool = False, is_initial: bool = False,
+                 is_final: bool = False, auxiliary_verb: str = ""):
         self._name = NameComponent(name)
         self.label = label
         self.keys = keys if keys else []
@@ -41,6 +42,7 @@ class EntityComponent(Component):
                 attribute.origin = AttributeOrigin(self.get_name())
         self.negated = negated
         self.entity_type = entity_type
+        self.auxiliary_verb = auxiliary_verb
         self.is_before = is_before
         self.is_after = is_after
         self.is_initial = is_initial
@@ -141,7 +143,9 @@ class EntityComponent(Component):
         keys = [key.copy() for key in self.keys]
         attributes = [attribute.copy() for attribute in self.attributes]
         return EntityComponent(self.get_name(), self.label, keys,
-                               attributes, self.negated, self.entity_type)
+                               attributes, self.negated, self.entity_type,
+                               self.is_before, self.is_after, self.is_initial, self.is_final,
+                               self.auxiliary_verb)
 
     def get_entities(self) -> list[EntityComponent]:
         return [self]

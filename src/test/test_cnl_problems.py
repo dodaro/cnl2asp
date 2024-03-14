@@ -90,8 +90,8 @@ timeslot(33,"01:00 PM").
 timeslot(34,"01:10 PM").
 timeslot(35,"01:20 PM").
 timeslot(36,"01:30 PM").
-1 <= {assignment_to(DY_DY,RGSTRTN_D,0,TMSLT_TMSLT): day(DY_DY,_), timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(RGSTRTN_D,0,_,_,_,_,_).
-1 <= {assignment_to(D+W,P,OR,TMSLT_TMSLT): timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(P,OR,W,_,_,_,_), assignment(P,OR-1,D,_), day(D+W,_).
+1 <= {assignment(RGSTRTN_D,0,DY_DY,TMSLT_TMSLT): day(DY_DY,_), timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(RGSTRTN_D,0,_,_,_,_,_).
+1 <= {assignment(P,OR,D+W,TMSLT_TMSLT): timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(P,OR,W,_,_,_,_), assignment(P,OR-1,D,_), day(D+W,_).
 :- registration(_,_,_,RGSTRTN_DRTN_F_TH_FRST_PHS,RGSTRTN_DRTN_F_TH_SCND_PHS,RGSTRTN_DRTN_F_TH_THRD_PHS,_), assignment(_,_,_,T), (RGSTRTN_DRTN_F_TH_FRST_PHS + RGSTRTN_DRTN_F_TH_SCND_PHS + RGSTRTN_DRTN_F_TH_THRD_PHS) <= T, registration(RGSTRTN_D,RGSTRTN_RDR,_,RGSTRTN_DRTN_F_TH_FRST_PHS,RGSTRTN_DRTN_F_TH_SCND_PHS,RGSTRTN_DRTN_F_TH_THRD_PHS,_), assignment(RGSTRTN_D,RGSTRTN_RDR,_,T).
 1 <= {x_support(D,S,P,SSGNMNT_RDR,T): seat(S,_)} <= 1 :- patient(P,_), assignment(P,SSGNMNT_RDR,D,T), registration(P,SSGNMNT_RDR,_,_,_,_,PH4), PH4 > 0.
 position_in(D,S,P,SSGNMNT_RDR,T..T+PH4) :- patient(P,_), assignment(P,SSGNMNT_RDR,D,T), registration(P,SSGNMNT_RDR,_,_,_,_,PH4), x_support(D,S,P,SSGNMNT_RDR,T).
@@ -267,7 +267,7 @@ time(10,"10").
 :- (AI + granularity)/360 != (A)/360, rotation(_,_,A,AI,_), (A)/360 > (AI)/360, (AI)/360 > (0)/360.
 :- (360 - granularity)/360 != (A)/360, rotation(_,_,A,0,_).
 :- (360 - granularity)/360 != (AI)/360, rotation(_,_,A,AI,_), (A)/360 = (0)/360.
-1 <= {position_to(J,T,A): angle(A)} <= 1 :- joint(J), time(T,_).
+1 <= {position(J,A,T): angle(A)} <= 1 :- joint(J), time(T,_).
 :- (A1)/360 != (A2)/360, position(J,A1,T), position(J,A2,T+1), not rotation(_,_,_,_,T), T <= timemax.
 :- (A1)/360 != (A2)/360, position(J1,A1,T), rotation(J1,_,A2,_,T-1).
 :- (AN)/360 != (|AC+(A-AP)+360|)/360, time(T,_), position(J1,AN,T+1), rotation(J2,_,_,AP,T), position(J1,AC,T), J1 > J2.

@@ -38,7 +38,8 @@ class QUANTITY_OPERATOR(Enum):
 PRONOUNS = ['i', 'you', 'he', 'she', 'it', 'we', 'you', 'they']  # they are skipped if subject
 
 
-
+def is_verb_to_have(word: str):
+    return word in ["have ", "have a ", "have an ", "has ", "has a ", "has an "]
 
 class CNLTransformer(Transformer):
     def __init__(self):
@@ -195,7 +196,7 @@ class CNLTransformer(Transformer):
         return entity
 
     def simple_definition(self, elem) -> EntityComponent:
-        name: str = elem[1].lower()
+        name: str = elem[2].lower()
         attribute_name = Utility.DEFAULT_ATTRIBUTE
         try:
             signature = SignatureManager.get_signature(name)
@@ -207,7 +208,7 @@ class CNLTransformer(Transformer):
         entity = EntityComponent(name, '', [],
                                [AttributeComponent(attribute_name,
                                                    ValueComponent(elem[0]))])
-        self._proposition.add_new_knowledge(NewKnowledgeComponent(entity))
+        self._proposition.add_new_knowledge(NewKnowledgeComponent(entity, auxiliary_verb=entity.auxiliary_verb))
         return entity
 
     @v_args(meta=True)
@@ -248,14 +249,14 @@ class CNLTransformer(Transformer):
         copy.set_attributes_value(subject.keys + subject.attributes)
         subject.keys = copy.keys
         subject.attributes = copy.attributes
-        verb = elem[2]
+        verb: EntityComponent = elem[1]
         if subject.label or subject.attributes:
             self._proposition.add_requisite(subject)
             SignatureManager.add_signature(elem[0])  # we can have new definitions in subject position for this proposition
         else:
             # subject is an attribute value of the verb
             verb.attributes.append(AttributeComponent('id', ValueComponent(subject.get_name()), AttributeOrigin(verb.get_name())))
-        object_list = elem[3] if elem[3] else []
+        object_list = elem[2] if elem[2] else []
         for idx, object_entity in enumerate(object_list):
             # replace the object elements with the proper signature if same of the subject
             for entity in object_entity.get_entities():
@@ -265,7 +266,7 @@ class CNLTransformer(Transformer):
                     entity_signature.set_attributes_value(entity.get_keys_and_attributes())
                     object_list[idx] = entity_signature
         self._proposition.add_new_knowledge(NewKnowledgeComponent(verb,
-                                                                  ConditionComponent([]), subject, elem[1], object_list))
+                                                                  ConditionComponent([]), subject, verb.auxiliary_verb, object_list))
         self._proposition.add_requisite_list(object_list)
         for proposition in self._proposition.get_propositions():
             if subject.label or subject.attributes:
@@ -319,7 +320,6 @@ class CNLTransformer(Transformer):
             if elem[1] == 'can' and not self._proposition.get_cardinality() else self._proposition.get_cardinality()
         self._proposition.add_cardinality(cardinality)
         self._proposition.add_subject(subject)
-        self._proposition.add_auxiliary_verb(elem[2])
         return subject
 
 
@@ -404,13 +404,12 @@ class CNLTransformer(Transformer):
         self._proposition.add_new_knowledge(NewKnowledgeComponent(elem[0]))
 
     def quantified_choice_proposition(self, elem):
-        subject: EntityComponent = elem[0]
+        subject: EntityComponent = elem[1]
         cardinality = CardinalityComponent(None, None) \
-            if elem[1] == 'can' and not self._proposition.get_cardinality() else self._proposition.get_cardinality()
+            if elem[2] == 'can' and not self._proposition.get_cardinality() else self._proposition.get_cardinality()
         self._proposition.add_cardinality(cardinality)
         self._proposition.add_requisite(subject)
         self._proposition.add_subject(subject.copy())
-        self._proposition.add_auxiliary_verb(elem[2])
         for proposition in self._proposition.get_propositions():
             self._make_new_knowledge_relations(proposition, [subject])
 
@@ -516,10 +515,10 @@ class CNLTransformer(Transformer):
         return [e for e in elem if e]
 
     def variable_substitution(self, elem):
-        self._delayed_operations.append(SubstituteVariable(self._proposition, elem[0], elem[1]))
+        self._delayed_operations.append(SubstituteVariable(self._proposition, elem[0], elem[2]))
 
     def variable_respectively_substitution(self, elem):
-        self._delayed_operations.append(RespectivelySubstituteVariable(self._proposition, elem[0], elem[1]))
+        self._delayed_operations.append(RespectivelySubstituteVariable(self._proposition, elem[0], elem[2]))
 
     def string_list(self, elem):
         return [ValueComponent(string) for string in elem]
@@ -633,10 +632,10 @@ class CNLTransformer(Transformer):
     def conjunctive_object_list(self, elem):
         return [x for x in elem]
 
-    def predicate_with_objects(self, elem) -> [NewKnowledgeComponent, CardinalityComponent]:
+    def predicate_with_objects(self, elem):
         verb: EntityComponent = elem[0]
         objects: list[Component] = elem[2]
-        new_knowledge = NewKnowledgeComponent(verb, ConditionComponent(objects), None, None, objects)
+        new_knowledge = NewKnowledgeComponent(verb, ConditionComponent(objects), None, verb.auxiliary_verb, objects)
         new_knowledge.objects = objects
         if elem[-1]:
             self._delayed_operations.append(DurationClause(self._proposition, new_knowledge, elem[-2], elem[-1]))
@@ -645,7 +644,7 @@ class CNLTransformer(Transformer):
     def predicate_with_simple_clause(self, elem):
         verb = elem[0]
         condition = elem[2]
-        self._proposition.add_new_knowledge(NewKnowledgeComponent(verb, ConditionComponent(condition)))
+        self._proposition.add_new_knowledge(NewKnowledgeComponent(verb, ConditionComponent(condition), auxiliary_verb=verb.auxiliary_verb))
 
     def parameter_list(self, list_parameters) -> list[AttributeComponent]:
         res = []
@@ -853,15 +852,20 @@ class CNLTransformer(Transformer):
 
     @v_args(meta=True)
     def verb(self, meta, elem):
-        elem[2] = elem[2][0:-1] if elem[2][-1] == 's' else elem[2]  # remove 3rd person final 's'
-        verb_name = '_'.join([elem[2], elem[6]]) if elem[6] else elem[2]
+        elem[4] = elem[4][0:-1] if elem[4][-1] == 's' else elem[4]  # remove 3rd person final 's'
+        verb_name = '_'.join([elem[4], elem[8]]) if elem[8] else elem[4]
         verb_name = verb_name.lower()
-        entity = self.simple_entity(meta, verb_name, '', elem[3], elem[4], elem[5], new_definition=True)
-        if elem[1]:
-            entity = self.entity([elem[1], entity])
-        if elem[0]:
+        if is_verb_to_have(elem[0]):
+            verb_name = verb_name.removesuffix('_to')
+        entity: EntityComponent = self.simple_entity(meta, verb_name, '', elem[5], elem[6], elem[7], new_definition=True)
+        if elem[3]:
+            entity = self.entity([elem[3], entity])
+        if elem[2]:
             entity.negated = True
+        if elem[1]:
+            self._proposition.add_cardinality(elem[1])
         self._delayed_operations.append(CreateSignature(self._proposition, entity))
+        entity.auxiliary_verb = elem[0]
         return entity
 
     def telingo_verb(self, elem):
@@ -997,15 +1001,9 @@ class CNLTransformer(Transformer):
         return ValueComponent(elem.value)
 
     def COPULA(self, elem):
-        return lark.Discard
-
-    def COPULA_WRV(self, elem):
         return elem
 
     def INDEFINITE_ARTICLE(self, elem):
-        return lark.Discard
-
-    def QUANTIFIER(self, elem):
         return lark.Discard
 
     def NUMBER(self, elem):

@@ -94,7 +94,7 @@ cnl_that_are_equal_to_respectively: _CNL_THAT " " _CNL_ARE " " _CNL_EQUAL_TO " "
 cnl_that_is_equal_to_respectively: _CNL_THAT " " _CNL_IS " " _CNL_EQUAL_TO " " _CNL_RESPECTIVELY
 _CNL_ALSO: "also"
 compounded_match_tail: _CNL_AND _CNL_HAS STRING (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list (_CNL_AND _CNL_ALSO STRING (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list)*
-enumerative_definition_clause: entity [COPULA_WRV] verb [conjunctive_object_list] [terminal_clauses]
+enumerative_definition_clause: entity verb [conjunctive_object_list] [terminal_clauses]
 
 standard_proposition: whenever_then_clause_proposition
                     | fact_proposition
@@ -114,7 +114,7 @@ whenever_clause: cnl_whenever_there_is [VERB_NEGATION] entity
                 | cnl_whenever_we_have_that comparison -> whenever_with_comparison
 _CNL_THEN: "then"
 _CNL_OR: "or"
-then_clause: _CNL_THEN entity ASSIGNMENT_VERB [COPULA_WRV] [cardinality] predicate (_CNL_COMMA? _CNL_OR predicate)*
+then_clause: _CNL_THEN entity ASSIGNMENT_VERB predicate (_CNL_COMMA? _CNL_OR predicate)*
 
 _CNL_HOLD: "hold" | "holds"
 hold_condition: _CNL_THAT [VERB_NEGATION] TELINGO_TEMPORAL_OPERATOR _CNL_HOLD
@@ -132,7 +132,7 @@ TELINGO_CONSTANT: "it is the initial state"
 
 fact_proposition: _CNL_THERE _CNL_IS entity
 
-!quantified_choice_proposition: QUANTIFIER entity ASSIGNMENT_VERB [COPULA_WRV] predicate [(_CNL_COMMA? _CNL_OR predicate)*] [foreach_clause] [terminal_clauses]
+!quantified_choice_proposition: _QUANTIFIER entity ASSIGNMENT_VERB predicate [(_CNL_COMMA? _CNL_OR predicate)*] [foreach_clause] [terminal_clauses]
 _CNL_FOR: "for"
 _CNL_EACH: "each"
 _CNL_FOR_EACH: _CNL_FOR " " _CNL_EACH
@@ -158,9 +158,9 @@ simple_clause_conjunction.-1: simple_clause_wrv (_CNL_AND _CNL_ALSO simple_claus
 when_then_clause: when_clause _CNL_THEN simple_clause_conjunction
 _CNL_WHEN: "when"
 when_clause: _CNL_WHEN simple_clause_conjunction
-quantified_simple_clause: QUANTIFIER simple_clause_wrv
+quantified_simple_clause: _QUANTIFIER simple_clause_wrv
 
-simple_clause: entity COPULA? verb [conjunctive_object_list]
+simple_clause: entity verb [conjunctive_object_list]
 
 _CNL_THE: "the"
 temporal_constraint: _CNL_THE? entity _CNL_IS ORDERING_OPERATOR temporal_value
@@ -196,8 +196,8 @@ comparison:  comparison_operand _CNL_IS COMPARISON_OPERATOR comparison_operand [
 _CNL_OCCURRENCES: "occurrences"
 aggregate_clause: AGGREGATE_OPERATOR _CNL_OF entity _CNL_OCCURRENCES? -> simple_aggregate
                 | AGGREGATE_OPERATOR _CNL_OF? parameter _CNL_OF entity -> simple_aggregate_with_parameter
-                | AGGREGATE_OPERATOR _CNL_OF? parameter [_CNL_COMMA (_CNL_FOR_EACH | _CNL_IN) parameter _CNL_COMMA] (_CNL_THAT COPULA? verb [conjunctive_object_list]) -> aggregate_active_clause
-                | AGGREGATE_OPERATOR _CNL_OF? parameter [parameter_list] [_CNL_COMMA (_CNL_FOR_EACH | _CNL_IN) parameter _CNL_COMMA] (_CNL_WHERE entity COPULA? verb [conjunctive_object_list] _CNL_COMMA?)+ -> aggregate_passive_clause
+                | AGGREGATE_OPERATOR _CNL_OF? parameter [_CNL_COMMA (_CNL_FOR_EACH | _CNL_IN) parameter _CNL_COMMA] _CNL_THAT verb [conjunctive_object_list] -> aggregate_active_clause
+                | AGGREGATE_OPERATOR _CNL_OF? parameter [parameter_list] [_CNL_COMMA (_CNL_FOR_EACH | _CNL_IN) parameter _CNL_COMMA] (_CNL_WHERE entity verb [conjunctive_object_list] _CNL_COMMA?)+ -> aggregate_passive_clause
 
 _CNL_SUCH: "such"
 _CNL_SUCH_THAT_THERE_IS: _CNL_SUCH " " _CNL_THAT " " _CNL_THERE " " _CNL_IS
@@ -285,7 +285,7 @@ cardinality: QUANTITY_OPERATOR STRING -> single_quantity_cardinality
 conjunctive_object_list.-1: entity ((_CNL_COMMA _CNL_AND?) entity)*
 predicate: verb [cardinality] _CNL_SUCH_THAT_THERE_IS? [conjunctive_object_list] [_CNL_FOR (NUMBER | VARIABLE) PARAMETER_NAME] -> predicate_with_objects
            | verb [cardinality] _CNL_SUCH_THAT_THERE_IS? simple_clause_wrv -> predicate_with_simple_clause
-simple_clause_wrv.-2: entity COPULA? verb [conjunctive_object_list]
+simple_clause_wrv.-2: entity verb [conjunctive_object_list]
 
 ?entity: TELINGO_ENTITY_TEMPORAL_OPERATOR? (simple_entity | complex_entity)
 simple_entity: _CNL_INDEFINITE_ARTICLE? STRING [STRING] [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list]
@@ -296,7 +296,7 @@ complex_entity: complex_entity_parameter _CNL_IN STRING -> generic_element
 complex_entity_parameter: _CNL_AN _CNL_ELEMENT [EXPRESSION] [COMPARISON_OPERATOR EXPRESSION [STRING]]
 
 TELINGO_ENTITY_TEMPORAL_OPERATOR: "previously" | "subsequently" | "initially" | "finally"
-verb.1: [VERB_NEGATION] [TELINGO_ENTITY_TEMPORAL_OPERATOR] _CNL_INDEFINITE_ARTICLE? STRING [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list] [VERB_PREPOSITION]
+verb.1: [COPULA] [cardinality] [VERB_NEGATION] [TELINGO_ENTITY_TEMPORAL_OPERATOR] _CNL_INDEFINITE_ARTICLE? STRING [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list] [VERB_PREPOSITION]
        | [VERB_NEGATION] TELINGO_TEMPORAL_OPERATOR verb [TELINGO_TEMPORAL_OPERATOR] -> telingo_verb
 entity_temporal_order_constraint: _CNL_THAT _CNL_IS ORDERING_OPERATOR temporal_value
 define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE
@@ -311,11 +311,6 @@ EXPRESSION: (VARIABLE | NUMBER | "+" | "-"| "*" | "/" | "\\" | "(" | ")" | "|" )
 
 ASSIGNMENT_VERB: "can" | "must"
 COPULA: "be " | "be a " | "be an "
-      | "are " | "are a " | "are an "
-      | "is " | "is a " | "is an "
-      | "have " | "have a " | "have an "
-      | "has " | "has a " | "has an "
-COPULA_WRV: "be " | "be a " | "be an "
           | "are " | "are a " | "are an "
           | "is " | "is a " | "is an "
           | "have " | "have a " | "have an "
@@ -333,7 +328,7 @@ VERB_NEGATION: "do not" | "does not" | "don't"
               | "doesn't" | "are not" | "aren't" | "not"
 
 QUANTITY_OPERATOR: "exactly" | "at most" | "at least"
-QUANTIFIER: "every"i | "any"i
+_QUANTIFIER: "every"i | "any"i
 
 NUMBER: INT | FLOAT
 FLOAT: INT _EXP | DECIMAL _EXP?

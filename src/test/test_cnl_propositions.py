@@ -42,7 +42,7 @@ A patient is identified by an id, and has a preference.
 A registration is identified by a patient, and by an order, and has a number of waiting days, a duration of the first phase, a duration of the second phase, a duration of the third phase, and a duration of the fourth phase.
 
 Whenever there is a registration R with an order O, then R can have an assignment to exactly 1 day, and timeslot.''',
-                         '1 <= {assignment_to(DY_DY,RGSTRTN_D,O,TMSLT_TMSLT): day(DY_DY), timeslot(TMSLT_TMSLT)} <= 1 :- registration(RGSTRTN_D,O,_,_,_,_,_).')
+                         '1 <= {assignment(DY_DY,RGSTRTN_D,O,TMSLT_TMSLT): day(DY_DY), timeslot(TMSLT_TMSLT)} <= 1 :- registration(RGSTRTN_D,O,_,_,_,_,_).')
 
     def test_quantified_choice_proposition(self):
         self.check_input_to_output('''
@@ -284,7 +284,7 @@ timeslot(33,"01:00 PM").
 timeslot(34,"01:10 PM").
 timeslot(35,"01:20 PM").
 timeslot(36,"01:30 PM").
-1 <= {assignment_to(P,OR,TMSLT_TMSLT): timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(P,OR,W,_,_,_,_).''')
+1 <= {assignment(P,OR,TMSLT_TMSLT): timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(P,OR,W,_,_,_,_).''')
 
     def test_handle_duplicated_parameters(self):
         """
@@ -386,13 +386,13 @@ day(3,"04/01/2022").
 day(4,"05/01/2022").
 day(5,"06/01/2022").
 day(6,"07/01/2022").
-1 <= {assignment_to(D+W,P,OR,TMSLT_TMSLT): timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(P,OR,W,_,_,_,_), assignment(P,OR-1,D,_), day(D+W,_).''')
+1 <= {assignment(P,OR,D+W,TMSLT_TMSLT): timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(P,OR,W,_,_,_,_), assignment(P,OR-1,D,_), day(D+W,_).''')
 
     def test_remove_duplicates_from_condition(self):
         self.check_input_to_output( '''
         A node goes from 1 to 5.
         Every node X can have a path to a node connected to node X.''',
-                         '''node(1..5).\n{path_to(CNNCTD_T_D,X): node(CNNCTD_T_D), connected_to(CNNCTD_T_D,X)} :- node(X).''')
+                         '''node(1..5).\n{path(CNNCTD_T_D,X): node(CNNCTD_T_D), connected_to(CNNCTD_T_D,X)} :- node(X).''')
 
     def test_parameter_temporal_ordering(self):
         self.check_input_to_output( '''
