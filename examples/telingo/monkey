@@ -15,7 +15,6 @@ Box B is at location window.
 
 The following propositions always apply except in the initial state:
 Whenever there is a monkey M, then M must walk to a location X or push to a location X or climb or grasp.
-//walk(M,L): location(L); push(M,L): location(X); .. :- monkey(M).
 A monkey M has moved, when monkey M is at location X and also monkey M is previously at location Y, where X is different from Y.
 A box B has moved, when box B is at location X and also box B is previously at location Y, where X is different from Y.
 Monkey M is at location X when monkey M is previously at location X and also monkey M has not moved.
