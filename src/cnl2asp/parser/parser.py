@@ -187,11 +187,19 @@ class CNLTransformer(Transformer):
         value = ValueComponent(elem[1]) if elem[1] else ValueComponent('')
         self._specification.add_constant(ConstantComponent(elem[0], value))
 
-    def compounded_range_clause(self, elem) -> EntityComponent:
+    @v_args(meta=True)
+    def compounded_range_clause(self, meta, elem) -> EntityComponent:
         name: str = elem[0].lower()
         value = RangeValueComponent(elem[1], elem[2])
-        entity = EntityComponent(name, '', [],
-                                 [AttributeComponent(Utility.DEFAULT_ATTRIBUTE, value, AttributeOrigin(name))])
+        try:
+            entity = SignatureManager.get_signature(name)
+            entity_keys = entity.get_keys()
+            if len(entity.get_keys()) > 1:
+                raise CompilationError(f"Impossible to use compound range clause for an entity (\"{name}\" with multiple keys", meta.line)
+            entity.set_attribute_value(entity_keys[0].get_name(), value, entity_keys[0].origin)
+        except:
+            entity = EntityComponent(name, '', [],
+                                     [AttributeComponent(Utility.DEFAULT_ATTRIBUTE, value, AttributeOrigin(name))])
         self._proposition.add_new_knowledge(NewKnowledgeComponent(entity))
         return entity
 
