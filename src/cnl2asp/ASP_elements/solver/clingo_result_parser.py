@@ -76,7 +76,14 @@ class ClingoResultParser:
                 except:
                     pass
             for attribute in attributes_to_print:
-                atom.attributes.remove(attribute)
+                try:
+                    atom.attributes.remove(attribute)
+                except ValueError:
+                    pass
+                try:
+                    atom.keys.remove(attribute)
+                except ValueError:
+                    pass
             res = self._entity_printer(subject.get_name(), attributes_to_print)
         return res if res and res != subject.get_name() else "There"
 
