@@ -63,6 +63,8 @@ class ASPAtom(ASPElement):
         return attributes
 
     def __str__(self) -> str:
+        if not self.name:
+            return ''
         string = ''
         string += 'not ' if self.negated else ''
         string += '\'' if self.is_before else ''

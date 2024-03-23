@@ -754,7 +754,7 @@ class CNLTransformer(Transformer):
         name = name.lower()
         parameter_list = parameter_list if parameter_list else []
         if self._is_pronouns(name):
-            return ''
+            return EntityComponent('', '', [], [])
         try:
             if label:
                 entity = self._proposition.get_entity_by_label(label)

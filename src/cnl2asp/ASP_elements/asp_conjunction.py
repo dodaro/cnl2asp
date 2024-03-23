@@ -40,7 +40,7 @@ class ASPConjunction(ASPElement):
         return atom_list
 
     def __str__(self) -> str:
-        return ', '.join([str(x) for x in self.conjunction])
+        return ', '.join([str(x) for x in self.conjunction if str(x)])
 
     def __eq__(self, other):
         if not isinstance(other, ASPConjunction):
