@@ -1,17 +1,8 @@
 import argparse
 import json
-import tempfile
 
-from clingo import Control
-from ngo import optimize, auto_detect_input, auto_detect_output
-
-from cnl2asp.ASP_elements.solver.clingo_wrapper import Clingo
-from cnl2asp.ASP_elements.solver.clingo_result_parser import ClingoResultParser
-from cnl2asp.ASP_elements.solver.telingo_result_parser import TelingoResultParser
-from cnl2asp.ASP_elements.solver.telingo_wrapper import Telingo
 from cnl2asp.cnl2asp import Cnl2asp
 from cnl2asp.utility.utility import Utility
-from clingo.ast import parse_files, ProgramBuilder
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -54,6 +45,8 @@ if __name__ == '__main__':
                     print("Compilation completed.")
             if args.solve:
                 if args.solve == "clingo":
+                    from cnl2asp.ASP_elements.solver.clingo_wrapper import Clingo
+                    from cnl2asp.ASP_elements.solver.clingo_result_parser import ClingoResultParser
                     solver = Clingo()
                     print("\n*********")
                     print(f"Running {args.solve}...\n")
@@ -63,6 +56,8 @@ if __name__ == '__main__':
                     model = clingo_res.parse_model()
                     print("SOLUTION:\n" + model)
                 elif args.solve == "telingo":
+                    from cnl2asp.ASP_elements.solver.telingo_result_parser import TelingoResultParser
+                    from cnl2asp.ASP_elements.solver.telingo_wrapper import Telingo
                     solver = Telingo()
                     print("\n*********")
                     print(f"Running {args.solve}...\n")
