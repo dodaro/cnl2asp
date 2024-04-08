@@ -1,0 +1,34 @@
+#program always.
+{picked(SGMNT_CLR,I): segment(SGMNT_CLR,I)} <= 1 :- image(I,S).
+selected(X,I) :- 'selected(X,I), segment(X,I).
+selected(X,I) :- picked(X,I), segment(X,I).
+:- picked(X,I), 'selected(X,I), segment(X,I).
+:- picked("red",I), segment("red",I), 'selected("blue",I), segment("blue",I).
+:- picked("yellow",I), segment("yellow",I), 'selected("red",I), segment("red",I).
+:- picked("green",I), segment("green",I), 'selected("red",I), segment("red",I).
+:- picked("yellow",I), segment("yellow",I), 'selected("green",I), segment("green",I).
+:- picked("red",I), segment("red",I), 'selected("purple",I), segment("purple",I).
+:- picked(X,I), segment(X,I), 'selected("orange",I), segment("orange",I), X != "orange".
+:- not segment(X,I), image(I,"seq1"), X = "purple".
+:- not segment(X,I), image(I,"seq1"), X = "red".
+:- segment(X,I), image(I,"seq1"), X = "orange".
+:- segment(X,I), image(I,"seq1"), X = "yellow".
+:- not segment(X,I), image(I,"seq2"), X = "purple".
+:- not segment(X,I), image(I,"seq2"), X = "orange".
+:- not segment(X,I), image(I,"seq2"), X = "yellow".
+:- segment(X,I), image(I,"seq3"), X = "purple".
+:- segment(X,I), image(I,"seq3"), X = "orange".
+:- not segment("yellow",I), image(I,"seq3").
+:- segment("purple",I), image(I,"seq4").
+:- not segment("yellow",I), image(I,X), X = "seq5".
+:- not segment("yellow",I), image(I,X), X = "seq6".
+:- not segment("yellow",I), image(I,X), X = "seq7".
+:- segment("purple",I), image(I,X), X = "seq5".
+:- segment("purple",I), image(I,X), X = "seq6".
+:- segment("purple",I), image(I,X), X = "seq7".
+:- not segment(X,I), image(I,"seq8"), X = "orange".
+:- not segment(X,I), image(I,"seq8"), X = "yellow".
+:- segment("purple",I), image(I,"seq8").
+
+#program final.
+:- segment(C,I), not selected(C,I), image(I,S).

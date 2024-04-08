@@ -1,0 +1,46 @@
+// other tissue (blue) sta sopra a vocal fold ( red)
+// vocal fold ( red) sta sopra a intubation (yellow) o glottal space (green)
+// glottal space (green) sta sopra a intubation (yellow)
+// Pathology (purple) sta sopra vocal fold ( red)
+// instrumet (orange) ultimi
+
+An image is identified by an id, and has a sequence.
+A segment is identified by a color, and by an image.
+
+The following propositions always apply:
+Whenever there is an image I with sequence S, then we can have picked at most 1 segment with image I.
+A segment S with color X, with image I is selected, when we have previously selected a segment with color X, with image I.
+A segment S with color X, with image I is selected, when we have picked a segment with color X, with image I.
+It is prohibited that we have picked a segment with color X, with image I, when we have previously selected a segment with color X, with image I.
+It is prohibited that we have picked a segment with color equal to blue, with image I, when we have previously selected a segment with color equal to red, with image I.
+It is prohibited that we have picked a segment with color equal to red, with image I, when we have previously selected a segment with color equal to yellow, with image I.
+It is prohibited that we have picked a segment with color equal to red, with image I, when we have previously selected a segment with color equal to green, with image I.
+It is prohibited that we have picked a segment with color equal to green, with image I, when we have previously selected a segment with color equal to yellow, with image I.
+It is prohibited that we have picked a segment with color equal to red, with image I, when we have previously selected a segment with color equal to purple, with image I.
+It is prohibited that we have picked a segment with color equal to X, with image I, when we have previously selected a segment with color equal to orange, with image I, where X is different from orange.
+
+//regole per verificare se la segmentazione è corretta, considerate le sequenze operatorie:
+//- seq1: pre-op with clearly visible tumor on vocal fold, no instruments visible, without intubation
+It is prohibited that there is not a segment with image I, with color equal to X, whenever there is an image with id I, with sequence equal to seq1, where X is one of purple, red.
+It is prohibited that there is a segment with image I, with color equal to X, whenever there is an image with id I, with sequence equal to seq1, where X is one of orange, yellow.
+
+//- seq2: pre-op with clearly visible tumor, visible instruments, with intubation
+It is prohibited that there is not a segment with image I, with color equal to X, whenever there is an image with id I, with sequence equal to seq2, where X is one of purple, orange, yellow.
+
+//- seq3-4: post-op with removed tumor, with intubation
+It is prohibited that there is a segment with image I, with color equal to X, whenever there is an image with id I, with sequence equal to seq3, where X is one of purple, orange.
+It is prohibited that there is not a segment with image I, with color equal to yellow, whenever there is an image with id I, with sequence equal to seq3.
+
+It is prohibited that there is a segment with image I, with color equal to purple, whenever there is an image with id I, with sequence equal to seq4.
+
+//- seq5-7: pre-op with intubation
+It is prohibited that there is not a segment with image I, with color equal to yellow, whenever there is an image with id I, with sequence equal to X, where X is one of seq5, seq6, seq7.
+It is prohibited that there is a segment with image I, with color equal to purple, whenever there is an image with id I, with sequence equal to X, where X is one of seq5, seq6, seq7.
+
+//- seq8: post-op with instruments, with intubation
+It is prohibited that there is not a segment with image I, with color equal to X, whenever there is an image with id I, with sequence equal to seq8, where X is one of orange, yellow.
+It is prohibited that there is a segment with image I, with color equal to purple, whenever there is an image with id I, with sequence equal to seq8.
+
+The following propositions apply in the final state:
+It is prohibited that a segment with color C, with image I is not selected, whenever there is an image I with sequence S.
+
