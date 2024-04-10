@@ -5,3 +5,5 @@ out.txt
 todo.txt
 test.txt
 changes.txt
+*.egg-info
+build
