@@ -7,11 +7,9 @@ from enum import Enum
 from textwrap import indent
 from typing import TextIO
 
-from clingo.ast import parse_files
 from cnl2asp.utility.utility import Utility
 from lark import Lark, UnexpectedCharacters
 from lark.exceptions import VisitError
-from ngo import optimize, Predicate
 
 from cnl2asp.ASP_elements.asp_program import ASPProgram
 from cnl2asp.converter.cnl2json_converter import Cnl2jsonConverter
@@ -53,6 +51,8 @@ class Cnl2asp:
         self._debug = debug
         if isinstance(cnl_input, str):
             self.cnl_input = cnl_input
+            if os.path.isfile(cnl_input):
+                self.cnl_input = open(cnl_input).read()
         else:
             self.cnl_input = cnl_input.read()
 
@@ -118,6 +118,8 @@ class Cnl2asp:
             return ''
 
     def optimize(self, asp_encoding: str):
+        from clingo.ast import parse_files
+        from ngo import optimize, Predicate
         prg = []
         with tempfile.NamedTemporaryFile(mode="w") as file:
             file.write(asp_encoding)
