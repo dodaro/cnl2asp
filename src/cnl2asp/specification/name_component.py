@@ -24,10 +24,14 @@ class NameComponent(Component):
             value = value.removesuffix(suffix)
 
     def __singular(self, string: str):
+        if not string:
+            return string
         singular = inflect.engine().singular_noun(string)
         return singular if singular else string
 
     def __plural(self, string: str):
+        if not string:
+            return string
         plural = inflect.engine().plural(string)
         return plural if plural != self.__singular(string) else string
 
