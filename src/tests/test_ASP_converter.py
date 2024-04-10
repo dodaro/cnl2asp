@@ -19,7 +19,7 @@ from cnl2asp.specification.specification import SpecificationComponent
 from cnl2asp.utility.utility import Utility
 
 asp_converter = ASPConverter()
-test_signature_manager = SignatureManager().add_signature(EntityComponent('test', '',
+test_signature_manager = SignatureManager().add_signature(EntityComponent('tests', '',
                                                                           [AttributeComponent('key',
                                                                                               ValueComponent('_'))],
                                                                           [AttributeComponent('field',
@@ -31,10 +31,10 @@ test_signature_manager = SignatureManager().add_signature(EntityComponent('test'
 class TestASPConverter(unittest.TestCase):
 
     def test_convert_entity(self):
-        entity_component = EntityComponent('test', '', [AttributeComponent('key', ValueComponent('KEY'))],
+        entity_component = EntityComponent('tests', '', [AttributeComponent('key', ValueComponent('KEY'))],
                                            [AttributeComponent('field', ValueComponent('FIELD')),
                                             AttributeComponent('field2', ValueComponent('_'))])
-        asp_atom = ASPAtom('test', [ASPAttribute('key', ASPValue('KEY')),
+        asp_atom = ASPAtom('tests', [ASPAttribute('key', ASPValue('KEY')),
                                     ASPAttribute('field', ASPValue('FIELD')), ASPAttribute('field2', ASPValue('_'))])
         asp_converter = ASPConverter()
         atom = asp_converter.convert_entity(entity_component)
@@ -43,12 +43,12 @@ class TestASPConverter(unittest.TestCase):
     def test_convert_aggregate(self):
         operation = AggregateOperation.COUNT
         discriminant = [AttributeComponent('TEST_DISCR', ValueComponent('TST_DSCR'))]
-        entity_component = EntityComponent('test', '', [AttributeComponent('key', ValueComponent('KEY'))],
+        entity_component = EntityComponent('tests', '', [AttributeComponent('key', ValueComponent('KEY'))],
                                            [AttributeComponent('field', ValueComponent('FIELD')),
                                             AttributeComponent('TEST_DISCR', ValueComponent('_'))])
         aggregate = AggregateComponent(operation, discriminant, [entity_component])
         asp_converter = ASPConverter()
-        asp_atom = ASPAtom('test', [ASPAttribute('key', ASPValue('KEY')),
+        asp_atom = ASPAtom('tests', [ASPAttribute('key', ASPValue('KEY')),
                                     ASPAttribute('field', ASPValue('FIELD')), ASPAttribute('TEST_DISCR', ASPValue('TST_DSCR'))])
         asp_aggregate = ASPAggregate(AggregateOperation.COUNT, [ASPAttribute('TEST_DISCR', ASPValue('TST_DSCR'))],
                                      ASPConjunction([asp_atom]))

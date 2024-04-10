@@ -23,21 +23,21 @@ class TestASPElements(unittest.TestCase):
         Utility.PRINT_WITH_FUNCTIONS = False
 
     def test_atom_to_string(self):
-        atom = ASPAtom('test', [ASPAttribute('field', ASPValue('FIELD'))])
-        self.assertEqual(str(atom), 'test(FIELD)', 'Incorrect atom print.')
+        atom = ASPAtom('tests', [ASPAttribute('field', ASPValue('FIELD'))])
+        self.assertEqual(str(atom), 'tests(FIELD)', 'Incorrect atom print.')
 
     def test_conjunction_to_string(self):
-        conjunction = ASPConjunction([ASPAtom('test', [ASPAttribute('field', ASPValue('FIELD'))]),
+        conjunction = ASPConjunction([ASPAtom('tests', [ASPAttribute('field', ASPValue('FIELD'))]),
                                       ASPAtom('test2', [ASPAttribute('field', ASPValue('FIELD'))])])
-        self.assertEqual(str(conjunction), 'test(FIELD), test2(FIELD)', 'Incorrect conjunction print.')
+        self.assertEqual(str(conjunction), 'tests(FIELD), test2(FIELD)', 'Incorrect conjunction print.')
 
     def test_aggregate_to_string(self):
-        conjunction = ASPConjunction([ASPAtom('test', [ASPAttribute('field', ASPValue('FIELD'))]),
+        conjunction = ASPConjunction([ASPAtom('tests', [ASPAttribute('field', ASPValue('FIELD'))]),
                                       ASPAtom('test2', [ASPAttribute('field', ASPValue('FIELD'))])])
         aggregate = ASPAggregate(AggregateOperation.SUM, [ASPAttribute('discriminant', ASPValue('DISCRIMINANT'))],
                                  conjunction)
         self.assertEqual(str(aggregate),
-                         '#sum{DISCRIMINANT: test(FIELD), test2(FIELD)}',
+                         '#sum{DISCRIMINANT: tests(FIELD), test2(FIELD)}',
                          'Incorrect aggregate print.')
 
     def test_choice_to_string(self):
@@ -105,10 +105,10 @@ class TestASPElements(unittest.TestCase):
 
     def test_weak_constraint(self):
         weak_constraint = ASPWeakConstraint(
-            ASPConjunction([ASPAtom('test', [ASPAttribute('field', ASPValue('FIELD'))])]),
+            ASPConjunction([ASPAtom('tests', [ASPAttribute('field', ASPValue('FIELD'))])]),
             1, 1, [ASPAttribute('key', ASPValue('KEY'))])
         self.assertEqual(str(weak_constraint),
-                         ':~ test(FIELD). [1@1,KEY]\n')
+                         ':~ tests(FIELD). [1@1,KEY]\n')
 
     def test_asp_operation(self):
         operation = ASPOperation(Operators.SUM, ASPValue('1'), ASPValue('2'), ASPValue('3'))
