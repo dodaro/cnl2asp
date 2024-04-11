@@ -121,13 +121,13 @@ class Cnl2asp:
 
     def optimize(self, asp_encoding: str):
         from clingo.ast import parse_files
-        from ngo import optimize, Predicate
+        from ngo import optimize, auto_detect_input, auto_detect_output
         prg = []
         with tempfile.NamedTemporaryFile(mode="w") as file:
             file.write(asp_encoding)
             file.seek(0)
             parse_files([file.name], prg.append)
-            prg = optimize(prg, [Predicate("node",1)], [Predicate("assigned_to",2)])
+            prg = optimize(prg, auto_detect_input(prg), auto_detect_output(prg))
             optimized_encoding = ''
             for stm in prg:
                 optimized_encoding += str(stm) + '\n'
