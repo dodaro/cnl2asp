@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 import tempfile
 import traceback
 from enum import Enum
@@ -176,21 +177,20 @@ class Cnl2asp:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--check-syntax', action='store_true', help='Checks that the input fits the grammar')
-    parser.add_argument('--cnl2json', action='store_true', help='Return a json formatted representation of the cnl')
+    parser.add_argument('--cnl2json', action='store_true', help=argparse.SUPPRESS)
     parser.add_argument('--symbols', action='store_true', help='Return the list of symbols generated for the compilation')
     parser.add_argument('-p', '--print-with-functions', action='store_true',
                         help='Print atoms with functions. ')
-    parser.add_argument('--debug', action='store_true')
+    parser.add_argument('--debug', action='store_true', help=argparse.SUPPRESS)
     parser.add_argument('--solve', type=str, choices=["clingo", "telingo"], help='Call the corresponding solver and print a cnl-translated output')
     parser.add_argument('-o', '--optimize', action='store_true', help='Optimize the output using ngo')
     parser.add_argument('input_file')
-    parser.add_argument('output_file', type=str, nargs='?', default='out.txt')
+    parser.add_argument('output_file', type=str, nargs='?', default='')
     args = parser.parse_args()
 
     Utility.PRINT_WITH_FUNCTIONS = args.print_with_functions
 
     input_file = args.input_file
-    output_file = args.output_file
 
     in_file = open(input_file, 'r')
     cnl2asp = Cnl2asp(in_file, args.debug)
@@ -207,9 +207,12 @@ def main():
         if args.optimize:
             asp_encoding = cnl2asp.optimize(asp_encoding)
         try:
-            with open(output_file, "w") as out_file:
-                if out_file.write(asp_encoding):
+            out = sys.stdout
+            if args.output_file:
+                if str(asp_encoding):
                     print("Compilation completed.")
+                out = open(args.output_file, "w")
+            out.write(asp_encoding)
             if args.solve:
                 if args.solve == "clingo":
                     from cnl2asp.ASP_elements.solver.clingo_wrapper import Clingo
@@ -233,6 +236,5 @@ def main():
                     telingo_res = TelingoResultParser(cnl2asp.parse_input(), res)
                     model = telingo_res.parse_model()
                     print("SOLUTION:\n" + model)
-
         except Exception as e:
             print("Error in writing output", str(e))

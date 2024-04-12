@@ -15,11 +15,11 @@ Cnl2asp is a tool for converting Controlled Natural Language sentences into Answ
 
 `cnl2asp input_file [output_file]`
 
-Or you can run cnl2asp from source using the following command:
+You can also run cnl2asp from source using the following command:
 
 `python3 src/main.py input_file [output_file]`
 
-output_file default value is out.txt
+If output_file is not provided, the output is printed in stdout. 
 
 ## Documentation
 
