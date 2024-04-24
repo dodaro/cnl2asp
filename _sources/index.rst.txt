@@ -6,9 +6,10 @@
 Welcome to CNL2ASP's documentation!
 ===================================
 
-A prototype for a Controlled Natural Language based on English.
-A document written in this language is compiled into an equivalent version expressed in Answer Set Programming.
+A tool for converting a Controlled Natural Language based on English into Answer set Programming rules.
 The compiler is written in the Python (>= 3.10) programming language.
+
+Latest version: 1.3.2
 
 Indices and tables
 ----------------------

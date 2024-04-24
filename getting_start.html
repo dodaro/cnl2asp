@@ -48,23 +48,32 @@ Some sections include parts of the CNL grammar. In such case, the following synt
 <p>where STATEMENT_NAME is the name given to the statement, terminal symbols are between “” (quotation marks), and VARIABLE is a reference to other STATEMENT_NAME.
 Finally, the ? (question mark) means that the previous element is optional, the * (asterisk) means that the preceding element can match zero or more times, the + (plus) must match at least once, and the | (vertical bar) is the or symbol, thus the statement can support the previous or the following element.</p>
 </section>
-<section id="command-line-usage">
-<h2>Command line usage<a class="headerlink" href="#command-line-usage" title="Link to this heading">¶</a></h2>
-<p>The basic usage is:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>main.py<span class="w"> </span>input.txt<span class="w"> </span>out.txt
+<section id="installation-and-usage">
+<h2>Installation and usage<a class="headerlink" href="#installation-and-usage" title="Link to this heading">¶</a></h2>
+<p>Cnl2asp is available on pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>cnl2asp
 </pre></div>
 </div>
-<p>where input.txt is the input file containing the CNL specification, while out.txt is optional and represents the path in which the output should be saved.
-In case the output file is not provided, the tool generates a new file called “out.txt”.</p>
+<p>Source files can be found at <a class="reference external" href="https://github.com/dodaro/cnl2asp">https://github.com/dodaro/cnl2asp</a> .
+The basic usage is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cnl2asp<span class="w"> </span>input_file<span class="w"> </span><span class="o">[</span>output_file<span class="o">]</span>
+</pre></div>
+</div>
+<p>where input_file is a text file containing the CNL specification, while output_file is the file in which the output will be save.
+In case the output file is not provided, the output is printed in stdout.</p>
 <p><strong>Flags:</strong></p>
 <ul class="simple">
 <li><p><code class="code docutils literal notranslate"><span class="pre">-c</span></code> or <code class="code docutils literal notranslate"><span class="pre">--check-syntax</span></code>, when provided the tool gives in output a meaningful message specifying if the input is recognised by CNL2ASP grammar,</p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">-p</span></code> or <code class="code docutils literal notranslate"><span class="pre">--print-with-functions</span></code>, whenever an attribute of an atom is declared to be an entity, the tool prints that attribute as a function with the entity name as function name,</p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">--symbols</span></code>, return the list of all the defined entities with their corresponding attributes.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">-o</span></code> or <code class="code docutils literal notranslate"><span class="pre">--optimize</span></code>, after the CNL is converted into ASP, the tool will call <a class="reference external" href="https://potassco.org/ngo/ngo.html">ngo</a> and optimize the output.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">--solve=[clingo|telingo]</span></code> the tool calls the corresponding solver and print a cnl-translated output</p></li>
 </ul>
-<p><strong>Dependencies:</strong>
-- lark
-- inflect</p>
+<p><strong>Dependencies:</strong></p>
+<ul class="simple">
+<li><p>lark</p></li>
+<li><p>inflect</p></li>
+</ul>
 </section>
 </section>
 
@@ -115,6 +124,10 @@ In case the output file is not provided, the tool generates a new file called �
     </div>
     <div class="footer">
       &#169;2024, CNL2ASP.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
       
     </div>
 

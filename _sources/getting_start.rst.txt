@@ -19,24 +19,34 @@ where STATEMENT_NAME is the name given to the statement, terminal symbols are be
 Finally, the ? (question mark) means that the previous element is optional, the * (asterisk) means that the preceding element can match zero or more times, the + (plus) must match at least once, and the | (vertical bar) is the or symbol, thus the statement can support the previous or the following element.
 
 
-Command line usage
+Installation and usage
 ------------------------------
 
+Cnl2asp is available on pip:
+
+.. code-block:: bash
+
+    pip install cnl2asp
+
+Source files can be found at `https://github.com/dodaro/cnl2asp <https://github.com/dodaro/cnl2asp>`_ .
 The basic usage is:
 
 .. code-block:: bash
 
-    python main.py input.txt out.txt
+    cnl2asp input_file [output_file]
 
-where input.txt is the input file containing the CNL specification, while out.txt is optional and represents the path in which the output should be saved.
-In case the output file is not provided, the tool generates a new file called "out.txt".
+where input_file is a text file containing the CNL specification, while output_file is the file in which the output will be save.
+In case the output file is not provided, the output is printed in stdout.
 
 **Flags:**
 
 - :code:`-c` or :code:`--check-syntax`, when provided the tool gives in output a meaningful message specifying if the input is recognised by CNL2ASP grammar,
 - :code:`-p` or :code:`--print-with-functions`, whenever an attribute of an atom is declared to be an entity, the tool prints that attribute as a function with the entity name as function name,
 - :code:`--symbols`, return the list of all the defined entities with their corresponding attributes. 
+- :code:`-o` or :code:`--optimize`, after the CNL is converted into ASP, the tool will call `ngo <https://potassco.org/ngo/ngo.html>`_ and optimize the output. 
+- :code:`--solve=[clingo|telingo]` the tool calls the corresponding solver and print a cnl-translated output
 
 **Dependencies:**
+
 - lark
 - inflect
