@@ -122,7 +122,8 @@ class ASPTemporalOperation(ASPOperation):
             string = ''
             string += f'{self._operator_to_symbol(self.operator)} '
             operand = str(self.operands[0])
-            if not isinstance(operand, ASPOperation):
+            if not isinstance(self.operands[0], ASPOperation) or (isinstance(self.operands[0], ASPOperation) and len(self.operands[0].operands) == 1):
+                # operation of a single operand or an atom
                 string += operand
             else:
                 string += f'({operand})'
