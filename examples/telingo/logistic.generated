@@ -4,22 +4,17 @@ vehicle(A) :- airplane(A).
 location(L) :- city(L,_).
 
 #program dynamic.
-{load(V,P): package(P) ; unload(V,P): package(P)} :- vehicle(V).
+{load(V,P)} <= 1 :- 'deposited_in(P,L), 'at(V,L), location(L), package(P), not 'loaded(P), vehicle(V).
+{unload(V,P)} :- package(P), 'loaded_in(P,V), vehicle(V).
 loaded_in(P,V) :- 'loaded_in(P,V), not unload(V,P), package(P), vehicle(V).
 loaded(P) :- loaded_in(P,V), vehicle(V), package(P).
 loaded_in(P,V) :- load(V,P), package(P), vehicle(V).
 :- vehicle(V1), load(V1,P), vehicle(V2), load(V2,P), package(P), V1 != V2.
-:- load(V,P), package(P), 'deposited_in(P,L), vehicle(V), not 'at(V,L), location(L).
-:- vehicle(V), load(V,P), package(P), 'loaded(P).
-:- unload(V,P), package(P), not 'loaded_in(P,V), vehicle(V).
 cargo(V) :- load(V,P), package(P), vehicle(V).
 cargo(V) :- unload(V,P), package(P), vehicle(V).
-{move_to(V,L): location(L)} <= 1 :- vehicle(V).
+{move_to(T,L): city(L,C), L != M} <= 1 :- 'at(T,M), location(M), city(M,C), truck(T).
+{move_to(A,L): airport(L), L != M} <= 1 :- 'at(A,M), location(M), airplane(A).
 :- vehicle(V), move_to(V,L), location(L), cargo(V).
-:- move_to(T,L), city(L,C), truck(T), 'at(T,L), location(L).
-:- move_to(T,L), location(L), truck(T), 'at(T,M), location(M), city(M,C1), city(L,C2), C1 != C2.
-:- move_to(A,L), airplane(A), 'at(A,L), airport(L).
-:- airplane(A), move_to(A,L), not airport(L).
 moving(V) :- move_to(V,LCTN_D), location(LCTN_D), vehicle(V).
 deposited_in(P,L) :- loaded_in(P,V), vehicle(V), at(V,L), package(P), location(L).
 at(V,L) :- move_to(V,L), vehicle(V), location(L).

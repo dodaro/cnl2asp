@@ -1,0 +1,43 @@
+A variable is identified by an id.
+A process is identified by a variable.
+A value is identified by a number.
+An instruction is identified by a value.
+target is a constant.
+
+The following propositions always apply:
+A process goes from 1 to 2.
+There is a variable r1. // corresponding to process 1 register
+There is a variable r2. // corresponding to process 2 register
+There is a variable c.
+An instruction goes from 0 to 2.
+A value goes from 0 to target.
+
+The following propositions apply in the initial state:
+Process P holds instruction 0.
+Variable c holds value 1.
+Variable a holds instruction 0.
+Variable b holds instruction 0.
+
+The following propositions always apply except in the initial state:
+Every process can fetch at most 1 instruction.
+It is prohibited that a process P1 fetch an instruction I1, when process P2 fetch, where P1 is different from P2 and I1 is less than 2.
+It is prohibited that the number of process variable P that fetch an instruction I is equal to 0.
+
+Process P changes instruction with value equal to (I+1)\3, when process P fetch instruction X and also process P previously holds instruction I.
+
+Variable V changes value with number equal to C, when process P fetch instruction I and also process P previously holds instruction with value equal to 0 and also variable c previously holds value C, where P is equal to 1 and V is equal to r1.
+Variable V changes value with number equal to C, when process P fetch instruction I and also process P previously holds instruction with value equal to 0 and also variable c previously holds value C, where P is equal to 2 and V is equal to r2.
+
+Variable V changes value with number equal to R+C, when process P fetch instruction I and also process P previously holds instruction with value equal to 1 and also variable c previously holds value C and also variable V previously holds value R, where P is equal to 1 and V is equal to r1 where R+C is less than or equal to target.
+Variable V changes value with number equal to R+C, when process P fetch instruction I and also process P previously holds instruction with value equal to 1 and also variable c previously holds value C and also variable V previously holds value R, where P is equal to 2 and V is equal to r2 where R+C is less than or equal to target.
+
+Variable c changes value with number equal to R, when process P fetch instruction I and also process P previously holds instruction with value equal to 2 and also variable r1 previously holds value R, where P is equal to 1.
+Variable c changes value with number equal to R, when process P fetch instruction I and also process P previously holds instruction with value equal to 2 and also variable r2 previously holds value R, where P is equal to 2.
+
+A variable K holds a value V, when a variable K changes value V.
+A process K holds a value V, when a process K changes value V.
+A variable K holds a value V, when a variable K previously holds a value V and also variable K does not change.
+A process K holds a value V, when a process K previously holds a value V and also variable K does not change.
+
+The following propositions apply in the final state:
+It is required that variable c holds value target.

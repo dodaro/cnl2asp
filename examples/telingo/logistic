@@ -15,26 +15,23 @@ Whenever there is a city with location L, then we must have a location with id L
 
 The following propositions always apply except in the initial state:
 
-Whenever there is a vehicle V, then V can load a package P or unload a package P.
+Every vehicle V can load at most 1 package P, when package with id P is previously deposited in location L and also vehicle V is previously at location L
+    and also package with id P is not previously loaded.
+Every vehicle V can unload a package P, when a package with id P is previously loaded in vehicle V.
+
 
 A package P is loaded in vehicle V, when package P is previously loaded in vehicle V and also vehicle V do not unload package P.
 A package P is loaded, when package P is loaded in a vehicle V.
 A package P is loaded in vehicle V, when a vehicle V loads package P.
 It is prohibited that a vehicle V1 loads a package P and also vehicle V2 loads package P, where V1 is different from V2.
-It is prohibited that a vehicle V load a package P, when package P is previously deposited in location L and also vehicle V is not previously at location L.
-It is prohibited that a vehicle V load a package P, when package P is previously loaded.
-
-It is prohibited that a vehicle V unload a package P when package P is not previously loaded in vehicle V.
 
 A vehicle V has a cargo when vehicle V load package P.
 A vehicle V has a cargo when vehicle V unload package P.
 
-Whenever there is a vehicle V, then V can move to at most 1 location L.
+Every truck T can move to at most 1 city with location L different from M, with name C, when truck T is previously at location M, whenever there is a city with location M, with name C.
+Every airplane A can move to at most 1 airport with location L different from M, when airplane A is previously at location M.
+
 It is prohibited that a vehicle V move to a location L whenever there is a cargo with vehicle V.
-It is prohibited that a truck T move to a city with location L, and with name C, when truck T is previously at location L.
-It is prohibited that a truck T moves to a location L, when truck T is previously at location M, whenever there is a city with location M, with name C1, whenever there is a city with location L, with name C2, where C1 is different from C2.
-It is prohibited that an airplane A move to an airport L, when airplane A is previously at location L.
-It is prohibited that an airplane A move to an airport L, whenever there is not an airport L.
 
 A vehicle V is moving, when vehicle V move to a location.
 A package P is deposited in location L, when package P is loaded in vehicle V and also vehicle V is at location L.
