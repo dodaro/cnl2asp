@@ -12,8 +12,8 @@ loaded_in(P,V) :- load(V,P), package(P), vehicle(V).
 :- vehicle(V1), load(V1,P), vehicle(V2), load(V2,P), package(P), V1 != V2.
 cargo(V) :- load(V,P), package(P), vehicle(V).
 cargo(V) :- unload(V,P), package(P), vehicle(V).
-{move_to(T,L): city(L,C), L != M} <= 1 :- 'at(T,M), location(M), city(M,C), truck(T).
 {move_to(A,L): airport(L), L != M} <= 1 :- 'at(A,M), location(M), airplane(A).
+{move_to(T,L): city(L,C), L != M} <= 1 :- 'at(T,M), location(M), city(M,C), truck(T).
 :- vehicle(V), move_to(V,L), location(L), cargo(V).
 moving(V) :- move_to(V,LCTN_D), location(LCTN_D), vehicle(V).
 deposited_in(P,L) :- loaded_in(P,V), vehicle(V), at(V,L), package(P), location(L).

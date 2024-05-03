@@ -28,8 +28,8 @@ It is prohibited that a vehicle V1 loads a package P and also vehicle V2 loads p
 A vehicle V has a cargo when vehicle V load package P.
 A vehicle V has a cargo when vehicle V unload package P.
 
-Every truck T can move to at most 1 city with location L different from M, with name C, when truck T is previously at location M, whenever there is a city with location M, with name C.
 Every airplane A can move to at most 1 airport with location L different from M, when airplane A is previously at location M.
+Every truck T can move to at most 1 city with location L different from M, with name C, when truck T is previously at location M, whenever there is a city with location M, with name C.
 
 It is prohibited that a vehicle V move to a location L whenever there is a cargo with vehicle V.
 
