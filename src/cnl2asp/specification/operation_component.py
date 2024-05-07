@@ -65,6 +65,7 @@ class OperationComponent(Component):
             if not isinstance(operand, Component):
                 operand = ValueComponent(operand)
             self.operands.append(operand)
+        self.auxiliary_verb = None
 
 
     def between_operator(self, operands):

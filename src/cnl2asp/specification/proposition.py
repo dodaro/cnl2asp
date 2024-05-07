@@ -70,7 +70,7 @@ class NewKnowledgeComponent(Component):
         return NewKnowledgeComponent(self.new_entity.copy(), self.condition.copy(), self.subject, self.auxiliary_verb, self.objects)
 
     def get_entities(self) -> list[EntityComponent]:
-        entities = [self.new_entity]
+        entities = self.new_entity.get_entities()
         for entity in self.condition.get_entities():
             entities.append(entity)
         return entities
