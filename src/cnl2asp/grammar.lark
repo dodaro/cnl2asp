@@ -70,7 +70,7 @@ implicit_definition_proposition: constant_definition_clause -> constant_implicit
                                  | simple_definition
                                  | compounded_range_clause
                                  | compounded_match_clause
-                                 | enumerative_definition_clause
+                                 | enumerative_definition_clause [terminal_clauses]
 _CNL_CONSTANT: "constant"
 cnl_is_a_constant: _CNL_IS " " _CNL_A " " _CNL_CONSTANT
 _CNL_EQUAL: "equal"
@@ -94,7 +94,7 @@ cnl_that_are_equal_to_respectively: _CNL_THAT " " _CNL_ARE " " _CNL_EQUAL_TO " "
 cnl_that_is_equal_to_respectively: _CNL_THAT " " _CNL_IS " " _CNL_EQUAL_TO " " _CNL_RESPECTIVELY
 _CNL_ALSO: "also"
 compounded_match_tail: _CNL_AND _CNL_HAS STRING (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list (_CNL_AND _CNL_ALSO STRING (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list)*
-enumerative_definition_clause: entity verb [conjunctive_object_list] [terminal_clauses]
+enumerative_definition_clause: entity verb [conjunctive_object_list]
 
 standard_proposition: whenever_then_clause_proposition
                     | fact_proposition

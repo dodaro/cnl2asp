@@ -99,7 +99,7 @@ Waiter W works in pub P.
 Waiter J serves a drink A.
 Waiter W is working, when waiter W serves a drink.''','''work_in(W,P) :- waiter(W), pub(P).
 serve(J,A) :- waiter(J), drink(A).
-working(W) :- serve(W,DRNK_D), drink(DRNK_D), waiter(W).''')
+working(W) :- waiter(W), serve(W,DRNK_D), drink(DRNK_D).''')
 
     def test_compounded_clause_definition(self):
         self.check_input_to_output('''
@@ -458,3 +458,7 @@ Whenever there is initially a tourist or the true constant, then we can have a m
         self.check_input_to_output('''A drink is identified by an id.
 A serve is identified by a drink.
 It is preferred with priority 5 that the number of drinks that are serve is maximized.''', ':~ #count{D: serve(D)} = CNT. [-CNT@5]')
+
+    def test_label_in_terminal_clause(self):
+        self.check_input_to_output('''A vtx is identified by an id. 
+                                      Vtx X have an arc to Vtx Y when Vtx X have an edge to Y.''', 'arc(X,Y) :- vtx(X), edge(X,Y), vtx(Y).')

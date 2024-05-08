@@ -174,7 +174,7 @@ close_to(1,2,X) :- pub(1), pub(2), pub(X), X = 3.
 close_to(1,2,X) :- pub(1), pub(2), pub(X), X = 4.
 work_in("John",1) :- waiter("John"), pub(1).
 serve("John","alcoholic") :- waiter("John"), drink("alcoholic").
-working(W) :- serve(W,DRNK_D), drink(DRNK_D), waiter(W).
+working(W) :- waiter(W), serve(W,DRNK_D), drink(DRNK_D).
 topmovie(X) :- movie(X,"spielberg",_,_).
 {topmovie(I): movie(I,X,_,_)} <= 1 :- director(X), X != "spielberg".
 scoreassignment(I,3) | scoreassignment(I,2) :- movie(I,"nolan",_,_).
