@@ -1,6 +1,6 @@
 #program initial.
 gun("unloaded").
-:- &tel {>* (~ gun("loaded") & gun("shooting"))}.
+:- &tel {>* (~ (gun("loaded") & gun("shooting")))}.
 
 #program always.
 shooter(1).
