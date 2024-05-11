@@ -1,0 +1,31 @@
+telingo version 2.1.1
+Reading from encoding.lp
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+ State 0:
+  unloaded
+ State 1:
+  shoot
+  unloaded
+ State 2:
+  broken
+  shoot
+  unloaded
+ State 3:
+  broken
+  load
+  loaded
+ State 4:
+  broken
+  loaded
+  shoot
+SATISFIABLE
+
+Models       : 1+
+Calls        : 5
+Time         : 0.007s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 0.007s

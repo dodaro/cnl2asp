@@ -1,0 +1,78 @@
+telingo version 2.1.1
+Reading from encoding.lp
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+ State 0:
+  farmer(1)
+  item("beans") item("fox") item("goose")
+  location("left_bank") location("right_bank")
+  at(1,"left_bank") at("beans","left_bank") at("fox","left_bank") at("goose","left_bank")
+  eat("fox","goose") eat("goose","beans")
+  route("left_bank","right_bank") route("right_bank","left_bank")
+ State 1:
+  farmer(1)
+  item("beans") item("fox") item("goose")
+  location("left_bank") location("right_bank")
+  moved("goose")
+  at(1,"right_bank") at("beans","left_bank") at("fox","left_bank") at("goose","right_bank")
+  eat("fox","goose") eat("goose","beans")
+  route("left_bank","right_bank") route("right_bank","left_bank")
+ State 2:
+  farmer(1)
+  item("beans") item("fox") item("goose")
+  location("left_bank") location("right_bank")
+  at(1,"left_bank") at("beans","left_bank") at("fox","left_bank") at("goose","right_bank")
+  eat("fox","goose") eat("goose","beans")
+  route("left_bank","right_bank") route("right_bank","left_bank")
+ State 3:
+  farmer(1)
+  item("beans") item("fox") item("goose")
+  location("left_bank") location("right_bank")
+  moved("fox")
+  at(1,"right_bank") at("beans","left_bank") at("fox","right_bank") at("goose","right_bank")
+  eat("fox","goose") eat("goose","beans")
+  route("left_bank","right_bank") route("right_bank","left_bank")
+ State 4:
+  farmer(1)
+  item("beans") item("fox") item("goose")
+  location("left_bank") location("right_bank")
+  moved("goose")
+  at(1,"left_bank") at("beans","left_bank") at("fox","right_bank") at("goose","left_bank")
+  eat("fox","goose") eat("goose","beans")
+  route("left_bank","right_bank") route("right_bank","left_bank")
+ State 5:
+  farmer(1)
+  item("beans") item("fox") item("goose")
+  location("left_bank") location("right_bank")
+  moved("beans")
+  at(1,"right_bank") at("beans","right_bank") at("fox","right_bank") at("goose","left_bank")
+  eat("fox","goose") eat("goose","beans")
+  route("left_bank","right_bank") route("right_bank","left_bank")
+ State 6:
+  farmer(1)
+  item("beans") item("fox") item("goose")
+  location("left_bank") location("right_bank")
+  at(1,"left_bank") at("beans","right_bank") at("fox","right_bank") at("goose","left_bank")
+  eat("fox","goose") eat("goose","beans")
+  route("left_bank","right_bank") route("right_bank","left_bank")
+ State 7:
+  farmer(1)
+  item("beans") item("fox") item("goose")
+  location("left_bank") location("right_bank")
+  moved("goose")
+  at(1,"right_bank") at("beans","right_bank") at("fox","right_bank") at("goose","right_bank")
+  eat("fox","goose") eat("goose","beans")
+  route("left_bank","right_bank") route("right_bank","left_bank")
+SATISFIABLE
+
+Models       : 1+
+Calls        : 8
+Time         : 0.016s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 0.016s

@@ -1,0 +1,64 @@
+telingo version 2.1.1
+Reading from original/encoding.lp
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+ State 0:
+ State 1:
+  load(1,truck(1)) load(2,truck(1)) load(3,truck(1)) load(4,truck(1)) load(5,truck(1)) load(6,truck(1)) load(7,truck(1))
+ State 2:
+  move(truck(1),airport(1))
+ State 3:
+  unload(1,truck(1)) unload(2,truck(1)) unload(3,truck(1)) unload(4,truck(1)) unload(5,truck(1)) unload(6,truck(1)) unload(7,truck(1))
+ State 4:
+  load(1,plane2) load(2,plane1) load(3,plane1) load(4,plane1) load(5,plane2) load(6,plane2) load(7,plane2)
+ State 5:
+  move(plane1,airport(4)) move(plane2,airport(2)) move(truck(4),airport(4))
+ State 6:
+  move(truck(2),airport(2)) move(truck(6),airport(6)) move(truck(8),airport(8))
+  unload(1,plane2) unload(3,plane1)
+ State 7:
+  load(1,truck(2)) load(3,truck(4))
+  move(plane1,airport(3)) move(plane2,airport(8))
+ State 8:
+  move(truck(3),airport(3)) move(truck(5),airport(5))
+  unload(1,truck(2)) unload(2,plane1) unload(7,plane2)
+ State 9:
+  load(1,truck(2)) load(2,truck(3)) load(7,truck(8))
+  move(plane1,airport(5)) move(plane2,airport(7)) move(truck(4),po(4)) move(truck(7),airport(7))
+ State 10:
+  move(truck(2),central(2)) move(truck(3),central(3)) move(truck(8),po(8))
+  unload(6,plane2)
+ State 11:
+  load(6,truck(7))
+  move(plane2,airport(6))
+  unload(1,truck(2)) unload(3,truck(4)) unload(7,truck(8))
+ State 12:
+  unload(2,truck(3)) unload(4,plane1) unload(5,plane2) unload(6,truck(7))
+ State 13:
+  load(1,truck(2)) load(2,truck(3)) load(4,truck(5)) load(5,truck(6)) load(6,truck(7)) load(7,truck(8))
+ State 14:
+  move(truck(2),po(2)) move(truck(3),po(3)) move(truck(5),po(5)) move(truck(6),po(6)) move(truck(7),po(7))
+  unload(7,truck(8))
+ State 15:
+  unload(1,truck(2)) unload(2,truck(3)) unload(4,truck(5)) unload(5,truck(6)) unload(6,truck(7))
+SATISFIABLE
+
+Models       : 1+
+Calls        : 16
+Time         : 1.346s (Solving: 1.15s 1st Model: 0.28s Unsat: 0.87s)
+CPU Time     : 1.345s

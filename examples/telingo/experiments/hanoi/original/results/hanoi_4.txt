@@ -1,0 +1,72 @@
+telingo version 2.1.1
+Reading from original/encoding.lp ...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+SATISFIABLE
+
+Models       : 1+
+Calls        : 16
+Time         : 0.018s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 0.018s
+ State 0:
+  on(1,a) on(2,a) on(3,a) on(4,a)
+ State 1:
+  move(4,b)
+  on(1,a) on(2,a) on(3,a) on(4,b)
+ State 2:
+  move(3,c)
+  on(1,a) on(2,a) on(3,c) on(4,b)
+ State 3:
+  move(4,c)
+  on(1,a) on(2,a) on(3,c) on(4,c)
+ State 4:
+  move(2,b)
+  on(1,a) on(2,b) on(3,c) on(4,c)
+ State 5:
+  move(4,a)
+  on(1,a) on(2,b) on(3,c) on(4,a)
+ State 6:
+  move(3,b)
+  on(1,a) on(2,b) on(3,b) on(4,a)
+ State 7:
+  move(4,b)
+  on(1,a) on(2,b) on(3,b) on(4,b)
+ State 8:
+  move(1,c)
+  on(1,c) on(2,b) on(3,b) on(4,b)
+ State 9:
+  move(4,c)
+  on(1,c) on(2,b) on(3,b) on(4,c)
+ State 10:
+  move(3,a)
+  on(1,c) on(2,b) on(3,a) on(4,c)
+ State 11:
+  move(4,a)
+  on(1,c) on(2,b) on(3,a) on(4,a)
+ State 12:
+  move(2,c)
+  on(1,c) on(2,c) on(3,a) on(4,a)
+ State 13:
+  move(4,b)
+  on(1,c) on(2,c) on(3,a) on(4,b)
+ State 14:
+  move(3,c)
+  on(1,c) on(2,c) on(3,c) on(4,b)
+ State 15:
+  move(4,c)
+  on(1,c) on(2,c) on(3,c) on(4,c)
