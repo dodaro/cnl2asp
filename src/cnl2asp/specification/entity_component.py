@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import abc
 from datetime import datetime, timedelta
 from enum import Enum
 from typing import Any, TYPE_CHECKING
@@ -55,7 +54,7 @@ class EntityComponent(Component):
 
     def set_label_as_key_value(self):
         self.set_attributes_value([AttributeComponent(self.get_keys()[0].get_name(),
-                                   ValueComponent(self.label), self.get_keys()[0].origin)])
+                                                      ValueComponent(self.label), self.get_keys()[0].origin)])
 
     def set_name(self, name: str):
         self._name = NameComponent(name)
@@ -92,18 +91,32 @@ class EntityComponent(Component):
     def get_keys_and_attributes(self) -> list[AttributeComponent]:
         return self.keys + self.attributes
 
-    def set_attributes_value(self, attributes: list[AttributeComponent], proposition: PropositionBuilder = None):
+    def set_attributes_value(self, attributes: list[AttributeComponent], proposition: PropositionBuilder = None, detecting_signature = False):
         for attribute in attributes:
             if isinstance(attribute, EntityComponent):
                 if not proposition:
                     raise RuntimeError('Error in compilation phase.')
                 proposition.add_relations([RelationComponent(self, attribute)])
             else:
-                if attribute.origin:
-                    entity_attributes = self.get_attributes_by_name_and_origin(attribute.get_name(), attribute.origin)
-                else:
-                    origin = AttributeOrigin(str(self.get_name()))
-                    entity_attributes = self.get_attributes_by_name_and_origin(attribute.get_name(), origin)
+                try:
+                    if attribute.origin:
+                        entity_attributes = self.get_attributes_by_name_and_origin(attribute.get_name(),
+                                                                                   attribute.origin)
+                    else:
+                        origin = AttributeOrigin(str(self.get_name()))
+                        entity_attributes = self.get_attributes_by_name_and_origin(attribute.get_name(), origin)
+                except AttributeNotFound as e:
+                    if detecting_signature:
+                        origin = AttributeOrigin(str(self.get_name()))
+                        if attribute.origin:
+                            origin = attribute.origin
+                        self.attributes.append(AttributeComponent(attribute.get_name(), ValueComponent('_'), origin))
+                        from cnl2asp.specification.signaturemanager import SignatureManager
+                        SignatureManager.remove_signature(self.get_name())
+                        SignatureManager.add_signature(self)
+                        entity_attributes = self.get_attributes_by_name_and_origin(attribute.get_name(), origin)
+                    else:
+                        raise e
                 for entity_attribute in entity_attributes:
                     entity_attribute.value = attribute.value
                     entity_attribute.operations = attribute.operations

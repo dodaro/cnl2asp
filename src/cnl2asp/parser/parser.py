@@ -530,11 +530,11 @@ class CNLTransformer(Transformer):
     def string_list(self, elem):
         return [ValueComponent(string) for string in elem]
 
-    @v_args(inline=True)
-    def parameter_entity_link(self, attribute: AttributeComponent, entity: EntityComponent):
+    @v_args(inline=True, meta=True)
+    def parameter_entity_link(self, meta, attribute: AttributeComponent, name, label):
         if attribute.value == Utility.NULL_VALUE:
-            attribute.value = self._new_field_value('_'.join([entity.get_name(), str(attribute.get_name())]))
-            entity.set_attributes_value([attribute])
+            attribute.value = self._new_field_value('_'.join([name, str(attribute.get_name())]))
+        entity = self.simple_entity(meta, name, label, None, None, [attribute], is_verb=True)
         self._proposition.add_requisite(entity)
         return entity.get_attributes_by_name_and_origin(attribute.get_name(), attribute.origin)[0]
 
@@ -568,14 +568,23 @@ class CNLTransformer(Transformer):
 
     def simple_aggregate_with_parameter(self, elem):
         discriminant = [elem[1]]
-        body = [elem[2]]
-        aggregate = AggregateComponent(elem[0], discriminant, body)
+        entity: EntityComponent = elem[2]
+        if Utility.DETECTING_SIGNATURES:
+            entity.set_attributes_value(discriminant, detecting_signature=True)
+        aggregate = AggregateComponent(elem[0], discriminant, [entity])
         return aggregate
 
 
     def aggregate_active_clause(self, elem) -> AggregateComponent:
         discriminant = [elem[1], elem[2]] if elem[2] else [elem[1]]
-        body = [elem[3]]
+        entity: EntityComponent = elem[3]
+        if Utility.DETECTING_SIGNATURES:
+            try:
+                for attribute in discriminant:
+                    entity.get_attributes_by_name(attribute.get_name())
+            except AttributeNotFound:
+                entity.set_attributes_value([attribute], detecting_signature=True)
+        body = [entity]
         if elem[4]:
             body += elem[4]
             for entity in elem[4]:
@@ -586,6 +595,12 @@ class CNLTransformer(Transformer):
     def aggregate_passive_clause(self, meta, elem) -> AggregateComponent:
         discriminant = [elem[1], elem[3]] if elem[3] else [elem[1]]
         verb: EntityComponent = elem[5]
+        if Utility.DETECTING_SIGNATURES:
+            try:
+                for attribute in discriminant:
+                    verb.get_attributes_by_name_and_origin(attribute.get_name(), attribute.origin)
+            except AttributeNotFound:
+                verb.set_attributes_value([attribute], detecting_signature=True)
         if elem[2]:
             try:
                 verb.set_attributes_value(elem[2])
@@ -745,7 +760,7 @@ class CNLTransformer(Transformer):
 
     @v_args(meta=True, inline=True)
     def simple_entity(self, meta, name, label, entity_temporal_order_constraint, define_subsequent_event,
-               parameter_list, new_definition=False) -> EntityComponent | str:
+                      parameter_list, is_verb=False) -> EntityComponent | str:
         if self._is_label(name):
             try:
                 return self._proposition.get_entity_by_label(name)
@@ -764,16 +779,18 @@ class CNLTransformer(Transformer):
             try:
                 entity = SignatureManager.get_signature(name)
                 entity.label = label
-            except EntityNotFound as e:
+            except EntityNotFound:
                 # this is the case that we are defining a new entity
-                if new_definition:
-                    entity = EntityComponent(name, label, [],
-                                             [attribute for attribute in parameter_list if
-                                              isinstance(attribute, AttributeComponent)])
-                else:
-                    raise CompilationError(str(e), meta.line)
+                entity = EntityComponent(name, label, [],
+                                                  [attribute for attribute in parameter_list if
+                                                   isinstance(attribute, AttributeComponent)])
+                if not (is_verb or parameter_list) and label:
+                    entity.set_attributes_value([AttributeComponent('id', ValueComponent(Utility.NULL_VALUE), AttributeOrigin(name))], detecting_signature=True)
+                signature = self._proposition.create_new_signature(entity)
+                if not is_verb:
+                    SignatureManager.add_signature(signature)
         try:
-            entity.set_attributes_value(parameter_list, self._proposition)
+            entity.set_attributes_value(parameter_list, self._proposition, detecting_signature=True)
         except AttributeNotFound as e:
             raise CompilationError(str(e), meta.line)
         if entity.label_is_key_value():
@@ -864,7 +881,7 @@ class CNLTransformer(Transformer):
         verb_name = verb_name.lower()
         if is_verb_to_have(elem[0]):
             verb_name = verb_name.removesuffix('_to')
-        entity: EntityComponent = self.simple_entity(meta, verb_name, '', elem[5], elem[6], elem[7], new_definition=True)
+        entity: EntityComponent = self.simple_entity(meta, verb_name, '', elem[5], elem[6], elem[7], is_verb=True)
         if elem[3]:
             entity = self.entity([elem[3], entity])
         if elem[2]:

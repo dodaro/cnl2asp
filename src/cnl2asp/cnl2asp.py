@@ -184,6 +184,7 @@ def main():
     parser.add_argument('--debug', action='store_true', help=argparse.SUPPRESS)
     parser.add_argument('--solve', type=str, choices=["clingo", "telingo"], help='Call the corresponding solver and print a cnl-translated output')
     parser.add_argument('-o', '--optimize', action='store_true', help='Optimize the output using ngo')
+    parser.add_argument('--detect-definitions',  help="The tool detects the atoms structures.")
     parser.add_argument('input_file')
     parser.add_argument('output_file', type=str, nargs='?', default='')
     args = parser.parse_args()

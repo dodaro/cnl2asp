@@ -11,6 +11,7 @@ class Utility:
                        "lowest", "smallest", "biggest", "sum", "difference", "product", "division", "where", "between",
                        "whenever", "such", "that", "there", "than", "also", "then", "required", "prohibited", "or"]
     AUTO_ENTITY_LINK = True
+    DETECTING_SIGNATURES = False
 
     @staticmethod
     def create_unique_identifier():

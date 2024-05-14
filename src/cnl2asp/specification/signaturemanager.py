@@ -34,16 +34,18 @@ class SignatureManager:
             SignatureManager.get_signature(entity.get_name())
         except:
             entity = entity.copy()
-            # Update previous declared signatures
-            for signature in SignatureManager.signatures:
-                try:
-                    attributes = signature.get_attributes_by_name(entity.get_name())
-                    for attribute in attributes:
-                        signature.attributes.remove(attribute)
-                    signature.attributes += entity.get_keys()
-                    signature.attributes.sort(key=lambda x: x.get_name())
-                except:
-                    pass
+            if not Utility.DETECTING_SIGNATURES:
+                # Update previous declared signatures.
+                # This is available only declaring domain definitions
+                for signature in SignatureManager.signatures:
+                    try:
+                        attributes = signature.get_attributes_by_name(entity.get_name())
+                        for attribute in attributes:
+                            signature.attributes.remove(attribute)
+                        signature.attributes += entity.get_keys()
+                        signature.attributes.sort(key=lambda x: x.get_name())
+                    except:
+                        pass
             SignatureManager.set_entity_to_null(entity)
             SignatureManager.signatures.append(entity)
 

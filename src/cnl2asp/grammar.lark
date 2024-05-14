@@ -180,7 +180,7 @@ where_clause: comparison (_CNL_AND comparison)*
             | where_clause _CNL_AND where_clause
 string_list: STRING (_CNL_COMMA STRING)*
 
-parameter_entity_link: _CNL_THE? parameter _CNL_OF _CNL_THE entity
+parameter_entity_link: _CNL_THE? parameter _CNL_OF _CNL_THE STRING [STRING]
 _CNL_BETWEEN: "between"
 _CNL_ABSOLUTE: "absolute"
 _CNL_VALUE: "value"
