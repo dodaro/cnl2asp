@@ -184,13 +184,13 @@ def main():
     parser.add_argument('--debug', action='store_true', help=argparse.SUPPRESS)
     parser.add_argument('--solve', type=str, choices=["clingo", "telingo"], help='Call the corresponding solver and print a cnl-translated output')
     parser.add_argument('-o', '--optimize', action='store_true', help='Optimize the output using ngo')
-    parser.add_argument('--detect-definitions',  help="The tool detects the atoms structures.")
+    parser.add_argument('--detect-signatures',  action='store_true', help="The tool detects the atoms structures.")
     parser.add_argument('input_file')
     parser.add_argument('output_file', type=str, nargs='?', default='')
     args = parser.parse_args()
 
     Utility.PRINT_WITH_FUNCTIONS = args.print_with_functions
-
+    Utility.DETECTING_SIGNATURES = args.detect_signatures
     input_file = args.input_file
 
     in_file = open(input_file, 'r')

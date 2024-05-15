@@ -583,7 +583,7 @@ class CNLTransformer(Transformer):
                 for attribute in discriminant:
                     entity.get_attributes_by_name(attribute.get_name())
             except AttributeNotFound:
-                entity.set_attributes_value([attribute], detecting_signature=True)
+                entity.set_attributes_value([attribute], detecting_signature=Utility.DETECTING_SIGNATURES)
         body = [entity]
         if elem[4]:
             body += elem[4]
@@ -600,7 +600,7 @@ class CNLTransformer(Transformer):
                 for attribute in discriminant:
                     verb.get_attributes_by_name_and_origin(attribute.get_name(), attribute.origin)
             except AttributeNotFound:
-                verb.set_attributes_value([attribute], detecting_signature=True)
+                verb.set_attributes_value([attribute], detecting_signature=Utility.DETECTING_SIGNATURES)
         if elem[2]:
             try:
                 verb.set_attributes_value(elem[2])
@@ -779,18 +779,21 @@ class CNLTransformer(Transformer):
             try:
                 entity = SignatureManager.get_signature(name)
                 entity.label = label
-            except EntityNotFound:
-                # this is the case that we are defining a new entity
-                entity = EntityComponent(name, label, [],
-                                                  [attribute for attribute in parameter_list if
-                                                   isinstance(attribute, AttributeComponent)])
-                if not (is_verb or parameter_list) and label:
-                    entity.set_attributes_value([AttributeComponent('id', ValueComponent(Utility.NULL_VALUE), AttributeOrigin(name))], detecting_signature=True)
-                signature = self._proposition.create_new_signature(entity)
-                if not is_verb:
-                    SignatureManager.add_signature(signature)
+            except EntityNotFound as e:
+                if is_verb or Utility.DETECTING_SIGNATURES:
+                    # this is the case that we are defining a new entity
+                    entity = EntityComponent(name, label, [],
+                                                      [attribute for attribute in parameter_list if
+                                                       isinstance(attribute, AttributeComponent)])
+                    if not (is_verb or parameter_list) and label:
+                        entity.set_attributes_value([AttributeComponent('id', ValueComponent(Utility.NULL_VALUE), AttributeOrigin(name))], detecting_signature=Utility.DETECTING_SIGNATURES)
+                    signature = self._proposition.create_new_signature(entity)
+                    if not is_verb:
+                        SignatureManager.add_signature(signature)
+                else:
+                    raise CompilationError(str(e), meta.line)
         try:
-            entity.set_attributes_value(parameter_list, self._proposition, detecting_signature=True)
+            entity.set_attributes_value(parameter_list, self._proposition, detecting_signature=Utility.DETECTING_SIGNATURES)
         except AttributeNotFound as e:
             raise CompilationError(str(e), meta.line)
         if entity.label_is_key_value():
