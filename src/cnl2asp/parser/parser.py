@@ -36,7 +36,7 @@ class QUANTITY_OPERATOR(Enum):
 
 
 PRONOUNS = ['i', 'you', 'he', 'she', 'it', 'we', 'you', 'they']  # they are skipped if subject
-
+DUMMY_ENTITY = EntityComponent('', '', [], [])
 
 def is_verb_to_have(word: str):
     return word in ["have ", "have a ", "have an ", "has ", "has a ", "has an "]
@@ -309,8 +309,9 @@ class CNLTransformer(Transformer):
                                 RelationComponent(new_knowledge.new_entity, entity))
 
     def whenever_then_clause_proposition(self, elem):
-        for proposition in self._proposition.get_propositions():
-            self._make_new_knowledge_relations(proposition, proposition.requisite.components)
+        if elem[-2] is DUMMY_ENTITY:
+            for proposition in self._proposition.get_propositions():
+                self._make_new_knowledge_relations(proposition, proposition.requisite.components)
 
     def whenever_clause(self, elem):
         if elem[0]:
@@ -329,6 +330,13 @@ class CNLTransformer(Transformer):
             cardinality = CardinalityComponent(None, None)
         self._proposition.add_cardinality(cardinality)
         self._proposition.add_subject(subject)
+        if subject is not DUMMY_ENTITY:
+            for proposition in self._proposition.get_propositions():
+                for new in proposition.new_knowledge:
+                    # normally only keys are linked to an head. Here we are forcing to link also subject initialized attributes.
+                    new.new_entity.attributes += [AttributeComponent(attribute.get_name(), ValueComponent(Utility.NULL_VALUE), AttributeOrigin(new.new_entity.get_name(), attribute.origin))
+                                                    for attribute in subject.get_initialized_attributes()]
+                self._make_new_knowledge_relations(proposition, [subject])
         return subject
 
 
@@ -421,7 +429,13 @@ class CNLTransformer(Transformer):
         self._proposition.add_requisite(subject)
         self._proposition.add_subject(subject.copy())
         for proposition in self._proposition.get_propositions():
-            self._make_new_knowledge_relations(proposition, [subject])
+            for proposition in self._proposition.get_propositions():
+                for new in proposition.new_knowledge:
+                    # normally only keys are linked to an head. Here we are forcing to link also subject initialized attributes.
+                    new.new_entity.attributes += [
+                        AttributeComponent(attribute.get_name(), ValueComponent(Utility.NULL_VALUE), AttributeOrigin(new.new_entity.get_name(), attribute.origin))
+                        for attribute in subject.get_initialized_attributes()]
+                self._make_new_knowledge_relations(proposition, [subject])
 
     def foreach_clause(self, elem):
         objects: list[EntityComponent] = elem[0]
@@ -757,7 +771,7 @@ class CNLTransformer(Transformer):
         name = name.lower()
         parameter_list = parameter_list if parameter_list else []
         if self._is_pronouns(name):
-            return EntityComponent('', '', [], [])
+            return DUMMY_ENTITY
         try:
             if label:
                 entity = self._proposition.get_entity_by_label(label)

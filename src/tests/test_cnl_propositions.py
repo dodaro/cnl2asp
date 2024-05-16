@@ -306,6 +306,25 @@ class TestCnlPropositions(unittest.TestCase):
                                     timeslot(1,"07:40 AM").
                                     1 <= {assignment(R,TMSLT_TMSLT): timeslot(TMSLT_TMSLT,_)} <= 1 :- assignment(R,_).''')
 
+    def test_head_links(self):
+        self.check_input_to_output('''
+                                    A node is identified by an id.
+                                    An edge is identified by an first node, by a second node, and has a weight.
+                                    Whenever there is a node N, whenever there is an edge with first node F, with second node S, 
+                                        then N can have a test. 
+                                    Whenever there is a node N, whenever there is an edge with first node F, with second node S, 
+                                        then we can have a test2.
+                                    Whenever there is a node N, whenever there is an edge E with first node F, with second node S, with weight W, 
+                                        then E can have a test3.
+                                    It is prohibited that there is test3 with edge first node F, with edge second node S, with edge weight W. 
+                                    Every edge with first node X, with weight Y can have a test4.''',
+                                   '''\
+                                   {test(N)} :- node(N), edge(F,S,_).
+                                   {test2(F,N,S)} :- node(N), edge(F,S,_).
+                                   {test3(F,S,W)} :- node(N), edge(F,S,W).
+                                   :- test3(F,S,W).
+                                   {test4(X,DG_SCND_ND,Y)} :- edge(X,DG_SCND_ND,Y).''')
+
     def test_remove_duplicates_from_condition(self):
         self.check_input_to_output('''
                                     A node is identified by an id.
