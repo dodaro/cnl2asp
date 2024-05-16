@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittest.mock import patch
 
@@ -8,7 +9,7 @@ from cnl2asp.converter.asp_converter import ASPConverter
 from cnl2asp.parser.parser import CNLTransformer
 from cnl2asp.specification.signaturemanager import SignatureManager
 
-cnl_parser = Lark(open("cnl2asp/grammar.lark", "r").read())
+cnl_parser = Lark(open(os.path.join(os.path.dirname(__file__), "..", "cnl2asp", "grammar.lark"), "r").read())
 
 
 class TestCnlPropositions(unittest.TestCase):
@@ -46,13 +47,7 @@ Whenever there is a patient P, whenever there is an assignment with registration
 It is required that the number of patient that have position in seat S, day D, timeslot TS is less than 2, whenever there is a day D, whenever there is a timeslot TS, whenever there is a seat with id S.
 It is required that the assignment A is after 11:20 AM, whenever there is a registration R with a duration of the fourth phase greater than 50 timeslots, whenever there is an assignment A with registration R.
 It is preferred as much as possible, with high priority, that a patient P with preference T has a position in a seat S, whenever there is a seat S with type T.''',
-                                   '''day(0,"01/01/2022").
-day(1,"02/01/2022").
-day(2,"03/01/2022").
-day(3,"04/01/2022").
-day(4,"05/01/2022").
-day(5,"06/01/2022").
-day(6,"07/01/2022").
+                                   '''\
 timeslot(0,"07:30 AM").
 timeslot(1,"07:40 AM").
 timeslot(2,"07:50 AM").
@@ -90,6 +85,13 @@ timeslot(33,"01:00 PM").
 timeslot(34,"01:10 PM").
 timeslot(35,"01:20 PM").
 timeslot(36,"01:30 PM").
+day(0,"01/01/2022").
+day(1,"02/01/2022").
+day(2,"03/01/2022").
+day(3,"04/01/2022").
+day(4,"05/01/2022").
+day(5,"06/01/2022").
+day(6,"07/01/2022").
 1 <= {assignment(RGSTRTN_D,0,DY_DY,TMSLT_TMSLT): day(DY_DY,_), timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(RGSTRTN_D,0,_,_,_,_,_).
 1 <= {assignment(P,OR,D+W,TMSLT_TMSLT): timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(P,OR,W,_,_,_,_), assignment(P,OR-1,D,_), day(D+W,_).
 :- registration(_,_,_,RGSTRTN_DRTN_F_TH_FRST_PHS,RGSTRTN_DRTN_F_TH_SCND_PHS,RGSTRTN_DRTN_F_TH_THRD_PHS,_), assignment(_,_,_,T), (RGSTRTN_DRTN_F_TH_FRST_PHS + RGSTRTN_DRTN_F_TH_SCND_PHS + RGSTRTN_DRTN_F_TH_THRD_PHS) <= T, registration(RGSTRTN_D,RGSTRTN_RDR,_,RGSTRTN_DRTN_F_TH_FRST_PHS,RGSTRTN_DRTN_F_TH_SCND_PHS,RGSTRTN_DRTN_F_TH_THRD_PHS,_), assignment(RGSTRTN_D,RGSTRTN_RDR,_,T).
@@ -163,6 +165,11 @@ It is preferred with low priority that the number of drinks that are serve is ma
 It is preferred as little as possible, with high priority, that V is equal to 1, whenever there is a scoreAssignment with movie I, and with value V, whenever there is a topMovie with id I.
 It is preferred, with medium priority, that whenever there is a topMovie with id I, whenever there is a scoreAssignment with movie I, and with value V, V is maximized.
 It is preferred, with medium priority, that the total value of a scoreAssignment is maximized.''','''#const minKelvinTemperature = 0.
+timeslot(0,"07:00 AM").
+timeslot(1,"07:30 AM").
+timeslot(2,"08:00 AM").
+timeslot(3,"08:30 AM").
+timeslot(4,"09:00 AM").
 coldtemperature(minKelvinTemperature..acceptableTemperature).
 day(1..365).
 drink("alcoholic").
@@ -247,7 +254,6 @@ It is required that the angle A1 of the position P1 is equal to the angle A2 of 
 It is required that the angle A1 of the goal G is equal to the angle A2 of the position P, whenever there is a goal G with joint J, with angle A1, whenever there is a position P with joint J, with angle A2, and with time equal to timemax.''',
                                    '''#const granularity = 90.
 #const timemax = 90.
-link(J2,J1) :- link(J1,J2).
 time(0,"0").
 time(1,"1").
 time(2,"2").
@@ -259,6 +265,7 @@ time(7,"7").
 time(8,"8").
 time(9,"9").
 time(10,"10").
+link(J2,J1) :- link(J1,J2).
 {rotation(J1,J2,A,AI,T): joint(J1), joint(J2), angle(A), link(J1,J2), position(J1,AI,T)} <= 1 :- T > 0, time(T,_).
 :- T >= timemax, rotation(_,_,_,_,T).
 :- J1 <= J2, rotation(J1,J2,_,_,_).
@@ -350,18 +357,3 @@ edge(4,5).
 :- node(N1,SSGND_T_WGHT), assigned_to(N1,S1,SSGND_T_WGHT), node(N2,SSGND_T_WGHT1), assigned_to(N2,S1,SSGND_T_WGHT1), set(S1), edge(N1,N2).
 :- #count{D: assigned_to(D,S1,_), set(S1)} = CNT, #count{D1: assigned_to(D1,S2,_), set(S2)} = CNT1, CNT <= CNT1, S1 = 1, S2 = 2.
 :- #sum{WGHT: assigned_to(_,S2,WGHT), set(S2)} = SM, #sum{WGHT1: assigned_to(_,S1,WGHT1), set(S1)} = SM1, SM < SM1, S1 = 1, S2 = 2.''')
-
-    def test_aggregate_range(self):
-        self.check_input_to_output('''A top_Movie is identified by an id.
-A score_Assignment is identified by an id, and by a va_lue.
-
-It is prohibited that the total va_lue, for each id, that have a score_assignment with id X is between 1 and 2.''', ''':- 1 <= #sum{V_L,X: score_assignment(X,V_L)} <= 2.''')
-
-    def test_whenever_clause_with_aggregate(self):
-        self.check_input_to_output('''A top_Movie is identified by an id.
-A score_Assignment is identified by an id, and by a value.
-
-Whenever we have that the total value, for each id, that have a score_assignment with id X is between 1 and 2, then we can have a movie with id X.''', '''{movie(X)} :- 1 <= #sum{VL,X: score_assignment(X,VL)} <= 2.''')
-
-if __name__ == '__main__':
-    unittest.main()

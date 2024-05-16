@@ -136,7 +136,10 @@ class CNLTransformer(Transformer):
         return [AttributeComponent(name.strip(), ValueComponent(Utility.NULL_VALUE), origin)]
 
     def temporal_concept_definition(self, elem):
-        return TemporalEntityComponent(elem[0], '', elem[2], elem[3], elem[4], elem[1])
+        temporal = TemporalEntityComponent(elem[0], '', elem[2], elem[3], elem[4], elem[1])
+        self._proposition.add_new_knowledge(NewKnowledgeComponent(temporal))
+        self._problem.add_propositions(self._proposition.get_propositions())
+        return temporal
 
     def temporal_value(self, elem):
         if len(elem) == 1:
