@@ -1,0 +1,29 @@
+telingo version 2.1.1
+Reading from encoding.lp
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+ State 0:
+  gun("unloaded")
+  shooter(1)
+ State 1:
+  gun("shooting") gun("unloaded")
+  shooter(1)
+ State 2:
+  gun("broken") gun("shooting") gun("unloaded")
+  shooter(1)
+ State 3:
+  gun("broken") gun("loaded") gun("loading")
+  shooter(1)
+ State 4:
+  gun("broken") gun("loaded") gun("shooting")
+  shooter(1)
+SATISFIABLE
+
+Models       : 1+
+Calls        : 5
+Time         : 0.008s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 0.008s

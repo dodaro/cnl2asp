@@ -1,0 +1,56 @@
+telingo version 2.1.1
+Reading from original/encoding.lp
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+ State 0:
+ State 1:
+  load(1,truck(1)) load(2,truck(1)) load(3,truck(1)) load(4,truck(1)) load(5,truck(1))
+ State 2:
+  move(truck(1),airport(1)) move(truck(3),airport(3))
+ State 3:
+  unload(1,truck(1)) unload(2,truck(1)) unload(3,truck(1)) unload(4,truck(1)) unload(5,truck(1))
+ State 4:
+  load(1,plane1) load(2,plane2) load(3,plane2) load(4,plane1) load(5,plane2)
+ State 5:
+  move(plane1,airport(5)) move(plane2,airport(3))
+ State 6:
+  unload(2,plane2) unload(4,plane1)
+ State 7:
+  load(2,truck(3))
+  move(plane1,airport(2)) move(plane2,airport(6)) move(truck(5),airport(5))
+ State 8:
+  load(4,truck(5))
+  move(truck(6),airport(6))
+  unload(5,plane2)
+ State 9:
+  load(5,truck(6))
+  move(plane2,airport(4)) move(truck(5),central(5))
+ State 10:
+  move(truck(2),airport(2)) move(truck(3),po(3)) move(truck(4),airport(4)) move(truck(6),po(6))
+  unload(1,plane1) unload(3,plane2) unload(4,truck(5))
+ State 11:
+  load(1,truck(2)) load(3,truck(4)) load(4,truck(5))
+  unload(2,truck(3)) unload(5,truck(6))
+ State 12:
+  move(truck(2),po(2)) move(truck(4),po(4)) move(truck(5),po(5))
+ State 13:
+  unload(1,truck(2)) unload(3,truck(4)) unload(4,truck(5))
+SATISFIABLE
+
+Models       : 1+
+Calls        : 14
+Time         : 0.164s (Solving: 0.06s 1st Model: 0.01s Unsat: 0.05s)
+CPU Time     : 0.164s

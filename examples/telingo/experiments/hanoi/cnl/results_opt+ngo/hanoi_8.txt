@@ -1,0 +1,2310 @@
+telingo version 2.1.1
+Reading from cnl/encoding_opt+ngo.lp
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+ State 0:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  peg(1) peg(2) peg(3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,1) on(6,1) on(7,1) on(8,1)
+ State 1:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(1,1) blocked_in(2,1) blocked_in(3,1) blocked_in(4,1) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,1) on(6,1) on(7,1) on(8,2)
+ State 2:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,1) on(6,1) on(7,3) on(8,2)
+ State 3:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,1) on(6,1) on(7,3) on(8,3)
+ State 4:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,2)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,1) on(6,2) on(7,3) on(8,3)
+ State 5:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,1) on(6,2) on(7,3) on(8,1)
+ State 6:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,1) on(6,2) on(7,2) on(8,1)
+ State 7:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,1) on(6,2) on(7,2) on(8,2)
+ State 8:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,3)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,3) on(6,2) on(7,2) on(8,2)
+ State 9:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,3) on(6,2) on(7,2) on(8,3)
+ State 10:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,3) on(6,2) on(7,1) on(8,3)
+ State 11:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,3) on(6,2) on(7,1) on(8,1)
+ State 12:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,3)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,3) on(6,3) on(7,1) on(8,1)
+ State 13:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,3) on(6,3) on(7,1) on(8,2)
+ State 14:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,3) on(6,3) on(7,3) on(8,2)
+ State 15:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,1) on(3,1) on(4,1) on(5,3) on(6,3) on(7,3) on(8,3)
+ State 16:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(4)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(4,2)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,3) on(6,3) on(7,3) on(8,3)
+ State 17:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,3) on(6,3) on(7,3) on(8,1)
+ State 18:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,3) on(6,3) on(7,2) on(8,1)
+ State 19:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,3) on(6,3) on(7,2) on(8,2)
+ State 20:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,1)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,3) on(6,1) on(7,2) on(8,2)
+ State 21:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,3) on(6,1) on(7,2) on(8,3)
+ State 22:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,3) on(6,1) on(7,1) on(8,3)
+ State 23:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,3) on(6,1) on(7,1) on(8,1)
+ State 24:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,2)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,2) on(6,1) on(7,1) on(8,1)
+ State 25:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,2) on(6,1) on(7,1) on(8,2)
+ State 26:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,2) on(6,1) on(7,3) on(8,2)
+ State 27:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,2) on(6,1) on(7,3) on(8,3)
+ State 28:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,2)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,2) on(6,2) on(7,3) on(8,3)
+ State 29:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,2) on(6,2) on(7,3) on(8,1)
+ State 30:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,2) on(6,2) on(7,2) on(8,1)
+ State 31:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,1) on(3,1) on(4,2) on(5,2) on(6,2) on(7,2) on(8,2)
+ State 32:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(3)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,2) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(3,3)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,2) on(6,2) on(7,2) on(8,2)
+ State 33:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,2) on(6,2) on(7,2) on(8,3)
+ State 34:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,2) on(6,2) on(7,1) on(8,3)
+ State 35:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,2) on(6,2) on(7,1) on(8,1)
+ State 36:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,3)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,2) on(6,3) on(7,1) on(8,1)
+ State 37:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,2) on(6,3) on(7,1) on(8,2)
+ State 38:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,2) on(6,3) on(7,3) on(8,2)
+ State 39:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,2) on(6,3) on(7,3) on(8,3)
+ State 40:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,1)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,1) on(6,3) on(7,3) on(8,3)
+ State 41:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,1) on(6,3) on(7,3) on(8,1)
+ State 42:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,1) on(6,3) on(7,2) on(8,1)
+ State 43:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,1) on(6,3) on(7,2) on(8,2)
+ State 44:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,1)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,1) on(6,1) on(7,2) on(8,2)
+ State 45:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,1) on(6,1) on(7,2) on(8,3)
+ State 46:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,1) on(6,1) on(7,1) on(8,3)
+ State 47:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,1) on(3,3) on(4,2) on(5,1) on(6,1) on(7,1) on(8,1)
+ State 48:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(4)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(4,3)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,1) on(6,1) on(7,1) on(8,1)
+ State 49:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,1) on(6,1) on(7,1) on(8,2)
+ State 50:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,1) on(6,1) on(7,3) on(8,2)
+ State 51:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,1) on(6,1) on(7,3) on(8,3)
+ State 52:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,2)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,1) on(6,2) on(7,3) on(8,3)
+ State 53:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,1) on(6,2) on(7,3) on(8,1)
+ State 54:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,1) on(6,2) on(7,2) on(8,1)
+ State 55:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,1) on(6,2) on(7,2) on(8,2)
+ State 56:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,3)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,3) on(6,2) on(7,2) on(8,2)
+ State 57:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,3) on(6,2) on(7,2) on(8,3)
+ State 58:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,3) on(6,2) on(7,1) on(8,3)
+ State 59:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,3) on(6,2) on(7,1) on(8,1)
+ State 60:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,3)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,3) on(6,3) on(7,1) on(8,1)
+ State 61:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,3) on(6,3) on(7,1) on(8,2)
+ State 62:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,3) on(6,3) on(7,3) on(8,2)
+ State 63:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,1) on(3,3) on(4,3) on(5,3) on(6,3) on(7,3) on(8,3)
+ State 64:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(2)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,3) blocked_in(3,3) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(2,2)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,3) on(6,3) on(7,3) on(8,3)
+ State 65:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,3) blocked_in(3,3) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,3) on(6,3) on(7,3) on(8,1)
+ State 66:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,3) on(6,3) on(7,2) on(8,1)
+ State 67:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,3) on(6,3) on(7,2) on(8,2)
+ State 68:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,1)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,3) on(6,1) on(7,2) on(8,2)
+ State 69:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,3) on(6,1) on(7,2) on(8,3)
+ State 70:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,3) on(6,1) on(7,1) on(8,3)
+ State 71:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,3) on(6,1) on(7,1) on(8,1)
+ State 72:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,2)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,2) on(6,1) on(7,1) on(8,1)
+ State 73:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,2) on(6,1) on(7,1) on(8,2)
+ State 74:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,2) on(6,1) on(7,3) on(8,2)
+ State 75:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,2) on(6,1) on(7,3) on(8,3)
+ State 76:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,2)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,2) on(6,2) on(7,3) on(8,3)
+ State 77:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,2) on(6,2) on(7,3) on(8,1)
+ State 78:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,2) on(6,2) on(7,2) on(8,1)
+ State 79:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,2) on(3,3) on(4,3) on(5,2) on(6,2) on(7,2) on(8,2)
+ State 80:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(4)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(4,1)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,2) on(6,2) on(7,2) on(8,2)
+ State 81:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,2) on(6,2) on(7,2) on(8,3)
+ State 82:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,2) on(6,2) on(7,1) on(8,3)
+ State 83:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,2) on(6,2) on(7,1) on(8,1)
+ State 84:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,3)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,2) on(6,3) on(7,1) on(8,1)
+ State 85:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,2) on(6,3) on(7,1) on(8,2)
+ State 86:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,2) on(6,3) on(7,3) on(8,2)
+ State 87:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,2) on(6,3) on(7,3) on(8,3)
+ State 88:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,1)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,1) on(6,3) on(7,3) on(8,3)
+ State 89:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,1) on(6,3) on(7,3) on(8,1)
+ State 90:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,1) on(6,3) on(7,2) on(8,1)
+ State 91:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,1) on(6,3) on(7,2) on(8,2)
+ State 92:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,1)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,1) on(6,1) on(7,2) on(8,2)
+ State 93:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,1) on(6,1) on(7,2) on(8,3)
+ State 94:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,1) on(6,1) on(7,1) on(8,3)
+ State 95:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,2) on(3,3) on(4,1) on(5,1) on(6,1) on(7,1) on(8,1)
+ State 96:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(3)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(4,1) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(3,2)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,1) on(6,1) on(7,1) on(8,1)
+ State 97:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(4,1) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,1) on(6,1) on(7,1) on(8,2)
+ State 98:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,1) on(6,1) on(7,3) on(8,2)
+ State 99:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,1) on(6,1) on(7,3) on(8,3)
+ State 100:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,2)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,1) on(6,2) on(7,3) on(8,3)
+ State 101:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,1) on(6,2) on(7,3) on(8,1)
+ State 102:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,1) on(6,2) on(7,2) on(8,1)
+ State 103:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,1) on(6,2) on(7,2) on(8,2)
+ State 104:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,3)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,3) on(6,2) on(7,2) on(8,2)
+ State 105:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,3) on(6,2) on(7,2) on(8,3)
+ State 106:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,3) on(6,2) on(7,1) on(8,3)
+ State 107:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,3) on(6,2) on(7,1) on(8,1)
+ State 108:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,3)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,3) on(6,3) on(7,1) on(8,1)
+ State 109:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,3) on(6,3) on(7,1) on(8,2)
+ State 110:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,3) on(6,3) on(7,3) on(8,2)
+ State 111:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,2) on(3,2) on(4,1) on(5,3) on(6,3) on(7,3) on(8,3)
+ State 112:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(4)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(4,2)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,3) on(6,3) on(7,3) on(8,3)
+ State 113:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,3) on(6,3) on(7,3) on(8,1)
+ State 114:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,3) on(6,3) on(7,2) on(8,1)
+ State 115:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,3) on(6,3) on(7,2) on(8,2)
+ State 116:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,1)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,3) on(6,1) on(7,2) on(8,2)
+ State 117:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,3) on(6,1) on(7,2) on(8,3)
+ State 118:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,3) on(6,1) on(7,1) on(8,3)
+ State 119:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,3) on(6,1) on(7,1) on(8,1)
+ State 120:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,2)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,2) on(6,1) on(7,1) on(8,1)
+ State 121:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,2) on(6,1) on(7,1) on(8,2)
+ State 122:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,2) on(6,1) on(7,3) on(8,2)
+ State 123:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,2) on(6,1) on(7,3) on(8,3)
+ State 124:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,2)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,2) on(6,2) on(7,3) on(8,3)
+ State 125:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,2) on(6,2) on(7,3) on(8,1)
+ State 126:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,2) on(6,2) on(7,2) on(8,1)
+ State 127:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,1) on(2,2) on(3,2) on(4,2) on(5,2) on(6,2) on(7,2) on(8,2)
+ State 128:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(1)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(1,2) blocked_in(2,2) blocked_in(3,2) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(1,3)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,2) on(6,2) on(7,2) on(8,2)
+ State 129:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(2,2) blocked_in(3,2) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,2) on(6,2) on(7,2) on(8,3)
+ State 130:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,2) on(6,2) on(7,1) on(8,3)
+ State 131:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,2) on(6,2) on(7,1) on(8,1)
+ State 132:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,3)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,2) on(6,3) on(7,1) on(8,1)
+ State 133:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,2) on(6,3) on(7,1) on(8,2)
+ State 134:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,2) on(6,3) on(7,3) on(8,2)
+ State 135:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,2) on(6,3) on(7,3) on(8,3)
+ State 136:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,1)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,1) on(6,3) on(7,3) on(8,3)
+ State 137:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,1) on(6,3) on(7,3) on(8,1)
+ State 138:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,1) on(6,3) on(7,2) on(8,1)
+ State 139:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,1) on(6,3) on(7,2) on(8,2)
+ State 140:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,1)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,1) on(6,1) on(7,2) on(8,2)
+ State 141:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,1) on(6,1) on(7,2) on(8,3)
+ State 142:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,1) on(6,1) on(7,1) on(8,3)
+ State 143:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,2) on(3,2) on(4,2) on(5,1) on(6,1) on(7,1) on(8,1)
+ State 144:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(4)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(4,3)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,1) on(6,1) on(7,1) on(8,1)
+ State 145:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,1) on(6,1) on(7,1) on(8,2)
+ State 146:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,1) on(6,1) on(7,3) on(8,2)
+ State 147:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,1) on(6,1) on(7,3) on(8,3)
+ State 148:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,2)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,1) on(6,2) on(7,3) on(8,3)
+ State 149:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,1) on(6,2) on(7,3) on(8,1)
+ State 150:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,1) on(6,2) on(7,2) on(8,1)
+ State 151:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,1) on(6,2) on(7,2) on(8,2)
+ State 152:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,3)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,3) on(6,2) on(7,2) on(8,2)
+ State 153:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,3) on(6,2) on(7,2) on(8,3)
+ State 154:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,3) on(6,2) on(7,1) on(8,3)
+ State 155:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,3) on(6,2) on(7,1) on(8,1)
+ State 156:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,3)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,3) on(6,3) on(7,1) on(8,1)
+ State 157:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,3) on(6,3) on(7,1) on(8,2)
+ State 158:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,3) on(6,3) on(7,3) on(8,2)
+ State 159:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,2) on(3,2) on(4,3) on(5,3) on(6,3) on(7,3) on(8,3)
+ State 160:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(3)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,3) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(3,1)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,3) on(6,3) on(7,3) on(8,3)
+ State 161:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,3) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,3) on(6,3) on(7,3) on(8,1)
+ State 162:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,3) on(6,3) on(7,2) on(8,1)
+ State 163:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,3) on(6,3) on(7,2) on(8,2)
+ State 164:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,1)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,3) on(6,1) on(7,2) on(8,2)
+ State 165:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,3) on(6,1) on(7,2) on(8,3)
+ State 166:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,3) on(6,1) on(7,1) on(8,3)
+ State 167:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,3) on(6,1) on(7,1) on(8,1)
+ State 168:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,2)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,2) on(6,1) on(7,1) on(8,1)
+ State 169:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,2) on(6,1) on(7,1) on(8,2)
+ State 170:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,2) on(6,1) on(7,3) on(8,2)
+ State 171:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,2) on(6,1) on(7,3) on(8,3)
+ State 172:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,2)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,2) on(6,2) on(7,3) on(8,3)
+ State 173:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,2) on(6,2) on(7,3) on(8,1)
+ State 174:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,2) on(6,2) on(7,2) on(8,1)
+ State 175:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,2) on(3,1) on(4,3) on(5,2) on(6,2) on(7,2) on(8,2)
+ State 176:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(4)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(4,1)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,2) on(6,2) on(7,2) on(8,2)
+ State 177:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,2) on(6,2) on(7,2) on(8,3)
+ State 178:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,2) on(6,2) on(7,1) on(8,3)
+ State 179:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,2) on(6,2) on(7,1) on(8,1)
+ State 180:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,3)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,2) on(6,3) on(7,1) on(8,1)
+ State 181:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,2) on(6,3) on(7,1) on(8,2)
+ State 182:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,2) on(6,3) on(7,3) on(8,2)
+ State 183:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,2) on(6,3) on(7,3) on(8,3)
+ State 184:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,1)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,1) on(6,3) on(7,3) on(8,3)
+ State 185:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,1) on(6,3) on(7,3) on(8,1)
+ State 186:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,1) on(6,3) on(7,2) on(8,1)
+ State 187:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,1) on(6,3) on(7,2) on(8,2)
+ State 188:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,1)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,1) on(6,1) on(7,2) on(8,2)
+ State 189:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,1) on(6,1) on(7,2) on(8,3)
+ State 190:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,1) on(6,1) on(7,1) on(8,3)
+ State 191:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,2) on(3,1) on(4,1) on(5,1) on(6,1) on(7,1) on(8,1)
+ State 192:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(2)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(2,1) blocked_in(3,1) blocked_in(4,1) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(2,3)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,1) on(6,1) on(7,1) on(8,1)
+ State 193:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,1) blocked_in(3,1) blocked_in(4,1) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,1) on(6,1) on(7,1) on(8,2)
+ State 194:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,1) on(6,1) on(7,3) on(8,2)
+ State 195:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,1) on(6,1) on(7,3) on(8,3)
+ State 196:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,2)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,1) on(6,2) on(7,3) on(8,3)
+ State 197:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,1) on(6,2) on(7,3) on(8,1)
+ State 198:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,1) on(6,2) on(7,2) on(8,1)
+ State 199:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,1) on(6,2) on(7,2) on(8,2)
+ State 200:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,3)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,3) on(6,2) on(7,2) on(8,2)
+ State 201:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,3) on(6,2) on(7,2) on(8,3)
+ State 202:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,3) on(6,2) on(7,1) on(8,3)
+ State 203:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,3) on(6,2) on(7,1) on(8,1)
+ State 204:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,3)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,3) on(6,3) on(7,1) on(8,1)
+ State 205:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,3) on(6,3) on(7,1) on(8,2)
+ State 206:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,3) on(6,3) on(7,3) on(8,2)
+ State 207:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,3) on(3,1) on(4,1) on(5,3) on(6,3) on(7,3) on(8,3)
+ State 208:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(4)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(4,2)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,3) on(6,3) on(7,3) on(8,3)
+ State 209:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,3) on(6,3) on(7,3) on(8,1)
+ State 210:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,3) on(6,3) on(7,2) on(8,1)
+ State 211:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,3) on(6,3) on(7,2) on(8,2)
+ State 212:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,1)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,3) on(6,1) on(7,2) on(8,2)
+ State 213:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,3) on(6,1) on(7,2) on(8,3)
+ State 214:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,3) on(6,1) on(7,1) on(8,3)
+ State 215:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,3) on(6,1) on(7,1) on(8,1)
+ State 216:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,2)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,2) on(6,1) on(7,1) on(8,1)
+ State 217:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,2) on(6,1) on(7,1) on(8,2)
+ State 218:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,2) on(6,1) on(7,3) on(8,2)
+ State 219:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,2) on(6,1) on(7,3) on(8,3)
+ State 220:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,2)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,2) on(6,2) on(7,3) on(8,3)
+ State 221:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,2) on(6,2) on(7,3) on(8,1)
+ State 222:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,2) on(6,2) on(7,2) on(8,1)
+ State 223:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,3) on(3,1) on(4,2) on(5,2) on(6,2) on(7,2) on(8,2)
+ State 224:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(3)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(3,2) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(3,3)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,2) on(6,2) on(7,2) on(8,2)
+ State 225:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,2) on(6,2) on(7,2) on(8,3)
+ State 226:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,2) on(6,2) on(7,1) on(8,3)
+ State 227:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,2) on(6,2) on(7,1) on(8,1)
+ State 228:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,3)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,2) on(6,3) on(7,1) on(8,1)
+ State 229:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,2) on(6,3) on(7,1) on(8,2)
+ State 230:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,2) on(6,3) on(7,3) on(8,2)
+ State 231:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,2) on(6,3) on(7,3) on(8,3)
+ State 232:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,1)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,1) on(6,3) on(7,3) on(8,3)
+ State 233:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,1) on(6,3) on(7,3) on(8,1)
+ State 234:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,1) on(6,3) on(7,2) on(8,1)
+ State 235:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,1) on(6,3) on(7,2) on(8,2)
+ State 236:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,1)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,1) on(6,1) on(7,2) on(8,2)
+ State 237:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,1) on(6,1) on(7,2) on(8,3)
+ State 238:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,1) on(6,1) on(7,1) on(8,3)
+ State 239:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,3) on(3,3) on(4,2) on(5,1) on(6,1) on(7,1) on(8,1)
+ State 240:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(4)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(4,1) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(4,3)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,1) on(6,1) on(7,1) on(8,1)
+ State 241:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(5,1) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,1) on(6,1) on(7,1) on(8,2)
+ State 242:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,1) on(6,1) on(7,3) on(8,2)
+ State 243:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,1) on(6,1) on(7,3) on(8,3)
+ State 244:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,2)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,1) on(6,2) on(7,3) on(8,3)
+ State 245:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,1) on(6,2) on(7,3) on(8,1)
+ State 246:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,2)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,1) on(6,2) on(7,2) on(8,1)
+ State 247:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(6,2) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,1) on(6,2) on(7,2) on(8,2)
+ State 248:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(5)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(5,3)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,3) on(6,2) on(7,2) on(8,2)
+ State 249:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,3) on(6,2) on(7,2) on(8,3)
+ State 250:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,1)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,3) on(6,2) on(7,1) on(8,3)
+ State 251:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,3) blocked_in(7,3)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,1)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,3) on(6,2) on(7,1) on(8,1)
+ State 252:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(6)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(6,3)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,3) on(6,3) on(7,1) on(8,1)
+ State 253:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,3) blocked_in(1,1) blocked_in(1,3) blocked_in(2,1) blocked_in(2,3) blocked_in(3,1) blocked_in(3,3) blocked_in(4,1) blocked_in(4,3) blocked_in(5,1) blocked_in(5,3) blocked_in(6,1) blocked_in(7,1)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,2)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,3) on(6,3) on(7,1) on(8,2)
+ State 254:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(7)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,1) blocked_in(0,2) blocked_in(0,3) blocked_in(1,1) blocked_in(1,2) blocked_in(1,3) blocked_in(2,1) blocked_in(2,2) blocked_in(2,3) blocked_in(3,1) blocked_in(3,2) blocked_in(3,3) blocked_in(4,1) blocked_in(4,2) blocked_in(4,3) blocked_in(5,1) blocked_in(5,2) blocked_in(5,3) blocked_in(6,1) blocked_in(6,2) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(7,3)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,3) on(6,3) on(7,3) on(8,2)
+ State 255:
+  disk(0) disk(1) disk(2) disk(3) disk(4) disk(5) disk(6) disk(7) disk(8)
+  moved(8)
+  peg(1) peg(2) peg(3)
+  blocked_in(0,2) blocked_in(0,3) blocked_in(1,2) blocked_in(1,3) blocked_in(2,2) blocked_in(2,3) blocked_in(3,2) blocked_in(3,3) blocked_in(4,2) blocked_in(4,3) blocked_in(5,2) blocked_in(5,3) blocked_in(6,2) blocked_in(6,3) blocked_in(7,2)
+  goal(1,3) goal(2,3) goal(3,3) goal(4,3) goal(5,3) goal(6,3) goal(7,3) goal(8,3)
+  moved_to(8,3)
+  on(1,3) on(2,3) on(3,3) on(4,3) on(5,3) on(6,3) on(7,3) on(8,3)
+SATISFIABLE
+
+Models       : 1+
+Calls        : 256
+Time         : 46.414s (Solving: 41.27s 1st Model: 0.36s Unsat: 40.68s)
+CPU Time     : 46.403s

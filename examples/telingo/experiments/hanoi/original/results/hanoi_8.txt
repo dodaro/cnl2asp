@@ -1,0 +1,1032 @@
+telingo version 2.1.1
+Reading from original/encoding.lp ...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+ State 0:
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,a) on(6,a) on(7,a) on(8,a)
+ State 1:
+  move(8,b)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,a) on(6,a) on(7,a) on(8,b)
+ State 2:
+  move(7,c)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,a) on(6,a) on(7,c) on(8,b)
+ State 3:
+  move(8,c)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,a) on(6,a) on(7,c) on(8,c)
+ State 4:
+  move(6,b)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,a) on(6,b) on(7,c) on(8,c)
+ State 5:
+  move(8,a)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,a) on(6,b) on(7,c) on(8,a)
+ State 6:
+  move(7,b)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,a) on(6,b) on(7,b) on(8,a)
+ State 7:
+  move(8,b)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,a) on(6,b) on(7,b) on(8,b)
+ State 8:
+  move(5,c)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,c) on(6,b) on(7,b) on(8,b)
+ State 9:
+  move(8,c)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,c) on(6,b) on(7,b) on(8,c)
+ State 10:
+  move(7,a)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,c) on(6,b) on(7,a) on(8,c)
+ State 11:
+  move(8,a)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,c) on(6,b) on(7,a) on(8,a)
+ State 12:
+  move(6,c)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,c) on(6,c) on(7,a) on(8,a)
+ State 13:
+  move(8,b)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,c) on(6,c) on(7,a) on(8,b)
+ State 14:
+  move(7,c)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,c) on(6,c) on(7,c) on(8,b)
+ State 15:
+  move(8,c)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,c) on(6,c) on(7,c) on(8,c)
+ State 16:
+  move(4,b)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,c) on(6,c) on(7,c) on(8,c)
+ State 17:
+  move(8,a)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,c) on(6,c) on(7,c) on(8,a)
+ State 18:
+  move(7,b)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,c) on(6,c) on(7,b) on(8,a)
+ State 19:
+  move(8,b)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,c) on(6,c) on(7,b) on(8,b)
+ State 20:
+  move(6,a)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,c) on(6,a) on(7,b) on(8,b)
+ State 21:
+  move(8,c)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,c) on(6,a) on(7,b) on(8,c)
+ State 22:
+  move(7,a)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,c) on(6,a) on(7,a) on(8,c)
+ State 23:
+  move(8,a)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,c) on(6,a) on(7,a) on(8,a)
+ State 24:
+  move(5,b)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,b) on(6,a) on(7,a) on(8,a)
+ State 25:
+  move(8,b)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,b) on(6,a) on(7,a) on(8,b)
+ State 26:
+  move(7,c)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,b) on(6,a) on(7,c) on(8,b)
+ State 27:
+  move(8,c)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,b) on(6,a) on(7,c) on(8,c)
+ State 28:
+  move(6,b)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,b) on(6,b) on(7,c) on(8,c)
+ State 29:
+  move(8,a)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,b) on(6,b) on(7,c) on(8,a)
+ State 30:
+  move(7,b)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,b) on(6,b) on(7,b) on(8,a)
+ State 31:
+  move(8,b)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,b) on(6,b) on(7,b) on(8,b)
+ State 32:
+  move(3,c)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,b) on(6,b) on(7,b) on(8,b)
+ State 33:
+  move(8,c)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,b) on(6,b) on(7,b) on(8,c)
+ State 34:
+  move(7,a)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,b) on(6,b) on(7,a) on(8,c)
+ State 35:
+  move(8,a)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,b) on(6,b) on(7,a) on(8,a)
+ State 36:
+  move(6,c)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,b) on(6,c) on(7,a) on(8,a)
+ State 37:
+  move(8,b)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,b) on(6,c) on(7,a) on(8,b)
+ State 38:
+  move(7,c)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,b) on(6,c) on(7,c) on(8,b)
+ State 39:
+  move(8,c)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,b) on(6,c) on(7,c) on(8,c)
+ State 40:
+  move(5,a)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,a) on(6,c) on(7,c) on(8,c)
+ State 41:
+  move(8,a)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,a) on(6,c) on(7,c) on(8,a)
+ State 42:
+  move(7,b)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,a) on(6,c) on(7,b) on(8,a)
+ State 43:
+  move(8,b)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,a) on(6,c) on(7,b) on(8,b)
+ State 44:
+  move(6,a)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,a) on(6,a) on(7,b) on(8,b)
+ State 45:
+  move(8,c)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,a) on(6,a) on(7,b) on(8,c)
+ State 46:
+  move(7,a)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,a) on(6,a) on(7,a) on(8,c)
+ State 47:
+  move(8,a)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,a) on(6,a) on(7,a) on(8,a)
+ State 48:
+  move(4,c)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,a) on(6,a) on(7,a) on(8,a)
+ State 49:
+  move(8,b)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,a) on(6,a) on(7,a) on(8,b)
+ State 50:
+  move(7,c)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,a) on(6,a) on(7,c) on(8,b)
+ State 51:
+  move(8,c)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,a) on(6,a) on(7,c) on(8,c)
+ State 52:
+  move(6,b)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,a) on(6,b) on(7,c) on(8,c)
+ State 53:
+  move(8,a)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,a) on(6,b) on(7,c) on(8,a)
+ State 54:
+  move(7,b)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,a) on(6,b) on(7,b) on(8,a)
+ State 55:
+  move(8,b)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,a) on(6,b) on(7,b) on(8,b)
+ State 56:
+  move(5,c)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,c) on(6,b) on(7,b) on(8,b)
+ State 57:
+  move(8,c)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,c) on(6,b) on(7,b) on(8,c)
+ State 58:
+  move(7,a)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,c) on(6,b) on(7,a) on(8,c)
+ State 59:
+  move(8,a)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,c) on(6,b) on(7,a) on(8,a)
+ State 60:
+  move(6,c)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,c) on(6,c) on(7,a) on(8,a)
+ State 61:
+  move(8,b)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,c) on(6,c) on(7,a) on(8,b)
+ State 62:
+  move(7,c)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,c) on(6,c) on(7,c) on(8,b)
+ State 63:
+  move(8,c)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,c) on(6,c) on(7,c) on(8,c)
+ State 64:
+  move(2,b)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,c) on(6,c) on(7,c) on(8,c)
+ State 65:
+  move(8,a)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,c) on(6,c) on(7,c) on(8,a)
+ State 66:
+  move(7,b)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,c) on(6,c) on(7,b) on(8,a)
+ State 67:
+  move(8,b)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,c) on(6,c) on(7,b) on(8,b)
+ State 68:
+  move(6,a)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,c) on(6,a) on(7,b) on(8,b)
+ State 69:
+  move(8,c)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,c) on(6,a) on(7,b) on(8,c)
+ State 70:
+  move(7,a)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,c) on(6,a) on(7,a) on(8,c)
+ State 71:
+  move(8,a)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,c) on(6,a) on(7,a) on(8,a)
+ State 72:
+  move(5,b)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,b) on(6,a) on(7,a) on(8,a)
+ State 73:
+  move(8,b)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,b) on(6,a) on(7,a) on(8,b)
+ State 74:
+  move(7,c)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,b) on(6,a) on(7,c) on(8,b)
+ State 75:
+  move(8,c)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,b) on(6,a) on(7,c) on(8,c)
+ State 76:
+  move(6,b)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,b) on(6,b) on(7,c) on(8,c)
+ State 77:
+  move(8,a)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,b) on(6,b) on(7,c) on(8,a)
+ State 78:
+  move(7,b)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,b) on(6,b) on(7,b) on(8,a)
+ State 79:
+  move(8,b)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,b) on(6,b) on(7,b) on(8,b)
+ State 80:
+  move(4,a)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,b) on(6,b) on(7,b) on(8,b)
+ State 81:
+  move(8,c)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,b) on(6,b) on(7,b) on(8,c)
+ State 82:
+  move(7,a)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,b) on(6,b) on(7,a) on(8,c)
+ State 83:
+  move(8,a)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,b) on(6,b) on(7,a) on(8,a)
+ State 84:
+  move(6,c)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,b) on(6,c) on(7,a) on(8,a)
+ State 85:
+  move(8,b)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,b) on(6,c) on(7,a) on(8,b)
+ State 86:
+  move(7,c)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,b) on(6,c) on(7,c) on(8,b)
+ State 87:
+  move(8,c)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,b) on(6,c) on(7,c) on(8,c)
+ State 88:
+  move(5,a)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,a) on(6,c) on(7,c) on(8,c)
+ State 89:
+  move(8,a)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,a) on(6,c) on(7,c) on(8,a)
+ State 90:
+  move(7,b)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,a) on(6,c) on(7,b) on(8,a)
+ State 91:
+  move(8,b)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,a) on(6,c) on(7,b) on(8,b)
+ State 92:
+  move(6,a)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,a) on(6,a) on(7,b) on(8,b)
+ State 93:
+  move(8,c)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,a) on(6,a) on(7,b) on(8,c)
+ State 94:
+  move(7,a)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,a) on(6,a) on(7,a) on(8,c)
+ State 95:
+  move(8,a)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,a) on(6,a) on(7,a) on(8,a)
+ State 96:
+  move(3,b)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,a) on(6,a) on(7,a) on(8,a)
+ State 97:
+  move(8,b)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,a) on(6,a) on(7,a) on(8,b)
+ State 98:
+  move(7,c)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,a) on(6,a) on(7,c) on(8,b)
+ State 99:
+  move(8,c)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,a) on(6,a) on(7,c) on(8,c)
+ State 100:
+  move(6,b)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,a) on(6,b) on(7,c) on(8,c)
+ State 101:
+  move(8,a)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,a) on(6,b) on(7,c) on(8,a)
+ State 102:
+  move(7,b)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,a) on(6,b) on(7,b) on(8,a)
+ State 103:
+  move(8,b)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,a) on(6,b) on(7,b) on(8,b)
+ State 104:
+  move(5,c)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,c) on(6,b) on(7,b) on(8,b)
+ State 105:
+  move(8,c)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,c) on(6,b) on(7,b) on(8,c)
+ State 106:
+  move(7,a)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,c) on(6,b) on(7,a) on(8,c)
+ State 107:
+  move(8,a)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,c) on(6,b) on(7,a) on(8,a)
+ State 108:
+  move(6,c)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,c) on(6,c) on(7,a) on(8,a)
+ State 109:
+  move(8,b)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,c) on(6,c) on(7,a) on(8,b)
+ State 110:
+  move(7,c)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,c) on(6,c) on(7,c) on(8,b)
+ State 111:
+  move(8,c)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,c) on(6,c) on(7,c) on(8,c)
+ State 112:
+  move(4,b)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,c) on(6,c) on(7,c) on(8,c)
+ State 113:
+  move(8,a)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,c) on(6,c) on(7,c) on(8,a)
+ State 114:
+  move(7,b)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,c) on(6,c) on(7,b) on(8,a)
+ State 115:
+  move(8,b)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,c) on(6,c) on(7,b) on(8,b)
+ State 116:
+  move(6,a)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,c) on(6,a) on(7,b) on(8,b)
+ State 117:
+  move(8,c)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,c) on(6,a) on(7,b) on(8,c)
+ State 118:
+  move(7,a)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,c) on(6,a) on(7,a) on(8,c)
+ State 119:
+  move(8,a)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,c) on(6,a) on(7,a) on(8,a)
+ State 120:
+  move(5,b)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,b) on(6,a) on(7,a) on(8,a)
+ State 121:
+  move(8,b)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,b) on(6,a) on(7,a) on(8,b)
+ State 122:
+  move(7,c)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,b) on(6,a) on(7,c) on(8,b)
+ State 123:
+  move(8,c)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,b) on(6,a) on(7,c) on(8,c)
+ State 124:
+  move(6,b)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,b) on(6,b) on(7,c) on(8,c)
+ State 125:
+  move(8,a)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,b) on(6,b) on(7,c) on(8,a)
+ State 126:
+  move(7,b)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,b) on(6,b) on(7,b) on(8,a)
+ State 127:
+  move(8,b)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,b) on(6,b) on(7,b) on(8,b)
+ State 128:
+  move(1,c)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,b) on(6,b) on(7,b) on(8,b)
+ State 129:
+  move(8,c)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,b) on(6,b) on(7,b) on(8,c)
+ State 130:
+  move(7,a)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,b) on(6,b) on(7,a) on(8,c)
+ State 131:
+  move(8,a)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,b) on(6,b) on(7,a) on(8,a)
+ State 132:
+  move(6,c)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,b) on(6,c) on(7,a) on(8,a)
+ State 133:
+  move(8,b)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,b) on(6,c) on(7,a) on(8,b)
+ State 134:
+  move(7,c)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,b) on(6,c) on(7,c) on(8,b)
+ State 135:
+  move(8,c)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,b) on(6,c) on(7,c) on(8,c)
+ State 136:
+  move(5,a)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,a) on(6,c) on(7,c) on(8,c)
+ State 137:
+  move(8,a)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,a) on(6,c) on(7,c) on(8,a)
+ State 138:
+  move(7,b)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,a) on(6,c) on(7,b) on(8,a)
+ State 139:
+  move(8,b)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,a) on(6,c) on(7,b) on(8,b)
+ State 140:
+  move(6,a)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,a) on(6,a) on(7,b) on(8,b)
+ State 141:
+  move(8,c)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,a) on(6,a) on(7,b) on(8,c)
+ State 142:
+  move(7,a)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,a) on(6,a) on(7,a) on(8,c)
+ State 143:
+  move(8,a)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,a) on(6,a) on(7,a) on(8,a)
+ State 144:
+  move(4,c)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,a) on(6,a) on(7,a) on(8,a)
+ State 145:
+  move(8,b)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,a) on(6,a) on(7,a) on(8,b)
+ State 146:
+  move(7,c)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,a) on(6,a) on(7,c) on(8,b)
+ State 147:
+  move(8,c)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,a) on(6,a) on(7,c) on(8,c)
+ State 148:
+  move(6,b)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,a) on(6,b) on(7,c) on(8,c)
+ State 149:
+  move(8,a)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,a) on(6,b) on(7,c) on(8,a)
+ State 150:
+  move(7,b)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,a) on(6,b) on(7,b) on(8,a)
+ State 151:
+  move(8,b)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,a) on(6,b) on(7,b) on(8,b)
+ State 152:
+  move(5,c)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,c) on(6,b) on(7,b) on(8,b)
+ State 153:
+  move(8,c)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,c) on(6,b) on(7,b) on(8,c)
+ State 154:
+  move(7,a)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,c) on(6,b) on(7,a) on(8,c)
+ State 155:
+  move(8,a)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,c) on(6,b) on(7,a) on(8,a)
+ State 156:
+  move(6,c)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,c) on(6,c) on(7,a) on(8,a)
+ State 157:
+  move(8,b)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,c) on(6,c) on(7,a) on(8,b)
+ State 158:
+  move(7,c)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,c) on(6,c) on(7,c) on(8,b)
+ State 159:
+  move(8,c)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,c) on(6,c) on(7,c) on(8,c)
+ State 160:
+  move(3,a)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,c) on(6,c) on(7,c) on(8,c)
+ State 161:
+  move(8,a)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,c) on(6,c) on(7,c) on(8,a)
+ State 162:
+  move(7,b)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,c) on(6,c) on(7,b) on(8,a)
+ State 163:
+  move(8,b)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,c) on(6,c) on(7,b) on(8,b)
+ State 164:
+  move(6,a)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,c) on(6,a) on(7,b) on(8,b)
+ State 165:
+  move(8,c)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,c) on(6,a) on(7,b) on(8,c)
+ State 166:
+  move(7,a)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,c) on(6,a) on(7,a) on(8,c)
+ State 167:
+  move(8,a)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,c) on(6,a) on(7,a) on(8,a)
+ State 168:
+  move(5,b)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,b) on(6,a) on(7,a) on(8,a)
+ State 169:
+  move(8,b)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,b) on(6,a) on(7,a) on(8,b)
+ State 170:
+  move(7,c)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,b) on(6,a) on(7,c) on(8,b)
+ State 171:
+  move(8,c)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,b) on(6,a) on(7,c) on(8,c)
+ State 172:
+  move(6,b)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,b) on(6,b) on(7,c) on(8,c)
+ State 173:
+  move(8,a)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,b) on(6,b) on(7,c) on(8,a)
+ State 174:
+  move(7,b)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,b) on(6,b) on(7,b) on(8,a)
+ State 175:
+  move(8,b)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,b) on(6,b) on(7,b) on(8,b)
+ State 176:
+  move(4,a)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,b) on(6,b) on(7,b) on(8,b)
+ State 177:
+  move(8,c)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,b) on(6,b) on(7,b) on(8,c)
+ State 178:
+  move(7,a)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,b) on(6,b) on(7,a) on(8,c)
+ State 179:
+  move(8,a)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,b) on(6,b) on(7,a) on(8,a)
+ State 180:
+  move(6,c)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,b) on(6,c) on(7,a) on(8,a)
+ State 181:
+  move(8,b)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,b) on(6,c) on(7,a) on(8,b)
+ State 182:
+  move(7,c)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,b) on(6,c) on(7,c) on(8,b)
+ State 183:
+  move(8,c)
+  on(1,c)SATISFIABLE
+
+Models       : 1+
+Calls        : 256
+Time         : 38.891s (Solving: 35.22s 1st Model: 0.04s Unsat: 35.14s)
+CPU Time     : 38.886s
+ on(2,b) on(3,a) on(4,a) on(5,b) on(6,c) on(7,c) on(8,c)
+ State 184:
+  move(5,a)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,a) on(6,c) on(7,c) on(8,c)
+ State 185:
+  move(8,a)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,a) on(6,c) on(7,c) on(8,a)
+ State 186:
+  move(7,b)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,a) on(6,c) on(7,b) on(8,a)
+ State 187:
+  move(8,b)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,a) on(6,c) on(7,b) on(8,b)
+ State 188:
+  move(6,a)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,a) on(6,a) on(7,b) on(8,b)
+ State 189:
+  move(8,c)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,a) on(6,a) on(7,b) on(8,c)
+ State 190:
+  move(7,a)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,a) on(6,a) on(7,a) on(8,c)
+ State 191:
+  move(8,a)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,a) on(6,a) on(7,a) on(8,a)
+ State 192:
+  move(2,c)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,a) on(6,a) on(7,a) on(8,a)
+ State 193:
+  move(8,b)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,a) on(6,a) on(7,a) on(8,b)
+ State 194:
+  move(7,c)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,a) on(6,a) on(7,c) on(8,b)
+ State 195:
+  move(8,c)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,a) on(6,a) on(7,c) on(8,c)
+ State 196:
+  move(6,b)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,a) on(6,b) on(7,c) on(8,c)
+ State 197:
+  move(8,a)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,a) on(6,b) on(7,c) on(8,a)
+ State 198:
+  move(7,b)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,a) on(6,b) on(7,b) on(8,a)
+ State 199:
+  move(8,b)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,a) on(6,b) on(7,b) on(8,b)
+ State 200:
+  move(5,c)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,c) on(6,b) on(7,b) on(8,b)
+ State 201:
+  move(8,c)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,c) on(6,b) on(7,b) on(8,c)
+ State 202:
+  move(7,a)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,c) on(6,b) on(7,a) on(8,c)
+ State 203:
+  move(8,a)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,c) on(6,b) on(7,a) on(8,a)
+ State 204:
+  move(6,c)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,c) on(6,c) on(7,a) on(8,a)
+ State 205:
+  move(8,b)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,c) on(6,c) on(7,a) on(8,b)
+ State 206:
+  move(7,c)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,c) on(6,c) on(7,c) on(8,b)
+ State 207:
+  move(8,c)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,c) on(6,c) on(7,c) on(8,c)
+ State 208:
+  move(4,b)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,c) on(6,c) on(7,c) on(8,c)
+ State 209:
+  move(8,a)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,c) on(6,c) on(7,c) on(8,a)
+ State 210:
+  move(7,b)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,c) on(6,c) on(7,b) on(8,a)
+ State 211:
+  move(8,b)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,c) on(6,c) on(7,b) on(8,b)
+ State 212:
+  move(6,a)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,c) on(6,a) on(7,b) on(8,b)
+ State 213:
+  move(8,c)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,c) on(6,a) on(7,b) on(8,c)
+ State 214:
+  move(7,a)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,c) on(6,a) on(7,a) on(8,c)
+ State 215:
+  move(8,a)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,c) on(6,a) on(7,a) on(8,a)
+ State 216:
+  move(5,b)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,b) on(6,a) on(7,a) on(8,a)
+ State 217:
+  move(8,b)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,b) on(6,a) on(7,a) on(8,b)
+ State 218:
+  move(7,c)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,b) on(6,a) on(7,c) on(8,b)
+ State 219:
+  move(8,c)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,b) on(6,a) on(7,c) on(8,c)
+ State 220:
+  move(6,b)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,b) on(6,b) on(7,c) on(8,c)
+ State 221:
+  move(8,a)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,b) on(6,b) on(7,c) on(8,a)
+ State 222:
+  move(7,b)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,b) on(6,b) on(7,b) on(8,a)
+ State 223:
+  move(8,b)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,b) on(6,b) on(7,b) on(8,b)
+ State 224:
+  move(3,c)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,b) on(6,b) on(7,b) on(8,b)
+ State 225:
+  move(8,c)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,b) on(6,b) on(7,b) on(8,c)
+ State 226:
+  move(7,a)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,b) on(6,b) on(7,a) on(8,c)
+ State 227:
+  move(8,a)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,b) on(6,b) on(7,a) on(8,a)
+ State 228:
+  move(6,c)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,b) on(6,c) on(7,a) on(8,a)
+ State 229:
+  move(8,b)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,b) on(6,c) on(7,a) on(8,b)
+ State 230:
+  move(7,c)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,b) on(6,c) on(7,c) on(8,b)
+ State 231:
+  move(8,c)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,b) on(6,c) on(7,c) on(8,c)
+ State 232:
+  move(5,a)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,a) on(6,c) on(7,c) on(8,c)
+ State 233:
+  move(8,a)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,a) on(6,c) on(7,c) on(8,a)
+ State 234:
+  move(7,b)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,a) on(6,c) on(7,b) on(8,a)
+ State 235:
+  move(8,b)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,a) on(6,c) on(7,b) on(8,b)
+ State 236:
+  move(6,a)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,a) on(6,a) on(7,b) on(8,b)
+ State 237:
+  move(8,c)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,a) on(6,a) on(7,b) on(8,c)
+ State 238:
+  move(7,a)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,a) on(6,a) on(7,a) on(8,c)
+ State 239:
+  move(8,a)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,a) on(6,a) on(7,a) on(8,a)
+ State 240:
+  move(4,c)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,a) on(6,a) on(7,a) on(8,a)
+ State 241:
+  move(8,b)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,a) on(6,a) on(7,a) on(8,b)
+ State 242:
+  move(7,c)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,a) on(6,a) on(7,c) on(8,b)
+ State 243:
+  move(8,c)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,a) on(6,a) on(7,c) on(8,c)
+ State 244:
+  move(6,b)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,a) on(6,b) on(7,c) on(8,c)
+ State 245:
+  move(8,a)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,a) on(6,b) on(7,c) on(8,a)
+ State 246:
+  move(7,b)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,a) on(6,b) on(7,b) on(8,a)
+ State 247:
+  move(8,b)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,a) on(6,b) on(7,b) on(8,b)
+ State 248:
+  move(5,c)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,c) on(6,b) on(7,b) on(8,b)
+ State 249:
+  move(8,c)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,c) on(6,b) on(7,b) on(8,c)
+ State 250:
+  move(7,a)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,c) on(6,b) on(7,a) on(8,c)
+ State 251:
+  move(8,a)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,c) on(6,b) on(7,a) on(8,a)
+ State 252:
+  move(6,c)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,c) on(6,c) on(7,a) on(8,a)
+ State 253:
+  move(8,b)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,c) on(6,c) on(7,a) on(8,b)
+ State 254:
+  move(7,c)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,c) on(6,c) on(7,c) on(8,b)
+ State 255:
+  move(8,c)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,c) on(6,c) on(7,c) on(8,c)

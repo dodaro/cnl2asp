@@ -4,15 +4,8 @@ A goal is identified by a disk, and by a peg.
 
 
 The following propositions always apply:
-There is a disk with id 0.
-There is a disk with id 1.
-There is a disk with id 3.
-There is a disk with id 2.
-
-There is a peg with id 1.
-There is a peg with id 2.
-There is a peg with id 3.
-
+A disk goes from 0 to 3.
+A peg goes from 1 to 3.
 There is a goal with disk id 3, with peg 3.
 There is a goal with disk id 2, with peg 3.
 There is a goal with disk id 1, with peg 3.

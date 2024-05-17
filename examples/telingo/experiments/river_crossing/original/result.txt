@@ -1,0 +1,40 @@
+telingo version 2.1.1
+Reading from encoding.lp
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+ State 0:
+  at(beans,river_bank) at(farmer,river_bank) at(fox,river_bank) at(goose,river_bank)
+ State 1:
+  move(farmer) move(goose)
+  at(beans,river_bank) at(farmer,far_bank) at(fox,river_bank) at(goose,far_bank)
+ State 2:
+  move(farmer)
+  at(beans,river_bank) at(farmer,river_bank) at(fox,river_bank) at(goose,far_bank)
+ State 3:
+  move(beans) move(farmer)
+  at(beans,far_bank) at(farmer,far_bank) at(fox,river_bank) at(goose,far_bank)
+ State 4:
+  move(farmer) move(goose)
+  at(beans,far_bank) at(farmer,river_bank) at(fox,river_bank) at(goose,river_bank)
+ State 5:
+  move(farmer) move(fox)
+  at(beans,far_bank) at(farmer,far_bank) at(fox,far_bank) at(goose,river_bank)
+ State 6:
+  move(farmer)
+  at(beans,far_bank) at(farmer,river_bank) at(fox,far_bank) at(goose,river_bank)
+ State 7:
+  move(farmer) move(goose)
+  at(beans,far_bank) at(farmer,far_bank) at(fox,far_bank) at(goose,far_bank)
+SATISFIABLE
+
+Models       : 1+
+Calls        : 8
+Time         : 0.013s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 0.012s

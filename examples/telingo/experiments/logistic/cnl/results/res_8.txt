@@ -1,0 +1,67 @@
+telingo version 2.1.1
+Reading from cnl/encoding.lp
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+ State 0:
+ State 1:
+  load(truck(1),1) load(truck(1),2) load(truck(1),3) load(truck(1),4) load(truck(1),5) load(truck(1),6) load(truck(1),7) load(truck(1),8)
+ State 2:
+  move_to(truck(1),airport(1))
+ State 3:
+  unload(truck(1),1) unload(truck(1),2) unload(truck(1),3) unload(truck(1),4) unload(truck(1),5) unload(truck(1),6) unload(truck(1),7) unload(truck(1),8)
+ State 4:
+  load(plane1,1) load(plane1,2) load(plane1,4) load(plane1,6) load(plane2,3) load(plane2,5) load(plane2,7) load(plane2,8)
+ State 5:
+  move_to(plane1,airport(2)) move_to(plane2,airport(4))
+ State 6:
+  unload(plane1,1) unload(plane2,3)
+ State 7:
+  move_to(plane1,airport(5)) move_to(plane2,airport(6)) move_to(truck(4),airport(4))
+ State 8:
+  load(truck(4),3)
+  move_to(truck(5),airport(5)) move_to(truck(6),airport(6))
+  unload(plane1,4) unload(plane2,5)
+ State 9:
+  load(truck(5),4) load(truck(6),5)
+  move_to(plane1,airport(7)) move_to(plane2,airport(9)) move_to(truck(2),airport(2))
+  unload(truck(4),3)
+ State 10:
+  load(truck(2),1) load(truck(4),3)
+  move_to(truck(6),po(6))
+  unload(plane1,6) unload(plane2,8)
+ State 11:
+  move_to(plane1,airport(3)) move_to(plane2,airport(8)) move_to(truck(7),airport(7))
+  unload(truck(2),1) unload(truck(4),3) unload(truck(6),5)
+ State 12:
+  load(truck(2),1) load(truck(4),3) load(truck(7),6)
+  move_to(truck(3),airport(3)) move_to(truck(8),airport(8)) move_to(truck(9),airport(9))
+  unload(plane1,2) unload(plane2,7)
+ State 13:
+  load(truck(3),2) load(truck(6),5) load(truck(8),7) load(truck(9),8)
+  move_to(truck(7),po(7))
+ State 14:
+  move_to(truck(2),po(2)) move_to(truck(3),po(3)) move_to(truck(4),po(4)) move_to(truck(5),po(5)) move_to(truck(8),po(8)) move_to(truck(9),po(9))
+  unload(truck(7),6)
+ State 15:
+  unload(truck(2),1) unload(truck(3),2) unload(truck(4),3) unload(truck(5),4) unload(truck(6),5) unload(truck(8),7) unload(truck(9),8)
+SATISFIABLE
+
+Models       : 1+
+Calls        : 16
+Time         : 3.677s (Solving: 3.54s 1st Model: 1.41s Unsat: 2.12s)
+CPU Time     : 3.676s

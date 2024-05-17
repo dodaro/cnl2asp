@@ -1,0 +1,25 @@
+#program always.
+disk(0..n).
+peg(1;2;3).
+goal(1..n,3).
+
+
+#program initial.
+on(X,1) :- X > 0, disk(X), peg(1).
+
+#program dynamic.
+{moved_to(D,PG_D): peg(PG_D)} :- disk(D).
+:- #count{D: moved_to(D,MVD_T_D), peg(MVD_T_D)} != 1.
+on(D,P) :- moved_to(D,P), disk(D), peg(P).
+moved(D) :- moved_to(D,P), peg(P), disk(D).
+on(D,P) :- 'on(D,P), not moved(D), disk(D), peg(P).
+blocked_in(X,P) :- disk(D), 'on(D,P), X = D-1, disk(X), peg(P).
+blocked_in(X,P) :- disk(D), blocked_in(D,P), X = D-1, disk(X), peg(P).
+:- disk(D), moved_to(D,P), disk(X), blocked_in(X,P), peg(P), X = D-1.
+:- moved_to(D,P1), peg(P1), 'on(D,P2), disk(D), blocked_in(D,P2), peg(P2).
+:- #count{P: on(D,P)} != 1, D > 0, disk(D).
+
+#program final.
+:- disk(D), not on(D,P), peg(P), goal(D,P).
+
+

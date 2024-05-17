@@ -1,0 +1,264 @@
+telingo version 2.1.1
+Reading from original/encoding.lp ...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+SATISFIABLE
+
+Models       : 1+
+Calls        : 64
+Time         : 0.520s (Solving: 0.41s 1st Model: 0.00s Unsat: 0.40s)
+CPU Time     : 0.520s
+ State 0:
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,a) on(6,a)
+ State 1:
+  move(6,b)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,a) on(6,b)
+ State 2:
+  move(5,c)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,c) on(6,b)
+ State 3:
+  move(6,c)
+  on(1,a) on(2,a) on(3,a) on(4,a) on(5,c) on(6,c)
+ State 4:
+  move(4,b)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,c) on(6,c)
+ State 5:
+  move(6,a)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,c) on(6,a)
+ State 6:
+  move(5,b)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,b) on(6,a)
+ State 7:
+  move(6,b)
+  on(1,a) on(2,a) on(3,a) on(4,b) on(5,b) on(6,b)
+ State 8:
+  move(3,c)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,b) on(6,b)
+ State 9:
+  move(6,c)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,b) on(6,c)
+ State 10:
+  move(5,a)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,a) on(6,c)
+ State 11:
+  move(6,a)
+  on(1,a) on(2,a) on(3,c) on(4,b) on(5,a) on(6,a)
+ State 12:
+  move(4,c)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,a) on(6,a)
+ State 13:
+  move(6,b)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,a) on(6,b)
+ State 14:
+  move(5,c)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,c) on(6,b)
+ State 15:
+  move(6,c)
+  on(1,a) on(2,a) on(3,c) on(4,c) on(5,c) on(6,c)
+ State 16:
+  move(2,b)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,c) on(6,c)
+ State 17:
+  move(6,a)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,c) on(6,a)
+ State 18:
+  move(5,b)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,b) on(6,a)
+ State 19:
+  move(6,b)
+  on(1,a) on(2,b) on(3,c) on(4,c) on(5,b) on(6,b)
+ State 20:
+  move(4,a)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,b) on(6,b)
+ State 21:
+  move(6,c)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,b) on(6,c)
+ State 22:
+  move(5,a)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,a) on(6,c)
+ State 23:
+  move(6,a)
+  on(1,a) on(2,b) on(3,c) on(4,a) on(5,a) on(6,a)
+ State 24:
+  move(3,b)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,a) on(6,a)
+ State 25:
+  move(6,b)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,a) on(6,b)
+ State 26:
+  move(5,c)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,c) on(6,b)
+ State 27:
+  move(6,c)
+  on(1,a) on(2,b) on(3,b) on(4,a) on(5,c) on(6,c)
+ State 28:
+  move(4,b)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,c) on(6,c)
+ State 29:
+  move(6,a)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,c) on(6,a)
+ State 30:
+  move(5,b)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,b) on(6,a)
+ State 31:
+  move(6,b)
+  on(1,a) on(2,b) on(3,b) on(4,b) on(5,b) on(6,b)
+ State 32:
+  move(1,c)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,b) on(6,b)
+ State 33:
+  move(6,c)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,b) on(6,c)
+ State 34:
+  move(5,a)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,a) on(6,c)
+ State 35:
+  move(6,a)
+  on(1,c) on(2,b) on(3,b) on(4,b) on(5,a) on(6,a)
+ State 36:
+  move(4,c)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,a) on(6,a)
+ State 37:
+  move(6,b)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,a) on(6,b)
+ State 38:
+  move(5,c)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,c) on(6,b)
+ State 39:
+  move(6,c)
+  on(1,c) on(2,b) on(3,b) on(4,c) on(5,c) on(6,c)
+ State 40:
+  move(3,a)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,c) on(6,c)
+ State 41:
+  move(6,a)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,c) on(6,a)
+ State 42:
+  move(5,b)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,b) on(6,a)
+ State 43:
+  move(6,b)
+  on(1,c) on(2,b) on(3,a) on(4,c) on(5,b) on(6,b)
+ State 44:
+  move(4,a)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,b) on(6,b)
+ State 45:
+  move(6,c)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,b) on(6,c)
+ State 46:
+  move(5,a)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,a) on(6,c)
+ State 47:
+  move(6,a)
+  on(1,c) on(2,b) on(3,a) on(4,a) on(5,a) on(6,a)
+ State 48:
+  move(2,c)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,a) on(6,a)
+ State 49:
+  move(6,b)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,a) on(6,b)
+ State 50:
+  move(5,c)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,c) on(6,b)
+ State 51:
+  move(6,c)
+  on(1,c) on(2,c) on(3,a) on(4,a) on(5,c) on(6,c)
+ State 52:
+  move(4,b)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,c) on(6,c)
+ State 53:
+  move(6,a)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,c) on(6,a)
+ State 54:
+  move(5,b)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,b) on(6,a)
+ State 55:
+  move(6,b)
+  on(1,c) on(2,c) on(3,a) on(4,b) on(5,b) on(6,b)
+ State 56:
+  move(3,c)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,b) on(6,b)
+ State 57:
+  move(6,c)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,b) on(6,c)
+ State 58:
+  move(5,a)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,a) on(6,c)
+ State 59:
+  move(6,a)
+  on(1,c) on(2,c) on(3,c) on(4,b) on(5,a) on(6,a)
+ State 60:
+  move(4,c)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,a) on(6,a)
+ State 61:
+  move(6,b)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,a) on(6,b)
+ State 62:
+  move(5,c)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,c) on(6,b)
+ State 63:
+  move(6,c)
+  on(1,c) on(2,c) on(3,c) on(4,c) on(5,c) on(6,c)

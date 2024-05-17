@@ -10,7 +10,7 @@ from lark import Transformer, v_args
 from cnl2asp.exception.cnl2asp_exceptions import LabelNotFound, ParserError, AttributeNotFound, EntityNotFound, \
     EntityNotFound, CompilationError, DuplicatedTypedEntity, AttributeGenericError
 from cnl2asp.parser.command import SubstituteVariable, Command, DurationClause, CreateSignature, \
-        RespectivelySubstituteVariable
+    RespectivelySubstituteVariable
 from cnl2asp.parser.proposition_builder import PropositionBuilder, PreferencePropositionBuilder
 from cnl2asp.specification.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent, \
     AttributeOrigin, AngleValueComponent
@@ -29,6 +29,7 @@ from cnl2asp.specification.specification import SpecificationComponent
 from cnl2asp.utility.utility import Utility
 from cnl2asp.exception.cnl2asp_exceptions import TypeNotFound
 
+
 class QUANTITY_OPERATOR(Enum):
     EXACTLY = 0
     AT_MOST = 1
@@ -36,10 +37,12 @@ class QUANTITY_OPERATOR(Enum):
 
 
 PRONOUNS = ['i', 'you', 'he', 'she', 'it', 'we', 'you', 'they']  # they are skipped if subject
+DUMMY_ENTITY = EntityComponent('', '', [], [])
 
 
 def is_verb_to_have(word: str):
     return word in ["have ", "have a ", "have an ", "has ", "has a ", "has an "]
+
 
 class CNLTransformer(Transformer):
     def __init__(self):
@@ -136,7 +139,10 @@ class CNLTransformer(Transformer):
         return [AttributeComponent(name.strip(), ValueComponent(Utility.NULL_VALUE), origin)]
 
     def temporal_concept_definition(self, elem):
-        return TemporalEntityComponent(elem[0], '', elem[2], elem[3], elem[4], elem[1])
+        temporal = TemporalEntityComponent(elem[0], '', elem[2], elem[3], elem[4], elem[1])
+        self._proposition.add_new_knowledge(NewKnowledgeComponent(temporal))
+        self._problem.add_propositions(self._proposition.get_propositions())
+        return temporal
 
     def temporal_value(self, elem):
         if len(elem) == 1:
@@ -182,7 +188,6 @@ class CNLTransformer(Transformer):
         self._problem.add_propositions(self._proposition.get_propositions())
         self._clear()
 
-
     def constant_definition_clause(self, elem):
         value = ValueComponent(elem[1]) if elem[1] else ValueComponent('')
         self._specification.add_constant(ConstantComponent(elem[0], value))
@@ -195,7 +200,8 @@ class CNLTransformer(Transformer):
             entity = SignatureManager.get_signature(name)
             entity_keys = entity.get_keys()
             if len(entity.get_keys()) > 1:
-                raise CompilationError(f"Impossible to use compound range clause for an entity (\"{name}\" with multiple keys", meta.line)
+                raise CompilationError(
+                    f"Impossible to use compound range clause for an entity (\"{name}\" with multiple keys", meta.line)
             entity.set_attribute_value(entity_keys[0].get_name(), value, entity_keys[0].origin)
         except:
             entity = EntityComponent(name, '', [],
@@ -214,8 +220,8 @@ class CNLTransformer(Transformer):
         except EntityNotFound:
             pass
         entity = EntityComponent(name, '', [],
-                               [AttributeComponent(attribute_name,
-                                                   ValueComponent(elem[0]))])
+                                 [AttributeComponent(attribute_name,
+                                                     ValueComponent(elem[0]))])
         self._proposition.add_new_knowledge(NewKnowledgeComponent(entity, auxiliary_verb=entity.auxiliary_verb))
         return entity
 
@@ -245,7 +251,6 @@ class CNLTransformer(Transformer):
             attributes.append((name, value))
         return attributes
 
-
     def enumerative_definition_clause(self, elem):
         subject = elem[0]
         try:
@@ -260,10 +265,12 @@ class CNLTransformer(Transformer):
         verb: EntityComponent = elem[1]
         if subject.label or subject.attributes:
             self._proposition.add_requisite(subject)
-            SignatureManager.add_signature(elem[0])  # we can have new definitions in subject position for this proposition
+            SignatureManager.add_signature(
+                elem[0])  # we can have new definitions in subject position for this proposition
         else:
             # subject is an attribute value of the verb
-            verb.attributes.append(AttributeComponent('id', ValueComponent(subject.get_name()), AttributeOrigin(verb.get_name())))
+            verb.attributes.append(
+                AttributeComponent('id', ValueComponent(subject.get_name()), AttributeOrigin(verb.get_name())))
         object_list = elem[2] if elem[2] else []
         for idx, object_entity in enumerate(object_list):
             # replace the object elements with the proper signature if same of the subject
@@ -274,7 +281,8 @@ class CNLTransformer(Transformer):
                     entity_signature.set_attributes_value(entity.get_keys_and_attributes())
                     object_list[idx] = entity_signature
         self._proposition.add_new_knowledge(NewKnowledgeComponent(verb,
-                                                                  ConditionComponent([]), subject, verb.auxiliary_verb, object_list))
+                                                                  ConditionComponent([]), subject, verb.auxiliary_verb,
+                                                                  object_list))
         self._proposition.add_requisite_list(object_list)
         for proposition in self._proposition.get_propositions():
             if subject.label or subject.attributes:
@@ -303,11 +311,12 @@ class CNLTransformer(Transformer):
                 for condition_entity in new_knowledge.condition.components:
                     for entity in condition_entity.get_entities_to_link_with_new_knowledge():
                         proposition.relations.append(
-                                RelationComponent(new_knowledge.new_entity, entity))
+                            RelationComponent(new_knowledge.new_entity, entity))
 
     def whenever_then_clause_proposition(self, elem):
-        for proposition in self._proposition.get_propositions():
-            self._make_new_knowledge_relations(proposition, proposition.requisite.components)
+        if elem[-2] is DUMMY_ENTITY:
+            for proposition in self._proposition.get_propositions():
+                self._make_new_knowledge_relations(proposition, proposition.requisite.components)
 
     def whenever_clause(self, elem):
         if elem[0]:
@@ -318,16 +327,11 @@ class CNLTransformer(Transformer):
         self.whenever_clause([None] + elem)
 
     def then_clause(self, elem) -> [EntityComponent | str, Proposition]:
-        subject = elem[0]
-        # if can and not cardinality we have a
-        # choice with cardinality = Null else we take the cardinality
         cardinality = self._proposition.get_cardinality()
         if elem[1] == 'can' and not self._proposition.get_cardinality():
             cardinality = CardinalityComponent(None, None)
-        self._proposition.add_cardinality(cardinality)
-        self._proposition.add_subject(subject)
-        return subject
-
+        self._handle_new_definition_proposition(elem[0], cardinality)
+        return elem[0]
 
     def telingo_operation(self, elem):
         operand = elem[2]
@@ -405,20 +409,30 @@ class CNLTransformer(Transformer):
         elif elem == "follow":
             return Operators.FOLLOW
 
-
     def fact_proposition(self, elem):
         self._proposition.add_new_knowledge(NewKnowledgeComponent(elem[0]))
 
+    def _handle_new_definition_proposition(self, subject: EntityComponent, cardinality: CardinalityComponent):
+        self._proposition.add_cardinality(cardinality)
+        self._proposition.add_subject(subject.copy())
+        if subject is not DUMMY_ENTITY:
+            for proposition in self._proposition.get_propositions():
+                for new in proposition.new_knowledge:
+                    # normally only keys are linked to an head.
+                    # Here we are forcing to link also subject initialized attributes.
+                    new.new_entity.attributes += [
+                        AttributeComponent(attribute.get_name(), ValueComponent(Utility.NULL_VALUE),
+                                           AttributeOrigin(new.new_entity.get_name(), attribute.origin))
+                        for attribute in subject.get_initialized_attributes()]
+                self._make_new_knowledge_relations(proposition, [subject])
+
     def quantified_choice_proposition(self, elem):
-        subject: EntityComponent = elem[1]
         cardinality = self._proposition.get_cardinality()
         if elem[2] == 'can' and not self._proposition.get_cardinality():
             cardinality = CardinalityComponent(None, None)
-        self._proposition.add_cardinality(cardinality)
-        self._proposition.add_requisite(subject)
-        self._proposition.add_subject(subject.copy())
-        for proposition in self._proposition.get_propositions():
-            self._make_new_knowledge_relations(proposition, [subject])
+        self._handle_new_definition_proposition(elem[1], cardinality)
+        self._proposition.add_requisite(elem[1])
+        return elem[1]
 
     def foreach_clause(self, elem):
         objects: list[EntityComponent] = elem[0]
@@ -472,7 +486,7 @@ class CNLTransformer(Transformer):
     def quantified_simple_clause(self, elem):
         for i, entity_i in enumerate(elem[0][0:]):
             self._proposition.add_requisite(entity_i)
-            for j, entity_j in enumerate(elem[i+1:]):
+            for j, entity_j in enumerate(elem[i + 1:]):
                 self._proposition.add_relations([RelationComponent(entity_i, entity_j)])
         return elem[0][1]
 
@@ -499,11 +513,13 @@ class CNLTransformer(Transformer):
         except KeyError as e:
             raise CompilationError(str(e), meta.line)
         subject: EntityComponent = elem[0]
-        new_var = subject.get_attributes_by_name_and_origin(temporal_entity.get_name(), AttributeOrigin(temporal_entity.get_name()))[0]
+        new_var = subject.get_attributes_by_name_and_origin(temporal_entity.get_name(),
+                                                            AttributeOrigin(temporal_entity.get_name()))[0]
         if new_var.value == Utility.NULL_VALUE:
             new_var = self._new_field_value('_'.join([temporal_entity.get_name(), subject.get_name()]))
             try:
-                subject.set_attributes_value([AttributeComponent(temporal_entity.get_name(), ValueComponent(new_var), AttributeOrigin(temporal_entity.get_name()))])
+                subject.set_attributes_value([AttributeComponent(temporal_entity.get_name(), ValueComponent(new_var),
+                                                                 AttributeOrigin(temporal_entity.get_name()))])
             except:
                 raise CompilationError(f'Compilation error in line {meta.line}')
         operator = elem[1]
@@ -574,7 +590,6 @@ class CNLTransformer(Transformer):
         aggregate = AggregateComponent(elem[0], discriminant, [entity])
         return aggregate
 
-
     def aggregate_active_clause(self, elem) -> AggregateComponent:
         discriminant = [elem[1], elem[2]] if elem[2] else [elem[1]]
         entity: EntityComponent = elem[3]
@@ -591,7 +606,7 @@ class CNLTransformer(Transformer):
                 self._proposition.add_relations([RelationComponent(entity, elem[3])])
         return AggregateComponent(elem[0], discriminant, body)
 
-    @v_args(meta = True)
+    @v_args(meta=True)
     def aggregate_passive_clause(self, meta, elem) -> AggregateComponent:
         discriminant = [elem[1], elem[3]] if elem[3] else [elem[1]]
         verb: EntityComponent = elem[5]
@@ -666,7 +681,8 @@ class CNLTransformer(Transformer):
     def predicate_with_simple_clause(self, elem):
         verb = elem[0]
         condition = elem[2]
-        self._proposition.add_new_knowledge(NewKnowledgeComponent(verb, ConditionComponent(condition), auxiliary_verb=verb.auxiliary_verb))
+        self._proposition.add_new_knowledge(
+            NewKnowledgeComponent(verb, ConditionComponent(condition), auxiliary_verb=verb.auxiliary_verb))
 
     def parameter_list(self, list_parameters) -> list[AttributeComponent]:
         res = []
@@ -721,7 +737,8 @@ class CNLTransformer(Transformer):
 
     def parameter_temporal_ordering(self, elem):
         temporal_entity = SignatureManager.get_signature_from_type(elem[1])
-        return AttributeComponent(temporal_entity.get_name(), ValueComponent(f'{elem[2]}{elem[0]}1'), AttributeOrigin(temporal_entity.get_name()))
+        return AttributeComponent(temporal_entity.get_name(), ValueComponent(f'{elem[2]}{elem[0]}1'),
+                                  AttributeOrigin(temporal_entity.get_name()))
 
     def EXPRESSION(self, elem):
         return ''.join(elem)
@@ -769,7 +786,7 @@ class CNLTransformer(Transformer):
         name = name.lower()
         parameter_list = parameter_list if parameter_list else []
         if self._is_pronouns(name):
-            return EntityComponent('', '', [], [])
+            return DUMMY_ENTITY
         try:
             if label:
                 entity = self._proposition.get_entity_by_label(label)
@@ -815,7 +832,7 @@ class CNLTransformer(Transformer):
             if not CNLTransformer.is_variable(elem[0].value):
                 if not entity.is_value_in_set(elem[0].value):
                     raise AttributeGenericError(f'Value \"{elem[0].value}\" not declared '
-                                         f'in set {entity.get_entity_identifier()}')
+                                                f'in set {entity.get_entity_identifier()}')
             attribute = elem[0]
             attribute.set_name('element')
             entity.set_attributes_value([elem[0]])
@@ -833,7 +850,7 @@ class CNLTransformer(Transformer):
             raise CompilationError(f"Entity {entity.get_name()} is not a list.", meta.line)
         try:
             element_variable: ValueComponent = elem[1] if elem[1] else self._new_field_value('element')
-            if elem[2] == Operators.GREATER_THAN: # ordering_operator == 'after'
+            if elem[2] == Operators.GREATER_THAN:  # ordering_operator == 'after'
                 entity.set_shifted_value(1, elem[3], element_variable)
             else:
                 entity.set_shifted_value(-1, elem[3], element_variable)
@@ -850,9 +867,8 @@ class CNLTransformer(Transformer):
         if entity.entity_type != EntityType.LIST:
             raise CompilationError(f"Entity {entity.get_name()} is not a list.", meta.line)
         element_variable = elem[1] if elem[1] else self._new_field_value('element')
-        entity.set_index_value(int(elem[0])-1, element_variable)
+        entity.set_index_value(int(elem[0]) - 1, element_variable)
         return entity
-
 
     def complex_entity_parameter(self, elem):
         return self.parameter(elem)
@@ -866,9 +882,12 @@ class CNLTransformer(Transformer):
         for declared_entity in self._proposition.get_entities():
             if not declared_entity is entity:
                 try:
-                    attribute_value = declared_entity.get_attributes_by_name_and_origin(attribute_name, AttributeOrigin(attribute_name))[0].value
+                    attribute_value = \
+                    declared_entity.get_attributes_by_name_and_origin(attribute_name, AttributeOrigin(attribute_name))[
+                        0].value
                     entity.set_attributes_value([AttributeComponent(attribute_name,
-                                                                    ValueComponent(f'{attribute_value}{operator}1'),  AttributeOrigin(attribute_name))])
+                                                                    ValueComponent(f'{attribute_value}{operator}1'),
+                                                                    AttributeOrigin(attribute_name))])
                     return
                 except AttributeNotFound:
                     pass
@@ -1049,10 +1068,10 @@ class CNLTransformer(Transformer):
         return lark.Discard
 
     def cnl_is_one_of(self, elem) -> None:
-         return lark.Discard
+        return lark.Discard
 
     def cnl_goes_from(self, elem) -> None:
-         return lark.Discard
+        return lark.Discard
 
     def cnl_with_a_length_of(self, elem) -> None:
         return lark.Discard

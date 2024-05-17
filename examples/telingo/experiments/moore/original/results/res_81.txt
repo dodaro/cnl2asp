@@ -1,0 +1,123 @@
+telingo version 2.1.1
+Reading from original/encoding.lp
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+ State 0:
+  instruction(0) instruction(1) instruction(2)
+  local(0) local(1)
+  process(a) process(b)
+  holds(c,1) holds(i(a),0) holds(i(b),0) holds(r(a),0) holds(r(b),0)
+ State 1:
+  fetch(b)
+  change(i(b),1) change(r(b),1)
+  fetch(b,2)
+  holds(c,1) holds(i(a),0) holds(i(b),1) holds(r(a),0) holds(r(b),1)
+ State 2:
+  fetch(b)
+  change(i(b),2) change(r(b),2)
+  fetch(b,1)
+  holds(c,1) holds(i(a),0) holds(i(b),2) holds(r(a),0) holds(r(b),2)
+ State 3:
+  fetch(a) fetch(b)
+  change(c,2) change(i(a),1) change(i(b),0) change(r(a),1)
+  fetch(a,0) fetch(b,0)
+  holds(c,2) holds(i(a),1) holds(i(b),0) holds(r(a),1) holds(r(b),2)
+ State 4:
+  fetch(a) fetch(b)
+  change(i(a),2) change(i(b),1) change(r(a),3) change(r(b),2)
+  fetch(a,1) fetch(b,0)
+  holds(c,2) holds(i(a),2) holds(i(b),1) holds(r(a),3) holds(r(b),2)
+ State 5:
+  fetch(a)
+  change(c,3) change(i(a),0)
+  fetch(a,2)
+  holds(c,3) holds(i(a),0) holds(i(b),1) holds(r(a),3) holds(r(b),2)
+ State 6:
+  fetch(a) fetch(b)
+  change(i(a),1) change(i(b),2) change(r(a),3) change(r(b),5)
+  fetch(a,0) fetch(b,0)
+  holds(c,3) holds(i(a),1) holds(i(b),2) holds(r(a),3) holds(r(b),5)
+ State 7:
+  fetch(a) fetch(b)
+  change(c,5) change(i(a),2) change(i(b),0) change(r(a),6)
+  fetch(a,0) fetch(b,1)
+  holds(c,5) holds(i(a),2) holds(i(b),0) holds(r(a),6) holds(r(b),5)
+ State 8:
+  fetch(a) fetch(b)
+  change(c,6) change(i(a),0) change(i(b),1) change(r(b),5)
+  fetch(a,0) fetch(b,1)
+  holds(c,6) holds(i(a),0) holds(i(b),1) holds(r(a),6) holds(r(b),5)
+ State 9:
+  fetch(a) fetch(b)
+  change(i(a),1) change(i(b),2) change(r(a),6) change(r(b),11)
+  fetch(a,1) fetch(b,0)
+  holds(c,6) holds(i(a),1) holds(i(b),2) holds(r(a),6) holds(r(b),11)
+ State 10:
+  fetch(a) fetch(b)
+  change(c,11) change(i(a),2) change(i(b),0) change(r(a),12)
+  fetch(a,0) fetch(b,1)
+  holds(c,11) holds(i(a),2) holds(i(b),0) holds(r(a),12) holds(r(b),11)
+ State 11:
+  fetch(a) fetch(b)
+  change(c,12) change(i(a),0) change(i(b),1) change(r(b),11)
+  fetch(a,0) fetch(b,0)
+  holds(c,12) holds(i(a),0) holds(i(b),1) holds(r(a),12) holds(r(b),11)
+ State 12:
+  fetch(a) fetch(b)
+  change(i(a),1) change(i(b),2) change(r(a),12) change(r(b),23)
+  fetch(a,1) fetch(b,1)
+  holds(c,12) holds(i(a),1) holds(i(b),2) holds(r(a),12) holds(r(b),23)
+ State 13:
+  fetch(b)
+  change(c,23) change(i(b),0)
+  fetch(b,1)
+  holds(c,23) holds(i(a),1) holds(i(b),0) holds(r(a),12) holds(r(b),23)
+ State 14:
+  fetch(a) fetch(b)
+  change(i(a),2) change(i(b),1) change(r(a),35) change(r(b),23)
+  fetch(a,1) fetch(b,0)
+  holds(c,23) holds(i(a),2) holds(i(b),1) holds(r(a),35) holds(r(b),23)
+ State 15:
+  fetch(a) fetch(b)
+  change(c,35) change(i(a),0) change(i(b),2) change(r(b),46)
+  fetch(a,1) fetch(b,0)
+  holds(c,35) holds(i(a),0) holds(i(b),2) holds(r(a),35) holds(r(b),46)
+ State 16:
+  fetch(a) fetch(b)
+  change(c,46) change(i(a),1) change(i(b),0) change(r(a),35)
+  fetch(a,1) fetch(b,0)
+  holds(c,46) holds(i(a),1) holds(i(b),0) holds(r(a),35) holds(r(b),46)
+ State 17:
+  fetch(a)
+  change(i(a),2) change(r(a),81)
+  fetch(a,1)
+  holds(c,46) holds(i(a),2) holds(i(b),0) holds(r(a),81) holds(r(b),46)
+ State 18:
+  fetch(a)
+  change(c,81) change(i(a),0)
+  fetch(a,1)
+  holds(c,81) holds(i(a),0) holds(i(b),0) holds(r(a),81) holds(r(b),46)
+SATISFIABLE
+
+Models       : 1+
+Calls        : 19
+Time         : 7.071s (Solving: 6.73s 1st Model: 2.91s Unsat: 3.82s)
+CPU Time     : 7.070s

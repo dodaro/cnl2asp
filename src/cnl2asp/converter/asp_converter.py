@@ -220,7 +220,8 @@ class ASPConverter(Converter[ASPProgram,
 
     def convert_temporal_entity(self, temporal_entity: TemporalEntityComponent):
         if temporal_entity.get_name() not in self._converted_complex_entities:
-            for value, idx in temporal_entity.values.items():
+            temporal_values = list(temporal_entity.values.items())
+            for value, idx in temporal_values[:-1]:
                 self._program.add_rule(ASPRule(head=[ASPRuleHead(ASPAtom(temporal_entity.get_name(),
                                                                          [ASPAttribute(
                                                                              temporal_entity.get_name().removesuffix(
@@ -228,6 +229,9 @@ class ASPConverter(Converter[ASPProgram,
                                                                           ASPAttribute('value',
                                                                                        ASPValue(f'\"{value}\"'))]))]))
             self._converted_complex_entities.append(temporal_entity.get_name())
+            return ASPAtom(temporal_entity.get_name(),
+                           [ASPAttribute(temporal_entity.get_name().removesuffix('s'), ASPValue(temporal_values[-1][1])),
+                            ASPAttribute('value', ASPValue(f'\"{temporal_values[-1][0]}\"'))])
         return self.convert_entity(temporal_entity)
 
     def __has_single_key(self, entity: EntityComponent) -> bool:

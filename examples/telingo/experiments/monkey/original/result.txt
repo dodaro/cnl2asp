@@ -1,0 +1,31 @@
+telingo version 2.1.1
+Reading from encoding.lp
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+ State 0:
+  at(box,window) at(monkey,door)
+ State 1:
+  walkto(window)
+  at(box,window) at(monkey,window)
+ State 2:
+  pushto(middle)
+  at(box,middle) at(monkey,middle)
+ State 3:
+  climb
+  onbox
+  at(box,middle) at(monkey,middle)
+ State 4:
+  banana
+  grasp
+  onbox
+  at(box,middle) at(monkey,middle)
+SATISFIABLE
+
+Models       : 1+
+Calls        : 5
+Time         : 0.013s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 0.013s

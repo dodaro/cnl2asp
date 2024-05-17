@@ -1,0 +1,151 @@
+telingo version 2.1.1
+Reading from cnl/encoding.lp
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Solving...
+Answer: 1
+ State 0:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  hold(1,0) hold(2,0) hold("c",1)
+ State 1:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(2,1) change("r2",1)
+  fetch(2,0)
+  hold(1,0) hold(2,1) hold("c",1) hold("r2",1)
+ State 2:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(1,1) change(2,2) change("r1",1) change("r2",2)
+  fetch(1,2) fetch(2,2)
+  hold(1,1) hold(2,2) hold("c",1) hold("r1",1) hold("r2",2)
+ State 3:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(2,0) change("c",2)
+  fetch(2,1)
+  hold(1,1) hold(2,0) hold("c",2) hold("r1",1) hold("r2",2)
+ State 4:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(1,2) change("r1",3)
+  fetch(1,0)
+  hold(1,2) hold(2,0) hold("c",2) hold("r1",3) hold("r2",2)
+ State 5:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(1,0) change(2,1) change("c",3) change("r2",2)
+  fetch(1,2) fetch(2,2)
+  hold(1,0) hold(2,1) hold("c",3) hold("r1",3) hold("r2",2)
+ State 6:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(1,1) change(2,2) change("r1",3) change("r2",5)
+  fetch(1,2) fetch(2,2)
+  hold(1,1) hold(2,2) hold("c",3) hold("r1",3) hold("r2",5)
+ State 7:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(2,0) change("c",5)
+  fetch(2,1)
+  hold(1,1) hold(2,0) hold("c",5) hold("r1",3) hold("r2",5)
+ State 8:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(2,1) change("r2",5)
+  fetch(2,1)
+  hold(1,1) hold(2,1) hold("c",5) hold("r1",3) hold("r2",5)
+ State 9:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(2,2) change("r2",10)
+  fetch(2,1)
+  hold(1,1) hold(2,2) hold("c",5) hold("r1",3) hold("r2",10)
+ State 10:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(2,0) change("c",10)
+  fetch(2,0)
+  hold(1,1) hold(2,0) hold("c",10) hold("r1",3) hold("r2",10)
+ State 11:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(1,2) change(2,1) change("r1",13) change("r2",10)
+  fetch(1,2) fetch(2,2)
+  hold(1,2) hold(2,1) hold("c",10) hold("r1",13) hold("r2",10)
+ State 12:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(1,0) change(2,2) change("c",13) change("r2",20)
+  fetch(1,2) fetch(2,2)
+  hold(1,0) hold(2,2) hold("c",13) hold("r1",13) hold("r2",20)
+ State 13:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(1,1) change(2,0) change("c",20) change("r1",13)
+  fetch(1,2) fetch(2,2)
+  hold(1,1) hold(2,0) hold("c",20) hold("r1",13) hold("r2",20)
+ State 14:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(1,2) change("r1",33)
+  fetch(1,2)
+  hold(1,2) hold(2,0) hold("c",20) hold("r1",33) hold("r2",20)
+ State 15:
+  instruction(0) instruction(1) instruction(2)
+  process(1) process(2)
+  value(0) value(1) value(2) value(3) value(4) value(5) value(6) value(7) value(8) value(9) value(10) value(11) value(12) value(13) value(14) value(15) value(16) value(17) value(18) value(19) value(20) value(21) value(22) value(23) value(24) value(25) value(26) value(27) value(28) value(29) value(30) value(31) value(32) value(33)
+  variable("c") variable("r1") variable("r2")
+  change(1,0) change("c",33)
+  fetch(1,2)
+  hold(1,0) hold(2,0) hold("c",33) hold("r1",33) hold("r2",20)
+SATISFIABLE
+
+Models       : 1+
+Calls        : 16
+Time         : 0.657s (Solving: 0.53s 1st Model: 0.09s Unsat: 0.43s)
+CPU Time     : 0.657s
