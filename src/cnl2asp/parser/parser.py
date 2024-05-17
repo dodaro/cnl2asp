@@ -550,7 +550,7 @@ class CNLTransformer(Transformer):
     def parameter_entity_link(self, attribute: AttributeComponent, entity: EntityComponent):
         if attribute.value == Utility.NULL_VALUE:
             attribute.value = self._new_field_value('_'.join([entity.get_name(), str(attribute.get_name())]))
-            entity.set_attributes_value([attribute])
+        entity.set_attributes_value([attribute])
         self._proposition.add_requisite(entity)
         return entity.get_attributes_by_name_and_origin(attribute.get_name(), attribute.origin)[0]
 

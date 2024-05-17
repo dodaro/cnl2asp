@@ -261,9 +261,7 @@ class TestCnlPropositions(unittest.TestCase):
                                     :- #count{positivematch(PSTVMTCH_MTCH): positivematch(PSTVMTCH_MTCH)} = CNT, #count{negativematch(NGTVMTCH_MTCH): negativematch(NGTVMTCH_MTCH)} = CNT1, CNT != CNT1.
                                     :- #count{positivematch(PSTVMTCH_MTCH): positivematch(PSTVMTCH_MTCH)} = CNT, #count{negativematch(NGTVMTCH_MTCH): negativematch(NGTVMTCH_MTCH)} = CNT1, CNT != CNT1.''')
 
-    @unittest.skip("in second proposition values are not properly initialized")
     def test_angle_operation(self):
-        #  :- (_)/360 = (_)/360, rotation(_,AI,_).
         self.check_input_to_output('''
                                     A rotation is identified by a desired angle, by a current angle, and by a value.
                                     It is required that the desired angle A of the rotation R is different from the value D of the rotation R,  
