@@ -94,7 +94,9 @@ class EntityComponent(Component):
         return self.keys if self.keys else self.attributes
 
     def get_attributes(self) -> list[AttributeComponent]:
-        return self.attributes
+        if self.keys:
+            return self.attributes
+        return []
 
     def get_keys_and_attributes(self) -> list[AttributeComponent]:
         return self.keys + self.attributes
