@@ -52,6 +52,9 @@ class CNLTransformer(Transformer):
         self._proposition: PropositionBuilder = PropositionBuilder()
         self._delayed_operations: list[Command] = []
         self._defined_variables: list[str] = []
+        self._defined_verbs: set = set()  # track the concepts that already have been used in rule heads
+                                          # it is forbidden to used the same concept twice with DETECT_SIGNATURES
+
 
     def _new_field_value(self, name: str = '') -> ValueComponent:
         if name:
@@ -794,6 +797,11 @@ class CNLTransformer(Transformer):
                 raise LabelNotFound("")
         except (LabelNotFound, AttributeNotFound):
             try:
+                if is_verb and Utility.DETECTING_SIGNATURES:
+                    if name in self._defined_verbs:
+                        print(
+                            f'Warning. Line {meta.line}. Entity \"{name}\": using the same entity twice in a rule head might lead to an unsafe program.')
+                    self._defined_verbs.add(name)
                 entity = SignatureManager.get_signature(name)
                 entity.label = label
             except EntityNotFound as e:
