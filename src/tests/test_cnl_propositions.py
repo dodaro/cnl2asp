@@ -160,10 +160,8 @@ class TestCnlPropositions(unittest.TestCase):
                                         and the id of the day is equal to 1.''',
                                    ':- patient(PTNT_D), day(DY_D), (PTNT_D + DY_D) != 1.')
 
-    @unittest.skip("test not working because assignment is linked with x_support, thus x_support gets T..T+2")
     @patch('cnl2asp.utility.utility.uuid4')
     def test_duration_clause(self, mock_uuid):
-        # TODO: implement smarter join operations.
         mock_uuid.return_value = "support"
         self.check_input_to_output('''
                                     A timeslot is a temporal concept expressed in minutes ranging 

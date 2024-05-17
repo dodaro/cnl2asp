@@ -91,11 +91,14 @@ class PropositionBuilder:
             copy.relations = []  # set the relations also for the copy
             for relation in self._original_rule.relations:
                 for new_knowledge in self._original_rule.new_knowledge:
-                    for entity in new_knowledge.condition.components:
-                        # do not copy the entity related with the condition part, since
-                        # it is not present in the new proposition
-                        if not (relation.relation_component_1 == entity or relation.relation_component_2 == entity):
-                            copy.relations.append(relation.copy())
+                    if new_knowledge.condition.components:
+                        for entity in new_knowledge.condition.components:
+                            # do not copy the entity related with the condition part, since
+                            # it is not present in the new proposition
+                            if not (relation.relation_component_1 == entity or relation.relation_component_2 == entity):
+                                copy.relations.append(relation.copy())
+                    else:
+                        copy.relations.append(relation.copy())
             # the final entity is related with all the entities in requisite
             for requisite_entity in copy.requisite.get_entities():
                 copy.relations.append(RelationComponent(copy_new_knowledge.new_entity, requisite_entity))
