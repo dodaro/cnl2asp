@@ -5,6 +5,7 @@ import tempfile
 from io import StringIO
 import sys
 
+
 class Telingo:
     def __init__(self):
         self.encoding = ''
@@ -17,6 +18,9 @@ class Telingo:
             file.write(self.encoding)
             file.seek(0)
             sys.stdout = telingo_result = StringIO()
-            clingo.clingo_main(telingo.Application(), [file.name, "--verbose=0", "--quiet=1,2,2", "--warn=none"])
+            clingo.clingo_main(telingo.TelApp(), [file.name, "--verbose=0", "--quiet=1,2,2", "--warn=none"])
             sys.stdout = sys.__stdout__
-            return telingo_result.getvalue()
+            sys.stderr = sys.__stderr__
+            res = telingo_result.getvalue()
+            print(res)
+            return res

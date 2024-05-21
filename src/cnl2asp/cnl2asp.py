@@ -184,6 +184,7 @@ def main():
     parser.add_argument('--debug', action='store_true', help=argparse.SUPPRESS)
     parser.add_argument('--solve', type=str, choices=["clingo", "telingo"], help='Call the corresponding solver and print a cnl-translated output')
     parser.add_argument('-o', '--optimize', action='store_true', help='Optimize the output using ngo')
+    parser.add_argument('--explain', action='store_true', help='Returns a cnl version of the best model')
     parser.add_argument('input_file')
     parser.add_argument('output_file', type=str, nargs='?', default='')
     args = parser.parse_args()
@@ -222,9 +223,10 @@ def main():
                     print(f"Running {args.solve}...\n")
                     solver.load(str(asp_encoding))
                     res = solver.solve()
-                    clingo_res = ClingoResultParser(cnl2asp.parse_input(), res)
-                    model = clingo_res.parse_model()
-                    print("SOLUTION:\n" + model)
+                    if args.explain:
+                        clingo_res = ClingoResultParser(cnl2asp.parse_input(), res)
+                        model = clingo_res.parse_model()
+                        print("\n\n" + model)
                 elif args.solve == "telingo":
                     from cnl2asp.ASP_elements.solver.telingo_result_parser import TelingoResultParser
                     from cnl2asp.ASP_elements.solver.telingo_wrapper import Telingo
@@ -233,8 +235,9 @@ def main():
                     print(f"Running {args.solve}...\n")
                     solver.load(str(asp_encoding))
                     res = solver.solve()
-                    telingo_res = TelingoResultParser(cnl2asp.parse_input(), res)
-                    model = telingo_res.parse_model()
-                    print("SOLUTION:\n" + model)
+                    if args.explain:
+                        telingo_res = TelingoResultParser(cnl2asp.parse_input(), res)
+                        model = telingo_res.parse_model()
+                        print("\n\n" + model)
         except Exception as e:
             print("Error in writing output", str(e))

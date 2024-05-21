@@ -9,8 +9,9 @@ from cnl2asp.specification.specification import SpecificationComponent
 
 class TelingoResultParser(ClingoResultParser):
 
-    def __init__(self, specification: SpecificationComponent, model: SolveHandle):
-        super().__init__(specification, model)
+    def __init__(self, specification: SpecificationComponent, model: str):
+        super().__init__(specification, [])
+        self.model = model
         self._old_states = []
 
     def compare(self, item1: str, item2: str):
@@ -27,7 +28,7 @@ class TelingoResultParser(ClingoResultParser):
     def parse_model(self):
         self._get_new_knowledge()
         model = ''
-        for state in str(self.model).split("State"):
+        for state in self.model.split("State"):
             if not state.strip():
                 continue
             state = state.splitlines()
