@@ -23,8 +23,8 @@ class TestClingoResultParser(unittest.TestCase):
         clingo = Clingo()
         clingo.load(str(asp_encoding))
         res = clingo.solve()
-        clingo_res = ClingoResultParser(cnl2asp.parse_input(), res)
-        return clingo_res.parse_model()
+        clingo_res = ClingoResultParser(cnl2asp.parse_input())
+        return clingo_res.parse_model(res)
 
     def compute_telingo_model(self, string: str) -> str:
         cnl2asp = Cnl2asp(string)
@@ -32,8 +32,8 @@ class TestClingoResultParser(unittest.TestCase):
         telingo = Telingo()
         telingo.load(str(asp_encoding))
         res = telingo.solve()
-        telingo_res = TelingoResultParser(cnl2asp.parse_input(), res)
-        return telingo_res.parse_model()
+        telingo_res = TelingoResultParser(cnl2asp.parse_input())
+        return telingo_res.parse_model(res)
 
     def test_graph_coloring(self):
         model = self.compute_clingo_model('''A node goes from 1 to 3.

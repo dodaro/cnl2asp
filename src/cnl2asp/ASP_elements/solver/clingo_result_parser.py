@@ -18,9 +18,8 @@ class NewKnowledge:
 
 class ClingoResultParser:
 
-    def __init__(self, specification: SpecificationComponent, model: list[str]):
+    def __init__(self, specification: SpecificationComponent):
         self.specification = specification
-        self.model: list[str] = model
         self.target_predicates = []
         self._signatures: list[NewKnowledge] = []
 
@@ -158,11 +157,11 @@ class ClingoResultParser:
                f"{self._entity_printer(signature.new_entity.get_name(), signature.new_entity.get_keys_and_attributes())} " \
                f"{string}".capitalize().strip() + "."
 
-    def parse_model(self):
+    def parse_model(self, model: list[str]):
         self._get_new_knowledge()
-        model = ''
-        for elem in self.model:
+        res = ''
+        for elem in model:
             elem = clingo.parse_term(elem.strip())
             if elem.name in self.target_predicates:
-                model += self._clingo_symbol_to_sentence(elem) + '\n'
-        return model
+                res += self._clingo_symbol_to_sentence(elem) + '\n'
+        return res

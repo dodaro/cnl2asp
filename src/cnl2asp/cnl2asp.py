@@ -195,7 +195,6 @@ def main():
 
     in_file = open(input_file, 'r')
     cnl2asp = Cnl2asp(in_file, args.debug)
-
     if args.check_syntax:
         if cnl2asp.check_syntax():
             print("Input file fits the grammar.")
@@ -219,25 +218,20 @@ def main():
                     from cnl2asp.ASP_elements.solver.clingo_wrapper import Clingo
                     from cnl2asp.ASP_elements.solver.clingo_result_parser import ClingoResultParser
                     solver = Clingo()
-                    print("\n*********")
-                    print(f"Running {args.solve}...\n")
-                    solver.load(str(asp_encoding))
-                    res = solver.solve()
-                    if args.explain:
-                        clingo_res = ClingoResultParser(cnl2asp.parse_input(), res)
-                        model = clingo_res.parse_model()
-                        print("\n\n" + model)
+                    res_parser = ClingoResultParser(cnl2asp.parse_input())
                 elif args.solve == "telingo":
                     from cnl2asp.ASP_elements.solver.telingo_result_parser import TelingoResultParser
                     from cnl2asp.ASP_elements.solver.telingo_wrapper import Telingo
                     solver = Telingo()
-                    print("\n*********")
-                    print(f"Running {args.solve}...\n")
-                    solver.load(str(asp_encoding))
-                    res = solver.solve()
-                    if args.explain:
-                        telingo_res = TelingoResultParser(cnl2asp.parse_input(), res)
-                        model = telingo_res.parse_model()
-                        print("\n\n" + model)
+                    res_parser = TelingoResultParser(cnl2asp.parse_input())
+                else:
+                    raise Exception(f"{args.solve} not recognised")
+                print("\n*********")
+                print(f"Running {args.solve}...\n")
+                solver.load(str(asp_encoding))
+                res = solver.solve()
+                if args.explain:
+                    model = res_parser.parse_model(res)
+                    print("\n\n" + model)
         except Exception as e:
             print("Error in writing output", str(e))

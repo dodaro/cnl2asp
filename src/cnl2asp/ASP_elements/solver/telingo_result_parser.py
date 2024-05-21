@@ -9,9 +9,8 @@ from cnl2asp.specification.specification import SpecificationComponent
 
 class TelingoResultParser(ClingoResultParser):
 
-    def __init__(self, specification: SpecificationComponent, model: str):
-        super().__init__(specification, [])
-        self.model = model
+    def __init__(self, specification: SpecificationComponent):
+        super().__init__(specification)
         self._old_states = []
 
     def compare(self, item1: str, item2: str):
@@ -25,14 +24,14 @@ class TelingoResultParser(ClingoResultParser):
             return 1
         return item1 < item2
 
-    def parse_model(self):
+    def parse_model(self, model: str):
         self._get_new_knowledge()
-        model = ''
-        for state in self.model.split("State"):
+        res = ''
+        for state in model.split("State"):
             if not state.strip():
                 continue
             state = state.splitlines()
-            model += f"-- In the {state[0].strip().removesuffix(':')} state:\n"
+            res += f"-- In the {state[0].strip().removesuffix(':')} state:\n"
             atoms = []
             for line in state[1:]:
                 for elem in line.split(" "):
@@ -41,6 +40,6 @@ class TelingoResultParser(ClingoResultParser):
                         if elem.name in self.target_predicates:
                             atoms.append(self._clingo_symbol_to_sentence(elem))
             atoms.sort(key=cmp_to_key(self.compare))
-            model += '\n'.join(atoms) + '\n'
+            res += '\n'.join(atoms) + '\n'
             self._old_states += atoms
-        return model
+        return res
