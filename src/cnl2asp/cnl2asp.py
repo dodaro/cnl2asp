@@ -99,26 +99,11 @@ class Cnl2asp:
 
     def compile(self, auto_link_entities: bool = True) -> str:
         Utility.AUTO_ENTITY_LINK = auto_link_entities
-        try:
-            specification: SpecificationComponent = self.parse_input()
-        except UnexpectedCharacters as e:
-            print(ParserError(e.char, e.line, e.column, e.get_context(self.cnl_input), self.cnl_input.splitlines()[e.line-1], list(e.allowed)))
-            return ''
-        except VisitError as e:
-            print(e.args[0])
-            if self._debug:
-                traceback.print_exception(e)
-            return ''
-        try:
-            asp_converter: ASPConverter = ASPConverter()
-            program: ASPProgram = specification.convert(asp_converter)
-            SignatureManager().signatures = []
-            return str(program)
-        except Exception as e:
-            print("Error in asp conversion:", str(e))
-            if self._debug:
-                traceback.print_exception(e)
-            return ''
+        specification: SpecificationComponent = self.parse_input()
+        asp_converter: ASPConverter = ASPConverter()
+        program: ASPProgram = specification.convert(asp_converter)
+        SignatureManager().signatures = []
+        return str(program)
 
     def optimize(self, asp_encoding: str):
         from clingo.ast import parse_files
@@ -203,7 +188,24 @@ def main():
     elif args.symbols:
         print(cnl2asp.get_symbols())
     else:
-        asp_encoding = cnl2asp.compile()
+        try:
+            asp_encoding = cnl2asp.compile()
+        except UnexpectedCharacters as e:
+            in_file.seek(0)
+            cnl_input = in_file.read()
+            print(ParserError(e.char, e.line, e.column, e.get_context(cnl_input), cnl_input.splitlines()[e.line-1], list(e.allowed)))
+            return ''
+        except VisitError as e:
+            print(e.args[0])
+            if args.debug:
+                traceback.print_exception(e)
+            return ''
+        except Exception as e:
+            print("Error in asp conversion:", str(e))
+            if args.debug:
+                traceback.print_exception(e)
+            return ''
+
         if args.optimize:
             asp_encoding = cnl2asp.optimize(asp_encoding)
         try:
