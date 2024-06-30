@@ -102,7 +102,7 @@ class Cnl2asp:
         specification: SpecificationComponent = self.parse_input()
         asp_converter: ASPConverter = ASPConverter()
         program: ASPProgram = specification.convert(asp_converter)
-        SignatureManager().signatures = []
+        SignatureManager.signatures = []
         return str(program)
 
     def optimize(self, asp_encoding: str):
@@ -153,9 +153,9 @@ class Cnl2asp:
     def get_symbols(self) -> list[Symbol]:
         self.compile()
         signatures: list[Symbol] = []
-        for signature in SignatureManager().signatures:
+        for signature in SignatureManager.signatures:
             signatures.append(self.__convert_signature(signature))
-        SignatureManager().signatures = []
+        SignatureManager.signatures = []
         return signatures
 
 

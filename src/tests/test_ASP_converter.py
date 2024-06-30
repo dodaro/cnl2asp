@@ -19,7 +19,7 @@ from cnl2asp.specification.specification import SpecificationComponent
 from cnl2asp.utility.utility import Utility
 
 asp_converter = ASPConverter()
-test_signature_manager = SignatureManager().add_signature(EntityComponent('tests', '',
+test_signature_manager = SignatureManager.add_signature(EntityComponent('tests', '',
                                                                           [AttributeComponent('key',
                                                                                               ValueComponent('_'))],
                                                                           [AttributeComponent('field',
