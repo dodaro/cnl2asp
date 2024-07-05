@@ -11,8 +11,6 @@ from enum import Enum
 from textwrap import indent
 from typing import TextIO
 
-from ngo import Predicate
-
 from cnl2asp.utility.utility import Utility
 from lark import Lark, UnexpectedCharacters
 from lark.exceptions import VisitError
@@ -132,7 +130,7 @@ class Cnl2asp:
     def optimize(self, asp_encoding: str, input_symbols: list[Symbol] = None, output_symbols: list[Symbol] = None,
                  print_with_functions=False):
         from clingo.ast import parse_files
-        from ngo import optimize, auto_detect_input, auto_detect_output
+        from ngo import optimize, auto_detect_input, auto_detect_output, Predicate
         prg = []
         with tempfile.NamedTemporaryFile(mode="w") as file:
             file.write(asp_encoding)
