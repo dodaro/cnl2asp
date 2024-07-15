@@ -185,7 +185,7 @@ _CNL_BETWEEN: "between"
 _CNL_ABSOLUTE: "absolute"
 _CNL_VALUE: "value"
 cnl_in_absolute_value: _CNL_IN " " _CNL_ABSOLUTE " " _CNL_VALUE
-comparison_operand: EXPRESSION
+comparison_operand: expression
                     | PARAMETER_NAME
                     | parameter_entity_link
                     | aggregate_clause
@@ -291,9 +291,9 @@ simple_clause_wrv.-2: entity verb [conjunctive_object_list]
 simple_entity: _CNL_INDEFINITE_ARTICLE? STRING [STRING] [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list]
 _CNL_ELEMENT: "element"
 complex_entity: complex_entity_parameter _CNL_IN STRING -> generic_element
-              | _CNL_THE STRING _CNL_ELEMENT? [EXPRESSION] ORDERING_OPERATOR STRING -> list_element_order
-              | _CNL_THE NUMBER ("st" | "nd" | "rd" | "th") _CNL_ELEMENT [EXPRESSION] _CNL_IN STRING -> list_index_element
-complex_entity_parameter: _CNL_AN _CNL_ELEMENT [EXPRESSION] [COMPARISON_OPERATOR EXPRESSION [STRING]]
+              | _CNL_THE STRING _CNL_ELEMENT? [expression] ORDERING_OPERATOR STRING -> list_element_order
+              | _CNL_THE NUMBER ("st" | "nd" | "rd" | "th") _CNL_ELEMENT [expression] _CNL_IN STRING -> list_index_element
+complex_entity_parameter: _CNL_AN _CNL_ELEMENT [expression] [COMPARISON_OPERATOR expression [STRING]]
 
 TELINGO_ENTITY_TEMPORAL_OPERATOR: "previously" | "subsequently" | "initially" | "finally"
 verb.1: [COPULA] [cardinality] [VERB_NEGATION] [TELINGO_ENTITY_TEMPORAL_OPERATOR] _CNL_INDEFINITE_ARTICLE? STRING [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list] [VERB_PREPOSITION]
@@ -304,10 +304,10 @@ define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE
 parameter_list.1: PARAMETER_PREPOSITION parameter (_CNL_COMMA _CNL_AND? PARAMETER_PREPOSITION parameter)*
 _CNL_RESPECT: "respect"
 _CNL_RESPECT_TO: _CNL_RESPECT " " _CNL_TO
-parameter.-1: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+ [EXPRESSION] [COMPARISON_OPERATOR (EXPRESSION | STRING) [STRING]]
+parameter.-1: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+ [expression] [COMPARISON_OPERATOR (expression | STRING) [STRING]]
               | SHIFT_OPERATOR TEMPORAL_TYPE _CNL_RESPECT_TO VARIABLE -> parameter_temporal_ordering
 
-EXPRESSION: (VARIABLE | NUMBER | "+" | "-"| "*" | "/" | "\\" | "(" | ")" | "|" )+
+!expression: (VARIABLE | NUMBER | "+" | "-"| "*" | "/" | "\\" | "(" | ")" | "|" )+
 
 ASSIGNMENT_VERB: "can" | "must"
 COPULA: "be " | "be a " | "be an "
