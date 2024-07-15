@@ -708,7 +708,7 @@ class CNLTransformer(Transformer):
         temporal_entity = SignatureManager.get_signature_from_type(elem[1])
         return AttributeComponent(temporal_entity.get_name(), ValueComponent(f'{elem[2]}{elem[0]}1'), AttributeOrigin(temporal_entity.get_name()))
 
-    def EXPRESSION(self, elem):
+    def expression(self, elem):
         return ''.join(elem)
 
     def entity(self, elem):
