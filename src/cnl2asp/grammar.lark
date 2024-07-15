@@ -30,7 +30,7 @@ cnl_is_identified: _CNL_IS " " _CNL_IDENTIFIED
 _CNL_COMMA: ","
 _CNL_AND: "and"
 _CNL_HAS: "has"
-standard_definition.1: _CNL_INDEFINITE_ARTICLE? STRING cnl_is_identified? [keys_list] (_CNL_COMMA _CNL_AND)? [_CNL_HAS parameter_definition (_CNL_COMMA _CNL_AND? parameter_definition)*]
+standard_definition.1: _CNL_INDEFINITE_ARTICLE? string cnl_is_identified? [keys_list] (_CNL_COMMA _CNL_AND)? [_CNL_HAS parameter_definition (_CNL_COMMA _CNL_AND? parameter_definition)*]
 _CNL_BY: "by"
 keys_list: _CNL_BY parameter_definition (_CNL_COMMA _CNL_AND? _CNL_BY parameter_definition)*
 parameter_definition: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+
@@ -50,21 +50,21 @@ _CNL_OF: "of"
 cnl_with_a_length_of: _CNL_WITH " " _CNL_A " " _CNL_LENGTH " " _CNL_OF
 _CNL_MINUTES: "minutes"
 _CNL_DAYS: "days"
-temporal_concept_definition.1: _CNL_INDEFINITE_ARTICLE STRING cnl_is_a_temporal_concept_expressed_in TEMPORAL_TYPE cnl_ranging_from temporal_value _CNL_TO temporal_value [cnl_with_a_length_of NUMBER (_CNL_MINUTES | _CNL_DAYS)]
+temporal_concept_definition.1: _CNL_INDEFINITE_ARTICLE string cnl_is_a_temporal_concept_expressed_in TEMPORAL_TYPE cnl_ranging_from temporal_value _CNL_TO temporal_value [cnl_with_a_length_of NUMBER (_CNL_MINUTES | _CNL_DAYS)]
 
 _CNL_MINUTE: "minute"
 _CNL_DAY: "day"
 _CNL_STEP: "step"
 _CNL_STEPS: "steps"
 TEMPORAL_TYPE: _CNL_MINUTES | _CNL_MINUTE | _CNL_DAYS | _CNL_DAY | _CNL_STEPS | _CNL_STEP
-temporal_value: NUMBER ":" NUMBER STRING | NUMBER "/" NUMBER "/" NUMBER | NUMBER | STRING
+temporal_value: NUMBER ":" NUMBER string | NUMBER "/" NUMBER "/" NUMBER | NUMBER | string
 
-complex_concept_definition.1: STRING _CNL_IS COMPLEX_CONCEPT_TYPE
+complex_concept_definition.1: string _CNL_IS COMPLEX_CONCEPT_TYPE
 _CNL_SET: "set"
 _CNL_LIST: "list"
 COMPLEX_CONCEPT_TYPE: _CNL_A " " (_CNL_SET | _CNL_LIST)
 _CNL_CONTAINS: "contains"
-complex_concept_elements_definition: STRING _CNL_CONTAINS string_list
+complex_concept_elements_definition: string _CNL_CONTAINS string_list
 
 implicit_definition_proposition: constant_definition_clause -> constant_implicit_definition_proposition
                                  | simple_definition
@@ -75,17 +75,17 @@ _CNL_CONSTANT: "constant"
 cnl_is_a_constant: _CNL_IS " " _CNL_A " " _CNL_CONSTANT
 _CNL_EQUAL: "equal"
 _CNL_EQUAL_TO: _CNL_EQUAL " " _CNL_TO
-constant_definition_clause.1: STRING cnl_is_a_constant [_CNL_EQUAL_TO STRING]
+constant_definition_clause.1: string cnl_is_a_constant [_CNL_EQUAL_TO string]
 
 _CNL_AN: "an"i
 _CNL_INDEFINITE_ARTICLE: _CNL_A | _CNL_AN
-simple_definition.1: STRING COPULA _CNL_INDEFINITE_ARTICLE? STRING
+simple_definition.1: string COPULA _CNL_INDEFINITE_ARTICLE? string
 _CNL_GOES: "goes"
 cnl_goes_from: _CNL_GOES " " _CNL_FROM
-compounded_range_clause: _CNL_INDEFINITE_ARTICLE? STRING cnl_goes_from (NUMBER | STRING) _CNL_TO (NUMBER | STRING) [compounded_match_tail]
+compounded_range_clause: _CNL_INDEFINITE_ARTICLE? string cnl_goes_from (NUMBER | string) _CNL_TO (NUMBER | string) [compounded_match_tail]
 _CNL_ONE: "one"
 cnl_is_one_of: _CNL_IS " " _CNL_ONE " " _CNL_OF
-compounded_match_clause: _CNL_INDEFINITE_ARTICLE? STRING cnl_is_one_of string_list [compounded_match_tail]
+compounded_match_clause: _CNL_INDEFINITE_ARTICLE? string cnl_is_one_of string_list [compounded_match_tail]
 
 _CNL_THAT: "that"
 _CNL_ARE: "are"
@@ -93,7 +93,7 @@ _CNL_RESPECTIVELY: "respectively"
 cnl_that_are_equal_to_respectively: _CNL_THAT " " _CNL_ARE " " _CNL_EQUAL_TO " " _CNL_RESPECTIVELY
 cnl_that_is_equal_to_respectively: _CNL_THAT " " _CNL_IS " " _CNL_EQUAL_TO " " _CNL_RESPECTIVELY
 _CNL_ALSO: "also"
-compounded_match_tail: _CNL_AND _CNL_HAS STRING (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list (_CNL_AND _CNL_ALSO STRING (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list)*
+compounded_match_tail: _CNL_AND _CNL_HAS string (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list (_CNL_AND _CNL_ALSO string (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list)*
 enumerative_definition_clause: entity verb [conjunctive_object_list]
 
 standard_proposition: whenever_then_clause_proposition
@@ -178,7 +178,7 @@ where_clause: comparison (_CNL_AND comparison)*
             | VARIABLE COPULA _CNL_ONE_OF string_list -> variable_substitution
             | VARIABLE COPULA _CNL_RESPECTIVELY _CNL_ONE_OF string_list -> variable_respectively_substitution
             | where_clause _CNL_AND where_clause
-string_list: STRING (_CNL_COMMA STRING)*
+string_list: string (_CNL_COMMA string)*
 
 parameter_entity_link: _CNL_THE? parameter _CNL_OF _CNL_THE entity
 _CNL_BETWEEN: "between"
@@ -280,23 +280,23 @@ CNL_MAXIMIZED: "maximized"
 optimization_operator: CNL_MINIMIZED | CNL_MAXIMIZED
 
 //GLOBAL ELEMENT
-cardinality: QUANTITY_OPERATOR STRING -> single_quantity_cardinality
-           | _CNL_BETWEEN STRING _CNL_AND STRING -> range_quantity_cardinality
+cardinality: QUANTITY_OPERATOR string -> single_quantity_cardinality
+           | _CNL_BETWEEN string _CNL_AND string -> range_quantity_cardinality
 conjunctive_object_list.-1: entity ((_CNL_COMMA _CNL_AND?) entity)*
 predicate: verb [cardinality] _CNL_SUCH_THAT_THERE_IS? [conjunctive_object_list] [_CNL_FOR (NUMBER | VARIABLE) PARAMETER_NAME] -> predicate_with_objects
            | verb [cardinality] _CNL_SUCH_THAT_THERE_IS? simple_clause_wrv -> predicate_with_simple_clause
 simple_clause_wrv.-2: entity verb [conjunctive_object_list]
 
 ?entity: TELINGO_ENTITY_TEMPORAL_OPERATOR? (simple_entity | complex_entity)
-simple_entity: _CNL_INDEFINITE_ARTICLE? STRING [STRING] [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list]
+simple_entity: _CNL_INDEFINITE_ARTICLE? string [string] [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list]
 _CNL_ELEMENT: "element"
-complex_entity: complex_entity_parameter _CNL_IN STRING -> generic_element
-              | _CNL_THE STRING _CNL_ELEMENT? [EXPRESSION] ORDERING_OPERATOR STRING -> list_element_order
-              | _CNL_THE NUMBER ("st" | "nd" | "rd" | "th") _CNL_ELEMENT [EXPRESSION] _CNL_IN STRING -> list_index_element
-complex_entity_parameter: _CNL_AN _CNL_ELEMENT [EXPRESSION] [COMPARISON_OPERATOR EXPRESSION [STRING]]
+complex_entity: complex_entity_parameter _CNL_IN string -> generic_element
+              | _CNL_THE string _CNL_ELEMENT? [EXPRESSION] ORDERING_OPERATOR string -> list_element_order
+              | _CNL_THE NUMBER ("st" | "nd" | "rd" | "th") _CNL_ELEMENT [EXPRESSION] _CNL_IN string -> list_index_element
+complex_entity_parameter: _CNL_AN _CNL_ELEMENT [EXPRESSION] [COMPARISON_OPERATOR EXPRESSION [string]]
 
 TELINGO_ENTITY_TEMPORAL_OPERATOR: "previously" | "subsequently" | "initially" | "finally"
-verb.1: [COPULA] [cardinality] [VERB_NEGATION] [TELINGO_ENTITY_TEMPORAL_OPERATOR] _CNL_INDEFINITE_ARTICLE? STRING [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list] [VERB_PREPOSITION]
+verb.1: [COPULA] [cardinality] [VERB_NEGATION] [TELINGO_ENTITY_TEMPORAL_OPERATOR] _CNL_INDEFINITE_ARTICLE? string [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list] [VERB_PREPOSITION]
        | [VERB_NEGATION] TELINGO_TEMPORAL_OPERATOR verb [TELINGO_TEMPORAL_OPERATOR] -> telingo_verb
 entity_temporal_order_constraint: _CNL_THAT _CNL_IS ORDERING_OPERATOR temporal_value
 define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE
@@ -304,7 +304,7 @@ define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE
 parameter_list.1: PARAMETER_PREPOSITION parameter (_CNL_COMMA _CNL_AND? PARAMETER_PREPOSITION parameter)*
 _CNL_RESPECT: "respect"
 _CNL_RESPECT_TO: _CNL_RESPECT " " _CNL_TO
-parameter.-1: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+ [EXPRESSION] [COMPARISON_OPERATOR (EXPRESSION | STRING) [STRING]]
+parameter.-1: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+ [EXPRESSION] [COMPARISON_OPERATOR (EXPRESSION | string) [string]]
               | SHIFT_OPERATOR TEMPORAL_TYPE _CNL_RESPECT_TO VARIABLE -> parameter_temporal_ordering
 
 EXPRESSION: (VARIABLE | NUMBER | "+" | "-"| "*" | "/" | "\\" | "(" | ")" | "|" )+
@@ -319,7 +319,8 @@ COPULA: "be " | "be a " | "be an "
 SHIFT_OPERATOR: _CNL_THE " " ("next" | "previous")
 
 PARAMETER_NAME: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[a-z0-9][A-Za-z0-9\_]+/ //has to start with lower case letter
-STRING: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[A-Za-z0-9\_]+/i
+string: /\b(?!(is|identified|and|equal|to|are|has|be|have|by|with|in|exactly|most|least|exaclty|any|every|more|less|greater|after|highest|lowest|smallest|biggest|sum|difference|product|division|where|between|whenever|such|that|there|than|also|then|required|prohibited|or)\b)[A-Za-z0-9\_]+/i
+       | "\"" string+ "\"" -> quoted_string
 VARIABLE: UCASE_LETTER (UCASE_LETTER | INT | "_")*
 PARAMETER_PREPOSITION: _CNL_BY | "with"
 VERB_PREPOSITION: _CNL_BY | "to" | "in" | "from"

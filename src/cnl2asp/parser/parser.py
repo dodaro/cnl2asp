@@ -923,10 +923,13 @@ class CNLTransformer(Transformer):
     def NUMBER(self, elem) -> ValueComponent:
         return ValueComponent(elem.value)
 
-    def STRING(self, elem) -> ValueComponent:
-        if self._is_label(elem.value):
-            return ValueComponent(elem.value)
-        return ValueComponent(elem.value)
+    def string(self, elem) -> ValueComponent:
+        if self._is_label(elem[0]):
+            return ValueComponent(elem[0])
+        return ValueComponent(elem[0])
+
+    def quoted_string(self, elem):
+        return ' '.join(elem)
 
     def PREPOSITION(self, preposition) -> None:
         return preposition
