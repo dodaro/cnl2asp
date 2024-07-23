@@ -111,7 +111,14 @@ class ASPWeakConstraint(ASPRule):
         weak_constraint = weak_constraint.replace('\n', ' ')
         weak_constraint += f'[{self.weight}@{self.level}'
         if self.discriminant:
-            weak_constraint += f',{",".join([str(attribute) for attribute in self.discriminant])}]\n'
+            added = set()
+            attributes = []
+            for attribute in self.discriminant:
+                str_attr = str(attribute)
+                if str_attr not in added:
+                    attributes.append(str_attr)
+                    added.add(str_attr)
+            weak_constraint += f',{",".join(attributes)}]\n'
         else:
             weak_constraint += ']\n'
         return weak_constraint

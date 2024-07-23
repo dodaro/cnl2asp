@@ -99,7 +99,7 @@ day(6,"07/01/2022").
 position_in(D,S,P,SSGNMNT_RDR,T..T+PH4) :- patient(P,_), assignment(P,SSGNMNT_RDR,D,T), registration(P,SSGNMNT_RDR,_,_,_,_,PH4), x_support(D,S,P,SSGNMNT_RDR,T).
 :- #count{D1: position_in(D,S,D1,_,TS), seat(S,_), day(D,_), timeslot(TS,_)} >= 2, day(D,_), timeslot(TS,_), seat(S,_).
 :- assignment(_,_,_,TMSLT_SSGNMNT), TMSLT_SSGNMNT <= 23, registration(RGSTRTN_D,RGSTRTN_RDR,_,_,_,_,DRTN_F_TH_FRTH_PHS), assignment(RGSTRTN_D,RGSTRTN_RDR,_,TMSLT_SSGNMNT), DRTN_F_TH_FRTH_PHS > 50.
-:~ patient(P,T), position_in(_,S,P,_,_), seat(S,T). [1@3,T,T]''')
+:~ patient(P,T), position_in(_,S,P,_,_), seat(S,T). [1@3,T]''')
 
     def test_graph_coloring(self):
         self.check_input_to_output('''A node goes from 1 to 3.
@@ -124,6 +124,41 @@ connected_to(3,X) :- node(3), node(X), X = 1.
 connected_to(3,X) :- node(3), node(X), X = 2.
 1 <= {assigned_to(ND_D,CLR_D): color(CLR_D)} <= 1 :- node(ND_D).
 :- connected_to(X,Y), node(X), assigned_to(X,C), node(Y), assigned_to(Y,C), color(C).''')
+
+    def test_ham_path(self):
+        self.check_input_to_output('''A path is identified by a first node, by a second node.
+A node goes from 1 to 5.
+Node 1 is connected to node X, where X is one of 2, 3.
+Node 2 is connected to node X, where X is one of 1, 4.
+Node 3 is connected to node X, where X is one of 1, 4.
+Node 4 is connected to node X, where X is one of 3, 5.
+Node 5 is connected to node X, where X is one of 3, 4.
+start is a constant equal to 1.
+Every node X can have a path with first node X, with second node Y to a node Y connected to node X.
+It is required that the number of nodes where node X has a path with first node X, with second node Y to node Y is equal to 1.
+It is required that the number of nodes where node Y has a path with first node X, with second node Y to node X is equal to 1.
+Node start is reachable.
+Node Y is reachable when node X is reachable and also node X has a path with first node X, with second node Y to node Y.
+It is required that every node is reachable.
+''', '''\
+#const start = 1.
+node(1..5).
+connected_to(1,X) :- node(1), node(X), X = 2.
+connected_to(1,X) :- node(1), node(X), X = 3.
+connected_to(2,X) :- node(2), node(X), X = 1.
+connected_to(2,X) :- node(2), node(X), X = 4.
+connected_to(3,X) :- node(3), node(X), X = 1.
+connected_to(3,X) :- node(3), node(X), X = 4.
+connected_to(4,X) :- node(4), node(X), X = 3.
+connected_to(4,X) :- node(4), node(X), X = 5.
+connected_to(5,X) :- node(5), node(X), X = 3.
+connected_to(5,X) :- node(5), node(X), X = 4.
+{path(X,Y): node(Y), connected_to(Y,X)} :- node(X).
+:- node(X), #count{Y: path(X,Y), node(Y)} != 1.
+:- node(Y), #count{X: path(X,Y), node(X)} != 1.
+reachable(start) :- node(start).
+reachable(Y) :- reachable(X), node(X), path(X,Y), node(Y).
+:- node(RCHBL_D), not reachable(RCHBL_D).''')
 
     def test_input_file(self):
         self.check_input_to_output('''A movie is identified by an id, and has a title, a director, and a year.
@@ -357,3 +392,71 @@ edge(4,5).
 :- node(N1,SSGND_T_WGHT), assigned_to(N1,S1,SSGND_T_WGHT), node(N2,SSGND_T_WGHT1), assigned_to(N2,S1,SSGND_T_WGHT1), set(S1), edge(N1,N2).
 :- #count{D: assigned_to(D,S1,_), set(S1)} = CNT, #count{D1: assigned_to(D1,S2,_), set(S2)} = CNT1, CNT <= CNT1, S1 = 1, S2 = 2.
 :- #sum{WGHT: assigned_to(_,S2,WGHT), set(S2)} = SM, #sum{WGHT1: assigned_to(_,S1,WGHT1), set(S1)} = SM1, SM < SM1, S1 = 1, S2 = 2.''')
+
+    def test_nursescheduling(self):
+        self.check_input_to_output('''A shift is identified by an id, and has a number, and hour.
+numberOfNurses is a constant.
+A nurse goes from 1 to numberOfNurses.
+A day goes from 1 to 365.
+maxNurseMorning is a constant.
+maxNurseAfternoon is a constant.
+maxNurseNight is a constant.
+minNurseMorning is a constant.
+minNurseAfternoon is a constant.
+minNurseNight is a constant.
+maxHours is a constant equal to 1692.
+minHours is a constant equal to 1687.
+maxDay is a constant equal to 82.
+maxNight is a constant equal to 61.
+minDay is a constant equal to 74.
+minNight is a constant equal to 58.
+balanceNurseDay is a constant equal to 78.
+balanceNurseAfternoon is a constant equal to 78.
+balanceNurseNight is a constant equal to 60.
+Every nurse can work in exactly 1 shift for each day.
+It is required that the number of nurses that work in shift S, and day D is at most M, whenever there is a day D, where S is one of morning, afternoon, night and M is respectively one of maxNurseMorning, maxNurseAfternoon, maxNurseNight.
+It is prohibited that the number of nurses that work in shift S, and day D is less than M, where S is one of morning, afternoon, night and M is respectively one of minNurseMorning, minNurseAfternoon, minNurseNight.
+It is prohibited that the total of hour, in a day, where a nurse works in shift S is more than maxHours.
+It is prohibited that the total of hour, in a day, where a nurse works in shift S is less than minHours.
+It is prohibited that the number of days with shift equal to vacation where a nurse works in is different from 30.
+It is prohibited that a nurse N works with day D in shift with id S1, with number N1, when nurse N works with day D+1 in shift with id S2, with number N2 less than N1, whenever there is a shift with id X, with number equal to morning, whenever there is a shift with id Y, with number equal to night, where S1 is between X and Y.
+It is required that the number of days D where a nurse works in a shift with id equal to rest is at least 2, whenever there is a day D2 where D is between D2 and D2+13 and D2 is less than 353.
+It is required that a nurse N works in a day D, shift specrest, whenever we have that the number of days D1 where a nurse N works in shift night is equal to 2, whenever there is a day D, where D1 is between D-2 and D-1.
+It is prohibited that a nurse N works in a day D, shift specrest, whenever we have that the number of days D1 where a nurse N works in shift night is different from 2, whenever there is a day D, where D1 is between D-2 and D-1.
+It is prohibited that the number of days where a nurse works in shift S is more than M, where S is one of morning, afternoon, night and M is respectively one of maxDay, maxDay, maxNight.
+It is prohibited that the number of days where a nurse works in shift S is less than M, where S is one of morning, afternoon, night and M is respectively one of minDay, minDay, minNight.
+It is preferred, with high priority, that the difference in absolute value between B, and DAYS is minimized, where DAYS is equal to the number of days where a nurse with id N works in a shift and DAYS is between minDay and maxDay and B is one of balanceNurseDay, balanceNurseAfternoon and S is respectively one of morning, afternoon.
+It is preferred as much as possible, with high priority, that the difference in absolute value between balanceNurseNight, and DAYS is minimized, where DAYS is equal to the number of days where a nurse with id N works in shift with id equal to night and DAYS is between minNight and maxNight.''', '''#const maxHours = 1692.
+#const minHours = 1687.
+#const maxDay = 82.
+#const maxNight = 61.
+#const minDay = 74.
+#const minNight = 58.
+#const balanceNurseDay = 78.
+#const balanceNurseAfternoon = 78.
+#const balanceNurseNight = 60.
+nurse(1..numberOfNurses).
+day(1..365).
+1 <= {work_in(DY_D,NRS_D,SHFT_D): shift(SHFT_D,_,_)} <= 1 :- day(DY_D), nurse(NRS_D).
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} <= M, day(D), S = "morning", M = maxNurseMorning.
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} <= M, day(D), S = "afternoon", M = maxNurseAfternoon.
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} <= M, day(D), S = "night", M = maxNurseNight.
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} < M, S = "morning", M = minNurseMorning.
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} < M, S = "afternoon", M = minNurseAfternoon.
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} < M, S = "night", M = minNurseNight.
+:- nurse(WRK_N_D), #sum{HR,D: work_in(D,WRK_N_D,S), shift(S,_,HR)} > maxHours.
+:- nurse(WRK_N_D), #sum{HR,D: work_in(D,WRK_N_D,S), shift(S,_,HR)} < minHours.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,"vacation")} != 30.
+:- work_in(D,N,S1), shift(S1,N1,_), nurse(N), work_in(D+1,N,S2), shift(S2,N2,_), shift(X,"morning",_), shift(Y,"night",_), X <= S1, S1 <= Y, N2 < N1.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,"rest"), shift("rest",_,_), D2 <= D, D <= D2+13} < 2, day(D2), D2 < 353.
+:- not work_in(D,N,"specrest"), shift("specrest",_,_), nurse(N), #count{D1: work_in(D1,N,"night"), shift("night",_,_), D-2 <= D1, D1 <= D-1} = 2, day(D).
+:- work_in(D,N,"specrest"), shift("specrest",_,_), nurse(N), #count{D1: work_in(D1,N,"night"), shift("night",_,_), D-2 <= D1, D1 <= D-1} != 2, day(D).
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} > M, S = "morning", M = maxDay.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} > M, S = "afternoon", M = maxDay.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} > M, S = "night", M = maxNight.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} < M, S = "morning", M = minDay.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} < M, S = "afternoon", M = minDay.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} < M, S = "night", M = minNight.
+:~ nurse(N), DAYS = #count{D: work_in(D,N,WRK_N_D1), shift(WRK_N_D1,_,_)}, minDay <= DAYS, DAYS <= maxDay, ((B - DAYS)) = BSLT_VL, B = balanceNurseDay, S = "morning". [BSLT_VL@3,N]
+:~ nurse(N), DAYS = #count{D: work_in(D,N,WRK_N_D1), shift(WRK_N_D1,_,_)}, minDay <= DAYS, DAYS <= maxDay, ((B - DAYS)) = BSLT_VL, B = balanceNurseAfternoon, S = "afternoon". [BSLT_VL@3,N]
+:~ nurse(N), DAYS = #count{D: work_in(D,N,"night"), shift("night",_,_)}, minNight <= DAYS, DAYS <= maxNight, ((balanceNurseNight - DAYS)) = BSLT_VL. [BSLT_VL@3,N]''')

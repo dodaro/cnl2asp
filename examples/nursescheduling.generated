@@ -20,7 +20,7 @@ day(1..365).
 :- nurse(WRK_N_D), #sum{HR,D: work_in(D,WRK_N_D,S), shift(S,_,HR)} < minHours.
 :- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,"vacation")} != 30.
 :- work_in(D,N,S1), shift(S1,N1,_), nurse(N), work_in(D+1,N,S2), shift(S2,N2,_), shift(X,"morning",_), shift(Y,"night",_), X <= S1, S1 <= Y, N2 < N1.
-:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,"rest"), shift("rest",_,_), D <= D2} < 2, day(D2), ['D2+13', 'D2'] < 353.
+:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,"rest"), shift("rest",_,_), D2 <= D, D <= D2+13} < 2, day(D2), D2 < 353.
 :- not work_in(D,N,"specrest"), shift("specrest",_,_), nurse(N), #count{D1: work_in(D1,N,"night"), shift("night",_,_), D-2 <= D1, D1 <= D-1} = 2, day(D).
 :- work_in(D,N,"specrest"), shift("specrest",_,_), nurse(N), #count{D1: work_in(D1,N,"night"), shift("night",_,_), D-2 <= D1, D1 <= D-1} != 2, day(D).
 :- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} > M, S = "morning", M = maxDay.
