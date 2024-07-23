@@ -402,3 +402,13 @@ class TestCnlPropositions(unittest.TestCase):
                                    """{jump(M)} :- not not &tel {<< monkey(M) | &true}.""")
 
 
+    def test_quoted_strings(self):
+        self.check_input_to_output('A entity is one of "first", "second second".',
+                                   'entity("first").\nentity("second second").')
+        self.check_input_to_output('A entity is identified by an id.\n'
+                                   'There is an entity with id equal to "field value".',
+                                   'entity("field value").')
+        self.check_input_to_output('A entity is identified by an id.\n'
+                                   'Whenever there is an entity with id equal to "field value", '
+                                   'then we can have a second_entity with field equal to "field value".',
+                                   '{second_entity("field value","field value")} :- entity("field value").')
