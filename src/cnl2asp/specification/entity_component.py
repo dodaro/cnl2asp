@@ -68,6 +68,13 @@ class EntityComponent(Component):
             return True
         return False
 
+    def get_initialized_attributes(self) -> list[AttributeComponent]:
+        res = []
+        for attribute in self.get_attributes():
+            if attribute.value != Utility.NULL_VALUE:
+                res.append(attribute)
+        return res
+
     def has_attribute_value(self, value: ValueComponent) -> bool:
         for attribute in self.attributes:
             if attribute.value == value:
@@ -87,7 +94,9 @@ class EntityComponent(Component):
         return self.keys if self.keys else self.attributes
 
     def get_attributes(self) -> list[AttributeComponent]:
-        return self.attributes
+        if self.keys:
+            return self.attributes
+        return []
 
     def get_keys_and_attributes(self) -> list[AttributeComponent]:
         return self.keys + self.attributes

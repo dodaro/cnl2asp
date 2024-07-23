@@ -49,4 +49,4 @@ timeslot(36,"01:30 PM").
 position_in(D,S,P,SSGNMNT_RDR,T..T+PH4) :- patient(P,_), assignment(P,SSGNMNT_RDR,D,T), registration(P,SSGNMNT_RDR,_,_,_,_,PH4), x_a2252620_a474_4f52_8cdc_72673ac6a2cf(D,S,P,SSGNMNT_RDR,T).
 :- #count{D1: position_in(D,S,D1,_,TS), seat(S,_), day(D,_), timeslot(TS,_)} >= 2, day(D,_), timeslot(TS,_), seat(S,_).
 :- assignment(_,_,_,TMSLT_SSGNMNT), TMSLT_SSGNMNT <= 23, registration(RGSTRTN_D,RGSTRTN_RDR,_,_,_,_,DRTN_F_TH_FRTH_PHS), assignment(RGSTRTN_D,RGSTRTN_RDR,_,TMSLT_SSGNMNT), DRTN_F_TH_FRTH_PHS > 50.
-:~ patient(P,T), position_in(_,S,P,_,_), seat(S,T). [1@3,T,T]
+:~ patient(P,T), position_in(_,S,P,_,_), seat(S,T). [1@3,T]
