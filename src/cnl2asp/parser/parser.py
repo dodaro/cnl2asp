@@ -355,6 +355,10 @@ class CNLTransformer(Transformer):
             operation.negated = True
         return operation
 
+    def prefixed_telingo_operation(self, elem):
+        elem[0], elem[1] = elem[1], elem[0]
+        return self.telingo_operation(elem)
+
     def hold_condition(self, elem):
         if elem[0] == True:
             return True, elem[1]
