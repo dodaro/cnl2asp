@@ -576,6 +576,9 @@ class CNLTransformer(Transformer):
         self._proposition.add_requisite(comparison)
         return comparison
 
+    def between_comparison(self, elem):
+        return self.comparison([elem[0], Operators.BETWEEN, [elem[1], elem[2]], None])
+
     def simple_aggregate(self, elem):
         discriminant = [elem[1]]
         body = [elem[1]]
