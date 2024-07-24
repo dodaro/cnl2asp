@@ -175,7 +175,7 @@ terminal_clauses: (_CNL_COMMA? (whenever_clause
 
 _CNL_WHERE: "where"
 _CNL_ONE_OF: _CNL_ONE " " _CNL_OF
-where_clause: comparison (_CNL_AND comparison)*
+where_clause: comparison
             | VARIABLE COPULA _CNL_ONE_OF string_list -> variable_substitution
             | VARIABLE COPULA _CNL_RESPECTIVELY _CNL_ONE_OF string_list -> variable_respectively_substitution
             | where_clause _CNL_AND where_clause
@@ -192,7 +192,8 @@ comparison_operand: expression
                     | aggregate_clause
                     | comparison_operand _CNL_AND comparison_operand -> comparison_operand_list
                     | ARITHMETIC_OPERATOR [cnl_in_absolute_value] _CNL_BETWEEN comparison_operand (_CNL_COMMA _CNL_AND? comparison_operand)+ -> arithmetic_operand
-comparison:  comparison_operand _CNL_IS COMPARISON_OPERATOR comparison_operand [such_that_clause]
+comparison: comparison_operand _CNL_IS COMPARISON_OPERATOR comparison_operand [such_that_clause]
+           | comparison_operand _CNL_IS _CNL_BETWEEN  (expression | PARAMETER_NAME | parameter_entity_link | aggregate_clause) _CNL_AND (expression | PARAMETER_NAME | parameter_entity_link | aggregate_clause) -> between_comparison
 
 _CNL_OCCURRENCES: "occurrences"
 aggregate_clause: AGGREGATE_OPERATOR _CNL_OF entity _CNL_OCCURRENCES? -> simple_aggregate
@@ -252,7 +253,6 @@ COMPARISON_OPERATOR: _CNL_THE_SAME_AS
           | _CNL_AT_LEAST
           | _CNL_AT_MOST
           | _CNL_NOT_AFTER
-          | _CNL_BETWEEN
 
 weak_constraint_proposition: cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison | simple_clause | there_is_clause) [weak_optimization_operator] [terminal_clauses]
                            | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison_operand | aggregate_clause) [weak_optimization_operator] [terminal_clauses] -> preference_with_aggregate_clause

@@ -24,7 +24,7 @@ It is prohibited that the total of hour, in a day, where a nurse works in shift 
 It is prohibited that the total of hour, in a day, where a nurse works in shift S is less than minHours.
 It is prohibited that the number of days with shift equal to vacation where a nurse works in is different from 30.
 It is prohibited that a nurse N works with day D in shift with id S1, with number N1, when nurse N works with day D+1 in shift with id S2, with number N2 less than N1, whenever there is a shift with id X, with number equal to morning, whenever there is a shift with id Y, with number equal to night, where S1 is between X and Y.
-It is required that the number days D  where a nurse works in a shift with id equal to rest is at least 2, whenever there is a day D2 where D is between D2 and D2+13 and D2 is less than 353.
+It is required that the number of days D where a nurse works in a shift with id equal to rest is at least 2, whenever there is a day D2 where D is between D2 and D2+13 and D2 is less than 353.
 It is required that a nurse N works in a day D, shift specrest, whenever we have that the number of days D1 where a nurse N works in shift night is equal to 2, whenever there is a day D, where D1 is between D-2 and D-1.
 It is prohibited that a nurse N works in a day D, shift specrest, whenever we have that the number of days D1 where a nurse N works in shift night is different from 2, whenever there is a day D, where D1 is between D-2 and D-1.
 It is prohibited that the number of days where a nurse works in shift S is more than M, where S is one of morning, afternoon, night and M is respectively one of maxDay, maxDay, maxNight.

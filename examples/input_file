@@ -8,7 +8,6 @@ acceptableTemperature is a constant.
 A ColdTemperature goes from minKelvinTemperature to acceptableTemperature.
 A day goes from 1 to 365.
 A drink is one of alcoholic, nonalcoholic.
- //and has color that is equal to respectively blue, yellow.
 John is a waiter.
 1 is a pub.
 Alice is a patron.

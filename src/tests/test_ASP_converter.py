@@ -84,6 +84,3 @@ class TestASPConverter(unittest.TestCase):
         asp_converter = ASPConverter()
         encoding = asp_converter.convert_specification(specification)
         self.assertEqual(str(encoding).strip(), '''#program problem1.\n:- entity(FIELD).\n\n#program problem2.\n:- entity(FIELD).''')
-
-if __name__ == '__main__':
-    unittest.main()

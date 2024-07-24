@@ -25,7 +25,8 @@ from cnl2asp.specification.entity_component import EntityComponent, TemporalEnti
 from cnl2asp.specification.attribute_component import AttributeComponent, RangeValueComponent, is_same_origin
 from cnl2asp.specification.component import Component
 from cnl2asp.specification.problem import Problem
-from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, RequisiteComponent, \
+from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, \
+    RequisiteComponent, \
     PreferenceProposition, CardinalityComponent, PREFERENCE_PROPOSITION_TYPE
 from cnl2asp.specification.aggregate_component import AggregateComponent
 from cnl2asp.specification.operation_component import OperationComponent, Operators
@@ -41,10 +42,12 @@ class EntityToAtom:
         self.entity = entity
         self.atom = atom
 
+
 def is_arithmetic_operator(operator):
     if operator <= Operators.DIVISION:
         return True
     return False
+
 
 operators_negation = {
     Operators.EQUALITY: Operators.INEQUALITY,
@@ -55,6 +58,7 @@ operators_negation = {
     Operators.LESS_THAN_OR_EQUAL_TO: Operators.GREATER_THAN,
     Operators.BETWEEN: Operators.NOTBETWEEN
 }
+
 
 class ForbiddenLink:
     def __init__(self, entity_1: EntityComponent, entity_2: EntityComponent, attribute_1: AttributeComponent,
@@ -88,7 +92,8 @@ class ASPConverter(Converter[ASPProgram,
         self._aggregates: list[ASPAggregate] = []
         self._operations: list[ASPOperation] = []
         self._forbidden_links: list[ForbiddenLink] = []
-        self._converted_complex_entities: list[str] = [] # name of complex entities already converted, used to track if their values have been already converted.
+        self._converted_complex_entities: list[
+            str] = []  # name of complex entities already converted, used to track if their values have been already converted.
 
     def get_trailing_number(self, s: str):
         m = re.search(r'\d+$', s)
@@ -215,17 +220,25 @@ class ASPConverter(Converter[ASPProgram,
 
     def convert_temporal_entity(self, temporal_entity: TemporalEntityComponent):
         if temporal_entity.get_name() not in self._converted_complex_entities:
-            for value, idx in temporal_entity.values.items():
+            temporal_values = list(temporal_entity.values.items())
+            for value, idx in temporal_values[:-1]:
                 self._program.add_rule(ASPRule(head=[ASPRuleHead(ASPAtom(temporal_entity.get_name(),
-                                                                       [ASPAttribute(temporal_entity.get_name().removesuffix('s'), ASPValue(idx)),
-                                                                        ASPAttribute('value', ASPValue(f'\"{value}\"'))]))]))
+                                                                         [ASPAttribute(
+                                                                             temporal_entity.get_name().removesuffix(
+                                                                                 's'), ASPValue(idx)),
+                                                                          ASPAttribute('value',
+                                                                                       ASPValue(f'\"{value}\"'))]))]))
             self._converted_complex_entities.append(temporal_entity.get_name())
+            return ASPAtom(temporal_entity.get_name(),
+                           [ASPAttribute(temporal_entity.get_name().removesuffix('s'), ASPValue(temporal_values[-1][1])),
+                            ASPAttribute('value', ASPValue(f'\"{temporal_values[-1][0]}\"'))])
         return self.convert_entity(temporal_entity)
 
     def __has_single_key(self, entity: EntityComponent) -> bool:
         entity_keys = entity.get_keys()
         return len(entity_keys) == 1 and \
-               entity.get_attributes_by_name_and_origin(entity_keys[0].get_name(), entity_keys[0].origin)[0].value == Utility.ASP_NULL_VALUE
+               entity.get_attributes_by_name_and_origin(entity_keys[0].get_name(), entity_keys[0].origin)[
+                   0].value == Utility.ASP_NULL_VALUE
 
     def _match_discriminant_attributes_with_body(self, discriminant: list, body: ASPConjunction):
         unmatched_discriminant_attributes = []
@@ -332,7 +345,8 @@ class ASPConverter(Converter[ASPProgram,
         return operation
 
     def convert_attribute(self, attribute: AttributeComponent) -> ASPAttribute:
-        attribute_name = inflect.engine().singular_noun(attribute.get_name()) if inflect.engine().singular_noun(attribute.get_name()) else attribute.get_name()
+        attribute_name = inflect.engine().singular_noun(attribute.get_name()) if inflect.engine().singular_noun(
+            attribute.get_name()) else attribute.get_name()
         operations = [operation.convert(self) for operation in attribute.operations]
         return ASPAttribute(attribute_name, attribute.value.convert(self), attribute.origin, operations)
 
@@ -346,7 +360,8 @@ class ASPConverter(Converter[ASPProgram,
     def convert_value(self, value: ValueComponent) -> ASPValue:
         if not value:
             return ASPValue(value)
-        if not self._asp_encoding.is_constant(value) and not value == Utility.NULL_VALUE and not value.isnumeric() and not value.isupper():
+        if not self._asp_encoding.is_constant(
+                value) and not value == Utility.NULL_VALUE and not value.isnumeric() and not value.isupper():
             return ASPValue(f'"{value}"')
         return ASPValue(value)
 
@@ -380,7 +395,8 @@ class ASPConverter(Converter[ASPProgram,
                     pass
         return forbidden_links
 
-    def convert_relation(self, relation_component_1: Component, relation_component_2: Component, new_knowledge: NewKnowledgeComponent = None) -> None:
+    def convert_relation(self, relation_component_1: Component, relation_component_2: Component,
+                         new_knowledge: NewKnowledgeComponent = None) -> None:
         relation_entities_1 = relation_component_1.get_entities()
         if len(relation_entities_1) > 1:
             for entities in relation_entities_1:
@@ -394,8 +410,8 @@ class ASPConverter(Converter[ASPProgram,
             else:
                 self.entity_to_atoms_and_link(relation_component_1, relation_entities_2[0])
 
-
-    def entity_to_atoms_and_link(self, entity_1: EntityComponent, entity_2: EntityComponent, new_knowledge: NewKnowledgeComponent = None):
+    def entity_to_atoms_and_link(self, entity_1: EntityComponent, entity_2: EntityComponent,
+                                 new_knowledge: NewKnowledgeComponent = None):
         atom_1 = None
         atom_2 = None
         for pair in self._atoms_in_current_rule:
@@ -447,7 +463,8 @@ class ASPConverter(Converter[ASPProgram,
                                 attribute: ASPAttribute, atom_2: ASPAtom, linked_attributes: list[ASPAttribute]):
         atom_1_attributes = atom_1.get_attributes_list(attribute.name)
         for atom_1_attribute in atom_1_attributes:
-            if (not atom_1_attribute.is_null() and atom_2.has_attribute(atom_1_attribute)) or (not attribute.is_null() and atom_1.has_attribute(attribute)):
+            if (not atom_1_attribute.is_null() and atom_2.has_attribute(atom_1_attribute)) or (
+                    not attribute.is_null() and atom_1.has_attribute(attribute)):
                 continue
             if atom_1_attribute in linked_attributes:
                 continue

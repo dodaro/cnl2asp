@@ -1,12 +1,9 @@
 from dataclasses import dataclass
 
 import clingo
-from clingo import SolveHandle
-
-from cnl2asp.converter.asp_converter import ASPConverter
+from clingo.solving import _SymbolSequence
 
 from cnl2asp.specification.attribute_component import ValueComponent, AttributeComponent
-
 from cnl2asp.specification.entity_component import EntityComponent
 from cnl2asp.specification.specification import SpecificationComponent
 
@@ -21,9 +18,8 @@ class NewKnowledge:
 
 class ClingoResultParser:
 
-    def __init__(self, specification: SpecificationComponent, model: SolveHandle):
+    def __init__(self, specification: SpecificationComponent):
         self.specification = specification
-        self.model = model
         self.target_predicates = []
         self._signatures: list[NewKnowledge] = []
 
@@ -64,7 +60,7 @@ class ClingoResultParser:
         name = ' '.join(symbol_name.split('_'))
         return f"{name} {attributes_string}".strip()
 
-    def convert_attribute_to_entity(self, subject: EntityComponent, atom: EntityComponent):
+    def _convert_attribute_to_entity(self, subject: EntityComponent, atom: EntityComponent):
         res = ''
         if subject:
             attributes_to_print = []
@@ -136,14 +132,14 @@ class ClingoResultParser:
 
     def _convert_subject(self, subject: list[EntityComponent], atom: EntityComponent):
         if len(subject) == 1:
-            return self.convert_attribute_to_entity(subject[0], atom)
+            return self._convert_attribute_to_entity(subject[0], atom)
         elif not subject:
-            return self.convert_attribute_to_entity(None, atom)
+            return self._convert_attribute_to_entity(None, atom)
         elif len(subject) > 1:
             for entity in subject:
                 attributes = self._attributes_intersection(entity, atom)
                 if self._search_entity(entity.get_name(), attributes):
-                    return self.convert_attribute_to_entity(entity, atom)
+                    return self._convert_attribute_to_entity(entity, atom)
 
     def _clingo_symbol_to_sentence(self, symbol: clingo.Symbol):
         signature = self._get_signature(symbol.name)
@@ -156,15 +152,16 @@ class ClingoResultParser:
             verb = "is "
         if signature.objects:
             for object_complement in signature.objects:
-                string += self.convert_attribute_to_entity(object_complement, signature.new_entity)
+                string += self._convert_attribute_to_entity(object_complement, signature.new_entity)
         return f"{subject} {verb}" \
                f"{self._entity_printer(signature.new_entity.get_name(), signature.new_entity.get_keys_and_attributes())} " \
                f"{string}".capitalize().strip() + "."
 
-    def parse_model(self):
+    def parse_model(self, model: list[str]):
         self._get_new_knowledge()
-        model = ''
-        for elem in self.model.symbols(atoms=True):
+        res = ''
+        for elem in model:
+            elem = clingo.parse_term(elem.strip())
             if elem.name in self.target_predicates:
-                model += self._clingo_symbol_to_sentence(elem) + '\n'
-        return model
+                res += self._clingo_symbol_to_sentence(elem) + '\n'
+        return res
