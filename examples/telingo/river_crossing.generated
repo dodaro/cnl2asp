@@ -19,9 +19,9 @@ at(F,"left_bank") :- farmer(F), location("left_bank").
 #program dynamic.
 {moved(I)} :- item(I).
 :- #count{D: moved(D)} > 1.
-at(X,B) :- 'at(X,A), location(A), moved(X), route(A,B), item(X), location(B).
-at(X,A) :- 'at(X,A), not moved(X), item(X), location(A).
-at(F,B) :- 'at(F,A), location(A), route(A,B), farmer(F), location(B).
+at(X,B) :- location(B), 'at(X,A), location(A), item(X), moved(X), route(A,B).
+at(X,A) :- 'at(X,A), location(A), item(X), not moved(X).
+at(F,B) :- location(B), farmer(F), 'at(F,A), location(A), route(A,B).
 :- moved(X), farmer(F), 'at(F,A), item(X), not 'at(X,A), location(A).
 
 #program always.
