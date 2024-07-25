@@ -117,11 +117,16 @@ _CNL_OR: "or"
 then_clause: _CNL_THEN entity ASSIGNMENT_VERB predicate (_CNL_COMMA? _CNL_OR predicate)*
 
 _CNL_HOLD: "hold" | "holds"
-hold_condition: _CNL_THAT [VERB_NEGATION] TELINGO_TEMPORAL_OPERATOR _CNL_HOLD
-                | _CNL_THAT [VERB_NEGATION] _CNL_HOLD TELINGO_TEMPORAL_OPERATOR
-telingo_operation: _CNL_THERE " " (_CNL_IS | _CNL_ARE) [VERB_NEGATION] [TELINGO_TEMPORAL_OPERATOR] telingo_operand [hold_condition] [TELINGO_DUAL_OPERATOR telingo_operation]
-                 | TELINGO_TEMPORAL_OPERATOR  _CNL_THERE " " (_CNL_IS | _CNL_ARE) [VERB_NEGATION] telingo_operand [hold_condition] [TELINGO_DUAL_OPERATOR telingo_operation] -> prefixed_telingo_operation
+hold_condition: _CNL_THAT [VERB_NEGATION] telingo_temporal_operator _CNL_HOLD
+                | _CNL_THAT [VERB_NEGATION] _CNL_HOLD telingo_temporal_operator
+telingo_operation: _CNL_THERE " " (_CNL_IS | _CNL_ARE) [VERB_NEGATION] [telingo_temporal_operator] telingo_operand [hold_condition] [TELINGO_DUAL_OPERATOR telingo_operation]
+                 | telingo_temporal_operator  _CNL_THERE " " (_CNL_IS | _CNL_ARE) [VERB_NEGATION] telingo_operand [hold_condition] [TELINGO_DUAL_OPERATOR telingo_operation] -> prefixed_telingo_operation
+_CNL_THIS: "this"
+_CNL_STATE: "state"
+_CNL_NOW: "now"
+_CNL_HERE: "here"
 TELINGO_TEMPORAL_OPERATOR: "always" | "eventually" | "before" | "since before" | "after" | "since after"
+telingo_temporal_operator: _CNL_COMMA? TELINGO_TEMPORAL_OPERATOR  ( _CNL_THIS _CNL_STATE | _CNL_NOW | _CNL_HERE)? _CNL_COMMA?
 TELINGO_DUAL_OPERATOR: "and" | "or" | "implies" | "imply" | "equivalent to" | "trigger" | "triggers" | "since" | "precede" | "releases" | "until" | "follow"
 
 telingo_operand: entity [TELINGO_DUAL_OPERATOR telingo_operand]
@@ -187,11 +192,11 @@ _CNL_ABSOLUTE: "absolute"
 _CNL_VALUE: "value"
 cnl_in_absolute_value: _CNL_IN " " _CNL_ABSOLUTE " " _CNL_VALUE
 comparison_operand: expression
-                    | PARAMETER_NAME
-                    | parameter_entity_link
-                    | aggregate_clause
-                    | comparison_operand _CNL_AND comparison_operand -> comparison_operand_list
-                    | ARITHMETIC_OPERATOR [cnl_in_absolute_value] _CNL_BETWEEN comparison_operand (_CNL_COMMA _CNL_AND? comparison_operand)+ -> arithmetic_operand
+                  | PARAMETER_NAME
+                  | parameter_entity_link
+                  | aggregate_clause
+                  | comparison_operand _CNL_AND comparison_operand -> comparison_operand_list
+                  | ARITHMETIC_OPERATOR [cnl_in_absolute_value] _CNL_BETWEEN comparison_operand (_CNL_COMMA _CNL_AND? comparison_operand)+ -> arithmetic_operand
 comparison: comparison_operand _CNL_IS COMPARISON_OPERATOR comparison_operand [such_that_clause]
            | comparison_operand _CNL_IS _CNL_BETWEEN  (expression | PARAMETER_NAME | parameter_entity_link | aggregate_clause) _CNL_AND (expression | PARAMETER_NAME | parameter_entity_link | aggregate_clause) -> between_comparison
 
@@ -298,7 +303,7 @@ complex_entity_parameter: _CNL_AN _CNL_ELEMENT [expression] [COMPARISON_OPERATOR
 
 TELINGO_ENTITY_TEMPORAL_OPERATOR: "previously" | "subsequently" | "initially" | "finally"
 verb.1: [COPULA] [cardinality] [VERB_NEGATION] [TELINGO_ENTITY_TEMPORAL_OPERATOR] _CNL_INDEFINITE_ARTICLE? string [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list] [VERB_PREPOSITION]
-       | [VERB_NEGATION] TELINGO_TEMPORAL_OPERATOR verb [TELINGO_TEMPORAL_OPERATOR] -> telingo_verb
+       | [VERB_NEGATION] telingo_temporal_operator verb [telingo_temporal_operator] -> telingo_verb
 entity_temporal_order_constraint: _CNL_THAT _CNL_IS ORDERING_OPERATOR temporal_value
 define_subsequent_event: SHIFT_OPERATOR TEMPORAL_TYPE
 
@@ -308,7 +313,11 @@ _CNL_RESPECT_TO: _CNL_RESPECT " " _CNL_TO
 parameter.-1: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+ [expression] [COMPARISON_OPERATOR (expression | string) [string]]
               | SHIFT_OPERATOR TEMPORAL_TYPE _CNL_RESPECT_TO VARIABLE -> parameter_temporal_ordering
 
-!expression: (VARIABLE | NUMBER | "+" | "-"| "*" | "/" | "\\" | "(" | ")" | "|" )+
+?expression_operand: VARIABLE | NUMBER
+!expression: expression_operand
+            | expression ("+" | "-" | "*" | "/" | "\\") expression
+            | "(" expression ")"
+            | "|" expression "|"
 
 ASSIGNMENT_VERB: "can" | "must"
 COPULA: "be " | "be a " | "be an "

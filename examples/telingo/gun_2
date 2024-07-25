@@ -25,4 +25,4 @@ Whenever there is a gun shooting, whenever there is before a gun unloaded that a
 Whenever there is previously a gun broken, then we must have a gun with status equal to broken.
 
 The following propositions apply in the final state:
-It is prohibited that before there are not a gun loaded and a gun shooting that eventually hold.
+It is prohibited that before this state there are not a gun loaded and a gun shooting that eventually hold.
