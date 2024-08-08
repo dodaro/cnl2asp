@@ -20,7 +20,7 @@ Every vehicle V can load at most 1 package P, when package with id P is previous
 Every vehicle V can unload a package P, when a package with id P is previously loaded in vehicle V.
 
 
-A package P is loaded in vehicle V, when package P is previously loaded in vehicle V and also vehicle V do not unload package P.
+A package P is loaded in vehicle V, when package P is previously loaded in vehicle V and also vehicle V does not unload package P.
 A package P is loaded, when package P is loaded in a vehicle V.
 A package P is loaded in vehicle V, when a vehicle V loads package P.
 It is prohibited that a vehicle V1 loads a package P and also vehicle V2 loads package P, where V1 is different from V2.
@@ -31,9 +31,9 @@ A vehicle V has a cargo when vehicle V unload package P.
 Every airplane A can move to at most 1 airport with location L different from M, when airplane A is previously at location M.
 Every truck T can move to at most 1 city with location L different from M, with name C, when truck T is previously at location M, whenever there is a city with location M, with name C.
 
-It is prohibited that a vehicle V move to a location L whenever there is a cargo with vehicle V.
+It is prohibited that a vehicle V moves to a location L whenever there is a cargo with vehicle V.
 
-A vehicle V is moving, when vehicle V move to a location.
+A vehicle V is moving, when vehicle V moves to a location.
 A package P is deposited in location L, when package P is loaded in vehicle V and also vehicle V is at location L.
 A vehicle V is at location L, when vehicle V moves to location L.
 

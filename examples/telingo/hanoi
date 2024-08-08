@@ -6,6 +6,7 @@ A goal is identified by a disk, and by a peg.
 The following propositions always apply:
 A disk ranges from 0 to 3.
 A peg goes from 1 to 3.
+
 There is a goal with disk id 3, with peg 3.
 There is a goal with disk id 2, with peg 3.
 There is a goal with disk id 1, with peg 3.

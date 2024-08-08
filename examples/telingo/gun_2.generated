@@ -1,6 +1,5 @@
 #program initial.
 gun("unloaded").
-:- &tel {>* (~ (gun("loaded") & gun("shooting")))}.
 
 #program always.
 shooter(1).
@@ -14,3 +13,6 @@ gun("unloaded") :- 'gun("unloaded"), not gun("loaded").
 :- gun("loading"), 'gun("loaded").
 gun("broken") :- gun("shooting"),not not &tel {(<* gun("unloaded")) & (< <? gun("shooting"))}.
 gun("broken") :- 'gun("broken").
+
+#program final.
+:- not &tel {<? (gun("loaded") & gun("shooting"))}.

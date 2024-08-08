@@ -359,6 +359,10 @@ class CNLTransformer(Transformer):
             operation.negated = True
         return operation
 
+    def prefixed_telingo_operation(self, elem):
+        elem[0], elem[1] = elem[1], elem[0]
+        return self.telingo_operation(elem)
+
     def hold_condition(self, elem):
         if elem[0] == True:
             return True, elem[1]
@@ -383,6 +387,9 @@ class CNLTransformer(Transformer):
 
     def TELINGO_TEMPORAL_RELATIONSHIP(self, elem):
         return elem.value
+
+    def telingo_temporal_operator(self, elem):
+        return elem[0]
 
     def TELINGO_TEMPORAL_OPERATOR(self, elem):
         return elem.value
