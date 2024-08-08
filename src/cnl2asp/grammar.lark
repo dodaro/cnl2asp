@@ -81,7 +81,8 @@ _CNL_AN: "an"i
 _CNL_INDEFINITE_ARTICLE: _CNL_A | _CNL_AN
 simple_definition.1: string COPULA _CNL_INDEFINITE_ARTICLE? string
 _CNL_GOES: "goes"
-cnl_goes_from: _CNL_GOES " " _CNL_FROM
+_CNL_RANGES: "ranges"
+cnl_goes_from: (_CNL_GOES | _CNL_RANGES) " " _CNL_FROM
 compounded_range_clause: _CNL_INDEFINITE_ARTICLE? string cnl_goes_from (NUMBER | string) _CNL_TO (NUMBER | string) [compounded_match_tail]
 _CNL_ONE: "one"
 cnl_is_one_of: _CNL_IS " " _CNL_ONE " " _CNL_OF
