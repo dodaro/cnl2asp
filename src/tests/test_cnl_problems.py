@@ -923,3 +923,24 @@ at(F,B) :- location(B), farmer(F), 'at(F,A), location(A), route(A,B).
 #program final.
 :- item(X), not at(X,"right_bank"), location("right_bank").''')
 
+    def test_queen(self):
+        self.check_input_to_output('''Row goes from 1 to 8.
+Column goes from 1 to 8.
+
+Queen goes from 1 to 8.
+
+Every queen can be assigned_row exactly 1 row.
+Every queen can be assigned_column exactly 1 column.
+
+Queen Q1 is sharing_row with queen Q2 when
+    queen Q1 is assigned_row row R1 and also
+    queen Q2 is assigned_row row R2.
+
+Whenever there is a sharing_row with queen Q1, with queen Q2, then we can have a queen.''', '''\
+row(1..8).
+column(1..8).
+queen(1..8).
+1 <= {assigned_row(QN_D,RW_D): row(RW_D)} <= 1 :- queen(QN_D).
+1 <= {assigned_column(QN_D,CLMN_D): column(CLMN_D)} <= 1 :- queen(QN_D).
+sharing_row(Q2,Q1) :- queen(Q1), assigned_row(Q1,R1), row(R1), queen(Q2), assigned_row(Q2,R2), row(R2).
+{queen(Q1)} :- sharing_row(Q1,Q2).''')

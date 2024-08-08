@@ -102,20 +102,32 @@ class EntityComponent(Component):
         return self.keys + self.attributes
 
     def set_attributes_value(self, attributes: list[AttributeComponent], proposition: PropositionBuilder = None):
+        def update_attribute(attribute, value, operations):
+            attribute.value = value
+            attribute.operations = operations
+
+        def get_first_null_attribute(attributes):
+            for attribute in attributes:
+                if attribute.value == Utility.NULL_VALUE:
+                    return attribute
+            return None
+
         for attribute in attributes:
             if isinstance(attribute, EntityComponent):
                 if not proposition:
                     raise RuntimeError('Error in compilation phase.')
                 proposition.add_relations([RelationComponent(self, attribute)])
             else:
-                if attribute.origin:
-                    entity_attributes = self.get_attributes_by_name_and_origin(attribute.get_name(), attribute.origin)
-                else:
+                origin = attribute.origin
+                if not origin:
                     origin = AttributeOrigin(str(self.get_name()))
-                    entity_attributes = self.get_attributes_by_name_and_origin(attribute.get_name(), origin)
-                for entity_attribute in entity_attributes:
-                    entity_attribute.value = attribute.value
-                    entity_attribute.operations = attribute.operations
+                matching_attributes = self.get_attributes_by_name_and_origin(attribute.get_name(), origin)
+                if get_first_null_attribute(matching_attributes):
+                    update_attribute(get_first_null_attribute(matching_attributes), attribute.value,
+                                     attribute.operations)
+                else:
+                    for matching_attribute in matching_attributes:
+                        update_attribute(matching_attribute, attribute.value, attribute.operations)
 
     def set_attribute_value(self, attribute_name: str, value: ValueComponent, origin: AttributeOrigin = None):
         if not origin:

@@ -193,7 +193,7 @@ _CNL_ABSOLUTE: "absolute"
 _CNL_VALUE: "value"
 cnl_in_absolute_value: _CNL_IN " " _CNL_ABSOLUTE " " _CNL_VALUE
 comparison_operand: expression
-                  | PARAMETER_NAME
+                  | string
                   | parameter_entity_link
                   | aggregate_clause
                   | comparison_operand _CNL_AND comparison_operand -> comparison_operand_list
