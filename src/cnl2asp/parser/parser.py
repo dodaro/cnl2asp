@@ -123,11 +123,8 @@ class CNLTransformer(Transformer):
 
     def parameter_definition(self, parameter) -> list[AttributeComponent]:
         name = parameter[:]
-        # part of the parameter name can be the definition of the origin.
-        # e.g. user id. we have an attribute id with origin user
-        origin = self._parameter_origin_builder(name)
+        origin = self._parse_parameter_origin(name)
         if origin and not name:
-            # if origin and not name the user imply the key of the last "origin"
             keys = SignatureManager.get_signature(parameter[-1]).get_keys()
             res = []
             for key in keys:
@@ -687,46 +684,70 @@ class CNLTransformer(Transformer):
                 res.append(elem)
         return list(res)
 
-    def _parameter_origin_builder(self, name: list[str]):
+    def _parse_parameter_origin(self, name: list[str]):
         try:
             SignatureManager.get_signature(name[0])
-            return AttributeOrigin(name.pop(0), self._parameter_origin_builder(name))
+            return AttributeOrigin(name.pop(0), self._parse_parameter_origin(name))
         except:
             return None
 
-    def parameter(self, parameter) -> EntityComponent | AttributeComponent:
-        name = parameter[:-4]
+    def _parse_entity_parameter(self, name, label):
         try:
-            entity = self._proposition.get_entity_by_label(parameter[-4])
+            entity = self._proposition.get_entity_by_label(label)
             if entity.get_name() == name[0]:
                 return entity
         except LabelNotFound:
-            pass
-        # part of the parameter name can be the definition of the origin.
-        # e.g. user id. we have an attribute id with origin user
-        origin = self._parameter_origin_builder(name)
+            return None
+        return None
+
+    def _parse_parameter_value(self, parameter_name, explicit_value, operator, operand_value):
+        result = Utility.NULL_VALUE
+        if explicit_value:
+            result = explicit_value
+        elif operator == Operators.EQUALITY:
+            result = operand_value
+        elif operator:
+            result = self._new_field_value(parameter_name)
+        self._defined_variables.append(result)
+        return ValueComponent(result)
+
+    def _parse_parameter_operation(self, attribute, operator, operand):
+        if operator and attribute.value != operand:
+            operation = OperationComponent(operator, attribute.value, operand)
+            if attribute.is_angle():
+                operation.operands[0] = AngleValueComponent(attribute.value)
+            attribute.operations = [operation]
+
+    def parameter(self, parameter) -> EntityComponent | AttributeComponent:
+        name = parameter[:-4]
+        if self._parse_entity_parameter(name, parameter[-4]):
+            return self._parse_entity_parameter(name, parameter[-4])
+        origin = self._parse_parameter_origin(name)
         if origin and not name:
-            # if origin and not name the user imply the key of the last "origin"
             name = SignatureManager.get_signature(parameter[-5]).get_keys()[0].get_name()
         else:
             name = '_'.join(name)
-        value = parameter[-4] if parameter[-4] else Utility.NULL_VALUE
-        self._defined_variables.append(value)
-        operations = []
-        if parameter[-3]:
-            if parameter[-3] == Operators.EQUALITY and value == Utility.NULL_VALUE:
-                value = parameter[-2]
-            else:
-                if value == Utility.NULL_VALUE:
-                    value = self._new_field_value(name)
-                operations = [OperationComponent(parameter[-3], ValueComponent(value), parameter[-2])]
         if not origin and SignatureManager.is_temporal_entity(name.strip()):
             origin = AttributeOrigin(name.strip())
-        attribute = AttributeComponent(name.strip(), ValueComponent(value), origin)
-        if attribute.is_angle():
-            for operation in operations:
-                operation.operands[0] = AngleValueComponent(value)
-        attribute.operations = operations
+        attribute = AttributeComponent(name.strip(),
+                                       self._parse_parameter_value(name, parameter[-4], parameter[-3], parameter[-2]),
+                                       origin)
+        self._parse_parameter_operation(attribute, parameter[-3], parameter[-2])
+        self._proposition.add_discriminant([attribute])
+        return attribute
+
+    def aggregate_parameter(self, parameter):
+        name = parameter[:-1]
+        origin = self._parse_parameter_origin(name)
+        if origin and not name:
+            name = SignatureManager.get_signature(parameter[-2]).get_keys()[0].get_name()
+        else:
+            name = '_'.join(name)
+        if not origin and SignatureManager.is_temporal_entity(name.strip()):
+            origin = AttributeOrigin(name.strip())
+        attribute = AttributeComponent(name.strip(),
+                                       self._parse_parameter_value(name, parameter[-1], None, None),
+                                       origin)
         self._proposition.add_discriminant([attribute])
         return attribute
 
@@ -873,8 +894,9 @@ class CNLTransformer(Transformer):
             if not declared_entity is entity:
                 try:
                     attribute_value = \
-                    declared_entity.get_attributes_by_name_and_origin(attribute_name, AttributeOrigin(attribute_name))[
-                        0].value
+                        declared_entity.get_attributes_by_name_and_origin(attribute_name,
+                                                                          AttributeOrigin(attribute_name))[
+                            0].value
                     entity.set_attributes_value([AttributeComponent(attribute_name,
                                                                     ValueComponent(f'{attribute_value}{operator}1'),
                                                                     AttributeOrigin(attribute_name))])

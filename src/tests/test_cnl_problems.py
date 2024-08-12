@@ -944,3 +944,15 @@ queen(1..8).
 1 <= {assigned_column(QN_D,CLMN_D): column(CLMN_D)} <= 1 :- queen(QN_D).
 sharing_row(Q2,Q1) :- queen(Q1), assigned_row(Q1,R1), row(R1), queen(Q2), assigned_row(Q2,R2), row(R2).
 {queen(Q1)} :- sharing_row(Q1,Q2).''')
+
+    def test_cell_and_rows(self):
+        self.check_input_to_output('''A row is identified by an id.
+A column is identified by an id.
+A cell is identified by a column, and by a row.
+A value is identified by a number.
+
+Every cell can be assigned to exactly 1 value.
+A row R has_duplicates whenever we have that the number of row id R that are assigned to value V is greater than 1.''',
+                                '''\
+1 <= {assigned_to(CLL_D,CLL_D1,VL_NMBR): value(VL_NMBR)} <= 1 :- cell(CLL_D,CLL_D1).
+has_duplicate(R) :- row(R), #count{R: assigned_to(_,R,V), value(V)} > 1.''')
