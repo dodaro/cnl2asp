@@ -265,7 +265,7 @@ class ASPConverter(Converter[ASPProgram,
                 unmatched_discriminant_attributes.append(attribute)
                 try:
                     discriminant += [attribute.convert(self) for attribute in
-                                     SignatureManager.get_signature(attribute.name).get_keys()]
+                                     SignatureManager.clone_signature(attribute.name).get_keys()]
                 except EntityNotFound:
                     raise Exception(f"Impossible to use attribute \"{attribute.origin} {attribute}\" in aggregate.")
             discriminant = [attribute for attribute in discriminant if

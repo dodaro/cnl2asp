@@ -31,7 +31,7 @@ class SignatureManager:
     @staticmethod
     def add_signature(entity: EntityComponent):
         try:
-            SignatureManager.get_signature(entity.get_name())
+            SignatureManager.clone_signature(entity.get_name())
         except:
             entity = entity.copy()
             # Update previous declared signatures
@@ -48,23 +48,20 @@ class SignatureManager:
             SignatureManager.signatures.append(entity)
 
     @staticmethod
-    def get_signature(signature_identifier: str) -> EntityComponent:
-        for signature in SignatureManager.signatures:
-            if signature.get_entity_identifier() == signature_identifier:
-                return signature.copy()
-        raise EntityNotFound(f'Entity "{signature_identifier}" not declared before its usage.')
+    def clone_signature(signature_identifier: str) -> EntityComponent:
+        return SignatureManager.get_signature(signature_identifier).copy()
 
     @staticmethod
-    def remove_signature(signature_identifier: str) -> EntityComponent:
+    def get_signature(signature_identifier: str):
         for signature in SignatureManager.signatures:
             if signature.get_entity_identifier() == signature_identifier:
-                SignatureManager.signatures.remove(signature)
                 return signature
+        raise EntityNotFound(f'Entity "{signature_identifier}" not declared before its usage.')
 
     @staticmethod
     def is_temporal_entity(name: str) -> bool:
         try:
-            entity = SignatureManager.get_signature(name)
+            entity = SignatureManager.clone_signature(name)
             if entity.entity_type == EntityType.DATE or entity.entity_type == EntityType.TIME or entity.entity_type == EntityType.STEP:
                 return True
         except EntityNotFound:

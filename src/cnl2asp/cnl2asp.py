@@ -90,7 +90,7 @@ class Cnl2asp:
 
     def __is_predicate(self, name: str):
         try:
-            SignatureManager.get_signature(name)
+            SignatureManager.clone_signature(name)
             return True
         except:
             return False
@@ -100,12 +100,12 @@ class Cnl2asp:
         if len(split_name) > 1:
             for name in split_name:
                 if self.__is_predicate(name):
-                    return SignatureManager.get_signature(name)
+                    return SignatureManager.clone_signature(name)
         signature_name = attribute.get_name()
         if attribute.origin != entity_name:
             signature_name = attribute.origin.name
         if self.__is_predicate(signature_name):
-            return SignatureManager.get_signature(signature_name)
+            return SignatureManager.clone_signature(signature_name)
         return None
 
     def cnl_to_json(self):

@@ -125,7 +125,7 @@ class CNLTransformer(Transformer):
         name = parameter[:]
         origin = self._parse_parameter_origin(name)
         if origin and not name:
-            keys = SignatureManager.get_signature(parameter[-1]).get_keys()
+            keys = SignatureManager.clone_signature(parameter[-1]).get_keys()
             res = []
             for key in keys:
                 key_origin = AttributeOrigin(origin.name, key.origin)
@@ -170,9 +170,8 @@ class CNLTransformer(Transformer):
     def complex_concept_elements_definition(self, meta, elem):
         elem[0] = elem[0].lower()
         try:
-            entity: ComplexEntityComponent = SignatureManager.remove_signature(elem[0])
+            entity = SignatureManager.get_signature(elem[0])
             entity.values = elem[1]
-            SignatureManager.add_signature(entity)
         except EntityNotFound as e:
             CompilationError(str(e), line=meta.line)
 
@@ -194,7 +193,7 @@ class CNLTransformer(Transformer):
         name: str = elem[0].lower()
         value = RangeValueComponent(elem[1], elem[2])
         try:
-            entity = SignatureManager.get_signature(name)
+            entity = SignatureManager.clone_signature(name)
             entity_keys = entity.get_keys()
             if len(entity.get_keys()) > 1:
                 raise CompilationError(
@@ -210,7 +209,7 @@ class CNLTransformer(Transformer):
         name: str = elem[2].lower()
         attribute_name = Utility.DEFAULT_ATTRIBUTE
         try:
-            signature = SignatureManager.get_signature(name)
+            signature = SignatureManager.clone_signature(name)
             attributes = signature.get_keys_and_attributes()
             if len(attributes) == 1:
                 attribute_name = attributes[0].get_name()
@@ -251,7 +250,7 @@ class CNLTransformer(Transformer):
     def enumerative_definition_clause(self, elem):
         subject = elem[0]
         try:
-            signature = SignatureManager.get_signature(subject.get_name())
+            signature = SignatureManager.clone_signature(subject.get_name())
         except:
             signature = self._proposition.create_new_signature(subject)
             SignatureManager.add_signature(signature)
@@ -273,7 +272,7 @@ class CNLTransformer(Transformer):
             # replace the object elements with the proper signature if same of the subject
             for entity in object_entity.get_entities():
                 if entity.get_name() == subject.get_name():
-                    entity_signature = SignatureManager.get_signature(entity.get_name())
+                    entity_signature = SignatureManager.clone_signature(entity.get_name())
                     entity_signature.label = entity.label
                     entity_signature.set_attributes_value(entity.get_keys_and_attributes())
                     object_list[idx] = entity_signature
@@ -686,7 +685,7 @@ class CNLTransformer(Transformer):
 
     def _parse_parameter_origin(self, name: list[str]):
         try:
-            SignatureManager.get_signature(name[0])
+            SignatureManager.clone_signature(name[0])
             return AttributeOrigin(name.pop(0), self._parse_parameter_origin(name))
         except:
             return None
@@ -724,7 +723,7 @@ class CNLTransformer(Transformer):
             return self._parse_entity_parameter(name, parameter[-4])
         origin = self._parse_parameter_origin(name)
         if origin and not name:
-            name = SignatureManager.get_signature(parameter[-5]).get_keys()[0].get_name()
+            name = SignatureManager.clone_signature(parameter[-5]).get_keys()[0].get_name()
         else:
             name = '_'.join(name)
         if not origin and SignatureManager.is_temporal_entity(name.strip()):
@@ -740,7 +739,7 @@ class CNLTransformer(Transformer):
         name = parameter[:-1]
         origin = self._parse_parameter_origin(name)
         if origin and not name:
-            name = SignatureManager.get_signature(parameter[-2]).get_keys()[0].get_name()
+            name = SignatureManager.clone_signature(parameter[-2]).get_keys()[0].get_name()
         else:
             name = '_'.join(name)
         if not origin and SignatureManager.is_temporal_entity(name.strip()):
@@ -810,7 +809,7 @@ class CNLTransformer(Transformer):
                 raise LabelNotFound("")
         except (LabelNotFound, AttributeNotFound):
             try:
-                entity = SignatureManager.get_signature(name)
+                entity = SignatureManager.clone_signature(name)
                 entity.label = label
             except EntityNotFound as e:
                 # this is the case that we are defining a new entity
@@ -839,7 +838,7 @@ class CNLTransformer(Transformer):
     @v_args(meta=True)
     def generic_element(self, meta, elem):
         try:
-            entity: SetEntityComponent = SignatureManager.get_signature(elem[1])
+            entity: SetEntityComponent = SignatureManager.clone_signature(elem[1])
             if not CNLTransformer.is_variable(elem[0].value):
                 if not entity.is_value_in_set(elem[0].value):
                     raise AttributeGenericError(f'Value \"{elem[0].value}\" not declared '
@@ -854,7 +853,7 @@ class CNLTransformer(Transformer):
     @v_args(meta=True)
     def list_element_order(self, meta, elem):
         try:
-            entity: ListEntityComponent = SignatureManager.get_signature(elem[0])
+            entity: ListEntityComponent = SignatureManager.clone_signature(elem[0])
         except EntityNotFound as e:
             raise CompilationError(str(e), meta.line)
         if entity.entity_type != EntityType.LIST:
@@ -872,7 +871,7 @@ class CNLTransformer(Transformer):
     @v_args(meta=True)
     def list_index_element(self, meta, elem):
         try:
-            entity: ListEntityComponent = SignatureManager.get_signature(elem[2])
+            entity: ListEntityComponent = SignatureManager.clone_signature(elem[2])
         except EntityNotFound as e:
             raise CompilationError(str(e), meta.line)
         if entity.entity_type != EntityType.LIST:
@@ -888,7 +887,7 @@ class CNLTransformer(Transformer):
         attribute_name = ''
         for attribute in entity.get_keys_and_attributes():
             if SignatureManager.is_temporal_entity(attribute.get_name()) and \
-                    SignatureManager.get_signature(attribute.get_name()).entity_type == entity_type:
+                    SignatureManager.clone_signature(attribute.get_name()).entity_type == entity_type:
                 attribute_name = attribute.get_name()
         for declared_entity in self._proposition.get_entities():
             if not declared_entity is entity:
