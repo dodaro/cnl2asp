@@ -122,18 +122,30 @@ class CNLTransformer(Transformer):
         return res
 
     def parameter_definition(self, parameter) -> list[AttributeComponent]:
-        name = parameter[:]
+        name = parameter[:-1]
+        type = parameter[-1]
+        if type:
+            return self._typed_parameter_definition('_'.join(name).strip(), type)
         origin = self._parse_parameter_origin(name)
+        res = []
         if origin and not name:
-            keys = SignatureManager.clone_signature(parameter[-1]).get_keys()
-            res = []
+            keys = SignatureManager.clone_signature(parameter[-2]).get_keys()
             for key in keys:
                 key_origin = AttributeOrigin(origin.name, key.origin)
                 res.append(AttributeComponent(key.get_name(), ValueComponent(Utility.NULL_VALUE), key_origin))
-            return res
         else:
-            name = '_'.join(name)
-        return [AttributeComponent(name.strip(), ValueComponent(Utility.NULL_VALUE), origin)]
+            res.append(AttributeComponent('_'.join(name).strip(), ValueComponent(Utility.NULL_VALUE), origin))
+        return res
+
+    def _typed_parameter_definition(self, name, type):
+        res = []
+        type_signature = SignatureManager.clone_signature(type)
+        type_signature.set_name(name)
+        for key in type_signature.get_keys():
+            key_origin = AttributeOrigin(name, key.origin)
+            res.append(AttributeComponent(key.get_name(), ValueComponent(Utility.NULL_VALUE), key_origin))
+        SignatureManager.add_signature(type_signature)
+        return res
 
     def temporal_concept_definition(self, elem):
         temporal = TemporalEntityComponent(elem[0], '', elem[2], elem[3], elem[4], elem[1])
@@ -726,8 +738,6 @@ class CNLTransformer(Transformer):
             name = SignatureManager.clone_signature(parameter[-5]).get_keys()[0].get_name()
         else:
             name = '_'.join(name)
-        if not origin and SignatureManager.is_temporal_entity(name.strip()):
-            origin = AttributeOrigin(name.strip())
         attribute = AttributeComponent(name.strip(),
                                        self._parse_parameter_value(name, parameter[-4], parameter[-3], parameter[-2]),
                                        origin)

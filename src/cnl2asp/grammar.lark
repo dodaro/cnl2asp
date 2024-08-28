@@ -33,7 +33,7 @@ _CNL_HAS: "has"
 standard_definition.1: _CNL_INDEFINITE_ARTICLE? string cnl_is_identified? [keys_list] (_CNL_COMMA _CNL_AND)? [_CNL_HAS parameter_definition (_CNL_COMMA _CNL_AND? parameter_definition)*]
 _CNL_BY: "by"
 keys_list: _CNL_BY parameter_definition (_CNL_COMMA _CNL_AND? _CNL_BY parameter_definition)*
-parameter_definition: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+
+parameter_definition: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+ ["that is" _CNL_INDEFINITE_ARTICLE string]
 _CNL_A: "a"i
 _CNL_TEMPORAL: "temporal"
 _CNL_CONCEPT: "concept"
