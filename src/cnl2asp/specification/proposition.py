@@ -168,7 +168,6 @@ class Proposition(Component):
                             signature.attributes.append(AttributeComponent(key.get_name(), ValueComponent(Utility.NULL_VALUE),
                                                                            AttributeOrigin(to_be_related_with.get_name(),
                                                                                            key.origin)))
-        signature.attributes.sort(key=lambda x: x.get_name())
         if not signature.attributes:
             signature.attributes.append(
                 AttributeComponent(Utility.DEFAULT_ATTRIBUTE, ValueComponent(Utility.NULL_VALUE),

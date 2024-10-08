@@ -95,11 +95,11 @@ day(6,"07/01/2022").
 1 <= {assignment(RGSTRTN_D,0,DY_DY,TMSLT_TMSLT): day(DY_DY,_), timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(RGSTRTN_D,0,_,_,_,_,_).
 1 <= {assignment(P,OR,D+W,TMSLT_TMSLT): timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(P,OR,W,_,_,_,_), assignment(P,OR-1,D,_), day(D+W,_).
 :- registration(_,_,_,RGSTRTN_DRTN_F_TH_FRST_PHS,RGSTRTN_DRTN_F_TH_SCND_PHS,RGSTRTN_DRTN_F_TH_THRD_PHS,_), assignment(_,_,_,T), (RGSTRTN_DRTN_F_TH_FRST_PHS + RGSTRTN_DRTN_F_TH_SCND_PHS + RGSTRTN_DRTN_F_TH_THRD_PHS) <= T, registration(RGSTRTN_D,RGSTRTN_RDR,_,RGSTRTN_DRTN_F_TH_FRST_PHS,RGSTRTN_DRTN_F_TH_SCND_PHS,RGSTRTN_DRTN_F_TH_THRD_PHS,_), assignment(RGSTRTN_D,RGSTRTN_RDR,_,T).
-1 <= {x_support(D,S,P,SSGNMNT_RDR,T): seat(S,_)} <= 1 :- patient(P,_), assignment(P,SSGNMNT_RDR,D,T), registration(P,SSGNMNT_RDR,_,_,_,_,PH4), PH4 > 0.
-position_in(D,S,P,SSGNMNT_RDR,T..T+PH4) :- patient(P,_), assignment(P,SSGNMNT_RDR,D,T), registration(P,SSGNMNT_RDR,_,_,_,_,PH4), x_support(D,S,P,SSGNMNT_RDR,T).
-:- #count{D1: position_in(D,S,D1,_,TS), seat(S,_), day(D,_), timeslot(TS,_)} >= 2, day(D,_), timeslot(TS,_), seat(S,_).
+1 <= {x_support(S,T,D,P,SSGNMNT_RDR): seat(S,_)} <= 1 :- patient(P,_), assignment(P,SSGNMNT_RDR,D,T), registration(P,SSGNMNT_RDR,_,_,_,_,PH4), PH4 > 0.
+position_in(S,T..T+PH4,D,P,SSGNMNT_RDR) :- patient(P,_), assignment(P,SSGNMNT_RDR,D,T), registration(P,SSGNMNT_RDR,_,_,_,_,PH4), x_support(S,T,D,P,SSGNMNT_RDR).
+:- #count{D1: position_in(S,TS,D,D1,_), seat(S,_), day(D,_), timeslot(TS,_)} >= 2, day(D,_), timeslot(TS,_), seat(S,_).
 :- assignment(_,_,_,TMSLT_SSGNMNT), TMSLT_SSGNMNT <= 23, registration(RGSTRTN_D,RGSTRTN_RDR,_,_,_,_,DRTN_F_TH_FRTH_PHS), assignment(RGSTRTN_D,RGSTRTN_RDR,_,TMSLT_SSGNMNT), DRTN_F_TH_FRTH_PHS > 50.
-:~ patient(P,T), position_in(_,S,P,_,_), seat(S,T). [1@3,T]''')
+:~ patient(P,T), position_in(S,_,_,P,_), seat(S,T). [1@3,T]''')
 
     def test_graph_coloring(self):
         self.check_input_to_output('''A node goes from 1 to 3.
@@ -217,22 +217,22 @@ close_to(1,2,X) :- pub(1), pub(2), pub(X), X = 4.
 work_in("John",1) :- waiter("John"), pub(1).
 serve("John","alcoholic") :- waiter("John"), drink("alcoholic").
 working(W) :- waiter(W), serve(W,DRNK_D), drink(DRNK_D).
-topmovie(X) :- movie(X,"spielberg",_,_).
-{topmovie(I): movie(I,X,_,_)} <= 1 :- director(X), X != "spielberg".
-scoreassignment(I,3) | scoreassignment(I,2) :- movie(I,"nolan",_,_).
-movie(1,"spielberg","jurassicPark",1993).
-movie(1,"spielberg","jurassicPark",1993).
-movie(1,"spielberg","jurassicPark",1993).
+topmovie(X) :- movie(X,_,_,"spielberg").
+{topmovie(I): movie(I,_,_,X)} <= 1 :- director(X), X != "spielberg".
+scoreassignment(I,3) | scoreassignment(I,2) :- movie(I,_,_,"nolan").
+movie(1,"jurassicPark",1993,"spielberg").
+movie(1,"jurassicPark",1993,"spielberg").
+movie(1,"jurassicPark",1993,"spielberg").
 1 <= {drink_in(DY_D,PTRN_D,PB_D): pub(PB_D)} <= 1 :- day(DY_D), patron(PTRN_D).
 {serve(WTR_D,DRNK_D): drink(DRNK_D)} :- waiter(WTR_D).
 scoreassignment(I,1) | scoreassignment(I,2) | scoreassignment(I,3) :- movie(I,_,_,_).
 :- waiter(W1), work_in(W1,P1), waiter(W2), work_in(W2,P1), pub(P1), W1 != W2.
-:- X = Y, movie(X,_,_,1964), topmovie(Y).
+:- X = Y, movie(X,_,1964,_), topmovie(Y).
 :- #min{VL: scoreassignment(X,VL)} = 1, topmovie(X).
 :- #sum{VL: scoreassignment(X,VL), topmovie(X)} != 10.
 :- waiter(WRK_N_D), #count{D: work_in(WRK_N_D,D)} >= 2.
 :- work_in(X,P1), pub(P1), waiter(X), work_in(X,P2), pub(P2), P1 != P2.
-:- V != 3, movie(I,"spielberg",_,_), scoreassignment(I,V).
+:- V != 3, movie(I,_,_,"spielberg"), scoreassignment(I,V).
 :- waiter(PYD_D), not payed(PYD_D).
 :~ #count{D: serve(_,D)} = CNT. [-CNT@1]
 :~ V = 1, scoreassignment(I,V), topmovie(I). [1@3,I,V]
@@ -388,10 +388,10 @@ set(2).
 edge(1,2).
 edge(1,3).
 edge(4,5).
-1 <= {assigned_to(ND_D,ST_D,ND_WGHT): set(ST_D)} <= 1 :- node(ND_D,ND_WGHT).
-:- node(N1,SSGND_T_WGHT), assigned_to(N1,S1,SSGND_T_WGHT), node(N2,SSGND_T_WGHT1), assigned_to(N2,S1,SSGND_T_WGHT1), set(S1), edge(N1,N2).
-:- #count{D: assigned_to(D,S1,_), set(S1)} = CNT, #count{D1: assigned_to(D1,S2,_), set(S2)} = CNT1, CNT <= CNT1, S1 = 1, S2 = 2.
-:- #sum{WGHT: assigned_to(_,S2,WGHT), set(S2)} = SM, #sum{WGHT1: assigned_to(_,S1,WGHT1), set(S1)} = SM1, SM < SM1, S1 = 1, S2 = 2.''')
+1 <= {assigned_to(ND_D,ND_WGHT,ST_D): set(ST_D)} <= 1 :- node(ND_D,ND_WGHT).
+:- node(N1,SSGND_T_WGHT), assigned_to(N1,SSGND_T_WGHT,S1), node(N2,SSGND_T_WGHT1), assigned_to(N2,SSGND_T_WGHT1,S1), set(S1), edge(N1,N2).
+:- #count{D: assigned_to(D,_,S1), set(S1)} = CNT, #count{D1: assigned_to(D1,_,S2), set(S2)} = CNT1, CNT <= CNT1, S1 = 1, S2 = 2.
+:- #sum{WGHT: assigned_to(_,WGHT,S2), set(S2)} = SM, #sum{WGHT1: assigned_to(_,WGHT1,S1), set(S1)} = SM1, SM < SM1, S1 = 1, S2 = 2.''')
 
     def test_nursescheduling(self):
         self.check_input_to_output('''A shift is identified by an id, and has a number, and hour.
@@ -746,30 +746,30 @@ box(2).
 banana(3).
 
 #program initial.
-at("door",M) :- monkey(M), location("door").
-at("window",B) :- box(B), location("window").
+at(M,"door") :- monkey(M), location("door").
+at(B,"window") :- box(B), location("window").
 
 #program dynamic.
-walk_to(X,M): location(X) | push_to(X,M): location(X) | climb(M) | grasp(M) :- monkey(M).
-moved(M) :- at(X,M), location(X), monkey(M), 'at(Y,M), location(Y), X != Y.
-moved(B) :- at(X,B), location(X), box(B), 'at(Y,B), location(Y), X != Y.
-at(X,M) :- 'at(X,M), location(X), monkey(M), not moved(M).
-at(X,B) :- 'at(X,B), location(X), box(B), not moved(B).
+walk_to(M,X): location(X) | push_to(M,X): location(X) | climb(M) | grasp(M) :- monkey(M).
+moved(M) :- at(M,X), location(X), monkey(M), 'at(M,Y), location(Y), X != Y.
+moved(B) :- at(B,X), location(X), box(B), 'at(B,Y), location(Y), X != Y.
+at(M,X) :- 'at(M,X), location(X), monkey(M), not moved(M).
+at(B,X) :- 'at(B,X), location(X), box(B), not moved(B).
 on(M,B) :- monkey(M), 'on(M,B), box(B).
-at(X,M) :- monkey(M), walk_to(X,M), location(X).
-:- walk_to(X,M), monkey(M), 'at(X,M), location(X).
-:- walk_to(X,M), location(X), monkey(M), 'on(M,B), box(B).
-:- push_to(X,M), location(X), monkey(M), 'on(M,B), box(B).
-:- push_to(X,M), monkey(M), 'at(X,M), location(X).
-:- push_to(X,M), location(X), monkey(M), 'at(Y,M), location(Y), box(B), 'at(Z,B), location(Z), Y != Z.
+at(M,X) :- monkey(M), walk_to(M,X), location(X).
+:- walk_to(M,X), monkey(M), 'at(M,X), location(X).
+:- walk_to(M,X), location(X), monkey(M), 'on(M,B), box(B).
+:- push_to(M,X), location(X), monkey(M), 'on(M,B), box(B).
+:- push_to(M,X), monkey(M), 'at(M,X), location(X).
+:- push_to(M,X), location(X), monkey(M), 'at(M,Y), location(Y), box(B), 'at(B,Z), location(Z), Y != Z.
 get(M,B) :- banana(B), monkey(M), grasp(M).
 :- grasp(M), banana(BA), monkey(M), not 'on(M,BO), box(BO).
-:- grasp(M), banana(B), monkey(M), 'at(X,M), location(X), X != "middle".
+:- grasp(M), banana(B), monkey(M), 'at(M,X), location(X), X != "middle".
 on(M,B) :- monkey(M), climb(M), box(B).
 :- climb(M), monkey(M), 'on(M,B), box(B).
-:- climb(M), monkey(M), at(X,M), location(X), box(B), at(Y,B), location(Y), X != Y.
-at(X,M) :- monkey(M), push_to(X,M), location(X).
-at(X,B) :- monkey(M), push_to(X,M), location(X), box(B).
+:- climb(M), monkey(M), at(M,X), location(X), box(B), at(B,Y), location(Y), X != Y.
+at(M,X) :- monkey(M), push_to(M,X), location(X).
+at(B,X) :- monkey(M), push_to(M,X), location(X), box(B).
 
 #program final.
 :- monkey(M), not get(M,B), banana(B).''')

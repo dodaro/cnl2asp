@@ -41,7 +41,6 @@ class SignatureManager:
                     for attribute in attributes:
                         signature.attributes.remove(attribute)
                     signature.attributes += entity.get_keys()
-                    signature.attributes.sort(key=lambda x: x.get_name())
                 except:
                     pass
             SignatureManager.set_entity_to_null(entity)

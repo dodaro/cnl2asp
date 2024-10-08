@@ -188,8 +188,8 @@ class TestCnlPropositions(unittest.TestCase):
                                    '''\
                                     timeslot(0,"07:30 AM").
                                     timeslot(1,"07:40 AM").
-                                    {x_support(D,P,T): day(D)} :- patient(P).
-                                    position_in(X_SPPRT_DY,P,T..T+2) :- patient(P), x_support(X_SPPRT_DY,P,T).''')
+                                    {x_support(T,P,D): day(D)} :- patient(P).
+                                    position_in(T..T+2,P,X_SPPRT_DY) :- patient(P), x_support(T,P,X_SPPRT_DY).''')
 
     def test_substitute_subsequent_event_next(self):
         self.check_input_to_output('''
@@ -316,10 +316,10 @@ class TestCnlPropositions(unittest.TestCase):
                                     Every edge with first node X, with weight Y can have a test4.''',
                                    '''\
                                    {test(N)} :- node(N), edge(F,S,_).
-                                   {test2(F,N,S)} :- node(N), edge(F,S,_).
-                                   {test3(F,S,W)} :- node(N), edge(F,S,W).
-                                   :- test3(F,S,W).
-                                   {test4(X,DG_SCND_ND,Y)} :- edge(X,DG_SCND_ND,Y).''')
+                                   {test2(N,F,S)} :- node(N), edge(F,S,_).
+                                   {test3(W,F,S)} :- node(N), edge(F,S,W).
+                                   :- test3(W,F,S).
+                                   {test4(Y,X,DG_SCND_ND)} :- edge(X,DG_SCND_ND,Y).''')
 
     def test_remove_duplicates_from_condition(self):
         self.check_input_to_output('''
@@ -367,8 +367,8 @@ class TestCnlPropositions(unittest.TestCase):
                                     It is prohibited that a nurse works in the shift element after night.
                                     It is prohibited that a nurse works in the 1st element in shift.''',
                                    '''\
-                                    :- nurse(WRK_N_D), work_in(WRK_N_D,LMNT,"shift"), list("shift",LMNT,"morning").
-                                    :- nurse(WRK_N_D), work_in(WRK_N_D,LMNT,"shift"), list("shift",LMNT,"morning").''')
+                                    :- nurse(WRK_N_D), work_in(WRK_N_D,"shift",LMNT), list("shift",LMNT,"morning").
+                                    :- nurse(WRK_N_D), work_in(WRK_N_D,"shift",LMNT), list("shift",LMNT,"morning").''')
 
     def test_priority_level_number(self):
         self.check_input_to_output('''
