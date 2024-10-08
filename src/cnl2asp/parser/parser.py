@@ -546,6 +546,9 @@ class CNLTransformer(Transformer):
     def variable_respectively_substitution(self, elem):
         self._delayed_operations.append(RespectivelySubstituteVariable(self._proposition, elem[0], elem[2]))
 
+    def variable_substitution_range(self, elem):
+        self._delayed_operations.append(SubstituteVariable(self._proposition, elem[0], [RangeValueComponent(elem[1], elem[2])]))
+
     def string_list(self, elem):
         return [ValueComponent(string) for string in elem]
 

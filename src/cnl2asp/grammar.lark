@@ -139,7 +139,7 @@ TELINGO_CONSTANT: "it is the initial state"
 
 fact_proposition: _CNL_THERE _CNL_IS entity
 
-!quantified_choice_proposition: _QUANTIFIER entity ASSIGNMENT_VERB predicate [(_CNL_COMMA? _CNL_OR predicate)*] [foreach_clause] [terminal_clauses]
+!quantified_choice_proposition: [_QUANTIFIER] entity ASSIGNMENT_VERB predicate [(_CNL_COMMA? _CNL_OR predicate)*] [foreach_clause] [terminal_clauses]
 _CNL_FOR: "for"
 _CNL_EACH: "each"
 _CNL_FOR_EACH: _CNL_FOR " " _CNL_EACH
@@ -184,6 +184,7 @@ _CNL_ONE_OF: _CNL_ONE " " _CNL_OF
 where_clause: comparison
             | VARIABLE COPULA _CNL_ONE_OF string_list -> variable_substitution
             | VARIABLE COPULA _CNL_RESPECTIVELY _CNL_ONE_OF string_list -> variable_respectively_substitution
+            | VARIABLE _CNL_RANGES _CNL_FROM string _CNL_TO string -> variable_substitution_range
             | where_clause _CNL_AND where_clause
 string_list: string (_CNL_COMMA string)*
 
