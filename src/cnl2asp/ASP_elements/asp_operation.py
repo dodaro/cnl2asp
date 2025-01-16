@@ -54,7 +54,10 @@ class ASPOperation(ASPElement):
             else:
                 string += f'({str(operand)})'
             string += f' {self._operator_to_symbol(self.operator)} '
-        return string.removesuffix(f' {self._operator_to_symbol(self.operator)} ')
+        string = string.removesuffix(f' {self._operator_to_symbol(self.operator)} ')
+        if self.operator == Operators.ABSOLUTE_VALUE:
+            return f'|{string}|'
+        return string
 
     def __repr__(self):
         return str(self)

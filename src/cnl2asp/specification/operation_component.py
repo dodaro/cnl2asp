@@ -55,10 +55,10 @@ class Operators(Enum):
         return NotImplemented
 
 class OperationComponent(Component):
-    def __init__(self, operator: Operators, *operands: Component):
+    def __init__(self, operator: Operators, *operands: Component, negated = False):
         self.operation = operator
         self.operands = []
-        self.negated = False
+        self.negated = negated
         if self.operation == Operators.BETWEEN:
             operands = self.between_operator(operands)
         for operand in operands:
@@ -99,7 +99,7 @@ class OperationComponent(Component):
 
     def copy(self):
         operands = [component for component in self.operands]
-        return OperationComponent(self.operation, *operands)
+        return OperationComponent(self.operation, *operands, negated = self.negated)
 
     def is_angle(self) -> False:
         for operand in self.operands:

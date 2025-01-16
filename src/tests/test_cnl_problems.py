@@ -438,9 +438,9 @@ It is preferred as much as possible, with high priority, that the difference in 
 nurse(1..numberOfNurses).
 day(1..365).
 1 <= {work_in(DY_D,NRS_D,SHFT_D): shift(SHFT_D,_,_)} <= 1 :- day(DY_D), nurse(NRS_D).
-:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} <= M, day(D), S = "morning", M = maxNurseMorning.
-:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} <= M, day(D), S = "afternoon", M = maxNurseAfternoon.
-:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} <= M, day(D), S = "night", M = maxNurseNight.
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} > M, day(D), S = "morning", M = maxNurseMorning.
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} > M, day(D), S = "afternoon", M = maxNurseAfternoon.
+:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} > M, day(D), S = "night", M = maxNurseNight.
 :- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} < M, S = "morning", M = minNurseMorning.
 :- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} < M, S = "afternoon", M = minNurseAfternoon.
 :- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} < M, S = "night", M = minNurseNight.
@@ -457,9 +457,9 @@ day(1..365).
 :- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} < M, S = "morning", M = minDay.
 :- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} < M, S = "afternoon", M = minDay.
 :- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} < M, S = "night", M = minNight.
-:~ nurse(N), DAYS = #count{D: work_in(D,N,WRK_N_D1), shift(WRK_N_D1,_,_)}, minDay <= DAYS, DAYS <= maxDay, ((B - DAYS)) = BSLT_VL, B = balanceNurseDay, S = "morning". [BSLT_VL@3,N]
-:~ nurse(N), DAYS = #count{D: work_in(D,N,WRK_N_D1), shift(WRK_N_D1,_,_)}, minDay <= DAYS, DAYS <= maxDay, ((B - DAYS)) = BSLT_VL, B = balanceNurseAfternoon, S = "afternoon". [BSLT_VL@3,N]
-:~ nurse(N), DAYS = #count{D: work_in(D,N,"night"), shift("night",_,_)}, minNight <= DAYS, DAYS <= maxNight, ((balanceNurseNight - DAYS)) = BSLT_VL. [BSLT_VL@3,N]''')
+:~ nurse(N), DAYS = #count{D: work_in(D,N,WRK_N_D1), shift(WRK_N_D1,_,_)}, minDay <= DAYS, DAYS <= maxDay, (|(B - DAYS)|) = BSLT_VL, B = balanceNurseDay, S = "morning". [BSLT_VL@3,N]
+:~ nurse(N), DAYS = #count{D: work_in(D,N,WRK_N_D1), shift(WRK_N_D1,_,_)}, minDay <= DAYS, DAYS <= maxDay, (|(B - DAYS)|) = BSLT_VL, B = balanceNurseAfternoon, S = "afternoon". [BSLT_VL@3,N]
+:~ nurse(N), DAYS = #count{D: work_in(D,N,"night"), shift("night",_,_)}, minNight <= DAYS, DAYS <= maxNight, (|(balanceNurseNight - DAYS)|) = BSLT_VL. [BSLT_VL@3,N]''')
 
 
     def test_gun_1(self):
