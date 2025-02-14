@@ -4,7 +4,7 @@ These are the results obtained by running [telingo](https://github.com/potassco/
 
 You can reproduce the experiments by runnnig:
     
-`telingo {DOMAIN}_{TYPE}_encoding.lp`
+`telingo {DOMAIN}/{TYPE}/encoding.lp`
 
 where DOMAIN is one of the problem name: 
  - gun, 
@@ -17,4 +17,4 @@ where DOMAIN is one of the problem name:
 and TYPE is one of: cnl, original.
 
 Moreover, for the hanoi, logistic and moore problems you have to specify the instance by adding the following flag
-`--c n={VALUE}` 
+`-c n={VALUE}` 
