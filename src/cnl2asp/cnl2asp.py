@@ -12,7 +12,7 @@ from textwrap import indent
 from typing import TextIO
 
 from cnl2asp.utility.utility import Utility
-from lark import Lark, UnexpectedCharacters
+from lark import Lark, UnexpectedCharacters, Token, Tree
 from lark.exceptions import VisitError
 
 from cnl2asp.ASP_elements.asp_program import ASPProgram
@@ -82,11 +82,11 @@ class Cnl2asp:
         else:
             self.cnl_input = cnl_input.read()
 
-    def parse_input(self):
+    def parse_input(self) -> Tree[Token]:
         with open(os.path.join(os.path.dirname(__file__), "grammar.lark"), "r") as grammar:
             cnl_parser = Lark(grammar.read(), propagate_positions=True)
-            specification: SpecificationComponent = CNLTransformer().transform(cnl_parser.parse(self.cnl_input))
-            return specification
+            return cnl_parser.parse(self.cnl_input)
+
 
     def __is_predicate(self, name: str):
         try:
@@ -109,7 +109,7 @@ class Cnl2asp:
         return None
 
     def cnl_to_json(self):
-        problem = self.parse_input()
+        problem = CNLTransformer().transform(self.parse_input())
         converter = Cnl2jsonConverter()
         json = problem.convert(converter)
         return json
@@ -122,7 +122,7 @@ class Cnl2asp:
     def compile(self, auto_link_entities: bool = True) -> str:
         SignatureManager.signatures = []
         Utility.AUTO_ENTITY_LINK = auto_link_entities
-        specification: SpecificationComponent = self.parse_input()
+        specification: SpecificationComponent = CNLTransformer().transform(self.parse_input())
         asp_converter: ASPConverter = ASPConverter()
         program: ASPProgram = specification.convert(asp_converter)
         return str(program)
@@ -256,12 +256,12 @@ def main():
                     from cnl2asp.ASP_elements.solver.clingo_wrapper import Clingo
                     from cnl2asp.ASP_elements.solver.clingo_result_parser import ClingoResultParser
                     solver = Clingo()
-                    res_parser = ClingoResultParser(cnl2asp.parse_input())
+                    res_parser = ClingoResultParser(CNLTransformer().transform(cnl2asp.parse_input()))
                 elif args.solve == "telingo":
                     from cnl2asp.ASP_elements.solver.telingo_result_parser import TelingoResultParser
                     from cnl2asp.ASP_elements.solver.telingo_wrapper import Telingo
                     solver = Telingo()
-                    res_parser = TelingoResultParser(cnl2asp.parse_input())
+                    res_parser = TelingoResultParser(CNLTransformer().transform(cnl2asp.parse_input()))
                 else:
                     raise Exception(f"{args.solve} not recognised")
                 print("\n*********")

@@ -2,6 +2,8 @@ import sys
 import unittest
 from io import StringIO
 
+from cnl2asp.parser.parser import CNLTransformer
+
 from cnl2asp.ASP_elements.solver.telingo_result_parser import TelingoResultParser
 from cnl2asp.ASP_elements.solver.telingo_wrapper import Telingo
 from cnl2asp.cnl2asp import Cnl2asp
@@ -27,7 +29,7 @@ class TestClingoResultParser(unittest.TestCase):
         tmp = sys.stdout
         sys.stdout = StringIO()
         res = clingo.solve()
-        clingo_res = ClingoResultParser(cnl2asp.parse_input())
+        clingo_res = ClingoResultParser(CNLTransformer().transform(cnl2asp.parse_input()))
         sys.stdout = tmp
         return clingo_res.parse_model(list(res))
 
@@ -40,7 +42,7 @@ class TestClingoResultParser(unittest.TestCase):
         sys.stdout = StringIO()
         res = telingo.solve()
         sys.stdout = tmp
-        telingo_res = TelingoResultParser(cnl2asp.parse_input())
+        telingo_res = TelingoResultParser(CNLTransformer().transform(cnl2asp.parse_input()))
         return telingo_res.parse_model(res)
 
     def test_graph_coloring(self):
