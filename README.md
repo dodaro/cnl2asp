@@ -21,6 +21,11 @@ You can also run cnl2asp from source using the following command:
 
 If output_file is not provided, the output is printed in stdout. 
 
+## Web Interface
+You can run CNL2ASP directly in your browser using the following link:
+
+https://cnl2asp.streamlit.app/
+
 ## Documentation
 
 https://dodaro.github.io/cnl2asp/getting_start.html
