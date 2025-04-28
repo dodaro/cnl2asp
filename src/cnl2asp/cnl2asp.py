@@ -60,8 +60,8 @@ class Symbol:
     def __eq__(self, other):
         if isinstance(other, Symbol):
             return self.predicate == other.predicate and self.symbol_type == other.symbol_type \
-                   and collections.Counter(self.attributes) == collections.Counter(other.attributes) \
-                   and collections.Counter(self.keys) == collections.Counter(other.keys)
+                and collections.Counter(self.attributes) == collections.Counter(other.attributes) \
+                and collections.Counter(self.keys) == collections.Counter(other.keys)
         return False
 
     def __repr__(self):
@@ -73,8 +73,7 @@ class Symbol:
 
 
 class Cnl2asp:
-    def __init__(self, cnl_input: TextIO | str, debug: bool = False):
-        self._debug = debug
+    def __init__(self, cnl_input: TextIO | str):
         if isinstance(cnl_input, str):
             self.cnl_input = cnl_input
             if os.path.isfile(cnl_input):
@@ -86,27 +85,6 @@ class Cnl2asp:
         with open(os.path.join(os.path.dirname(__file__), "grammar.lark"), "r") as grammar:
             cnl_parser = Lark(grammar.read(), propagate_positions=True)
             return cnl_parser.parse(self.cnl_input)
-
-
-    def __is_predicate(self, name: str):
-        try:
-            SignatureManager.clone_signature(name)
-            return True
-        except:
-            return False
-
-    def __get_predicate(self, entity_name: str, attribute: AttributeComponent):
-        split_name = attribute.get_name().split('_')
-        if len(split_name) > 1:
-            for name in split_name:
-                if self.__is_predicate(name):
-                    return SignatureManager.clone_signature(name)
-        signature_name = attribute.get_name()
-        if attribute.origin != entity_name:
-            signature_name = attribute.origin.name
-        if self.__is_predicate(signature_name):
-            return SignatureManager.clone_signature(signature_name)
-        return None
 
     def cnl_to_json(self):
         problem = CNLTransformer().transform(self.parse_input())
@@ -129,28 +107,23 @@ class Cnl2asp:
 
     def optimize(self, asp_encoding: str, input_symbols: list[Symbol] = None, output_symbols: list[Symbol] = None,
                  print_with_functions=False):
-        from clingo.ast import parse_files
+        def symbol_to_clingo_predicate(symbols: list[Symbol]):
+            res = []
+            for symbol in symbols:
+                res.append(Predicate(symbol.predicate, symbol.get_arity(print_with_functions)))
+            return res
+
+        from clingo.ast import parse_string
         from ngo import optimize, auto_detect_input, auto_detect_output, Predicate
         prg = []
-        with tempfile.NamedTemporaryFile(mode="w") as file:
-            file.write(asp_encoding)
-            file.seek(0)
-            parse_files([file.name], prg.append)
-            input_predicates = auto_detect_input(prg)
-            if input_symbols is not None:
-                input_predicates = []
-                for symbol in input_symbols:
-                    input_predicates.append(Predicate(symbol.predicate, symbol.get_arity(print_with_functions)))
-            output_predicates = auto_detect_output(prg)
-            if output_symbols is not None:
-                output_predicates = []
-                for symbol in output_symbols:
-                    output_predicates.append(Predicate(symbol.predicate, symbol.get_arity(print_with_functions)))
-            prg = optimize(prg, input_predicates, output_predicates)
-            optimized_encoding = ''
-            for stm in prg:
-                optimized_encoding += str(stm) + '\n'
-        return optimized_encoding
+        parse_string(asp_encoding, prg.append)
+        input_predicates = auto_detect_input(prg)
+        if input_symbols is not None:
+            input_predicates = symbol_to_clingo_predicate(input_symbols)
+        output_predicates = auto_detect_output(prg)
+        if output_symbols is not None:
+            output_predicates = symbol_to_clingo_predicate(output_symbols)
+        return '\n'.join(map(str, optimize(prg, input_predicates, output_predicates)))
 
     def __get_type(self, name: str):
         if SignatureManager.is_temporal_entity(name):
@@ -214,7 +187,7 @@ def main():
     input_file = args.input_file
 
     in_file = open(input_file, 'r')
-    cnl2asp = Cnl2asp(in_file, args.debug)
+    cnl2asp = Cnl2asp(in_file)
     if args.check_syntax:
         if cnl2asp.check_syntax():
             print("Input file fits the grammar.")
