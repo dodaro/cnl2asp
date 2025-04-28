@@ -5,7 +5,6 @@ import collections
 import json
 import os
 import sys
-import tempfile
 import traceback
 from enum import Enum
 from textwrap import indent
@@ -82,9 +81,14 @@ class Cnl2asp:
             self.cnl_input = cnl_input.read()
 
     def parse_input(self) -> Tree[Token]:
-        with open(os.path.join(os.path.dirname(__file__), "grammar.lark"), "r") as grammar:
-            cnl_parser = Lark(grammar.read(), propagate_positions=True)
-            return cnl_parser.parse(self.cnl_input)
+        try:
+            with open(os.path.join(os.path.dirname(__file__), "grammar.lark"), "r") as grammar:
+                cnl_parser = Lark(grammar.read(), propagate_positions=True)
+                return cnl_parser.parse(self.cnl_input)
+        except UnexpectedCharacters as e:
+            raise ParserError(e.char, e.line, e.column, e.get_context(self.cnl_input),
+                              self.cnl_input.splitlines()[e.line - 1],
+                              list(e.allowed))
 
     def cnl_to_json(self):
         problem = CNLTransformer().transform(self.parse_input())
@@ -184,10 +188,8 @@ def main():
 
     Utility.PRINT_WITH_FUNCTIONS = args.print_with_functions
 
-    input_file = args.input_file
+    cnl2asp = Cnl2asp(args.input_file)
 
-    in_file = open(input_file, 'r')
-    cnl2asp = Cnl2asp(in_file)
     if args.check_syntax:
         if cnl2asp.check_syntax():
             print("Input file fits the grammar.")
@@ -198,22 +200,16 @@ def main():
     else:
         try:
             asp_encoding = cnl2asp.compile()
-        except UnexpectedCharacters as e:
-            in_file.seek(0)
-            cnl_input = in_file.read()
-            print(ParserError(e.char, e.line, e.column, e.get_context(cnl_input), cnl_input.splitlines()[e.line - 1],
-                              list(e.allowed)))
-            return ''
         except VisitError as e:
             print(e.args[0])
             if args.debug:
                 traceback.print_exception(e)
-            return ''
+            return
         except Exception as e:
-            print("Error in asp conversion:", str(e))
+            print("Error in asp conversion:\n", str(e))
             if args.debug:
                 traceback.print_exception(e)
-            return ''
+            return
 
         if args.optimize:
             asp_encoding = cnl2asp.optimize(asp_encoding)
@@ -224,25 +220,27 @@ def main():
                     print("Compilation completed.")
                 out = open(args.output_file, "w")
             out.write(asp_encoding)
-            if args.solve:
-                if args.solve == "clingo":
-                    from cnl2asp.ASP_elements.solver.clingo_wrapper import Clingo
-                    from cnl2asp.ASP_elements.solver.clingo_result_parser import ClingoResultParser
-                    solver = Clingo()
-                    res_parser = ClingoResultParser(CNLTransformer().transform(cnl2asp.parse_input()))
-                elif args.solve == "telingo":
-                    from cnl2asp.ASP_elements.solver.telingo_result_parser import TelingoResultParser
-                    from cnl2asp.ASP_elements.solver.telingo_wrapper import Telingo
-                    solver = Telingo()
-                    res_parser = TelingoResultParser(CNLTransformer().transform(cnl2asp.parse_input()))
-                else:
-                    raise Exception(f"{args.solve} not recognised")
-                print("\n*********")
-                print(f"Running {args.solve}...\n")
-                solver.load(str(asp_encoding))
-                res = solver.solve()
-                if args.explain:
-                    model = res_parser.parse_model(res)
-                    print("\n\n" + model)
         except Exception as e:
             print("Error in writing output", str(e))
+
+        if args.solve:
+            if args.solve == "clingo":
+                from cnl2asp.ASP_elements.solver.clingo_wrapper import Clingo
+                from cnl2asp.ASP_elements.solver.clingo_result_parser import ClingoResultParser
+                solver = Clingo()
+                res_parser = ClingoResultParser(CNLTransformer().transform(cnl2asp.parse_input()))
+            elif args.solve == "telingo":
+                from cnl2asp.ASP_elements.solver.telingo_result_parser import TelingoResultParser
+                from cnl2asp.ASP_elements.solver.telingo_wrapper import Telingo
+                solver = Telingo()
+                res_parser = TelingoResultParser(CNLTransformer().transform(cnl2asp.parse_input()))
+            else:
+                raise Exception(f"{args.solve} not recognised")
+            print("\n*********")
+            print(f"Running {args.solve}...\n")
+            solver.load(str(asp_encoding))
+            res = solver.solve()
+            if args.explain:
+                model = res_parser.parse_model(res)
+                print("\n\n" + model)
+

@@ -1,6 +1,7 @@
 from uuid import uuid4
 import inflect
 
+
 class Utility:
     NULL_VALUE = '_'
     ASP_NULL_VALUE = '_'
