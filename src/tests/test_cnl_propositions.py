@@ -6,8 +6,9 @@ from unittest.mock import patch
 from lark import Lark
 
 from cnl2asp.ASP_elements.asp_program import ASPProgram
+from cnl2asp.cnl2asp import Cnl2asp, MODE
 from cnl2asp.converter.asp_converter import ASPConverter
-from cnl2asp.parser.parser import CNLTransformer
+from cnl2asp.parser.asp_compiler import ASPTransformer
 from cnl2asp.specification.signaturemanager import SignatureManager
 
 cnl_parser = Lark(open(os.path.join(os.path.dirname(__file__), "..", "cnl2asp", "grammar.lark"), "r").read())
@@ -22,14 +23,18 @@ class TestCnlPropositions(unittest.TestCase):
         asp_converter.clear_support_variables()
 
     def compute_asp(self, string: str) -> str:
-        problem = CNLTransformer().transform(cnl_parser.parse(string))
-        asp_converter: ASPConverter = ASPConverter()
-        program: ASPProgram = problem.convert(asp_converter)
-        return str(program)
+        return Cnl2asp(string).compile()
 
-    def check_input_to_output(self, input_string, expected_output):
-        asp = self.compute_asp(input_string)
-        self.assertEqual(asp.strip(), dedent(expected_output))
+    def compute_telingo(self, string: str) -> str:
+        return Cnl2asp(string, MODE.TELINGO).compile()
+
+    def check_input_to_output(self, input_string, expected_output, mode=MODE.ASP):
+        encoding = ''
+        if mode == MODE.ASP:
+            encoding = self.compute_asp(input_string)
+        elif mode == MODE.TELINGO:
+            encoding = self.compute_telingo(input_string)
+        self.assertEqual(encoding.strip(), dedent(expected_output))
 
     def test_constant_string(self):
         self.check_input_to_output('k is a constant equal to Kelvin.', '#const k = "Kelvin".')
@@ -311,13 +316,13 @@ class TestCnlPropositions(unittest.TestCase):
                                     node(1).
                                     
                                     #program final.
-                                    node(2).''')
+                                    node(2).''', mode=MODE.TELINGO)
 
     def test_initially_inside_temporal_formulas(self):
         self.check_input_to_output("""
                                     A monkey is identified by a name.
                                     Whenever there is initially a monkey M or the true constant, then M can jump.""",
-                                   """{jump(M)} :- not not &tel {<< monkey(M) | &true}.""")
+                                   """{jump(M)} :- not not &tel {<< monkey(M) | &true}.""", MODE.TELINGO)
 
 
     def test_quoted_strings(self):

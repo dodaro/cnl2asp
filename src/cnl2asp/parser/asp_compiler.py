@@ -44,7 +44,7 @@ def is_verb_to_have(word: str):
     return word in ["have ", "have a ", "have an ", "has ", "has a ", "has an "]
 
 
-class CNLTransformer(Transformer):
+class ASPTransformer(Transformer):
     def __init__(self):
         super().__init__()
         self._specification: SpecificationComponent = SpecificationComponent()
@@ -75,16 +75,6 @@ class CNLTransformer(Transformer):
     def specification(self, elem):
         self._specification.add_problem(self._problem)
         self._problem = Problem()
-
-    def PROBLEM_IDENTIFIER(self, elem):
-        if elem == "The following propositions apply in the initial state:":
-            self._problem.name = 'initial'
-        elif elem == "The following propositions always apply except in the initial state:":
-            self._problem.name = 'dynamic'
-        elif elem == "The following propositions always apply:":
-            self._problem.name = 'always'
-        elif elem == "The following propositions apply in the final state:":
-            self._problem.name = 'final'
 
     def _clear(self):
         self._proposition = PropositionBuilder()
@@ -319,98 +309,12 @@ class CNLTransformer(Transformer):
             elem[1].negated = True
         self._proposition.add_requisite(elem[1])
 
-    def whenever_telingo_operation(self, elem):
-        self.whenever_clause([None] + elem)
-
     def then_clause(self, elem) -> [EntityComponent | str, Proposition]:
         cardinality = self._proposition.get_cardinality()
         if elem[1] == 'can' and not self._proposition.get_cardinality():
             cardinality = CardinalityComponent(None, None)
         self._handle_new_definition_proposition(elem[0], cardinality)
         return elem[0]
-
-    def telingo_operation(self, elem):
-        operand = elem[2]
-        if elem[3] and elem[3][0]:
-            operand = OperationComponent(Operators.NEGATION, operand)
-        if elem[1] and elem[3] and elem[3][1]:
-            TELINGO_TEMPORAL_RELATIONSHIP = elem[1].removeprefix('since ')
-            TELINGO_TEMPORAL_OPERATOR = elem[3][1].removeprefix('since ')
-            operator = f'{TELINGO_TEMPORAL_RELATIONSHIP}_{TELINGO_TEMPORAL_OPERATOR}' if TELINGO_TEMPORAL_OPERATOR == 'before' or TELINGO_TEMPORAL_OPERATOR == 'after' else f'{TELINGO_TEMPORAL_OPERATOR}_{TELINGO_TEMPORAL_RELATIONSHIP}'
-            operation = OperationComponent(Operators[operator.upper()], operand)
-        elif elem[1]:
-            operator = elem[1]
-            operation = OperationComponent(Operators[operator.upper()], operand)
-        else:
-            operation = operand
-        TELINGO_DUAL_OPERATOR = elem[4]
-        telingo_operation = elem[5]
-        if TELINGO_DUAL_OPERATOR:
-            operation = OperationComponent(TELINGO_DUAL_OPERATOR, operation, telingo_operation)
-        if elem[3] and elem[3][1] == 'since before':
-            operation = OperationComponent(Operators.PREVIOUS, operation)
-        elif elem[3] and elem[3][1] == 'since after':
-            operation = OperationComponent(Operators.NEXT, operation)
-        if elem[0]:
-            operation.negated = True
-        return operation
-
-    def prefixed_telingo_operation(self, elem):
-        elem[0], elem[1] = elem[1], elem[0]
-        return self.telingo_operation(elem)
-
-    def hold_condition(self, elem):
-        if elem[0] == True:
-            return True, elem[1]
-        else:
-            return False, elem[1]
-
-    def telingo_operand(self, elem):
-        if not elem[1]:
-            return elem[0]
-        else:
-            return OperationComponent(elem[1], elem[0], elem[2])
-
-    def TELINGO_CONSTANT(self, elem):
-        if elem == "it is the initial state":
-            return ValueComponent("&initial")
-        if elem == "it is the final state":
-            return ValueComponent("&final")
-        if elem == "the true constant":
-            return ValueComponent("&true")
-        if elem == "the false constant":
-            return ValueComponent("&false")
-
-    def TELINGO_TEMPORAL_RELATIONSHIP(self, elem):
-        return elem.value
-
-    def telingo_temporal_operator(self, elem):
-        return elem[0]
-
-    def TELINGO_TEMPORAL_OPERATOR(self, elem):
-        return elem.value
-
-    def TELINGO_DUAL_OPERATOR(self, elem):
-        if elem == "and":
-            return Operators.CONJUNCTION
-        elif elem == "or":
-            return Operators.DISJUNCTION
-        elif elem == "implies" or elem == "imply":
-            return Operators.LEFT_IMPLICATION
-        elif elem == "equivalent to":
-            return Operators.EQUIVALENCE
-        elif elem == "trigger" or elem == "triggers":
-            return Operators.TRIGGER
-        elif elem == "since":
-            return Operators.SINCE
-        elif elem == "precede":
-            return Operators.PRECEDE
-        elif elem == "release" or elem == "releases":
-            return Operators.RELEASE
-        elif elem == "until":
-            return Operators.UNTIL
-        elif elem == "follow":
-            return Operators.FOLLOW
 
     def fact_proposition(self, elem):
         self._proposition.add_new_knowledge(NewKnowledgeComponent(elem[0]))
@@ -499,10 +403,6 @@ class CNLTransformer(Transformer):
         self._proposition.add_requisite(elem[1])
         return elem[1]
 
-    def telingo_there_is(self, elem):
-        self._proposition.add_requisite(elem[0])
-        return elem[0]
-
     @v_args(meta=True)
     def temporal_constraint(self, meta, elem):
         try:
@@ -547,7 +447,8 @@ class CNLTransformer(Transformer):
         self._delayed_operations.append(RespectivelySubstituteVariable(self._proposition, elem[0], elem[2]))
 
     def variable_substitution_range(self, elem):
-        self._delayed_operations.append(SubstituteVariable(self._proposition, elem[0], [RangeValueComponent(elem[1], elem[2])]))
+        self._delayed_operations.append(
+            SubstituteVariable(self._proposition, elem[0], [RangeValueComponent(elem[1], elem[2])]))
 
     def string_list(self, elem):
         return [ValueComponent(string) for string in elem]
@@ -761,20 +662,6 @@ class CNLTransformer(Transformer):
     def expression(self, elem):
         return ''.join(elem)
 
-    def entity(self, elem):
-        if elem[0] == "previously":
-            elem[1].is_before = True
-        elif elem[0] == "subsequently":
-            elem[1].is_after = True
-        elif elem[0] == "initially":
-            elem[1].is_initial = True
-        elif elem[0] == "finally":
-            elem[1].is_final = True
-        return elem[1]
-
-    def TELINGO_ENTITY_TEMPORAL_OPERATOR(self, elem):
-        return elem.value
-
     def _is_label(self, string: str) -> bool:
         if isinstance(string, EntityComponent):
             return False
@@ -842,7 +729,7 @@ class CNLTransformer(Transformer):
     def generic_element(self, meta, elem):
         try:
             entity: SetEntityComponent = SignatureManager.clone_signature(elem[1])
-            if not CNLTransformer.is_variable(elem[0].value):
+            if not ASPTransformer.is_variable(elem[0].value):
                 if not entity.is_value_in_set(elem[0].value):
                     raise AttributeGenericError(f'Value \"{elem[0].value}\" not declared '
                                                 f'in set {entity.get_entity_identifier()}')
@@ -912,15 +799,13 @@ class CNLTransformer(Transformer):
 
     @v_args(meta=True)
     def verb(self, meta, elem):
-        elem[4] = elem[4][0:-1] if elem[4][-1] == 's' else elem[4]  # remove 3rd person final 's'
-        verb_name = '_'.join([elem[4], elem[8]]) if elem[8] else elem[4]
+        elem[3] = elem[3][0:-1] if elem[3][-1] == 's' else elem[3]  # remove 3rd person final 's'
+        verb_name = '_'.join([elem[3], elem[7]]) if elem[7] else elem[3]
         verb_name = verb_name.lower()
         if is_verb_to_have(elem[0]):
             verb_name = verb_name.removesuffix('_to')
-        entity: EntityComponent = self.simple_entity(meta, verb_name, '', elem[5], elem[6], elem[7],
+        entity: EntityComponent = self.simple_entity(meta, verb_name, '', elem[4], elem[5], elem[6],
                                                      new_definition=True)
-        if elem[3]:
-            entity = self.entity([elem[3], entity])
         if elem[2]:
             entity.negated = True
         if elem[1]:
@@ -928,19 +813,6 @@ class CNLTransformer(Transformer):
         self._delayed_operations.append(CreateSignature(self._proposition, entity))
         entity.auxiliary_verb = elem[0]
         return entity
-
-    def telingo_verb(self, elem):
-        verb: EntityComponent = elem[2]
-        if elem[1] and elem[3]:
-            TELINGO_TEMPORAL_RELATIONSHIP = elem[1].removeprefix('since ')
-            TELINGO_TEMPORAL_OPERATOR = elem[3].removeprefix('since ')
-            operator = f'{TELINGO_TEMPORAL_RELATIONSHIP}_{TELINGO_TEMPORAL_OPERATOR}' if TELINGO_TEMPORAL_OPERATOR == 'before' or TELINGO_TEMPORAL_OPERATOR == 'after' else f'{TELINGO_TEMPORAL_OPERATOR}_{TELINGO_TEMPORAL_RELATIONSHIP}'
-        else:
-            operator = elem[1]
-        operation = OperationComponent(Operators[operator.upper()], verb)
-        if elem[0]:
-            operation.negated = True
-        return operation
 
     def cnl_it_is_preferred(self, elem):
         self._proposition = PreferencePropositionBuilder()
@@ -1002,7 +874,7 @@ class CNLTransformer(Transformer):
         elif quantity == 'at least':
             return QUANTITY_OPERATOR.AT_LEAST
 
-    def COMPARISON_OPERATOR(self, elem):
+    def COMPARISON_OPERATOR(self, elem) -> Operators:
         operator = elem.value
         if operator == "the same as" or operator == "equal to":
             return Operators.EQUALITY
@@ -1021,7 +893,7 @@ class CNLTransformer(Transformer):
         if operator == "between":
             return Operators.BETWEEN
 
-    def ARITHMETIC_OPERATOR(self, elem):
+    def ARITHMETIC_OPERATOR(self, elem) -> Operators:
         operator = elem.value
         if operator == "the sum":
             return Operators.SUM
@@ -1036,7 +908,7 @@ class CNLTransformer(Transformer):
         parameter = elem.value
         return parameter if parameter else elem.value
 
-    def TEMPORAL_TYPE(self, elem):
+    def TEMPORAL_TYPE(self, elem) -> EntityType:
         if elem == "minutes" or elem == "minute":
             return EntityType.TIME
         elif elem == "days" or elem == "day":
@@ -1044,13 +916,13 @@ class CNLTransformer(Transformer):
         elif elem == "steps" or elem == "step":
             return EntityType.STEP
 
-    def SHIFT_OPERATOR(self, elem):
+    def SHIFT_OPERATOR(self, elem) -> str:
         if elem == 'the previous':
             return '-'
         elif elem == 'the next':
             return '+'
 
-    def AGGREGATE_OPERATOR(self, elem):
+    def AGGREGATE_OPERATOR(self, elem) -> AggregateOperation:
         operator = elem.value
         if operator == "the number":
             return AggregateOperation.COUNT
@@ -1112,8 +984,8 @@ class CNLTransformer(Transformer):
     def cnl_it_is_required_that(self, elem) -> PROPOSITION_TYPE:
         return PROPOSITION_TYPE.REQUIREMENT
 
-    def cnl_as_much_as_possible(self, elem) -> None:
+    def cnl_as_much_as_possible(self, elem) -> PREFERENCE_PROPOSITION_TYPE:
         return PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION
 
-    def cnl_as_little_as_possible(self, elem) -> None:
+    def cnl_as_little_as_possible(self, elem) -> PREFERENCE_PROPOSITION_TYPE:
         return PREFERENCE_PROPOSITION_TYPE.MINIMIZATION

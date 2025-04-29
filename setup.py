@@ -20,7 +20,7 @@ setup(
     maintainer_email='simone.caruso@edu.unige.it',
     package_dir={'': 'src'},
     packages=find_packages('src', exclude=['tests*']),
-    package_data={'': ['grammar.lark']},
+    package_data={'cnl2asp': ['grammars/*.lark']},
     install_requires=['lark', 'inflect', 'multipledispatch'],
     entry_points={
         'console_scripts': ['cnl2asp = cnl2asp.cnl2asp:main'],

@@ -1,0 +1,34 @@
+%override specification: PROBLEM_IDENTIFIER? ((standard_proposition | implicit_definition_proposition) END_OF_LINE)+
+PROBLEM_IDENTIFIER: "The following propositions apply in the initial state:"
+                    | "The following propositions always apply except in the initial state:"
+                    | "The following propositions always apply:"
+                    | "The following propositions apply in the final state:"
+
+%extend whenever_clause: _CNL_WHENEVER telingo_operation -> whenever_telingo_operation
+
+_CNL_HOLD: "hold" | "holds"
+hold_condition: _CNL_THAT [VERB_NEGATION] telingo_temporal_operator _CNL_HOLD
+                | _CNL_THAT [VERB_NEGATION] _CNL_HOLD telingo_temporal_operator
+telingo_operation: _CNL_THERE " " (_CNL_IS | _CNL_ARE) [VERB_NEGATION] [telingo_temporal_operator] telingo_operand [hold_condition] [TELINGO_DUAL_OPERATOR telingo_operation]
+                 | telingo_temporal_operator  _CNL_THERE " " (_CNL_IS | _CNL_ARE) [VERB_NEGATION] telingo_operand [hold_condition] [TELINGO_DUAL_OPERATOR telingo_operation] -> prefixed_telingo_operation
+_CNL_THIS: "this"
+_CNL_STATE: "state"
+_CNL_NOW: "now"
+_CNL_HERE: "here"
+TELINGO_TEMPORAL_OPERATOR: "always" | "eventually" | "before" | "since before" | "after" | "since after"
+telingo_temporal_operator: _CNL_COMMA? TELINGO_TEMPORAL_OPERATOR  ( _CNL_THIS _CNL_STATE | _CNL_NOW | _CNL_HERE)? _CNL_COMMA?
+TELINGO_DUAL_OPERATOR: "and" | "or" | "implies" | "imply" | "equivalent to" | "trigger" | "triggers" | "since" | "precede" | "releases" | "until" | "follow"
+
+telingo_operand: entity [TELINGO_DUAL_OPERATOR telingo_operand]
+                | TELINGO_CONSTANT [TELINGO_DUAL_OPERATOR telingo_operand]
+TELINGO_CONSTANT: "it is the initial state"
+                | "it is the final state"
+                | "the true constant"
+                | "the false constant"
+
+%extend there_is_clause: telingo_operation -> telingo_there_is
+%override ?entity: TELINGO_ENTITY_TEMPORAL_OPERATOR? (simple_entity | complex_entity)
+TELINGO_ENTITY_TEMPORAL_OPERATOR: "previously" | "subsequently" | "initially" | "finally"
+
+%override verb: [COPULA] [cardinality] [VERB_NEGATION] [TELINGO_ENTITY_TEMPORAL_OPERATOR] _CNL_INDEFINITE_ARTICLE? string [entity_temporal_order_constraint] [define_subsequent_event] [parameter_list] [VERB_PREPOSITION]
+              | [VERB_NEGATION] telingo_temporal_operator verb [telingo_temporal_operator] -> telingo_verb

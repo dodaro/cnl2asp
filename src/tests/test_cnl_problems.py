@@ -5,12 +5,11 @@ from unittest.mock import patch
 from lark import Lark
 
 from cnl2asp.ASP_elements.asp_program import ASPProgram
+from cnl2asp.cnl2asp import Cnl2asp, MODE
 from cnl2asp.converter.asp_converter import ASPConverter
-from cnl2asp.parser.parser import CNLTransformer
+from cnl2asp.parser.asp_compiler import ASPTransformer
+from cnl2asp.parser.telingo_compiler import TelingoTransformer
 from cnl2asp.specification.signaturemanager import SignatureManager
-
-cnl_parser = Lark(open(os.path.join(os.path.dirname(__file__), "..", "cnl2asp", "grammar.lark"), "r").read())
-
 
 class TestCnlPropositions(unittest.TestCase):
 
@@ -21,19 +20,15 @@ class TestCnlPropositions(unittest.TestCase):
         asp_converter.clear_support_variables()
 
     def compute_asp(self, string: str) -> str:
-        problem = CNLTransformer().transform(cnl_parser.parse(string))
-        asp_converter: ASPConverter = ASPConverter()
-        program: ASPProgram = problem.convert(asp_converter)
-        return str(program)
+        return Cnl2asp(string).compile().strip()
 
-    def check_input_to_output(self, input_string, expected_output):
-        asp = self.compute_asp(input_string)
-        self.assertEqual(asp.strip(), expected_output)
+    def compute_telingo(self, string: str) -> str:
+        return Cnl2asp(string, MODE.TELINGO).compile().strip()
 
     @patch('cnl2asp.utility.utility.uuid4')
     def test_cts(self, mock_uuid):
         mock_uuid.return_value = 'support'
-        self.check_input_to_output('''A timeslot is a temporal concept expressed in minutes ranging from 07:30 AM to 01:30 PM with a length of 10 minutes.
+        self.assertEqual(self.compute_asp('''A timeslot is a temporal concept expressed in minutes ranging from 07:30 AM to 01:30 PM with a length of 10 minutes.
 A day is a temporal concept expressed in days ranging from 01/01/2022 to 07/01/2022.
 A patient is identified by an id, and has a preference.
 A registration is identified by a patient, and by an order, and has a number of waiting days, a duration of the first phase, a duration of the second phase, a duration of the third phase, and a duration of the fourth phase.
@@ -46,8 +41,8 @@ It is required that the sum between the duration of the first phase of the regis
 Whenever there is a patient P, whenever there is an assignment with registration patient P, with timeslot T, and with day D, whenever there is a registration R with patient P, and with a duration of the fourth phase PH4 greater than 0, then we can have a position with seat id S, with timeslot T, with day D in exactly 1 seat S for PH4 timeslots.
 It is required that the number of patient that have position in seat S, day D, timeslot TS is less than 2, whenever there is a day D, whenever there is a timeslot TS, whenever there is a seat with id S.
 It is required that the assignment A is after 11:20 AM, whenever there is a registration R with a duration of the fourth phase greater than 50 timeslots, whenever there is an assignment A with registration R.
-It is preferred as much as possible, with high priority, that a patient P with preference T has a position in a seat S, whenever there is a seat S with type T.''',
-                                   '''\
+It is preferred as much as possible, with high priority, that a patient P with preference T has a position in a seat S, whenever there is a seat S with type T.'''),
+                         '''\
 timeslot(0,"07:30 AM").
 timeslot(1,"07:40 AM").
 timeslot(2,"07:50 AM").
@@ -102,7 +97,7 @@ position_in(S,T..T+PH4,D,P,SSGNMNT_RDR) :- patient(P,_), assignment(P,SSGNMNT_RD
 :~ patient(P,T), position_in(S,_,_,P,_), seat(S,T). [1@3,T]''')
 
     def test_graph_coloring(self):
-        self.check_input_to_output('''A node goes from 1 to 3.
+        self.assertEqual(self.compute_asp('''A node goes from 1 to 3.
 A color is one of red, green, blue.
 
 Node 1 is connected to node X, where X is one of 2, 3.
@@ -111,8 +106,8 @@ Node 3 is connected to node X, where X is one of 1, 2.
 
 Every node can be assigned to exactly 1 color.
 
-It is required that when node X is connected to node Y then node X is not assigned to color C and also node Y is not assigned to color C.''',
-                                   '''node(1..3).
+It is required that when node X is connected to node Y then node X is not assigned to color C and also node Y is not assigned to color C.'''),
+                         '''node(1..3).
 color("red").
 color("green").
 color("blue").
@@ -126,7 +121,7 @@ connected_to(3,X) :- node(3), node(X), X = 2.
 :- connected_to(X,Y), node(X), assigned_to(X,C), node(Y), assigned_to(Y,C), color(C).''')
 
     def test_ham_path(self):
-        self.check_input_to_output('''A path is identified by a first node, by a second node.
+        self.assertEqual(self.compute_asp('''A path is identified by a first node, by a second node.
 A node goes from 1 to 5.
 Node 1 is connected to node X, where X is one of 2, 3.
 Node 2 is connected to node X, where X is one of 1, 4.
@@ -140,7 +135,7 @@ It is required that the number of nodes where node Y has a path with first node 
 Node start is reachable.
 Node Y is reachable when node X is reachable and also node X has a path with first node X, with second node Y to node Y.
 It is required that every node is reachable.
-''', '''\
+'''), '''\
 #const start = 1.
 node(1..5).
 connected_to(1,X) :- node(1), node(X), X = 2.
@@ -161,7 +156,7 @@ reachable(Y) :- reachable(X), node(X), path(X,Y), node(Y).
 :- node(RCHBL_D), not reachable(RCHBL_D).''')
 
     def test_input_file(self):
-        self.check_input_to_output('''A movie is identified by an id, and has a title, a director, and a year.
+        self.assertEqual(self.compute_asp('''A movie is identified by an id, and has a title, a director, and a year.
 A director is identified by a name.
 A topMovie is identified by an id.
 A scoreAssignment is identified by a movie, and by a value.
@@ -199,7 +194,7 @@ It is required that every waiter is payed.
 It is preferred with low priority that the number of drinks that are serve is maximized.
 It is preferred as little as possible, with high priority, that V is equal to 1, whenever there is a scoreAssignment with movie I, and with value V, whenever there is a topMovie with id I.
 It is preferred, with medium priority, that whenever there is a topMovie with id I, whenever there is a scoreAssignment with movie I, and with value V, V is maximized.
-It is preferred, with medium priority, that the total value of a scoreAssignment is maximized.''','''#const minKelvinTemperature = 0.
+It is preferred, with medium priority, that the total value of a scoreAssignment is maximized.'''), '''#const minKelvinTemperature = 0.
 timeslot(0,"07:00 AM").
 timeslot(1,"07:30 AM").
 timeslot(2,"08:00 AM").
@@ -240,7 +235,7 @@ scoreassignment(I,1) | scoreassignment(I,2) | scoreassignment(I,3) :- movie(I,_,
 :~ #sum{VL: scoreassignment(_,VL)} = SM. [-SM@2]''')
 
     def test_integer_sets(self):
-        self.check_input_to_output('''set1 is a set.
+        self.assertEqual(self.compute_asp('''set1 is a set.
 set2 is a set.
 A match is identified by a first, and by a second.
 A positivematch is identified by a match.
@@ -254,8 +249,8 @@ Whenever there is a match M with first X, and with second Y greater than X, then
 It is required that the number of match occurrences with first E is equal to 1, whenever there is an element E in set1.
 It is required that the number of match occurrences with second E is equal to 1, whenever there is an element E in set2.
 
-It is required that the number of positivematch is equal to the number of negativematch.''',
-                                   '''{match(X,Y)} :- set("set1",X), set("set2",Y).
+It is required that the number of positivematch is equal to the number of negativematch.'''),
+                         '''{match(X,Y)} :- set("set1",X), set("set2",Y).
 positivematch(X,Y) :- match(X,Y), Y < X.
 negativematch(X,Y) :- match(X,Y), Y > X.
 :- #count{match(E,MTCH_SCND): match(E,MTCH_SCND)} != 1, set("set1",E).
@@ -263,7 +258,7 @@ negativematch(X,Y) :- match(X,Y), Y > X.
 :- #count{positivematch(PSTVMTCH_FRST,PSTVMTCH_SCND): positivematch(PSTVMTCH_FRST,PSTVMTCH_SCND)} = CNT, #count{negativematch(NGTVMTCH_FRST,NGTVMTCH_SCND): negativematch(NGTVMTCH_FRST,NGTVMTCH_SCND)} = CNT1, CNT != CNT1.''')
 
     def test_mao(self):
-        self.check_input_to_output('''A time is a temporal concept expressed in steps ranging from 0 to 10.
+        self.assertEqual(self.compute_asp('''A time is a temporal concept expressed in steps ranging from 0 to 10.
 A joint is identified by an id.
 An angle is identified by a value.
 A position is identified by a joint, by an angle, and by a time.
@@ -286,8 +281,8 @@ It is required that the angle A1 of the position P1 is equal to the angle A2 of 
 It is required that the angle A1 of the position P is equal to the desired angle A2 of the rotation R, whenever there is a position P with joint J1, with time T, with angle A1, whenever there is a rotation R the previous step with first joint J1, and with desired angle A2.
 It is required that the angle AN of the position P is equal to |AC+(A-AP)+360|, whenever there is a time T, whenever there is a position P the next step with joint J1, and with angle AN, whenever there is a rotation with first joint J2, with current angle A, with current angle AP, and with time T, whenever there is a position P2 with joint J1 greater than J2, with angle AC, and with time T.
 It is required that the angle A1 of the position P1 is equal to the angle A2 of the position P2, whenever there is a position P1 with joint J1, with angle A1, and with time T, whenever there is a position P2 the next step with joint J1, and with angle A2, whenever there is a rotation with first joint J2 greater than J1, and with time T not after timemax.
-It is required that the angle A1 of the goal G is equal to the angle A2 of the position P, whenever there is a goal G with joint J, with angle A1, whenever there is a position P with joint J, with angle A2, and with time equal to timemax.''',
-                                   '''#const granularity = 90.
+It is required that the angle A1 of the goal G is equal to the angle A2 of the position P, whenever there is a goal G with joint J, with angle A1, whenever there is a position P with joint J, with angle A2, and with time equal to timemax.'''),
+                         '''#const granularity = 90.
 #const timemax = 90.
 time(0,"0").
 time(1,"1").
@@ -317,7 +312,7 @@ link(J2,J1) :- link(J1,J2).
 :- (A1)/360 != (A2)/360, goal(J,A1), position(J,A2,timemax).''')
 
     def test_maxclique(self):
-        self.check_input_to_output('''A node goes from 1 to 5.
+        self.assertEqual(self.compute_asp('''A node goes from 1 to 5.
 Node 1 is connected to node X, where X is one of 2, 3.
 Node 2 is connected to node X, where X is one of 1, 3, 4, 5.
 Node 3 is connected to node X, where X is one of 1, 2, 4, 5.
@@ -325,8 +320,8 @@ Node 4 is connected to node X, where X is one of 2, 3, 5.
 Node 5 is connected to node X, where X is one of 2, 3, 4.
 Every node can be chosen. 
 It is required that when node X is not connected to node Y then node X is not chosen and also node Y is not chosen, where X is different from Y.
-It is preferred with high priority that the number of nodes that are chosen is maximized.''',
-                                   '''node(1..5).
+It is preferred with high priority that the number of nodes that are chosen is maximized.'''),
+                         '''node(1..5).
 connected_to(1,X) :- node(1), node(X), X = 2.
 connected_to(1,X) :- node(1), node(X), X = 3.
 connected_to(2,X) :- node(2), node(X), X = 1.
@@ -348,7 +343,7 @@ connected_to(5,X) :- node(5), node(X), X = 4.
 :~ #count{D: chosen(D)} = CNT. [-CNT@3]''')
 
     def test_undirected_graph(self):
-        self.check_input_to_output('''A node is identified by an id, and by a weight.
+        self.assertEqual(self.compute_asp('''A node is identified by an id, and by a weight.
 An edge is identified by a first node id, and by a second node id.
 A set is identified by an id.
 
@@ -377,8 +372,8 @@ the number of node id that are assigned to a set S2, where S1 is equal to 1 and 
 
 It is required that the total of weights that are assigned to a set S2
 is greater than or equal to
-the total of weights that are assigned to a set S1, where S1 is equal to 1 and S2 is equal to 2.''',
-                                   '''node(1,1).
+the total of weights that are assigned to a set S1, where S1 is equal to 1 and S2 is equal to 2.'''),
+                         '''node(1,1).
 node(2,1).
 node(3,1).
 node(4,1).
@@ -394,7 +389,7 @@ edge(4,5).
 :- #sum{WGHT: assigned_to(_,WGHT,S2), set(S2)} = SM, #sum{WGHT1: assigned_to(_,WGHT1,S1), set(S1)} = SM1, SM < SM1, S1 = 1, S2 = 2.''')
 
     def test_nursescheduling(self):
-        self.check_input_to_output('''A shift is identified by an id, and has a number, and hour.
+        self.assertEqual(self.compute_asp('''A shift is identified by an id, and has a number, and hour.
 numberOfNurses is a constant.
 A nurse goes from 1 to numberOfNurses.
 A day goes from 1 to 365.
@@ -426,7 +421,7 @@ It is prohibited that a nurse N works in a day D, shift specrest, whenever we ha
 It is prohibited that the number of days where a nurse works in shift S is more than M, where S is one of morning, afternoon, night and M is respectively one of maxDay, maxDay, maxNight.
 It is prohibited that the number of days where a nurse works in shift S is less than M, where S is one of morning, afternoon, night and M is respectively one of minDay, minDay, minNight.
 It is preferred, with high priority, that the difference in absolute value between B, and DAYS is minimized, where DAYS is equal to the number of days where a nurse with id N works in a shift and DAYS is between minDay and maxDay and B is one of balanceNurseDay, balanceNurseAfternoon and S is respectively one of morning, afternoon.
-It is preferred as much as possible, with high priority, that the difference in absolute value between balanceNurseNight, and DAYS is minimized, where DAYS is equal to the number of days where a nurse with id N works in shift with id equal to night and DAYS is between minNight and maxNight.''', '''#const maxHours = 1692.
+It is preferred as much as possible, with high priority, that the difference in absolute value between balanceNurseNight, and DAYS is minimized, where DAYS is equal to the number of days where a nurse with id N works in shift with id equal to night and DAYS is between minNight and maxNight.'''), '''#const maxHours = 1692.
 #const minHours = 1687.
 #const maxDay = 82.
 #const maxNight = 61.
@@ -461,9 +456,8 @@ day(1..365).
 :~ nurse(N), DAYS = #count{D: work_in(D,N,WRK_N_D1), shift(WRK_N_D1,_,_)}, minDay <= DAYS, DAYS <= maxDay, (|(B - DAYS)|) = BSLT_VL, B = balanceNurseAfternoon, S = "afternoon". [BSLT_VL@3,N]
 :~ nurse(N), DAYS = #count{D: work_in(D,N,"night"), shift("night",_,_)}, minNight <= DAYS, DAYS <= maxNight, (|(balanceNurseNight - DAYS)|) = BSLT_VL. [BSLT_VL@3,N]''')
 
-
     def test_gun_1(self):
-        self.check_input_to_output('''A gun is identified by a status.
+        self.assertEqual(self.compute_telingo('''A gun is identified by a status.
 A shooter is identified by an id.
 
 The following propositions apply in the initial state:
@@ -481,7 +475,7 @@ Whenever there is not a gun unloaded, whenever there is previously a gun loaded 
 Whenever there is a gun shooting, whenever there is previously a gun loaded then we must have a gun with status equal to unloaded.
 Whenever there is previously a gun unloaded, whenever there is not a gun loaded then we must have a gun with status equal to unloaded.
 
-It is prohibited that there is a gun loading, whenever there is previously a gun loaded.''', '''\
+It is prohibited that there is a gun loading, whenever there is previously a gun loaded.'''), '''\
 #program initial.
 gun("unloaded").
 
@@ -497,7 +491,7 @@ gun("unloaded") :- 'gun("unloaded"), not gun("loaded").
 :- gun("loading"), 'gun("loaded").''')
 
     def test_gun_2(self):
-        self.check_input_to_output('''\
+        self.assertEqual(self.compute_telingo('''\
 A gun is identified by a status.
 A shooter is identified by an id.
 
@@ -525,7 +519,7 @@ Whenever there is previously a gun broken, then we must have a gun with status e
 
 The following propositions apply in the final state:
 It is prohibited that, before here, there are not a gun loaded and a gun shooting that eventually hold.
-''', '''\
+'''), '''\
 #program initial.
 gun("unloaded").
 
@@ -546,7 +540,7 @@ gun("broken") :- 'gun("broken").
 :- not &tel {<? (gun("loaded") & gun("shooting"))}.''')
 
     def test_hanoi(self):
-        self.check_input_to_output('''\
+        self.assertEqual(self.compute_telingo('''\
 A disk is identified by an id.
 A peg is identified by an id.
 A goal is identified by a disk, and by a peg.
@@ -586,7 +580,7 @@ It is prohibited that a disk D is moved to a peg P1, when disk D is previously o
 
 The following propositions apply in the final state:
 It is prohibited that disk D is not on peg P, whenever there is a goal with disk id D, with peg id P.
-''', '''\
+'''), '''\
 #program always.
 disk(0).
 disk(1).
@@ -617,7 +611,7 @@ blocked_in(X,P) :- disk(X), disk(D), blocked_in(D,P), peg(P), X = D-1.
 :- disk(D), not on(D,P), peg(P), goal(D,P).''')
 
     def test_logistic(self):
-        self.check_input_to_output('''\
+        self.assertEqual(self.compute_telingo('''\
 An object is identified by an id.
 A vehicle is identified by a object.
 A truck is identified by a object.
@@ -665,7 +659,7 @@ It is prohibited that a vehicle with object id V is moving, whenever there is no
 
 The following propositions apply in the final state:
 It is prohibited that package P is not deposited in location L, whenever there is a goal with package P, and with location L.
-It is prohibited that package P is loaded, whenever there is a goal with package P.''', '''\
+It is prohibited that package P is loaded, whenever there is a goal with package P.'''), '''\
 #program always.
 vehicle(T) :- truck(T).
 vehicle(A) :- airplane(A).
@@ -696,7 +690,7 @@ deposited_in(P,L) :- 'deposited_in(P,L), location(L), package(P), not loaded(P).
 :- package(P), loaded(P), goal(P,_).''')
 
     def test_monkey(self):
-        self.check_input_to_output('''\
+        self.assertEqual(self.compute_telingo('''\
 An agent is identified by a name.
 A monkey is identified by an agent.
 A box is identified by an agent.
@@ -736,7 +730,7 @@ A box B is at location X when monkey M push to location X, box B.
 
 The following propositions apply in the final state:
 It is required that monkey M gets banana B.
-''', '''\
+'''), '''\
 #program always.
 location("door").
 location("window").
@@ -775,7 +769,7 @@ at(B,X) :- monkey(M), push_to(M,X), location(X), box(B).
 :- monkey(M), not get(M,B), banana(B).''')
 
     def test_moore(self):
-        self.check_input_to_output('''\
+        self.assertEqual(self.compute_telingo('''\
 A variable is identified by an id.
 A process is identified by a variable.
 A value is identified by a number.
@@ -818,7 +812,7 @@ A variable K holds a value V, when a variable K previously holds a value V and a
 A process K holds a value V, when a process K previously holds a value V and also variable K does not change.
 
 The following propositions apply in the final state:
-It is required that variable c holds value target.''', '''\
+It is required that variable c holds value target.'''), '''\
 #program always.
 process(1..2).
 variable("r1").
@@ -853,7 +847,7 @@ hold(K,V) :- 'hold(K,V), value(V), process(K), not change(K,_).
 :- variable("c"), not hold("c",target), value(target).''')
 
     def test_river(self):
-        self.check_input_to_output('''A location is identified by a name.
+        self.assertEqual(self.compute_telingo('''A location is identified by a name.
 An item is identified by an id.
 A farmer is identified by an item.
 A route is identified by a starting location, and by an arriving location.
@@ -889,7 +883,7 @@ It is prohibited that item X is at location A and also item X is at location B, 
 It is prohibited that item X is at location A and also item Y is at location A, when item X eats item Y and also farmer F is not at location A.
 
 The following propositions apply in the final state:
-It is required that item X is at location right_bank.''', '''\
+It is required that item X is at location right_bank.'''), '''\
 #program always.
 item("fox").
 item("beans").
@@ -924,7 +918,7 @@ at(F,B) :- location(B), farmer(F), 'at(F,A), location(A), route(A,B).
 :- item(X), not at(X,"right_bank"), location("right_bank").''')
 
     def test_queen(self):
-        self.check_input_to_output('''Row goes from 1 to 8.
+        self.assertEqual(self.compute_telingo('''Row goes from 1 to 8.
 Column goes from 1 to 8.
 
 Queen goes from 1 to 8.
@@ -936,7 +930,7 @@ Queen Q1 is sharing_row with queen Q2 when
     queen Q1 is assigned_row row R1 and also
     queen Q2 is assigned_row row R2.
 
-Whenever there is a sharing_row with queen Q1, with queen Q2, then we can have a queen.''', '''\
+Whenever there is a sharing_row with queen Q1, with queen Q2, then we can have a queen.'''), '''\
 row(1..8).
 column(1..8).
 queen(1..8).
@@ -946,13 +940,13 @@ sharing_row(Q2,Q1) :- queen(Q1), assigned_row(Q1,R1), row(R1), queen(Q2), assign
 {queen(Q1)} :- sharing_row(Q1,Q2).''')
 
     def test_cell_and_rows(self):
-        self.check_input_to_output('''A row is identified by an id.
+        self.assertEqual(self.compute_telingo('''A row is identified by an id.
 A column is identified by an id.
 A cell is identified by a column, and by a row.
 A value is identified by a number.
 
 Every cell can be assigned to exactly 1 value.
-A row R has_duplicates whenever we have that the number of row id R that are assigned to value V is greater than 1.''',
-                                '''\
+A row R has_duplicates whenever we have that the number of row id R that are assigned to value V is greater than 1.'''),
+                         '''\
 1 <= {assigned_to(CLL_D,CLL_D1,VL_NMBR): value(VL_NMBR)} <= 1 :- cell(CLL_D,CLL_D1).
 has_duplicate(R) :- row(R), #count{R: assigned_to(_,R,V), value(V)} > 1.''')

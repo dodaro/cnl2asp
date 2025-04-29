@@ -4,11 +4,11 @@ import unittest
 from io import StringIO
 from textwrap import dedent
 
-from cnl2asp.parser.parser import CNLTransformer
+from cnl2asp.parser.asp_compiler import ASPTransformer
 
 from cnl2asp.ASP_elements.solver.telingo_result_parser import TelingoResultParser
 from cnl2asp.ASP_elements.solver.telingo_wrapper import Telingo
-from cnl2asp.cnl2asp import Cnl2asp
+from cnl2asp.cnl2asp import Cnl2asp, MODE
 from cnl2asp.ASP_elements.solver.clingo_wrapper import Clingo
 from cnl2asp.ASP_elements.solver.clingo_result_parser import ClingoResultParser
 from cnl2asp.converter.asp_converter import ASPConverter
@@ -25,12 +25,12 @@ class TestClingoResultParser(unittest.TestCase):
 
     def compute_clingo_explaination(self, cnl: str, answer_set: str, ):
         cnl2asp = Cnl2asp(cnl)
-        return ClingoResultParser(CNLTransformer().transform(cnl2asp.parse_input())).parse_model(
+        return ClingoResultParser(cnl2asp.get_transformer().transform(cnl2asp.parse_input())).parse_model(
             answer_set.splitlines()).strip()
 
     def compute_telingo_explaination(self, cnl: str, answer_set: str, ):
-        cnl2asp = Cnl2asp(cnl)
-        return TelingoResultParser(CNLTransformer().transform(cnl2asp.parse_input())).parse_model(
+        cnl2asp = Cnl2asp(cnl, mode=MODE.TELINGO)
+        return TelingoResultParser(cnl2asp.get_transformer().transform(cnl2asp.parse_input())).parse_model(
             answer_set).strip()
 
 

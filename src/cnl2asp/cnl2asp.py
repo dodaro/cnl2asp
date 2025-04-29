@@ -10,6 +10,7 @@ from enum import Enum
 from textwrap import indent
 from typing import TextIO
 
+from cnl2asp.parser.telingo_compiler import TelingoTransformer
 from cnl2asp.utility.utility import Utility
 from lark import Lark, UnexpectedCharacters, Token, Tree
 from lark.exceptions import VisitError
@@ -20,7 +21,7 @@ from cnl2asp.exception.cnl2asp_exceptions import ParserError
 from cnl2asp.specification.attribute_component import AttributeComponent
 from cnl2asp.specification.entity_component import EntityComponent
 from cnl2asp.converter.asp_converter import ASPConverter
-from cnl2asp.parser.parser import CNLTransformer
+from cnl2asp.parser.asp_compiler import ASPTransformer
 from cnl2asp.specification.signaturemanager import SignatureManager
 from cnl2asp.specification.specification import SpecificationComponent
 
@@ -71,27 +72,48 @@ class Symbol:
         return hash((self.predicate, tuple(self.attributes), tuple(self.keys), self.symbol_type))
 
 
+class MODE(Enum):
+    ASP = 0,
+    TELINGO = 1
+
+
 class Cnl2asp:
-    def __init__(self, cnl_input: TextIO | str):
+    def __init__(self, cnl_input: TextIO | str, mode=MODE.ASP):
         if isinstance(cnl_input, str):
             self.cnl_input = cnl_input
             if os.path.isfile(cnl_input):
                 self.cnl_input = open(cnl_input).read()
         else:
             self.cnl_input = cnl_input.read()
+        self.mode = mode
+
+    def get_grammar(self):
+        res = ''
+        with open(os.path.join(os.path.dirname(__file__), "grammars", "asp_grammar.lark"), "r") as grammar:
+            res += grammar.read()
+        if self.mode == MODE.TELINGO:
+            with open(os.path.join(os.path.dirname(__file__), "grammars", "telingo_grammar.lark"), "r") as grammar:
+                res += '\n'
+                res += grammar.read()
+        return res
+
+    def get_transformer(self):
+        if self.mode == MODE.ASP:
+            return ASPTransformer()
+        elif self.mode == MODE.TELINGO:
+            return TelingoTransformer()
 
     def parse_input(self) -> Tree[Token]:
         try:
-            with open(os.path.join(os.path.dirname(__file__), "grammar.lark"), "r") as grammar:
-                cnl_parser = Lark(grammar.read(), propagate_positions=True)
-                return cnl_parser.parse(self.cnl_input)
+            cnl_parser = Lark(self.get_grammar(), propagate_positions=True)
+            return cnl_parser.parse(self.cnl_input)
         except UnexpectedCharacters as e:
             raise ParserError(e.char, e.line, e.column, e.get_context(self.cnl_input),
                               self.cnl_input.splitlines()[e.line - 1],
                               list(e.allowed))
 
     def cnl_to_json(self):
-        problem = CNLTransformer().transform(self.parse_input())
+        problem = ASPTransformer().transform(self.parse_input())
         converter = Cnl2jsonConverter()
         json = problem.convert(converter)
         return json
@@ -104,7 +126,7 @@ class Cnl2asp:
     def compile(self, auto_link_entities: bool = True) -> str:
         SignatureManager.signatures = []
         Utility.AUTO_ENTITY_LINK = auto_link_entities
-        specification: SpecificationComponent = CNLTransformer().transform(self.parse_input())
+        specification: SpecificationComponent = self.get_transformer().transform(self.parse_input())
         asp_converter: ASPConverter = ASPConverter()
         program: ASPProgram = specification.convert(asp_converter)
         return str(program)
@@ -178,8 +200,10 @@ def main():
     parser.add_argument('-p', '--print-with-functions', action='store_true',
                         help='Print atoms with functions. ')
     parser.add_argument('--debug', action='store_true', help=argparse.SUPPRESS)
-    parser.add_argument('--solve', type=str, choices=["clingo", "telingo"],
+    parser.add_argument('--solve', action='store_true',
                         help='Call the corresponding solver and print a cnl-translated output')
+    parser.add_argument('--telingo', action='store_true',
+                        help='Generate a telingo encoding')
     parser.add_argument('-o', '--optimize', action='store_true', help='Optimize the output using ngo')
     parser.add_argument('--explain', action='store_true', help='Returns a cnl version of the best model')
     parser.add_argument('input_file')
@@ -187,8 +211,10 @@ def main():
     args = parser.parse_args()
 
     Utility.PRINT_WITH_FUNCTIONS = args.print_with_functions
-
-    cnl2asp = Cnl2asp(args.input_file)
+    mode = MODE.ASP
+    if args.telingo:
+        mode = MODE.TELINGO
+    cnl2asp = Cnl2asp(args.input_file, mode)
 
     if args.check_syntax:
         if cnl2asp.check_syntax():
@@ -224,18 +250,16 @@ def main():
             print("Error in writing output", str(e))
 
         if args.solve:
-            if args.solve == "clingo":
-                from cnl2asp.ASP_elements.solver.clingo_wrapper import Clingo
-                from cnl2asp.ASP_elements.solver.clingo_result_parser import ClingoResultParser
-                solver = Clingo()
-                res_parser = ClingoResultParser(CNLTransformer().transform(cnl2asp.parse_input()))
-            elif args.solve == "telingo":
+            if args.telingo:
                 from cnl2asp.ASP_elements.solver.telingo_result_parser import TelingoResultParser
                 from cnl2asp.ASP_elements.solver.telingo_wrapper import Telingo
                 solver = Telingo()
-                res_parser = TelingoResultParser(CNLTransformer().transform(cnl2asp.parse_input()))
+                res_parser = TelingoResultParser(cnl2asp.get_transformer().transform(cnl2asp.parse_input()))
             else:
-                raise Exception(f"{args.solve} not recognised")
+                from cnl2asp.ASP_elements.solver.clingo_wrapper import Clingo
+                from cnl2asp.ASP_elements.solver.clingo_result_parser import ClingoResultParser
+                solver = Clingo()
+                res_parser = ClingoResultParser(cnl2asp.get_transformer().transform(cnl2asp.parse_input()))
             print("\n*********")
             print(f"Running {args.solve}...\n")
             solver.load(str(asp_encoding))
@@ -243,4 +267,3 @@ def main():
             if args.explain:
                 model = res_parser.parse_model(res)
                 print("\n\n" + model)
-
