@@ -1,8 +1,5 @@
 from dataclasses import dataclass
-
 import clingo
-from clingo.solving import _SymbolSequence
-
 from cnl2asp.specification.attribute_component import ValueComponent, AttributeComponent
 from cnl2asp.specification.entity_component import EntityComponent
 from cnl2asp.specification.specification import SpecificationComponent

@@ -1,8 +1,5 @@
 from functools import cmp_to_key
-
 import clingo
-from clingo import SolveHandle
-
 from cnl2asp.ASP_elements.solver.clingo_result_parser import ClingoResultParser
 from cnl2asp.specification.specification import SpecificationComponent
 
