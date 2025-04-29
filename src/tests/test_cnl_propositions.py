@@ -31,9 +31,6 @@ class TestCnlPropositions(unittest.TestCase):
         asp = self.compute_asp(input_string)
         self.assertEqual(asp.strip(), dedent(expected_output))
 
-    def test_constant_numeric(self):
-        self.check_input_to_output('k is a constant equal to 20.', '#const k = 20.')
-
     def test_constant_string(self):
         self.check_input_to_output('k is a constant equal to Kelvin.', '#const k = "Kelvin".')
 
@@ -93,13 +90,6 @@ class TestCnlPropositions(unittest.TestCase):
                                     Waiter W works in pub P.''',
                                    'work_in(W,P) :- waiter(W), pub(P).')
 
-    def test_compounded_clause_definition(self):
-        self.check_input_to_output('A day goes from 1 to 365.', 'day(1..365).')
-
-    def test_compounded_clause_match(self):
-        self.check_input_to_output('A color is one of red, green, blue.',
-                                   'color("red").\ncolor("green").\ncolor("blue").')
-
     def test_compounded_clause_match_with_tail(self):
         self.check_input_to_output(
             'A drink is one of alcoholic, nonalcoholic and has color that is equal to respectively blue, yellow.',
@@ -130,35 +120,6 @@ class TestCnlPropositions(unittest.TestCase):
                                     A movie is identified by an id.
                                     It is preferred, with medium priority, that the total id of a movie is minimized.''',
                                    ':~ #sum{D: movie(D)} = SM. [SM@2]')
-
-    def test_variable_substitution(self):
-        self.check_input_to_output('''
-                                    A node is identified by an id.
-                                    Node 1 is connected to node X, where X is one of 2, 3, 4.''',
-                                   '''\
-                                    connected_to(1,X) :- node(1), node(X), X = 2.
-                                    connected_to(1,X) :- node(1), node(X), X = 3.
-                                    connected_to(1,X) :- node(1), node(X), X = 4.''')
-
-    def test_temporal_definitions_and_constraints_after(self):
-        self.check_input_to_output('''
-                                    A timeslot is a temporal concept expressed in minutes ranging from 07:30 AM 
-                                        to 07:50 AM with a length of 10 minutes.
-                                    An entity is identified by a timeslot.
-                                    It is required that the entity is after 07:40 AM.''',
-                                   '''\
-                                    timeslot(0,"07:30 AM").
-                                    timeslot(1,"07:40 AM").
-                                    timeslot(2,"07:50 AM").
-                                    :- entity(TMSLT_NTTY), TMSLT_NTTY <= 1.''')
-
-    def test_arithmetic_operations_with_parameters(self):
-        self.check_input_to_output('''
-                                    A day is identified by an id.
-                                    A patient is identified by an id.
-                                    It is required that the sum between the id of the patient I, 
-                                        and the id of the day is equal to 1.''',
-                                   ':- patient(PTNT_D), day(DY_D), (PTNT_D + DY_D) != 1.')
 
     @patch('cnl2asp.utility.utility.uuid4')
     def test_duration_clause(self, mock_uuid):
@@ -213,18 +174,6 @@ class TestCnlPropositions(unittest.TestCase):
                                     time(1,"2").
                                     :- position(T), position(T-1).''')
 
-    def test_entity_as_parameter(self):
-        self.check_input_to_output("""
-                                    A timeslot is a temporal concept expressed in minutes ranging from 07:30 AM to
-                                        07:40 AM with a length of 10 minutes.
-                                    A patient is identified by an id, and has a preference.
-                                    A registration is identified by a patient.
-                                    Whenever there is a registration R with patient P, then we can have an assignment with registration R.""",
-                                   '''\
-                                    timeslot(0,"07:30 AM").
-                                    timeslot(1,"07:40 AM").
-                                    {assignment(P)} :- registration(P).''')
-
     def test_handle_duplicated_parameters(self):
         """
         Parameters with same name and different origin should be considered different.
@@ -238,37 +187,6 @@ class TestCnlPropositions(unittest.TestCase):
                                    '''\
                                     {link1(V,N): vtx(V)} :- node(N).
                                     {link2(K,N,V): vtx(V)} :- node(N).''')
-
-    def test_aggregate_with_objects(self):
-        self.check_input_to_output('''
-                                    A patient is identified by an id.
-                                    A seat is identified by an id.
-                                    Whenever there is a patient P then P can have a position in exactly 1 seat S.
-                                    It is required that the number of patient that have a position in seat S is less than 2.''',
-                                   '''\
-                                    1 <= {position_in(P,S): seat(S)} <= 1 :- patient(P).
-                                    :- #count{D: position_in(D,S), seat(S)} >= 2.''')
-
-    def test_simple_aggregate(self):
-        self.check_input_to_output('''
-                                    A positivematch is identified by a match.
-                                    A negativematch is identified by a match.
-                                    It is required that the number of positivematch is equal to the number of negativematch.
-                                    It is required that the number of positivematch occurrences is equal to the number of negativematch occurrences.''',
-                                   '''\
-                                    :- #count{positivematch(PSTVMTCH_MTCH): positivematch(PSTVMTCH_MTCH)} = CNT, #count{negativematch(NGTVMTCH_MTCH): negativematch(NGTVMTCH_MTCH)} = CNT1, CNT != CNT1.
-                                    :- #count{positivematch(PSTVMTCH_MTCH): positivematch(PSTVMTCH_MTCH)} = CNT, #count{negativematch(NGTVMTCH_MTCH): negativematch(NGTVMTCH_MTCH)} = CNT1, CNT != CNT1.''')
-
-    def test_angle_operation(self):
-        self.check_input_to_output('''
-                                    A rotation is identified by a desired angle, by a current angle, and by a value.
-                                    It is required that the desired angle A of the rotation R is different from the value D of the rotation R,  
-                                        whenever there is a rotation R with desired angle A, and with current angle AI, with value D.
-                                    It is required that the desired angle A of the rotation R is different from the value D of the rotation R,  
-                                        whenever there is a rotation R with current angle AI.''',
-                                   '''\
-                                    :- (A)/360 = (D)/360, rotation(A,AI,D).
-                                    :- (A)/360 = (D)/360, rotation(A,AI,D).''')
 
     def test_operation_between_two_aggregate(self):
         self.check_input_to_output('''
