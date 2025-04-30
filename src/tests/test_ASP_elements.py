@@ -8,7 +8,8 @@ from cnl2asp.ASP_elements.asp_encoding import ASPEncoding
 from cnl2asp.ASP_elements.asp_operation import ASPOperation, ASPTemporalOperation
 from cnl2asp.ASP_elements.asp_program import ASPProgram
 from cnl2asp.ASP_elements.asp_rule import ASPRule, ASPRuleHead, ASPWeakConstraint
-from cnl2asp.ASP_elements.asp_temporal_formula import ASPTemporalFormula
+
+from cnl2asp.ASP_elements.asp_theory_atom import TheoryAtom
 from cnl2asp.specification.aggregate_component import AggregateOperation
 from cnl2asp.specification.attribute_component import AttributeOrigin
 from cnl2asp.specification.operation_component import Operators
@@ -149,24 +150,27 @@ class TestASPElements(unittest.TestCase):
     def test_temporal_formulas(self):
         atom = ASPAtom('atom', [ASPAttribute('field', ASPValue('FIELD'), AttributeOrigin('atom'))])
         atom2 = ASPAtom('atom2', [ASPAttribute('field', ASPValue('FIELD'), AttributeOrigin('atom2'))])
-        temporal_formula1 = ASPTemporalFormula([ASPTemporalOperation(Operators.CONJUNCTION, 'a', 'b')])
+        temporal_formula1 = TheoryAtom('tel', [ASPTemporalOperation(Operators.CONJUNCTION, 'a', 'b')])
         self.assertEqual(str(temporal_formula1), '&tel {a & b}')
 
-        temporal_formula2 = ASPTemporalFormula([ASPTemporalOperation(Operators.CONJUNCTION, atom, 'b')])
+        temporal_formula2 = TheoryAtom('tel', [ASPTemporalOperation(Operators.CONJUNCTION, atom, 'b')])
         self.assertEqual(str(temporal_formula2), '&tel {atom(FIELD) & b}')
 
         atom.is_after = True
-        temporal_formula3 = ASPTemporalFormula([ASPTemporalOperation(Operators.DISJUNCTION, atom, atom2)])
+        temporal_formula3 = TheoryAtom('tel', [ASPTemporalOperation(Operators.DISJUNCTION, atom, atom2)])
         self.assertEqual(str(temporal_formula3), '&tel {atom\'(FIELD) | atom2(FIELD)}')
 
-        temporal_formula4 = ASPTemporalFormula([ASPTemporalOperation(Operators.PREVIOUS,
-                                                                     ASPTemporalOperation(Operators.CONJUNCTION, 'a', 'b'))])
+        temporal_formula4 = TheoryAtom('tel', [ASPTemporalOperation(Operators.PREVIOUS,
+                                                                    ASPTemporalOperation(Operators.CONJUNCTION, 'a',
+                                                                                         'b'))])
         self.assertEqual(str(temporal_formula4), '&tel {< (a & b)}')
 
         atom.is_after = False
-        temporal_formula5 = ASPTemporalFormula([ASPTemporalOperation(Operators.PREVIOUS,
-                                                                     ASPTemporalOperation(Operators.EQUIVALENCE, atom,
-                                                                                          ASPTemporalOperation(Operators.DISJUNCTION, 'a', 'b')))])
+        temporal_formula5 = TheoryAtom('tel', [ASPTemporalOperation(Operators.PREVIOUS,
+                                                                    ASPTemporalOperation(Operators.EQUIVALENCE, atom,
+                                                                                         ASPTemporalOperation(
+                                                                                             Operators.DISJUNCTION, 'a',
+                                                                                             'b')))])
         self.assertEqual(str(temporal_formula5), '&tel {< (atom(FIELD) <> (a | b))}')
 
     def test_multiple_programs(self):
@@ -179,7 +183,6 @@ class TestASPElements(unittest.TestCase):
 
         encoding.add_program(program_base)
         encoding.add_program(program_dynamic)
-        self.assertEqual(str(encoding).strip(), '''#program base.\n:- atom(FIELD).\n\n#program dynamic.\n:- atom(FIELD).''')
+        self.assertEqual(str(encoding).strip(),
+                         '''#program base.\n:- atom(FIELD).\n\n#program dynamic.\n:- atom(FIELD).''')
 
-if __name__ == '__main__':
-    unittest.main()

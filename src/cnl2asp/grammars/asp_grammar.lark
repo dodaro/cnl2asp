@@ -125,8 +125,8 @@ cnl_it_is_prohibited_that: _CNL_IT " " _CNL_IS " " _CNL_PROHIBITED " " _CNL_THAT
 _CNL_REQUIRED: "required"
 cnl_it_is_required_that: _CNL_IT " " _CNL_IS " " _CNL_REQUIRED " " _CNL_THAT
 ?constraint_operator: cnl_it_is_prohibited_that | cnl_it_is_required_that
-constraint_proposition: constraint_operator (comparison [terminal_clauses]
-                                            | when_then_clause [terminal_clauses]
+constraint_proposition: constraint_operator comparison [terminal_clauses] -> constraint_with_comparison
+                      | constraint_operator ( when_then_clause [terminal_clauses]
                                             | quantified_simple_clause [terminal_clauses]
                                             | there_is_clause [terminal_clauses]
                                             | simple_clause_conjunction [terminal_clauses]
@@ -154,7 +154,7 @@ terminal_clauses: (_CNL_COMMA? (whenever_clause
 
 _CNL_WHERE: "where"
 _CNL_ONE_OF: _CNL_ONE " " _CNL_OF
-where_clause: comparison
+where_clause: comparison -> where_clause_comparison
             | VARIABLE COPULA _CNL_ONE_OF string_list -> variable_substitution
             | VARIABLE COPULA _CNL_RESPECTIVELY _CNL_ONE_OF string_list -> variable_respectively_substitution
             | VARIABLE _CNL_RANGES _CNL_FROM string _CNL_TO string -> variable_substitution_range
@@ -236,7 +236,8 @@ COMPARISON_OPERATOR: _CNL_THE_SAME_AS
           | _CNL_AT_MOST
           | _CNL_NOT_AFTER
 
-weak_constraint_proposition: cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison | simple_clause | there_is_clause) [weak_optimization_operator] [terminal_clauses]
+weak_constraint_proposition: cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (simple_clause | there_is_clause) [weak_optimization_operator] [terminal_clauses]
+                           | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT comparison [weak_optimization_operator] [terminal_clauses] -> preference_with_comparison
                            | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT (comparison_operand | aggregate_clause) [weak_optimization_operator] [terminal_clauses] -> preference_with_aggregate_clause
                            | cnl_it_is_preferred [optimization_statement] _CNL_COMMA? weak_priority_clause _CNL_COMMA? _CNL_THAT whenever_clauses_list _CNL_COMMA VARIABLE weak_optimization_operator [terminal_clauses] -> preference_with_variable_minimization
 whenever_clauses_list: whenever_clause (_CNL_COMMA whenever_clause)*
@@ -294,6 +295,7 @@ parameter.-1: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+ [expression] [COMPARISO
             | expression ("+" | "-" | "*" | "/" | "\\") expression
             | "(" expression ")"
             | "|" expression "|"
+            | "-" expression
 
 ASSIGNMENT_VERB: "can" | "must"
 COPULA: "be " | "be a " | "be an "

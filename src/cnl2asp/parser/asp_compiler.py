@@ -357,6 +357,10 @@ class ASPTransformer(Transformer):
             else:
                 elem[1].negate()
 
+    def constraint_with_comparison(self, elem):
+        self._proposition.add_requisite(elem[1])
+        return self.constraint_proposition(elem)
+
     def simple_clause_conjunction(self, elem):
         entities = []
         for entities_list in elem:
@@ -440,6 +444,9 @@ class ASPTransformer(Transformer):
     def terminal_clauses(self, elem):
         return [e for e in elem if e]
 
+    def where_clause_comparison(self, elem):
+        self._proposition.add_requisite(elem[0])
+
     def variable_substitution(self, elem):
         self._delayed_operations.append(SubstituteVariable(self._proposition, elem[0], elem[2]))
 
@@ -480,8 +487,11 @@ class ASPTransformer(Transformer):
         comparison = OperationComponent(elem[1], elem[0], elem[2])
         if elem[3] and isinstance(elem[0], AggregateComponent):
             elem[0].body += elem[3]
-        self._proposition.add_requisite(comparison)
+        # self._proposition.add_requisite(comparison)
         return comparison
+
+    def whenever_with_comparison(self, elem):
+        self._proposition.add_requisite(elem[1])
 
     def between_comparison(self, elem):
         return self.comparison([elem[0], Operators.BETWEEN, [elem[1], elem[2]], None])
@@ -529,6 +539,9 @@ class ASPTransformer(Transformer):
 
     def such_that_clause(self, elem):
         return elem[0]
+
+    def preference_with_comparison(self, elem):
+        self._proposition.add_requisite(elem[3])
 
     def preference_with_aggregate_clause(self, elem):
         if elem[3]:

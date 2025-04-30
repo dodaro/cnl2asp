@@ -22,18 +22,8 @@ class TestCnlPropositions(unittest.TestCase):
         asp_converter: ASPConverter = ASPConverter()
         asp_converter.clear_support_variables()
 
-    def compute_asp(self, string: str) -> str:
-        return Cnl2asp(string).compile()
-
-    def compute_telingo(self, string: str) -> str:
-        return Cnl2asp(string, MODE.TELINGO).compile()
-
     def check_input_to_output(self, input_string, expected_output, mode=MODE.ASP):
-        encoding = ''
-        if mode == MODE.ASP:
-            encoding = self.compute_asp(input_string)
-        elif mode == MODE.TELINGO:
-            encoding = self.compute_telingo(input_string)
+        encoding = Cnl2asp(input_string, mode).compile()
         self.assertEqual(encoding.strip(), dedent(expected_output))
 
     def test_constant_string(self):
@@ -69,7 +59,7 @@ class TestCnlPropositions(unittest.TestCase):
         self.check_input_to_output('''\
                                     A entity is identified by an field.
                                     It is required that X is equal to 1, whenever there is an entity with field X.''',
-                                   ':- X != 1, entity(X).')
+                                   ':- entity(X), X != 1.')
 
     def test_when_then_constraint(self):
         self.check_input_to_output('''
@@ -111,7 +101,7 @@ class TestCnlPropositions(unittest.TestCase):
                                     A movie is identified by an id.
                                     It is preferred as little as possible, with high priority, that V is equal to 1, 
                                         whenever there is a movie with id V.''',
-                                   ':~ V = 1, movie(V). [1@3,V]')
+                                   ':~ movie(V), V = 1. [1@3,V]')
 
     def test_weak_constraint_with_variable_maximized(self):
         self.check_input_to_output('''
@@ -280,7 +270,7 @@ class TestCnlPropositions(unittest.TestCase):
                                     set1 contains 1, 2, 3.
                                     it is prohibited that X is equal to 1, whenever there is an element X in set1, 
                                         whenever there is an element Y greater than 2 in set2.''',
-                                   ''':- X = 1, set("set1",X), set("set2",Y), Y > 2.''')
+                                   ''':- set("set1",X), set("set2",Y), X = 1, Y > 2.''')
 
     def test_list_element(self):
         self.check_input_to_output('''
@@ -303,7 +293,7 @@ class TestCnlPropositions(unittest.TestCase):
         self.check_input_to_output('''
                                     A vtx is identified by an id. 
                                     Vtx X have an arc to Vtx Y when Vtx X have an edge to Y.''',
-                                    'arc(X,Y) :- vtx(X), edge(X,Y), vtx(Y).')
+                                   'arc(X,Y) :- vtx(X), edge(X,Y), vtx(Y).')
 
     def test_multiple_problems(self):
         self.check_input_to_output('''A node is identified by an id.
@@ -324,7 +314,6 @@ class TestCnlPropositions(unittest.TestCase):
                                     Whenever there is initially a monkey M or the true constant, then M can jump.""",
                                    """{jump(M)} :- not not &tel {<< monkey(M) | &true}.""", MODE.TELINGO)
 
-
     def test_quoted_strings(self):
         self.check_input_to_output('A entity is one of "first", "second second".',
                                    'entity("first").\nentity("second second").')
@@ -335,3 +324,18 @@ class TestCnlPropositions(unittest.TestCase):
                                    'Whenever there is an entity with id equal to "field value", '
                                    'then we can have a second_entity with field equal to "field value".',
                                    '{second_entity("field value","field value")} :- entity("field value").')
+
+    def test_diff_logic(self):
+        self.check_input_to_output('''\
+            A sequence is identified by a first starting time, by first machine, by a second starting time, by a second machine, by a time.
+            A starting is identified by a time, by machine.
+            Whenever there is a sequence with first starting time T1, with first machine M1,
+                with second starting time T2, with second machine M2, with time T,
+            then the difference between starting with time T1, with machine M1, and 
+                starting with time T2, with machine M2 is less than or equal to -T.
+            It is prohibited that the difference between starting with time T1, with machine M1, and 
+                starting with time T2, with machine M2 is less than or equal to -T, whenever there is a sequence with first starting time T1, with first machine M1,
+                with second starting time T2, with second machine M2, with time T.''',
+                                   '&diff {starting(T1,M1) - starting(T2,M2)} <= -T :- sequence(T1,M1,T2,M2,T).\n'
+                                   ':- sequence(T1,M1,T2,M2,T), &diff {starting(T1,M1) - starting(T2,M2)} <= -T.',
+                                   MODE.DIFF_LOGIC)

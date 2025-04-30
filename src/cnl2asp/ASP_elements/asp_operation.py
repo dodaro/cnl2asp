@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from cnl2asp.ASP_elements.asp_temporal_formula import ASPTemporalFormula
+from cnl2asp.ASP_elements.asp_theory_atom import TheoryAtom
 from cnl2asp.specification.operation_component import Operators
 from cnl2asp.ASP_elements.asp_element import ASPElement
 
@@ -107,8 +107,8 @@ class ASPTemporalOperation(ASPOperation):
     def __init__(self, operator: Operators, *operands: ASPElement):
         clean_operands = []
         for operand in operands:
-            if isinstance(operand, ASPTemporalFormula):
-                clean_operands.append(operand.operations[0])
+            if isinstance(operand, TheoryAtom):
+                clean_operands.append(operand.body[0])
             else:
                 clean_operands.append(operand)
 
@@ -119,21 +119,6 @@ class ASPTemporalOperation(ASPOperation):
         return ASPTemporalOperation.asp_temporal_operators.get(operator)
 
     def __str__(self) -> str:
-        if len(self.operands) > 1:
-            return f'{super(ASPTemporalOperation, self).__str__()}'
-        else:
-            string = ''
-            string += f'{self._operator_to_symbol(self.operator)} '
-            operand = str(self.operands[0])
-            if not isinstance(self.operands[0], ASPOperation) or (isinstance(self.operands[0], ASPOperation) and len(self.operands[0].operands) == 1):
-                # operation of a single operand or an atom
-                string += operand
-            else:
-                string += f'({operand})'
-            return string
-
-
-    def temporal_formula_string(self) -> str:
         string = ''
         if len(self.operands) > 1:
             for operand in self.operands:
@@ -162,7 +147,7 @@ class ASPTemporalOperation(ASPOperation):
                 operand_to_string = operand_to_string.replace("__", ">> ", 1)
             elif operand_to_string.startswith("_"):
                 operand_to_string = operand_to_string.replace("_", "<< ", 1)
-            if not isinstance(self.operands[0], ASPOperation):
+            if not isinstance(self.operands[0], ASPOperation) or (isinstance(self.operands[0], ASPOperation) and len(self.operands[0].operands) == 1):
                 string += operand_to_string
             else:
                 string += f'({operand_to_string})'

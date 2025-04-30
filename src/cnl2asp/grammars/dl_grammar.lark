@@ -1,0 +1,3 @@
+%extend then_clause: _CNL_THEN comparison -> dl_head
+%extend comparison_operand: entity
+

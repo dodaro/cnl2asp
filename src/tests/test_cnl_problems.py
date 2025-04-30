@@ -11,6 +11,7 @@ from cnl2asp.parser.asp_compiler import ASPTransformer
 from cnl2asp.parser.telingo_compiler import TelingoTransformer
 from cnl2asp.specification.signaturemanager import SignatureManager
 
+
 class TestCnlPropositions(unittest.TestCase):
 
     def setUp(self):
@@ -89,10 +90,10 @@ day(5,"06/01/2022").
 day(6,"07/01/2022").
 1 <= {assignment(RGSTRTN_D,0,DY_DY,TMSLT_TMSLT): day(DY_DY,_), timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(RGSTRTN_D,0,_,_,_,_,_).
 1 <= {assignment(P,OR,D+W,TMSLT_TMSLT): timeslot(TMSLT_TMSLT,_)} <= 1 :- registration(P,OR,W,_,_,_,_), assignment(P,OR-1,D,_), day(D+W,_).
-:- registration(_,_,_,RGSTRTN_DRTN_F_TH_FRST_PHS,RGSTRTN_DRTN_F_TH_SCND_PHS,RGSTRTN_DRTN_F_TH_THRD_PHS,_), assignment(_,_,_,T), (RGSTRTN_DRTN_F_TH_FRST_PHS + RGSTRTN_DRTN_F_TH_SCND_PHS + RGSTRTN_DRTN_F_TH_THRD_PHS) <= T, registration(RGSTRTN_D,RGSTRTN_RDR,_,RGSTRTN_DRTN_F_TH_FRST_PHS,RGSTRTN_DRTN_F_TH_SCND_PHS,RGSTRTN_DRTN_F_TH_THRD_PHS,_), assignment(RGSTRTN_D,RGSTRTN_RDR,_,T).
+:- registration(_,_,_,RGSTRTN_DRTN_F_TH_FRST_PHS,RGSTRTN_DRTN_F_TH_SCND_PHS,RGSTRTN_DRTN_F_TH_THRD_PHS,_), assignment(_,_,_,T), registration(RGSTRTN_D,RGSTRTN_RDR,_,RGSTRTN_DRTN_F_TH_FRST_PHS,RGSTRTN_DRTN_F_TH_SCND_PHS,RGSTRTN_DRTN_F_TH_THRD_PHS,_), assignment(RGSTRTN_D,RGSTRTN_RDR,_,T), (RGSTRTN_DRTN_F_TH_FRST_PHS + RGSTRTN_DRTN_F_TH_SCND_PHS + RGSTRTN_DRTN_F_TH_THRD_PHS) <= T.
 1 <= {x_support(S,T,D,P,SSGNMNT_RDR): seat(S,_)} <= 1 :- patient(P,_), assignment(P,SSGNMNT_RDR,D,T), registration(P,SSGNMNT_RDR,_,_,_,_,PH4), PH4 > 0.
 position_in(S,T..T+PH4,D,P,SSGNMNT_RDR) :- patient(P,_), assignment(P,SSGNMNT_RDR,D,T), registration(P,SSGNMNT_RDR,_,_,_,_,PH4), x_support(S,T,D,P,SSGNMNT_RDR).
-:- #count{D1: position_in(S,TS,D,D1,_), seat(S,_), day(D,_), timeslot(TS,_)} >= 2, day(D,_), timeslot(TS,_), seat(S,_).
+:- day(D,_), timeslot(TS,_), seat(S,_), #count{D1: position_in(S,TS,D,D1,_), seat(S,_), day(D,_), timeslot(TS,_)} >= 2.
 :- assignment(_,_,_,TMSLT_SSGNMNT), TMSLT_SSGNMNT <= 23, registration(RGSTRTN_D,RGSTRTN_RDR,_,_,_,_,DRTN_F_TH_FRTH_PHS), assignment(RGSTRTN_D,RGSTRTN_RDR,_,TMSLT_SSGNMNT), DRTN_F_TH_FRTH_PHS > 50.
 :~ patient(P,T), position_in(S,_,_,P,_), seat(S,T). [1@3,T]''')
 
@@ -222,15 +223,15 @@ movie(1,"jurassicPark",1993,"spielberg").
 {serve(WTR_D,DRNK_D): drink(DRNK_D)} :- waiter(WTR_D).
 scoreassignment(I,1) | scoreassignment(I,2) | scoreassignment(I,3) :- movie(I,_,_,_).
 :- waiter(W1), work_in(W1,P1), waiter(W2), work_in(W2,P1), pub(P1), W1 != W2.
-:- X = Y, movie(X,_,1964,_), topmovie(Y).
-:- #min{VL: scoreassignment(X,VL)} = 1, topmovie(X).
+:- movie(X,_,1964,_), topmovie(Y), X = Y.
+:- topmovie(X), #min{VL: scoreassignment(X,VL)} = 1.
 :- #sum{VL: scoreassignment(X,VL), topmovie(X)} != 10.
 :- waiter(WRK_N_D), #count{D: work_in(WRK_N_D,D)} >= 2.
 :- work_in(X,P1), pub(P1), waiter(X), work_in(X,P2), pub(P2), P1 != P2.
-:- V != 3, movie(I,_,_,"spielberg"), scoreassignment(I,V).
+:- movie(I,_,_,"spielberg"), scoreassignment(I,V), V != 3.
 :- waiter(PYD_D), not payed(PYD_D).
 :~ #count{D: serve(_,D)} = CNT. [-CNT@1]
-:~ V = 1, scoreassignment(I,V), topmovie(I). [1@3,I,V]
+:~ scoreassignment(I,V), topmovie(I), V = 1. [1@3,I,V]
 :~ topmovie(I), scoreassignment(I,V). [-V@2,I,V]
 :~ #sum{VL: scoreassignment(_,VL)} = SM. [-SM@2]''')
 
@@ -253,8 +254,8 @@ It is required that the number of positivematch is equal to the number of negati
                          '''{match(X,Y)} :- set("set1",X), set("set2",Y).
 positivematch(X,Y) :- match(X,Y), Y < X.
 negativematch(X,Y) :- match(X,Y), Y > X.
-:- #count{match(E,MTCH_SCND): match(E,MTCH_SCND)} != 1, set("set1",E).
-:- #count{match(MTCH_FRST,E): match(MTCH_FRST,E)} != 1, set("set2",E).
+:- set("set1",E), #count{match(E,MTCH_SCND): match(E,MTCH_SCND)} != 1.
+:- set("set2",E), #count{match(MTCH_FRST,E): match(MTCH_FRST,E)} != 1.
 :- #count{positivematch(PSTVMTCH_FRST,PSTVMTCH_SCND): positivematch(PSTVMTCH_FRST,PSTVMTCH_SCND)} = CNT, #count{negativematch(NGTVMTCH_FRST,NGTVMTCH_SCND): negativematch(NGTVMTCH_FRST,NGTVMTCH_SCND)} = CNT1, CNT != CNT1.''')
 
     def test_mao(self):
@@ -297,19 +298,19 @@ time(9,"9").
 time(10,"10").
 link(J2,J1) :- link(J1,J2).
 {rotation(J1,J2,A,AI,T): joint(J1), joint(J2), angle(A), link(J1,J2), position(J1,AI,T)} <= 1 :- T > 0, time(T,_).
-:- T >= timemax, rotation(_,_,_,_,T).
-:- J1 <= J2, rotation(J1,J2,_,_,_).
-:- (A)/360 = (AI)/360, rotation(_,_,A,AI,_).
-:- (A + granularity)/360 != (AI)/360, rotation(_,_,A,AI,_), (A)/360 > (0)/360, (AI)/360 > (A)/360.
-:- (AI + granularity)/360 != (A)/360, rotation(_,_,A,AI,_), (A)/360 > (AI)/360, (AI)/360 > (0)/360.
-:- (360 - granularity)/360 != (A)/360, rotation(_,_,A,0,_).
-:- (360 - granularity)/360 != (AI)/360, rotation(_,_,A,AI,_), (A)/360 = (0)/360.
+:- rotation(_,_,_,_,T), T >= timemax.
+:- rotation(J1,J2,_,_,_), J1 <= J2.
+:- rotation(_,_,A,AI,_), (A)/360 = (AI)/360.
+:- rotation(_,_,A,AI,_), (A + granularity)/360 != (AI)/360, (A)/360 > (0)/360, (AI)/360 > (A)/360.
+:- rotation(_,_,A,AI,_), (AI + granularity)/360 != (A)/360, (A)/360 > (AI)/360, (AI)/360 > (0)/360.
+:- rotation(_,_,A,0,_), (360 - granularity)/360 != (A)/360.
+:- rotation(_,_,A,AI,_), (360 - granularity)/360 != (AI)/360, (A)/360 = (0)/360.
 1 <= {position(J,A,T): angle(A)} <= 1 :- joint(J), time(T,_).
-:- (A1)/360 != (A2)/360, position(J,A1,T), position(J,A2,T+1), not rotation(_,_,_,_,T), T <= timemax.
-:- (A1)/360 != (A2)/360, position(J1,A1,T), rotation(J1,_,A2,_,T-1).
-:- (AN)/360 != (|AC+(A-AP)+360|)/360, time(T,_), position(J1,AN,T+1), rotation(J2,_,_,AP,T), position(J1,AC,T), J1 > J2.
-:- (A1)/360 != (A2)/360, position(J1,A1,T), position(J1,A2,T+1), rotation(J2,_,_,_,T), J2 > J1, T <= timemax.
-:- (A1)/360 != (A2)/360, goal(J,A1), position(J,A2,timemax).''')
+:- position(J,A1,T), position(J,A2,T+1), not rotation(_,_,_,_,T), (A1)/360 != (A2)/360, T <= timemax.
+:- position(J1,A1,T), rotation(J1,_,A2,_,T-1), (A1)/360 != (A2)/360.
+:- time(T,_), position(J1,AN,T+1), rotation(J2,_,_,AP,T), position(J1,AC,T), (AN)/360 != (|AC+(A-AP)+360|)/360, J1 > J2.
+:- position(J1,A1,T), position(J1,A2,T+1), rotation(J2,_,_,_,T), (A1)/360 != (A2)/360, J2 > J1, T <= timemax.
+:- goal(J,A1), position(J,A2,timemax), (A1)/360 != (A2)/360.''')
 
     def test_maxclique(self):
         self.assertEqual(self.compute_asp('''A node goes from 1 to 5.
@@ -385,8 +386,8 @@ edge(1,3).
 edge(4,5).
 1 <= {assigned_to(ND_D,ND_WGHT,ST_D): set(ST_D)} <= 1 :- node(ND_D,ND_WGHT).
 :- node(N1,SSGND_T_WGHT), assigned_to(N1,SSGND_T_WGHT,S1), node(N2,SSGND_T_WGHT1), assigned_to(N2,SSGND_T_WGHT1,S1), set(S1), edge(N1,N2).
-:- #count{D: assigned_to(D,_,S1), set(S1)} = CNT, #count{D1: assigned_to(D1,_,S2), set(S2)} = CNT1, CNT <= CNT1, S1 = 1, S2 = 2.
-:- #sum{WGHT: assigned_to(_,WGHT,S2), set(S2)} = SM, #sum{WGHT1: assigned_to(_,WGHT1,S1), set(S1)} = SM1, SM < SM1, S1 = 1, S2 = 2.''')
+:- S1 = 1, S2 = 2, #count{D: assigned_to(D,_,S1), set(S1)} = CNT, #count{D1: assigned_to(D1,_,S2), set(S2)} = CNT1, CNT <= CNT1.
+:- S1 = 1, S2 = 2, #sum{WGHT: assigned_to(_,WGHT,S2), set(S2)} = SM, #sum{WGHT1: assigned_to(_,WGHT1,S1), set(S1)} = SM1, SM < SM1.''')
 
     def test_nursescheduling(self):
         self.assertEqual(self.compute_asp('''A shift is identified by an id, and has a number, and hour.
@@ -433,9 +434,9 @@ It is preferred as much as possible, with high priority, that the difference in 
 nurse(1..numberOfNurses).
 day(1..365).
 1 <= {work_in(DY_D,NRS_D,SHFT_D): shift(SHFT_D,_,_)} <= 1 :- day(DY_D), nurse(NRS_D).
-:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} > M, day(D), S = "morning", M = maxNurseMorning.
-:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} > M, day(D), S = "afternoon", M = maxNurseAfternoon.
-:- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} > M, day(D), S = "night", M = maxNurseNight.
+:- day(D), #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} > M, S = "morning", M = maxNurseMorning.
+:- day(D), #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} > M, S = "afternoon", M = maxNurseAfternoon.
+:- day(D), #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} > M, S = "night", M = maxNurseNight.
 :- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} < M, S = "morning", M = minNurseMorning.
 :- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} < M, S = "afternoon", M = minNurseAfternoon.
 :- #count{D1: work_in(D,D1,S), shift(S,_,_), day(D)} < M, S = "night", M = minNurseNight.
@@ -443,7 +444,7 @@ day(1..365).
 :- nurse(WRK_N_D), #sum{HR,D: work_in(D,WRK_N_D,S), shift(S,_,HR)} < minHours.
 :- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,"vacation")} != 30.
 :- work_in(D,N,S1), shift(S1,N1,_), nurse(N), work_in(D+1,N,S2), shift(S2,N2,_), shift(X,"morning",_), shift(Y,"night",_), X <= S1, S1 <= Y, N2 < N1.
-:- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,"rest"), shift("rest",_,_), D2 <= D, D <= D2+13} < 2, day(D2), D2 < 353.
+:- nurse(WRK_N_D), day(D2), D2 < 353, #count{D: work_in(D,WRK_N_D,"rest"), shift("rest",_,_), D2 <= D, D <= D2+13} < 2.
 :- not work_in(D,N,"specrest"), shift("specrest",_,_), nurse(N), #count{D1: work_in(D1,N,"night"), shift("night",_,_), D-2 <= D1, D1 <= D-1} = 2, day(D).
 :- work_in(D,N,"specrest"), shift("specrest",_,_), nurse(N), #count{D1: work_in(D1,N,"night"), shift("night",_,_), D-2 <= D1, D1 <= D-1} != 2, day(D).
 :- nurse(WRK_N_D), #count{D: work_in(D,WRK_N_D,S), shift(S,_,_)} > M, S = "morning", M = maxDay.

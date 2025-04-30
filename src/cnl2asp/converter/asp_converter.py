@@ -4,6 +4,8 @@ import re
 
 import inflect
 
+from cnl2asp.ASP_elements.asp_element import ASPElement
+from cnl2asp.ASP_elements.asp_theory_atom import TheoryAtom
 from cnl2asp.parser.asp_compiler import ASPTransformer
 
 from cnl2asp.ASP_elements.asp_aggregate import ASPAggregate
@@ -15,10 +17,9 @@ from cnl2asp.ASP_elements.asp_operation import ASPOperation, ASPAngleOperation, 
 from cnl2asp.ASP_elements.asp_program import ASPProgram
 from cnl2asp.ASP_elements.asp_rule import ASPRule, ASPRuleHead, ASPWeakConstraint
 from cnl2asp.ASP_elements.asp_attribute import ASPValue
-from cnl2asp.ASP_elements.asp_temporal_formula import ASPTemporalFormula
 
 from cnl2asp.converter.converter_interface import Converter
-from cnl2asp.exception.cnl2asp_exceptions import AttributeNotFound, EntityNotFound, CompilationError
+from cnl2asp.exception.cnl2asp_exceptions import AttributeNotFound, EntityNotFound
 
 from cnl2asp.specification.constant_component import ConstantComponent
 from cnl2asp.specification.entity_component import EntityComponent, TemporalEntityComponent
@@ -77,12 +78,12 @@ class ForbiddenLink:
 
 
 class ASPConverter(Converter[ASPProgram,
-                             ASPRule, ASPWeakConstraint,
-                             ASPRuleHead, (int, int),
-                             ASPConjunction, ASPConjunction,
-                             ASPAtom, ASPAggregate,
-                             ASPOperation, ASPAttribute,
-                             None, ASPValue, None]):
+ASPRule, ASPWeakConstraint,
+ASPRuleHead, (int, int),
+ASPConjunction, ASPConjunction,
+ASPAtom, ASPAggregate,
+ASPOperation, ASPAttribute,
+None, ASPValue, None]):
 
     def __init__(self):
         self._asp_encoding: ASPEncoding = ASPEncoding()
@@ -226,19 +227,21 @@ class ASPConverter(Converter[ASPProgram,
                                                                          [ASPAttribute(
                                                                              temporal_entity.get_name().removesuffix(
                                                                                  's'), ASPValue(idx)),
-                                                                          ASPAttribute('value',
-                                                                                       ASPValue(f'\"{value}\"'))]))]))
+                                                                             ASPAttribute('value',
+                                                                                          ASPValue(
+                                                                                              f'\"{value}\"'))]))]))
             self._converted_complex_entities.append(temporal_entity.get_name())
             return ASPAtom(temporal_entity.get_name(),
-                           [ASPAttribute(temporal_entity.get_name().removesuffix('s'), ASPValue(temporal_values[-1][1])),
+                           [ASPAttribute(temporal_entity.get_name().removesuffix('s'),
+                                         ASPValue(temporal_values[-1][1])),
                             ASPAttribute('value', ASPValue(f'\"{temporal_values[-1][0]}\"'))])
         return self.convert_entity(temporal_entity)
 
     def __has_single_key(self, entity: EntityComponent) -> bool:
         entity_keys = entity.get_keys()
         return len(entity_keys) == 1 and \
-               entity.get_attributes_by_name_and_origin(entity_keys[0].get_name(), entity_keys[0].origin)[
-                   0].value == Utility.ASP_NULL_VALUE
+            entity.get_attributes_by_name_and_origin(entity_keys[0].get_name(), entity_keys[0].origin)[
+                0].value == Utility.ASP_NULL_VALUE
 
     def _match_discriminant_attributes_with_body(self, discriminant: list, body: ASPConjunction):
         unmatched_discriminant_attributes = []
@@ -322,6 +325,22 @@ class ASPConverter(Converter[ASPProgram,
         self._operations.append(operation2)
         return ASPConjunction([operation1, operation2])
 
+    def _is_variable(self, string: str) -> bool:
+        if not isinstance(string, str):
+            return False
+        return string.isupper() and string.isalpha()
+
+    def is_dl_operation(self, operands: list[ASPElement], operator: Operators):
+        if operator != Operators.DIFFERENCE:
+            return False
+        for operand in operands:
+            if isinstance(operand, ASPAtom) or (isinstance(operand, str) and
+                                                not self._is_variable(operand) and
+                                                not operand.isnumeric() and
+                                                not self._asp_encoding.is_constant(operand)):
+                return True
+        return False
+
     def convert_operation(self, operation: OperationComponent) -> ASPOperation | [ASPOperation]:
         operands = []
         if operation.negated and operation.operation < Operators.CONJUNCTION:
@@ -339,7 +358,9 @@ class ASPConverter(Converter[ASPProgram,
                 and not isinstance(operands[1], ASPAggregate) and operation.operation < Operators.CONJUNCTION:
             return self._convert_between_operation_without_aggregate(operation, operands)
         if operation.operation >= Operators.CONJUNCTION:
-            return ASPTemporalFormula([ASPTemporalOperation(operation.operation, *operands)], operation.negated)
+            return TheoryAtom('tel', [ASPTemporalOperation(operation.operation, *operands)], operation.negated)
+        if self.is_dl_operation(operands, operation.operation):
+            return TheoryAtom('diff', [ASPOperation(operation.operation, *operands)], operation.negated)
         operation = ASPOperation(operation.operation, *operands)
         self._operations.append(operation)
         return operation

@@ -10,6 +10,7 @@ from enum import Enum
 from textwrap import indent
 from typing import TextIO
 
+from cnl2asp.parser.dl_compiler import DlTransformer
 from cnl2asp.parser.telingo_compiler import TelingoTransformer
 from cnl2asp.utility.utility import Utility
 from lark import Lark, UnexpectedCharacters, Token, Tree
@@ -75,7 +76,7 @@ class Symbol:
 class MODE(Enum):
     ASP = 0,
     TELINGO = 1
-
+    DIFF_LOGIC = 2
 
 class Cnl2asp:
     def __init__(self, cnl_input: TextIO | str, mode=MODE.ASP):
@@ -95,6 +96,10 @@ class Cnl2asp:
             with open(os.path.join(os.path.dirname(__file__), "grammars", "telingo_grammar.lark"), "r") as grammar:
                 res += '\n'
                 res += grammar.read()
+        elif self.mode == MODE.DIFF_LOGIC:
+            with open(os.path.join(os.path.dirname(__file__), "grammars", "dl_grammar.lark"), "r") as grammar:
+                res += '\n'
+                res += grammar.read()
         return res
 
     def get_transformer(self):
@@ -102,6 +107,8 @@ class Cnl2asp:
             return ASPTransformer()
         elif self.mode == MODE.TELINGO:
             return TelingoTransformer()
+        elif self.mode == MODE.DIFF_LOGIC:
+            return DlTransformer()
 
     def parse_input(self) -> Tree[Token]:
         try:
