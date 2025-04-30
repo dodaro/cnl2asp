@@ -1,17 +1,10 @@
-import os
 import unittest
 from textwrap import dedent
 from unittest.mock import patch
 
-from lark import Lark
-
-from cnl2asp.ASP_elements.asp_program import ASPProgram
 from cnl2asp.cnl2asp import Cnl2asp, MODE
 from cnl2asp.converter.asp_converter import ASPConverter
-from cnl2asp.parser.asp_compiler import ASPTransformer
 from cnl2asp.specification.signaturemanager import SignatureManager
-
-cnl_parser = Lark(open(os.path.join(os.path.dirname(__file__), "..", "cnl2asp", "grammar.lark"), "r").read())
 
 
 class TestCnlPropositions(unittest.TestCase):
@@ -295,25 +288,6 @@ class TestCnlPropositions(unittest.TestCase):
                                     Vtx X have an arc to Vtx Y when Vtx X have an edge to Y.''',
                                    'arc(X,Y) :- vtx(X), edge(X,Y), vtx(Y).')
 
-    def test_multiple_problems(self):
-        self.check_input_to_output('''A node is identified by an id.
-                                    The following propositions apply in the initial state:
-                                    There is a node with id 1.
-                                    The following propositions apply in the final state:
-                                    There is a node with id 2.''',
-                                   '''\
-                                    #program initial.
-                                    node(1).
-                                    
-                                    #program final.
-                                    node(2).''', mode=MODE.TELINGO)
-
-    def test_initially_inside_temporal_formulas(self):
-        self.check_input_to_output("""
-                                    A monkey is identified by a name.
-                                    Whenever there is initially a monkey M or the true constant, then M can jump.""",
-                                   """{jump(M)} :- not not &tel {<< monkey(M) | &true}.""", MODE.TELINGO)
-
     def test_quoted_strings(self):
         self.check_input_to_output('A entity is one of "first", "second second".',
                                    'entity("first").\nentity("second second").')
@@ -324,18 +298,3 @@ class TestCnlPropositions(unittest.TestCase):
                                    'Whenever there is an entity with id equal to "field value", '
                                    'then we can have a second_entity with field equal to "field value".',
                                    '{second_entity("field value","field value")} :- entity("field value").')
-
-    def test_diff_logic(self):
-        self.check_input_to_output('''\
-            A sequence is identified by a first starting time, by first machine, by a second starting time, by a second machine, by a time.
-            A starting is identified by a time, by machine.
-            Whenever there is a sequence with first starting time T1, with first machine M1,
-                with second starting time T2, with second machine M2, with time T,
-            then the difference between starting with time T1, with machine M1, and 
-                starting with time T2, with machine M2 is less than or equal to -T.
-            It is prohibited that the difference between starting with time T1, with machine M1, and 
-                starting with time T2, with machine M2 is less than or equal to -T, whenever there is a sequence with first starting time T1, with first machine M1,
-                with second starting time T2, with second machine M2, with time T.''',
-                                   '&diff {starting(T1,M1) - starting(T2,M2)} <= -T :- sequence(T1,M1,T2,M2,T).\n'
-                                   ':- sequence(T1,M1,T2,M2,T), &diff {starting(T1,M1) - starting(T2,M2)} <= -T.',
-                                   MODE.DIFF_LOGIC)

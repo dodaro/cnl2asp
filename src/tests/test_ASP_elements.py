@@ -8,8 +8,8 @@ from cnl2asp.ASP_elements.asp_encoding import ASPEncoding
 from cnl2asp.ASP_elements.asp_operation import ASPOperation, ASPTemporalOperation
 from cnl2asp.ASP_elements.asp_program import ASPProgram
 from cnl2asp.ASP_elements.asp_rule import ASPRule, ASPRuleHead, ASPWeakConstraint
-
 from cnl2asp.ASP_elements.asp_theory_atom import TheoryAtom
+
 from cnl2asp.specification.aggregate_component import AggregateOperation
 from cnl2asp.specification.attribute_component import AttributeOrigin
 from cnl2asp.specification.operation_component import Operators
