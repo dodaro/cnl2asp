@@ -8,7 +8,7 @@ from cnl2asp.converter.converter_interface import Converter, AggregateConverter
 from cnl2asp.specification.entity_component import EntityComponent
 
 
-class AggregateOperation(Enum):
+class AggregateOperator(Enum):
     COUNT = 0
     SUM = 1
     MAX = 2
@@ -16,8 +16,8 @@ class AggregateOperation(Enum):
 
 
 class AggregateComponent(Component):
-    def __init__(self, operation: AggregateOperation, discriminant: list[AttributeComponent], body: list[Component]):
-        self.operation = operation
+    def __init__(self, operator: AggregateOperator, discriminant: list[AttributeComponent], body: list[Component]):
+        self.operator = operator
         self.discriminant = discriminant
         self.body = body
 
@@ -25,7 +25,7 @@ class AggregateComponent(Component):
         return converter.convert_aggregate(self)
 
     def copy(self):
-        return AggregateComponent(self.operation, [discriminant.copy() for discriminant in self.discriminant])
+        return AggregateComponent(self.operator, [discriminant.copy() for discriminant in self.discriminant])
 
     def get_entities(self) -> list[EntityComponent]:
         entities = []

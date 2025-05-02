@@ -4,7 +4,7 @@ from cnl2asp.ASP_elements.asp_aggregate import ASPAggregate
 from cnl2asp.ASP_elements.asp_atom import ASPAtom
 from cnl2asp.ASP_elements.asp_attribute import ASPAttribute
 from cnl2asp.ASP_elements.asp_conjunction import ASPConjunction
-from cnl2asp.specification.aggregate_component import AggregateComponent, AggregateOperation
+from cnl2asp.specification.aggregate_component import AggregateComponent, AggregateOperator
 from cnl2asp.specification.problem import Problem
 from cnl2asp.specification.proposition import Proposition, RequisiteComponent
 from cnl2asp.specification.signaturemanager import SignatureManager
@@ -41,7 +41,7 @@ class TestASPConverter(unittest.TestCase):
         self.assertEqual(atom, asp_atom)
 
     def test_convert_aggregate(self):
-        operation = AggregateOperation.COUNT
+        operation = AggregateOperator.COUNT
         discriminant = [AttributeComponent('TEST_DISCR', ValueComponent('TST_DSCR'))]
         entity_component = EntityComponent('tests', '', [AttributeComponent('key', ValueComponent('KEY'))],
                                            [AttributeComponent('field', ValueComponent('FIELD')),
@@ -50,7 +50,7 @@ class TestASPConverter(unittest.TestCase):
         asp_converter = ASPConverter()
         asp_atom = ASPAtom('tests', [ASPAttribute('key', ASPValue('KEY')),
                                     ASPAttribute('field', ASPValue('FIELD')), ASPAttribute('TEST_DISCR', ASPValue('TST_DSCR'))])
-        asp_aggregate = ASPAggregate(AggregateOperation.COUNT, [ASPAttribute('TEST_DISCR', ASPValue('TST_DSCR'))],
+        asp_aggregate = ASPAggregate(AggregateOperator.COUNT, [ASPAttribute('TEST_DISCR', ASPValue('TST_DSCR'))],
                                      ASPConjunction([asp_atom]))
         self.assertEqual(str(aggregate.convert(asp_converter)),
                          str(asp_aggregate))

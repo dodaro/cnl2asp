@@ -54,12 +54,13 @@ class Operators(Enum):
             return self.value < other.value
         return NotImplemented
 
+
 class OperationComponent(Component):
-    def __init__(self, operator: Operators, *operands: Component, negated = False):
-        self.operation = operator
+    def __init__(self, operator: Operators, *operands: Component, negated=False):
+        self.operator = operator
         self.operands = []
         self.negated = negated
-        if self.operation == Operators.BETWEEN:
+        if self.operator == Operators.BETWEEN:
             operands = self.between_operator(operands)
         for operand in operands:
             if not isinstance(operand, Component):
@@ -67,12 +68,11 @@ class OperationComponent(Component):
             self.operands.append(operand)
         self.auxiliary_verb = None
 
-
     def between_operator(self, operands):
         operands = list(operands)
-        if self.operation == Operators.BETWEEN:
-            self.operation = Operators.LESS_THAN_OR_EQUAL_TO
-        elif self.operation == Operators.NOTBETWEEN:
+        if self.operator == Operators.BETWEEN:
+            self.operator = Operators.LESS_THAN_OR_EQUAL_TO
+        elif self.operator == Operators.NOTBETWEEN:
             raise NotImplemented("Operator not between not implemented")
         for operand in operands:
             if isinstance(operand, list):
@@ -80,7 +80,6 @@ class OperationComponent(Component):
                 operands.append(operand[1])
                 operands.remove(operand)
         return operands
-
 
     def get_entities(self) -> list[EntityComponent]:
         entities = []
@@ -99,7 +98,7 @@ class OperationComponent(Component):
 
     def copy(self):
         operands = [component for component in self.operands]
-        return OperationComponent(self.operation, *operands, negated = self.negated)
+        return OperationComponent(self.operator, *operands, negated=self.negated)
 
     def is_angle(self) -> False:
         for operand in self.operands:

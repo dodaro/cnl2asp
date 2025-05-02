@@ -45,7 +45,21 @@ class TestTheoryExtPropositions(unittest.TestCase):
                 starting with time T2, with machine M2 is less than or equal to -T.
             It is prohibited that the difference between starting with time T1, with machine M1, and 
                 starting with time T2, with machine M2 is less than or equal to -T, whenever there is a sequence with first starting time T1, with first machine M1,
+                with second starting time T2, with second machine M2, with time T.
+             It is prohibited that the difference between starting with time T1, with machine M1, and 
+                starting with time T2, with machine M2 is equal to -T, whenever there is a sequence with first starting time T1, with first machine M1,
+                with second starting time T2, with second machine M2, with time T.
+            It is required that the difference between starting with time T1, with machine M1, and 
+                starting with time T2, with machine M2 is less than or equal to -T, whenever there is a sequence with first starting time T1, with first machine M1,
+                with second starting time T2, with second machine M2, with time T.
+            It is prohibited that the difference between starting with time T1, with machine M1, and 
+                starting with time T2, with machine M2 is different from -T, whenever there is a sequence with first starting time T1, with first machine M1,
                 with second starting time T2, with second machine M2, with time T.''',
                                    '&diff {starting(T1,M1) - starting(T2,M2)} <= -T :- sequence(T1,M1,T2,M2,T).\n'
-                                   ':- sequence(T1,M1,T2,M2,T), &diff {starting(T1,M1) - starting(T2,M2)} <= -T.',
-                                   MODE.DIFF_LOGIC)
+                                   ':- sequence(T1,M1,T2,M2,T), &diff {starting(T1,M1) - starting(T2,M2)} <= -T.\n'
+                                   ':- sequence(T1,M1,T2,M2,T), &diff {starting(T2,M2) - starting(T1,M1)} <= (-T * -1).\n'
+                                   ':- sequence(T1,M1,T2,M2,T), &diff {starting(T1,M1) - starting(T2,M2)} <= -T.\n'
+                                   ':- sequence(T1,M1,T2,M2,T), not &diff {starting(T1,M1) - starting(T2,M2)} <= -T.\n'
+                                   ':- sequence(T1,M1,T2,M2,T), not &diff {starting(T2,M2) - starting(T1,M1)} <= (-T * -1).\n'
+                                   ':- sequence(T1,M1,T2,M2,T), not &diff {starting(T1,M1) - starting(T2,M2)} <= -T.',
+        MODE.DIFF_LOGIC)

@@ -10,7 +10,7 @@ from cnl2asp.ASP_elements.asp_program import ASPProgram
 from cnl2asp.ASP_elements.asp_rule import ASPRule, ASPRuleHead, ASPWeakConstraint
 from cnl2asp.ASP_elements.asp_theory_atom import TheoryAtom
 
-from cnl2asp.specification.aggregate_component import AggregateOperation
+from cnl2asp.specification.aggregate_component import AggregateOperator
 from cnl2asp.specification.attribute_component import AttributeOrigin
 from cnl2asp.specification.operation_component import Operators
 
@@ -35,7 +35,7 @@ class TestASPElements(unittest.TestCase):
     def test_aggregate_to_string(self):
         conjunction = ASPConjunction([ASPAtom('tests', [ASPAttribute('field', ASPValue('FIELD'))]),
                                       ASPAtom('test2', [ASPAttribute('field', ASPValue('FIELD'))])])
-        aggregate = ASPAggregate(AggregateOperation.SUM, [ASPAttribute('discriminant', ASPValue('DISCRIMINANT'))],
+        aggregate = ASPAggregate(AggregateOperator.SUM, [ASPAttribute('discriminant', ASPValue('DISCRIMINANT'))],
                                  conjunction)
         self.assertEqual(str(aggregate),
                          '#sum{DISCRIMINANT: tests(FIELD), test2(FIELD)}',

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import copy
 import re
+from collections import deque
 
 import inflect
 
@@ -44,10 +46,18 @@ class EntityToAtom:
         self.atom = atom
 
 
-def is_arithmetic_operator(operator):
+def is_arithmetic_operator(operator: Operators):
     if operator <= Operators.DIVISION:
         return True
     return False
+
+
+def is_number(string):
+    try:
+        float(string)
+        return True
+    except:
+        return False
 
 
 operators_negation = {
@@ -93,8 +103,10 @@ None, ASPValue, None]):
         self._aggregates: list[ASPAggregate] = []
         self._operations: list[ASPOperation] = []
         self._forbidden_links: list[ForbiddenLink] = []
-        self._converted_complex_entities: list[
-            str] = []  # name of complex entities already converted, used to track if their values have been already converted.
+        self._converted_complex_entities: list[str] = []  # name of complex entities already converted,
+        # used to track if their values have been already converted.
+        self._current_proposition = None
+        self._clones = deque()
 
     def get_trailing_number(self, s: str):
         m = re.search(r'\d+$', s)
@@ -130,7 +142,12 @@ None, ASPValue, None]):
     def convert_problem(self, problem: Problem) -> ASPProgram:
         self._program.name = problem.name
         for proposition in problem.get_propositions():
+            self._current_proposition = proposition
             self._program.add_rule(proposition.convert(self))
+            while self._clones:
+                clone = self._clones[0]
+                self._clones.popleft()
+                self._program.add_rule(clone.convert(self))
             self.clear_support_variables()
         return self._program
 
@@ -140,6 +157,8 @@ None, ASPValue, None]):
         self._forbidden_links = []
         self._aggregates = []
         self._operations = []
+        self._current_proposition = None
+        self._clones = deque()
 
     def convert_proposition(self, proposition: Proposition) -> ASPRule:
         # Create a new signature for each new entity
@@ -294,7 +313,7 @@ None, ASPValue, None]):
             discriminant = self._match_discriminant_attributes_with_body(discriminant, body)
         else:
             self._match_discriminant_atom_with_body(discriminant, body)
-        aggregate = ASPAggregate(aggregate.operation, discriminant, body)
+        aggregate = ASPAggregate(aggregate.operator, discriminant, body)
         self._aggregates.append(aggregate)
         return aggregate
 
@@ -308,19 +327,19 @@ None, ASPValue, None]):
         operations: list[ASPOperation] = []
         fields: list[ASPValue] = []
         for operand in operands:
-            new_field = ASPValue(self.create_new_field_value(operand.operation.name))
+            new_field = ASPValue(self.create_new_field_value(operand.operator.name))
             operations.append(ASPOperation(Operators.EQUALITY, operand, new_field))
             fields.append(new_field)
         for i, field_1 in enumerate(fields):
             for j, field_2 in enumerate(fields[i + 1:]):
-                operations.append(ASPOperation(operation.operation, field_1, field_2))
+                operations.append(ASPOperation(operation.operator, field_1, field_2))
         for operation in operations:
             self._operations.append(operation)
         return operations
 
     def _convert_between_operation_without_aggregate(self, operation, operands):
-        operation1 = ASPOperation(operation.operation, operands[0], operands[1])
-        operation2 = ASPOperation(operation.operation, operands[1], operands[2])
+        operation1 = ASPOperation(operation.operator, operands[0], operands[1])
+        operation2 = ASPOperation(operation.operator, operands[1], operands[2])
         self._operations.append(operation1)
         self._operations.append(operation2)
         return ASPConjunction([operation1, operation2])
@@ -336,34 +355,58 @@ None, ASPValue, None]):
         for operand in operands:
             if isinstance(operand, ASPAtom) or (isinstance(operand, str) and
                                                 not self._is_variable(operand) and
-                                                not operand.isnumeric() and
+                                                not is_number(operand) and
                                                 not self._asp_encoding.is_constant(operand)):
                 return True
         return False
 
     def convert_operation(self, operation: OperationComponent) -> ASPOperation | [ASPOperation]:
         operands = []
-        if operation.negated and operation.operation < Operators.CONJUNCTION:
-            operation.operation = operators_negation[operation.operation]
+        if operation.negated and operation.operator < Operators.CONJUNCTION:
+            operation.operator = operators_negation[operation.operator]
+            operation.negated = False
         is_operation_on_angle = False
         for operand in operation.operands:
             if operand.is_angle():
                 is_operation_on_angle = True
             operands.append(operand.convert(self))
         if is_operation_on_angle:
-            return ASPAngleOperation(operation.operation, *operands)
+            return ASPAngleOperation(operation.operator, *operands)
         if self._is_list_of_aggregates(operands):
             return self._convert_operation_of_list_of_aggregate(operation, operands)
-        if not is_arithmetic_operator(operation.operation) and len(operands) == 3 \
-                and not isinstance(operands[1], ASPAggregate) and operation.operation < Operators.CONJUNCTION:
+        if not is_arithmetic_operator(operation.operator) and len(operands) == 3 \
+                and not isinstance(operands[1], ASPAggregate) and operation.operator < Operators.CONJUNCTION:
             return self._convert_between_operation_without_aggregate(operation, operands)
-        if operation.operation >= Operators.CONJUNCTION:
-            return TheoryAtom('tel', [ASPTemporalOperation(operation.operation, *operands)], operation.negated)
-        if self.is_dl_operation(operands, operation.operation):
-            return TheoryAtom('diff', [ASPOperation(operation.operation, *operands)], operation.negated)
-        operation = ASPOperation(operation.operation, *operands)
+        if operation.operator >= Operators.CONJUNCTION:
+            return TheoryAtom('tel', [ASPTemporalOperation(operation.operator, *operands)], operation.negated)
+        if self.is_dl_operation(operands, operation.operator):
+            return TheoryAtom('diff', [ASPOperation(operation.operator, *operands)], operation.negated)
+        if isinstance(operands[0], TheoryAtom) and operands[0].predicate == 'diff':
+            self.process_dl_operation(operation, operands)
+        operation = ASPOperation(operation.operator, *operands, negated=operation.negated)
         self._operations.append(operation)
         return operation
+
+    def process_dl_operation(self, operation: OperationComponent, operands: list[Component]):
+        if operation.operator == Operators.LESS_THAN:
+            operands[1] = ASPOperation(Operators.SUM, operands[1], ASPValue(-1))
+        elif operation.operator == Operators.GREATER_THAN:
+            operation.negated = not operation.negated
+        elif operation.operator == Operators.GREATER_THAN_OR_EQUAL_TO:
+            operation.negated = not operation.negated
+            operands[1] = ASPOperation(Operators.SUM, operands[1], ASPValue(-1))
+        elif operation.operator == Operators.EQUALITY:
+            operation.operator = Operators.LESS_THAN_OR_EQUAL_TO
+            self._clones.append(copy.deepcopy(self._current_proposition))
+            operands[1] = ASPOperation(Operators.MULTIPLICATION,
+                               operands[1], ASPValue(-1))
+            operands[0].body[0].operands[0], operands[0].body[0].operands[1] = (operands[0].body[0].operands[1],
+                                                                          operands[0].body[0].operands[0])
+        elif operation.operator == Operators.INEQUALITY:
+            operation.negated = not operation.negated
+            operation.operator = Operators.EQUALITY
+            self.process_dl_operation(operation, operands)
+        operation.operator = Operators.LESS_THAN_OR_EQUAL_TO
 
     def convert_attribute(self, attribute: AttributeComponent) -> ASPAttribute:
         attribute_name = inflect.engine().singular_noun(attribute.get_name()) if inflect.engine().singular_noun(
@@ -381,8 +424,9 @@ None, ASPValue, None]):
     def convert_value(self, value: ValueComponent) -> ASPValue:
         if not value:
             return ASPValue(value)
-        if not self._asp_encoding.is_constant(
-                value) and not value == Utility.NULL_VALUE and not value.isnumeric() and not value.isupper():
+        if (not self._asp_encoding.is_constant(value) and
+                not value == Utility.NULL_VALUE and
+                not is_number(value) and not value.isupper()):
             return ASPValue(f'"{value}"')
         return ASPValue(value)
 

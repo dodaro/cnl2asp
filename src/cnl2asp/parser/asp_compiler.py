@@ -22,7 +22,7 @@ from cnl2asp.specification.problem import Problem
 from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, \
     CardinalityComponent, PREFERENCE_PROPOSITION_TYPE, PROPOSITION_TYPE
 from cnl2asp.specification.relation_component import RelationComponent
-from cnl2asp.specification.aggregate_component import AggregateComponent, AggregateOperation
+from cnl2asp.specification.aggregate_component import AggregateComponent, AggregateOperator
 from cnl2asp.specification.operation_component import Operators, OperationComponent
 from cnl2asp.specification.signaturemanager import SignatureManager
 from cnl2asp.specification.specification import SpecificationComponent
@@ -545,7 +545,7 @@ class ASPTransformer(Transformer):
 
     def preference_with_aggregate_clause(self, elem):
         if elem[3]:
-            new_var = self._new_field_value(elem[3].operation.name)
+            new_var = self._new_field_value(elem[3].operator.name)
             self._proposition.add_requisite(OperationComponent(Operators.EQUALITY, elem[3], new_var))
             self._proposition.add_weight(new_var)
 
@@ -935,16 +935,16 @@ class ASPTransformer(Transformer):
         elif elem == 'the next':
             return '+'
 
-    def AGGREGATE_OPERATOR(self, elem) -> AggregateOperation:
+    def AGGREGATE_OPERATOR(self, elem) -> AggregateOperator:
         operator = elem.value
         if operator == "the number":
-            return AggregateOperation.COUNT
+            return AggregateOperator.COUNT
         if operator == "the total":
-            return AggregateOperation.SUM
+            return AggregateOperator.SUM
         if operator == "the highest" or operator == "the biggest":
-            return AggregateOperation.MAX
+            return AggregateOperator.MAX
         if operator == "the lowest" or operator == "the smallest":
-            return AggregateOperation.MIN
+            return AggregateOperator.MIN
 
     def VARIABLE(self, elem):
         return ValueComponent(elem.value)
