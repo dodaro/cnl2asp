@@ -1,3 +1,4 @@
+import copy
 from dataclasses import dataclass
 import clingo
 from cnl2asp.specification.attribute_component import ValueComponent, AttributeComponent
@@ -28,7 +29,7 @@ class ClingoResultParser:
                     if name not in self.target_predicates:
                         self.target_predicates.append(new_knowledge.new_entity.get_name())
                         subject = [new_knowledge.subject] if new_knowledge.subject else []
-                        self._signatures.append(NewKnowledge(new_knowledge.new_entity.copy(),
+                        self._signatures.append(NewKnowledge(copy.deepcopy(new_knowledge.new_entity),
                                                              subject, new_knowledge.auxiliary_verb,
                                                              new_knowledge.objects))
                     else:
@@ -41,9 +42,9 @@ class ClingoResultParser:
     def _get_signature(self, name: str):
         for signature in self._signatures:
             if name == signature.new_entity.get_name():
-                new_entity = signature.new_entity.copy()
-                subject = [x.copy() for x in signature.subject.copy()] if signature.subject else signature.subject
-                objects = [x.copy() for x in signature.objects] if signature.objects else signature.objects
+                new_entity = copy.deepcopy(signature.new_entity)
+                subject = [copy.deepcopy(x) for x in copy.deepcopy(signature.subject)] if signature.subject else signature.subject
+                objects = [copy.deepcopy(x) for x in signature.objects] if signature.objects else signature.objects
                 return NewKnowledge(new_entity, subject, signature.verb, objects)
 
     def _entity_printer(self, symbol_name: str, attributes: list[AttributeComponent]):
@@ -125,7 +126,7 @@ class ClingoResultParser:
                 for new_knowledge in proposition.new_knowledge:
                     if new_knowledge.new_entity.get_name() == entity_name:
                         if self._check_attributes_list(attributes, new_knowledge.new_entity):
-                            return new_knowledge.new_entity.copy()
+                            return copy.deepcopy(new_knowledge.new_entity)
 
     def _convert_subject(self, subject: list[EntityComponent], atom: EntityComponent):
         if len(subject) == 1:

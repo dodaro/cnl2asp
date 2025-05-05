@@ -30,7 +30,7 @@ from cnl2asp.specification.component import Component
 from cnl2asp.specification.problem import Problem
 from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, \
     RequisiteComponent, \
-    PreferenceProposition, CardinalityComponent, PREFERENCE_PROPOSITION_TYPE
+    PreferenceProposition, CardinalityComponent, PreferencePropositionType
 from cnl2asp.specification.aggregate_component import AggregateComponent
 from cnl2asp.specification.operation_component import OperationComponent, Operators
 from cnl2asp.specification.relation_component import RelationComponent
@@ -99,11 +99,11 @@ None, ASPValue, None]):
         self._asp_encoding: ASPEncoding = ASPEncoding()
         self._program: ASPProgram = ASPProgram()
         self._atoms_in_current_rule: list[EntityToAtom] = []  # variable used to track the conversion entity -> atom
-        self._created_fields: list[str] = []
+        self._created_fields: set[str] = set()
         self._aggregates: list[ASPAggregate] = []
         self._operations: list[ASPOperation] = []
         self._forbidden_links: list[ForbiddenLink] = []
-        self._converted_complex_entities: list[str] = []  # name of complex entities already converted,
+        self._converted_complex_entities: set[str] = set()  # name of complex entities already converted,
         # used to track if their values have been already converted.
         self._current_proposition = None
         self._clones = deque()
@@ -116,7 +116,7 @@ None, ASPValue, None]):
         for entity in proposition.get_entities():
             for attribute in entity.get_keys_and_attributes():
                 if attribute.value != Utility.NULL_VALUE:
-                    self._created_fields.append(attribute.value)
+                    self._created_fields.add(attribute.value)
 
     def create_new_field_value(self, name: str) -> ASPValue:
         result = re.sub(r'[AEIOU]', '', name, flags=re.IGNORECASE).upper()
@@ -128,7 +128,7 @@ None, ASPValue, None]):
             else:
                 result += '1'
             result = self.create_new_field_value(result)
-        self._created_fields.append(result)
+        self._created_fields.add(result)
         return result
 
     def convert_specification(self, specification: SpecificationComponent):
@@ -153,7 +153,7 @@ None, ASPValue, None]):
 
     def clear_support_variables(self):
         self._atoms_in_current_rule = []
-        self._created_fields = []
+        self._created_fields = set()
         self._forbidden_links = []
         self._aggregates = []
         self._operations = []
@@ -185,12 +185,12 @@ None, ASPValue, None]):
         return ASPRule(body, head, cardinality)
 
     def add_atoms_operations(self, context):
-        atoms_operations = []
+        atoms_operations = set()
         for atom in context.get_atom_list():
             for attribute in atom.attributes:
                 for operation in attribute.operations:
                     if str(operation) not in atoms_operations:
-                        atoms_operations.append(str(operation))
+                        atoms_operations.add(str(operation))
                         context.add_element(operation)
 
     def __move_operations(self, body):
@@ -206,7 +206,7 @@ None, ASPValue, None]):
         discriminant = [attribute.convert(self) for attribute in preference.discriminant if
                         ASPTransformer.is_variable(attribute.value)]
         weight = preference.weight
-        if preference.type == PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION:
+        if preference.type == PreferencePropositionType.MAXIMIZATION:
             weight = '-' + preference.weight.upper()
         weak_constraint = ASPWeakConstraint(rule.body, weight,
                                             preference.level, discriminant)
@@ -233,7 +233,7 @@ None, ASPValue, None]):
         return asp_conjunction
 
     def convert_entity(self, entity: EntityComponent) -> ASPAtom:
-        atom = ASPAtom(entity.get_name(), [attribute.convert(self) for attribute in entity.keys + entity.attributes],
+        atom = ASPAtom(entity.get_name(), [attribute.convert(self) for attribute in entity.get_keys_and_attributes()],
                        entity.negated, entity.is_before, entity.is_after, entity.is_initial, entity.is_final)
         self._atoms_in_current_rule.append(EntityToAtom(entity, atom))
         return atom
@@ -249,7 +249,7 @@ None, ASPValue, None]):
                                                                              ASPAttribute('value',
                                                                                           ASPValue(
                                                                                               f'\"{value}\"'))]))]))
-            self._converted_complex_entities.append(temporal_entity.get_name())
+            self._converted_complex_entities.add(temporal_entity.get_name())
             return ASPAtom(temporal_entity.get_name(),
                            [ASPAttribute(temporal_entity.get_name().removesuffix('s'),
                                          ASPValue(temporal_values[-1][1])),

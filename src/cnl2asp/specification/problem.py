@@ -14,7 +14,6 @@ class Problem(Component):
             propositions = []
         self._propositions = propositions
 
-
     def add_proposition(self, proposition: Proposition):
         self._propositions.append(proposition)
 
@@ -28,7 +27,3 @@ class Problem(Component):
 
     def convert(self, converter: Converter) -> Any:
         return converter.convert_problem(self)
-
-    def copy(self):
-        propositions = [proposition.copy() for proposition in self._propositions]
-        return Problem(self.name, propositions)

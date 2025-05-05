@@ -6,13 +6,9 @@ from cnl2asp.converter.converter_interface import Converter
 from cnl2asp.specification.component import Component
 
 
-
 class NameComponent(Component):
     def convert(self, converter: Converter) -> Any:
         return self.name
-
-    def copy(self) -> Any:
-        return NameComponent(self.name)
 
     def __init__(self, name: str):
         self.name = name

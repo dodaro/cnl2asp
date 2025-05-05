@@ -16,17 +16,11 @@ class ValueComponent(Component, str):
     def convert(self, converter: Converter):
         return converter.convert_value(self)
 
-    def copy(self) -> Any:
-        return ValueComponent(self)
-
     def is_angle(self) -> bool:
         return False
 
 
 class AngleValueComponent(ValueComponent):
-
-    def copy(self) -> Any:
-        return AngleValueComponent(self)
 
     def is_angle(self) -> bool:
         return True
@@ -41,9 +35,6 @@ class RangeValueComponent(ValueComponent):
 
     def convert(self, converter: Converter):
         return converter.convert_range_value(self)
-
-    def copy(self) -> Any:
-        return RangeValueComponent(self)
 
 
 class AttributeOrigin:
@@ -123,9 +114,6 @@ class AttributeComponent(Component):
 
     def add_operation(self, operation: OperationComponent):
         self.operations.append(operation)
-
-    def copy(self) -> Any:
-        return AttributeComponent(self.get_name(), self.value.copy(), self.origin)
 
     def is_angle(self) -> bool:
         return 'angle' in self.get_name() or (self.origin.is_angle() if self.origin else False)

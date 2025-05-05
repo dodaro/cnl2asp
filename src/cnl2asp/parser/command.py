@@ -1,3 +1,5 @@
+import copy
+
 from cnl2asp.parser.proposition_builder import PropositionBuilder
 from cnl2asp.specification.attribute_component import ValueComponent, AttributeComponent
 from cnl2asp.specification.entity_component import EntityComponent
@@ -22,7 +24,7 @@ class SubstituteVariable(Command):
         new_propositions = []
         for proposition in self.proposition.get_propositions():
             for value in self.values:
-                derived_proposition = proposition.copy()
+                derived_proposition = copy.deepcopy(proposition)
                 derived_proposition.add_requisite([OperationComponent(Operators.EQUALITY,
                                                                       ValueComponent(self.variable),
                                                                       value)])
@@ -39,9 +41,9 @@ class RespectivelySubstituteVariable(Command):
 
     def execute(self):
         for proposition, value in zip(self.proposition.get_propositions(), self.values):
-                proposition.add_requisite([OperationComponent(Operators.EQUALITY,
-                                                                      ValueComponent(self.variable),
-                                                                      value)])
+            proposition.add_requisite([OperationComponent(Operators.EQUALITY,
+                                                          ValueComponent(self.variable),
+                                                          value)])
 
 
 class DurationClause(Command):

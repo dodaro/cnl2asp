@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import copy
 import re
 import string
 
@@ -20,7 +22,7 @@ from cnl2asp.specification.entity_component import EntityComponent, EntityType, 
     SetEntityComponent, ListEntityComponent, ComplexEntityComponent
 from cnl2asp.specification.problem import Problem
 from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, \
-    CardinalityComponent, PREFERENCE_PROPOSITION_TYPE, PROPOSITION_TYPE
+    CardinalityComponent, PreferencePropositionType, PROPOSITION_TYPE
 from cnl2asp.specification.relation_component import RelationComponent
 from cnl2asp.specification.aggregate_component import AggregateComponent, AggregateOperator
 from cnl2asp.specification.operation_component import Operators, OperationComponent
@@ -51,7 +53,7 @@ class ASPTransformer(Transformer):
         self._problem: Problem = Problem()
         self._proposition: PropositionBuilder = PropositionBuilder()
         self._delayed_operations: list[Command] = []
-        self._defined_variables: list[str] = []
+        self._defined_variables: set[str] = set()
 
     def _new_field_value(self, name: str = '') -> ValueComponent:
         if name:
@@ -65,7 +67,7 @@ class ASPTransformer(Transformer):
                 else:
                     last_num = 1
                 return self._new_field_value(f'{name}{last_num}')
-            self._defined_variables.append(result)
+            self._defined_variables.add(result)
             return ValueComponent(result)
 
     def start(self, elem) -> SpecificationComponent:
@@ -79,7 +81,7 @@ class ASPTransformer(Transformer):
     def _clear(self):
         self._proposition = PropositionBuilder()
         self._delayed_operations = []
-        self._defined_variables = []
+        self._defined_variables = set()
 
     def explicit_definition_proposition(self, elem):
         if elem[0]:
@@ -144,17 +146,15 @@ class ASPTransformer(Transformer):
     @v_args(meta=True)
     def complex_concept_definition(self, meta, elem):
         try:
-            complex_concept = elem[1]
-            complex_concept.entity_identifier = ValueComponent(elem[0].lower())
-            return complex_concept
+            return elem[1](ValueComponent(elem[0].lower()))
         except DuplicatedTypedEntity as e:
             raise CompilationError(str(e), meta.line)
 
     def COMPLEX_CONCEPT_TYPE(self, elem):
         if elem.value == "a set":
-            return SetEntityComponent('')
+            return SetEntityComponent
         elif elem.value == "a list":
-            return ListEntityComponent('')
+            return ListEntityComponent
 
     @v_args(meta=True)
     def complex_concept_elements_definition(self, meta, elem):
@@ -244,10 +244,10 @@ class ASPTransformer(Transformer):
         except:
             signature = self._proposition.create_new_signature(subject)
             SignatureManager.add_signature(signature)
-        copy: EntityComponent = signature.copy()
-        copy.set_attributes_value(subject.keys + subject.attributes)
-        subject.keys = copy.keys
-        subject.attributes = copy.attributes
+        signature_copy: EntityComponent = copy.deepcopy(signature)
+        signature_copy.set_attributes_value(subject.keys + subject.attributes)
+        subject.keys = signature_copy.keys
+        subject.attributes = signature_copy.attributes
         verb: EntityComponent = elem[1]
         if subject.label or subject.attributes:
             self._proposition.add_requisite(subject)
@@ -321,7 +321,7 @@ class ASPTransformer(Transformer):
 
     def _handle_new_definition_proposition(self, subject: EntityComponent, cardinality: CardinalityComponent):
         self._proposition.add_cardinality(cardinality)
-        self._proposition.add_subject(subject.copy())
+        self._proposition.add_subject(copy.deepcopy(subject))
         if subject is not DUMMY_ENTITY:
             for proposition in self._proposition.get_propositions():
                 for new in proposition.new_knowledge:
@@ -624,7 +624,7 @@ class ASPTransformer(Transformer):
             result = operand_value
         elif operator:
             result = self._new_field_value(parameter_name)
-        self._defined_variables.append(result)
+        self._defined_variables.add(result)
         return ValueComponent(result)
 
     def _parse_parameter_operation(self, attribute, operator, operand):
@@ -728,7 +728,7 @@ class ASPTransformer(Transformer):
             raise CompilationError(str(e), meta.line)
         if entity.label_is_key_value():
             entity.set_label_as_key_value()
-            self._defined_variables.append(ValueComponent(entity.label))
+            self._defined_variables.add(ValueComponent(entity.label))
         if entity_temporal_order_constraint:
             self.temporal_constraint(meta, [entity] + entity_temporal_order_constraint)
         if define_subsequent_event:
@@ -831,22 +831,22 @@ class ASPTransformer(Transformer):
         self._proposition = PreferencePropositionBuilder()
 
     def optimization_statement(self, elem):
-        if elem == PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION:
-            self._proposition.add_type(PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION)
-        elif elem == PREFERENCE_PROPOSITION_TYPE.MINIMIZATION:
-            self._proposition.add_type(PREFERENCE_PROPOSITION_TYPE.MINIMIZATION)
+        if elem == PreferencePropositionType.MAXIMIZATION:
+            self._proposition.add_type(PreferencePropositionType.MAXIMIZATION)
+        elif elem == PreferencePropositionType.MINIMIZATION:
+            self._proposition.add_type(PreferencePropositionType.MINIMIZATION)
 
     def optimization_operator(self, elem):
-        if elem[0] == PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION:
-            self._proposition.add_type(PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION)
-        elif elem[0] == PREFERENCE_PROPOSITION_TYPE.MINIMIZATION:
-            self._proposition.add_type(PREFERENCE_PROPOSITION_TYPE.MINIMIZATION)
+        if elem[0] == PreferencePropositionType.MAXIMIZATION:
+            self._proposition.add_type(PreferencePropositionType.MAXIMIZATION)
+        elif elem[0] == PreferencePropositionType.MINIMIZATION:
+            self._proposition.add_type(PreferencePropositionType.MINIMIZATION)
 
     def CNL_MINIMIZED(self, elem):
-        return PREFERENCE_PROPOSITION_TYPE.MINIMIZATION
+        return PreferencePropositionType.MINIMIZATION
 
     def CNL_MAXIMIZED(self, elem):
-        return PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION
+        return PreferencePropositionType.MAXIMIZATION
 
     def priority_level_number(self, elem):
         self._proposition.add_level(int(elem[0]))
@@ -997,8 +997,8 @@ class ASPTransformer(Transformer):
     def cnl_it_is_required_that(self, elem) -> PROPOSITION_TYPE:
         return PROPOSITION_TYPE.REQUIREMENT
 
-    def cnl_as_much_as_possible(self, elem) -> PREFERENCE_PROPOSITION_TYPE:
-        return PREFERENCE_PROPOSITION_TYPE.MAXIMIZATION
+    def cnl_as_much_as_possible(self, elem) -> PreferencePropositionType:
+        return PreferencePropositionType.MAXIMIZATION
 
-    def cnl_as_little_as_possible(self, elem) -> PREFERENCE_PROPOSITION_TYPE:
-        return PREFERENCE_PROPOSITION_TYPE.MINIMIZATION
+    def cnl_as_little_as_possible(self, elem) -> PreferencePropositionType:
+        return PreferencePropositionType.MINIMIZATION

@@ -8,7 +8,7 @@ from cnl2asp.specification.entity_component import EntityComponent, TemporalEnti
 from cnl2asp.specification.attribute_component import AttributeComponent, RangeValueComponent, is_same_origin
 from cnl2asp.specification.problem import Problem
 from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, RequisiteComponent, \
-    PreferenceProposition, CardinalityComponent, PREFERENCE_PROPOSITION_TYPE
+    PreferenceProposition, CardinalityComponent, PreferencePropositionType
 from cnl2asp.specification.aggregate_component import AggregateComponent
 from cnl2asp.specification.operation_component import OperationComponent, Operators
 from cnl2asp.specification.relation_component import RelationComponent

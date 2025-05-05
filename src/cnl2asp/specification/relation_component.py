@@ -17,9 +17,6 @@ class RelationComponent(Component):
     def convert(self, converter: Converter):
         converter.convert_relation(self.relation_component_1, self.relation_component_2)
 
-    def copy(self):
-        return RelationComponent(self.relation_component_1.copy(), self.relation_component_2.copy())
-
     def get_entities(self) -> list[EntityComponent]:
         entities: list[EntityComponent] = []
         for entity in self.relation_component_1.get_entities():

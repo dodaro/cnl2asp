@@ -48,6 +48,14 @@ class EntityComponent(Component):
         self.is_initial = is_initial
         self.is_final = is_final
 
+    def clear(self):
+        for attribute in self.get_keys_and_attributes():
+            attribute.value = ValueComponent(Utility.NULL_VALUE)
+        self.negated = False
+        self.is_initial = False
+        self.is_after = False
+        self.is_before = False
+
     def label_is_key_value(self):
         if self.label and len(self.get_keys()) == 1 and self.get_keys()[0].value == Utility.NULL_VALUE:
             return True
@@ -160,14 +168,6 @@ class EntityComponent(Component):
             return attributes
         raise AttributeNotFound(f'Entity \"{self.get_name()}\" do not contain attribute \"{name}\".')
 
-    def copy(self) -> EntityComponent:
-        keys = [key.copy() for key in self.keys]
-        attributes = [attribute.copy() for attribute in self.attributes]
-        return EntityComponent(self.get_name(), self.label, keys,
-                               attributes, self.negated, self.entity_type,
-                               self.is_before, self.is_after, self.is_initial, self.is_final,
-                               self.auxiliary_verb)
-
     def get_entities(self) -> list[EntityComponent]:
         return [self]
 
@@ -257,13 +257,6 @@ class TemporalEntityComponent(EntityComponent):
     def get_temporal_key(self) -> AttributeComponent:
         return self.keys[0]
 
-    def copy(self) -> Any:
-        copy = TemporalEntityComponent(self.get_name(), self.label, None,
-                                       None, None, self.entity_type, self.values)
-        copy.set_attributes_value(super(TemporalEntityComponent, self).copy().attributes)
-        copy.set_attributes_value(super(TemporalEntityComponent, self).copy().keys)
-        return copy
-
     def convert(self, converter: Converter):
         return converter.convert_temporal_entity(self)
 
@@ -277,6 +270,15 @@ class ComplexEntityComponent(EntityComponent):
             self.values = values
         self.entity_identifier = complex_entity_id
         super().__init__(name, '', keys, attributes, False, entity_type)
+
+    def clear(self):
+        for attribute in self.get_keys_and_attributes():
+            if attribute.value != self.entity_identifier:
+                attribute.value = ValueComponent(Utility.NULL_VALUE)
+        self.negated = False
+        self.is_initial = False
+        self.is_after = False
+        self.is_before = False
 
     def get_entity_identifier(self):
         return self.entity_identifier
@@ -303,9 +305,6 @@ class SetEntityComponent(ComplexEntityComponent):
         if self.label in self.values:
             self.set_attribute_value('element', ValueComponent(self.label))
 
-    def copy(self) -> SetEntityComponent:
-        return SetEntityComponent(self.entity_identifier, self.values)
-
 
 class ListEntityComponent(ComplexEntityComponent):
     def __init__(self, list_id: ValueComponent = None, values: list[ValueComponent] = None):
@@ -319,9 +318,6 @@ class ListEntityComponent(ComplexEntityComponent):
         if self.label in self.values:
             self.set_attribute_value('element', ValueComponent(self.label))
             self.set_attribute_value('index', ValueComponent(self.values.index(ValueComponent(self.label))))
-
-    def copy(self) -> ListEntityComponent:
-        return ListEntityComponent(self.entity_identifier, self.values)
 
     def set_shifted_value(self, shift_value: int, starting_value: str, element_variable: ValueComponent):
         element_index = (self.values.index(ValueComponent(starting_value)) + shift_value) % len(self.values)

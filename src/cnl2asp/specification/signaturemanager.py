@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import copy
 from datetime import datetime
 from typing import TYPE_CHECKING
 
@@ -20,20 +22,11 @@ class SignatureManager:
         pass
 
     @staticmethod
-    def set_entity_to_null(entity):
-        for attribute in entity.get_keys_and_attributes():
-            attribute.value = ValueComponent(Utility.NULL_VALUE)
-        entity.negated = False
-        entity.is_initial = False
-        entity.is_after = False
-        entity.is_before = False
-
-    @staticmethod
     def add_signature(entity: EntityComponent):
         try:
             SignatureManager.clone_signature(entity.get_name())
         except:
-            entity = entity.copy()
+            entity = copy.deepcopy(entity)
             # Update previous declared signatures
             for signature in SignatureManager.signatures:
                 try:
@@ -43,12 +36,12 @@ class SignatureManager:
                     signature.attributes += entity.get_keys()
                 except:
                     pass
-            SignatureManager.set_entity_to_null(entity)
+            entity.clear()
             SignatureManager.signatures.append(entity)
 
     @staticmethod
     def clone_signature(signature_identifier: str) -> EntityComponent:
-        return SignatureManager.get_signature(signature_identifier).copy()
+        return copy.deepcopy(SignatureManager.get_signature(signature_identifier))
 
     @staticmethod
     def get_signature(signature_identifier: str):
@@ -76,7 +69,7 @@ class SignatureManager:
         """
         for entity in SignatureManager.signatures:
             if entity.entity_type == entity_type:
-                return entity.copy()
+                return copy.deepcopy(entity)
         raise EntityNotFound(f"Typed entity with type {entity_type} not defined.")
 
     @staticmethod

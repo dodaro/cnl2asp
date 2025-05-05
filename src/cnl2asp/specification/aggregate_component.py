@@ -24,9 +24,6 @@ class AggregateComponent(Component):
     def convert(self, converter: Converter) -> AggregateConverter:
         return converter.convert_aggregate(self)
 
-    def copy(self):
-        return AggregateComponent(self.operator, [discriminant.copy() for discriminant in self.discriminant])
-
     def get_entities(self) -> list[EntityComponent]:
         entities = []
         for entity in self.body:

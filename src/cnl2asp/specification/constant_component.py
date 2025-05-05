@@ -12,6 +12,3 @@ class ConstantComponent(Component):
 
     def convert(self, converter: Converter):
         return converter.convert_constant(self)
-
-    def copy(self) -> Any:
-        return ConstantComponent(self.name, self.value.copy())

@@ -1,10 +1,12 @@
+import copy
+
 from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, LabelNotFound
 from cnl2asp.specification.relation_component import RelationComponent
 from cnl2asp.specification.attribute_component import AttributeComponent, ValueComponent, RangeValueComponent
 from cnl2asp.specification.component import Component
 from cnl2asp.specification.entity_component import EntityComponent
 from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, CardinalityComponent, \
-    PreferenceProposition, PREFERENCE_PROPOSITION_TYPE, ConditionComponent
+    PreferenceProposition, PreferencePropositionType, ConditionComponent
 from cnl2asp.utility.utility import Utility
 
 
@@ -43,7 +45,7 @@ class PropositionBuilder:
         self._derived_rules.append(proposition)
 
     def copy_proposition(self) -> Proposition:
-        child = self._original_rule.copy()
+        child = copy.deepcopy(self._original_rule)
         self._derived_rules.append(child)
         return child
 
@@ -69,12 +71,12 @@ class PropositionBuilder:
 
     def duration_clause(self, new_knowledge: NewKnowledgeComponent,
                         duration_value: ValueComponent, attribute_name: str):
-        copy: Proposition = self._original_rule.copy()  # create the new proposition to express the duration
+        proposition_copy: Proposition = copy.deepcopy(self._original_rule)  # create the new proposition to express the duration
         new_knowledge.new_entity.set_name(Utility.create_unique_identifier())  # support entity
-        copy.add_requisite([new_knowledge.new_entity])  # add the support entity to the new proposition requisite
-        copy.new_knowledge[0].condition = ConditionComponent()
-        copy.cardinality = None
-        for copy_new_knowledge in copy.new_knowledge:
+        proposition_copy.add_requisite([new_knowledge.new_entity])  # add the support entity to the new proposition requisite
+        proposition_copy.new_knowledge[0].condition = ConditionComponent()
+        proposition_copy.cardinality = None
+        for copy_new_knowledge in proposition_copy.new_knowledge:
             # find the starting value of the temporal attribute
             try:
                 entity = self._original_rule.get_entity_by_name(attribute_name)
@@ -88,7 +90,7 @@ class PropositionBuilder:
             copy_new_knowledge.new_entity.set_attribute_value(attribute_name,
                                                               RangeValueComponent(starting_value,
                                                                                   f'{starting_value}+{duration_value}'))
-            copy.relations = []  # set the relations also for the copy
+            proposition_copy.relations = []  # set the relations also for the copy
             for relation in self._original_rule.relations:
                 for new_knowledge in self._original_rule.new_knowledge:
                     if new_knowledge.condition.components:
@@ -96,13 +98,13 @@ class PropositionBuilder:
                             # do not copy the entity related with the condition part, since
                             # it is not present in the new proposition
                             if not (relation.relation_component_1 == entity or relation.relation_component_2 == entity):
-                                copy.relations.append(relation.copy())
+                                proposition_copy.relations.append(copy.deepcopy(relation))
                     else:
-                        copy.relations.append(relation.copy())
+                        proposition_copy.relations.append(copy.deepcopy(relation))
             # the final entity is related with all the entities in requisite
-            for requisite_entity in copy.requisite.get_entities():
-                copy.relations.append(RelationComponent(copy_new_knowledge.new_entity, requisite_entity))
-        self._derived_rules.append(copy)
+            for requisite_entity in proposition_copy.requisite.get_entities():
+                proposition_copy.relations.append(RelationComponent(copy_new_knowledge.new_entity, requisite_entity))
+        self._derived_rules.append(proposition_copy)
 
     def create_new_signature(self, new_entity: EntityComponent) -> EntityComponent:
         return self._original_rule.create_new_signature(new_entity)
@@ -110,9 +112,9 @@ class PropositionBuilder:
     def add_discriminant(self, discriminant: list[AttributeComponent]):
         pass
 
-    def add_defined_attributes(self, defined_attributes: list[AttributeComponent]):
+    def add_defined_attributes(self, defined_attributes: set[AttributeComponent]):
         for proposition in self.get_propositions():
-            proposition.defined_attributes += defined_attributes
+            proposition.defined_attributes.update(defined_attributes)
 
     def add_auxiliary_verb(self, param):
         for new_knowledge in self._original_rule.new_knowledge:
@@ -142,6 +144,6 @@ class PreferencePropositionBuilder(PropositionBuilder):
                 if discriminant.value != Utility.NULL_VALUE:
                     proposition.add_discriminant(discriminant)
 
-    def add_type(self, proposition_type: PREFERENCE_PROPOSITION_TYPE):
+    def add_type(self, proposition_type: PreferencePropositionType):
         for proposition in self.get_propositions():
             proposition.type = proposition_type

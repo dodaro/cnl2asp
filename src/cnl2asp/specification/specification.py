@@ -32,8 +32,3 @@ class SpecificationComponent(Component):
     def convert(self, converter: Converter) -> Any:
         return converter.convert_specification(self)
 
-    def copy(self) -> SpecificationComponent:
-        problems = []
-        for problem in self._problems:
-            problems.append(problem.copy())
-        return SpecificationComponent(problems)

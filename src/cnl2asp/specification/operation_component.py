@@ -96,10 +96,6 @@ class OperationComponent(Component):
     def convert(self, converter: Converter) -> OperationConverter:
         return converter.convert_operation(self)
 
-    def copy(self):
-        operands = [component for component in self.operands]
-        return OperationComponent(self.operator, *operands, negated=self.negated)
-
     def is_angle(self) -> False:
         for operand in self.operands:
             if operand.is_angle():

@@ -1,3 +1,4 @@
+import copy
 from enum import Enum
 
 from cnl2asp.exception.cnl2asp_exceptions import EntityNotFound, AttributeNotFound
@@ -27,9 +28,6 @@ class AggregateOfComponents(Component):
     def convert(self, converter: Converter):
         pass
 
-    def copy(self):
-        return [component.copy() for component in self.components]
-
     def get_entities(self) -> list[EntityComponent]:
         entities = []
         for entity in self.components:
@@ -50,9 +48,6 @@ class ConditionComponent(AggregateOfComponents):
     def convert(self, converter: Converter) -> ConditionConverter:
         return converter.convert_condition(self)
 
-    def copy(self):
-        return ConditionComponent(super().copy())
-
 
 class NewKnowledgeComponent(Component):
     def __init__(self, new_knowledge: EntityComponent, condition: ConditionComponent = None,
@@ -61,13 +56,10 @@ class NewKnowledgeComponent(Component):
         self.condition = condition if condition else ConditionComponent([])
         self.subject = subject
         self.auxiliary_verb = auxiliary_verb
-        self.objects = [x.copy() for x in objects] if objects else None
+        self.objects = copy.deepcopy(objects)
 
     def convert(self, converter: Converter) -> NewKnowledgeConverter:
         return converter.convert_new_knowledge(self)
-
-    def copy(self):
-        return NewKnowledgeComponent(self.new_entity.copy(), self.condition.copy(), self.subject, self.auxiliary_verb, self.objects)
 
     def get_entities(self) -> list[EntityComponent]:
         entities = self.new_entity.get_entities()
@@ -81,15 +73,13 @@ class NewKnowledgeComponent(Component):
             entities.append(entity)
         return entities
 
+
 class RequisiteComponent(AggregateOfComponents):
     def __init__(self, requisite: list[Component]):
         super().__init__(requisite)
 
     def convert(self, converter: Converter) -> RequisiteConverter:
         return converter.convert_requisite(self)
-
-    def copy(self):
-        return RequisiteComponent(super().copy())
 
 
 class CardinalityComponent(Component):
@@ -100,17 +90,14 @@ class CardinalityComponent(Component):
     def convert(self, converter: Converter) -> CardinalityConverter:
         return converter.convert_cardinality(self)
 
-    def copy(self):
-        return CardinalityComponent(self.lower_bound, self.upper_bound)
-
 
 class Proposition(Component):
     # Data structure for representing the sentences
     def __init__(self, new_knowledge: list[NewKnowledgeComponent] = None,
                  cardinality: CardinalityComponent = None, requisite: RequisiteComponent = None,
-                 relations: list[RelationComponent] = None, defined_attributes: list[AttributeComponent] = None):
+                 relations: list[RelationComponent] = None, defined_attributes: set[AttributeComponent] = None):
         if defined_attributes is None:
-            defined_attributes = []
+            defined_attributes = set()
         self.new_knowledge = new_knowledge if new_knowledge else []
         self.cardinality = cardinality if cardinality else None
         self.requisite = requisite if requisite else RequisiteComponent([])
@@ -124,7 +111,7 @@ class Proposition(Component):
         self.requisite.add_components(requisite)
 
     def create_new_signature(self, new_entity: EntityComponent) -> EntityComponent:
-        signature: EntityComponent = new_entity.copy()
+        signature: EntityComponent = copy.deepcopy(new_entity)
         linked_entities: list[str] = []  # list of labels already linked
         # add all the keys of all the entities related with the new entity
         for relation in self.relations:
@@ -139,17 +126,20 @@ class Proposition(Component):
                         to_be_related_with.label not in linked_entities:
                     for key in to_be_related_with.get_keys():
                         if not new_entity.has_attribute_value(key.value):
-                            signature.attributes.append(AttributeComponent(key.get_name(), ValueComponent(Utility.NULL_VALUE),
-                                                                           AttributeOrigin(to_be_related_with.get_name(),
-                                                                                           key.origin)))
+                            signature.attributes.append(
+                                AttributeComponent(key.get_name(), ValueComponent(Utility.NULL_VALUE),
+                                                   AttributeOrigin(to_be_related_with.get_name(),
+                                                                   key.origin)))
                 if to_be_related_with.label not in linked_entities:
                     linked_entities.append(to_be_related_with.label)
                 for key in to_be_related_with.get_keys():
                     if key.value != Utility.NULL_VALUE and signature.has_attribute_value(key.value):
                         try:
-                            new_entity.get_attributes_by_name_and_origin(key.get_name(), AttributeOrigin(signature.get_name()))[
+                            new_entity.get_attributes_by_name_and_origin(key.get_name(),
+                                                                         AttributeOrigin(signature.get_name()))[
                                 0].origin = key.origin
-                            signature.get_attributes_by_name_and_origin(key.get_name(), AttributeOrigin(signature.get_name()))[
+                            signature.get_attributes_by_name_and_origin(key.get_name(),
+                                                                        AttributeOrigin(signature.get_name()))[
                                 0].origin = key.origin
                         except:
                             pass
@@ -165,9 +155,10 @@ class Proposition(Component):
                             else:
                                 raise AttributeNotFound('')
                         except AttributeNotFound:
-                            signature.attributes.append(AttributeComponent(key.get_name(), ValueComponent(Utility.NULL_VALUE),
-                                                                           AttributeOrigin(to_be_related_with.get_name(),
-                                                                                           key.origin)))
+                            signature.attributes.append(
+                                AttributeComponent(key.get_name(), ValueComponent(Utility.NULL_VALUE),
+                                                   AttributeOrigin(to_be_related_with.get_name(),
+                                                                   key.origin)))
         if not signature.attributes:
             signature.attributes.append(
                 AttributeComponent(Utility.DEFAULT_ATTRIBUTE, ValueComponent(Utility.NULL_VALUE),
@@ -205,16 +196,8 @@ class Proposition(Component):
             entities += relation.get_entities_to_link_with_new_knowledge()
         return entities
 
-    def copy(self):
-            new_knowledge = [new_knowledge.copy() for new_knowledge in self.new_knowledge]
-            cardinality = self.cardinality.copy() if self.cardinality else None
-            requisite = self.requisite.copy()
-            relations = [relation.copy() for relation in self.relations]
-            defined_attributes = [attribute.copy() for attribute in self.defined_attributes]
-            return Proposition(new_knowledge, cardinality, requisite, relations, defined_attributes)
 
-
-class PREFERENCE_PROPOSITION_TYPE(Enum):
+class PreferencePropositionType(Enum):
     MINIMIZATION = 0
     MAXIMIZATION = 1
 
@@ -229,7 +212,7 @@ class PreferenceProposition(Proposition):
         self.weight = weight
         self.level = level
         self.discriminant = discriminant
-        self.type = PREFERENCE_PROPOSITION_TYPE.MINIMIZATION
+        self.type = PreferencePropositionType.MINIMIZATION
 
     def convert(self, converter: Converter) -> PropositionConverter:
         return converter.convert_preference_proposition(self)
@@ -237,10 +220,3 @@ class PreferenceProposition(Proposition):
     def add_discriminant(self, discriminant: AttributeComponent):
         if discriminant not in self.discriminant:
             self.discriminant.append(discriminant)
-
-    def copy(self):
-        proposition = super().copy()
-        preference_proposition = PreferenceProposition(proposition.requisite, proposition.relations, self.weight,
-                                                       self.level,
-                                                       [discriminant.copy() for discriminant in self.discriminant])
-        return preference_proposition
