@@ -211,6 +211,8 @@ def main():
                         help='Call the corresponding solver and print a cnl-translated output')
     parser.add_argument('--telingo', action='store_true',
                         help='Generate a telingo encoding')
+    parser.add_argument('--dl', action='store_true',
+                        help='Generate a clingo dl encoding')
     parser.add_argument('-o', '--optimize', action='store_true', help='Optimize the output using ngo')
     parser.add_argument('--explain', action='store_true', help='Returns a cnl version of the best model')
     parser.add_argument('input_file')
@@ -221,6 +223,8 @@ def main():
     mode = MODE.ASP
     if args.telingo:
         mode = MODE.TELINGO
+    elif args.dl:
+        mode = MODE.DIFF_LOGIC
     cnl2asp = Cnl2asp(args.input_file, mode)
 
     if args.check_syntax:

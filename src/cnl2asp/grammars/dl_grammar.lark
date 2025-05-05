@@ -1,3 +1,9 @@
 %extend then_clause: _CNL_THEN comparison -> dl_head
-%extend comparison_operand: entity
+%override comparison_operand: expression
+                  | string
+                  | parameter_entity_link
+                  | aggregate_clause
+                  | comparison_operand _CNL_AND comparison_operand -> comparison_operand_list
+                  | ARITHMETIC_OPERATOR [cnl_in_absolute_value] _CNL_BETWEEN comparison_operand (_CNL_COMMA _CNL_AND? comparison_operand)+ -> arithmetic_operand
+                  | entity
 
