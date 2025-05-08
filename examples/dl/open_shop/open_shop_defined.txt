@@ -1,0 +1,30 @@
+A task is identified by an id.
+A subtask is identified by an id.
+An executionTime is identified by a task, by an subtask, by a duration.
+An assignment is identified by a task, by a subtask, by a machine.
+A sequence is identified by a first task, by a first subtask, by a second task, by a second subtask, by a duration.
+A start is identified by a task, by a subtask.
+
+deadline is a constant.
+
+Whenever there is an executionTime then we must have a task with id T.
+Whenever there is an executionTime then we must have a subtask with id M.
+
+Whenever there is an assignment with task T, with machine M1, with subtask ST1, whenever there is an assignment with task T, with machine M2, with subtask ST2 greater than ST1, whenever there is an executionTime with task T, with subtask ST1, with duration TIME1, whenever there is an executionTime with task T, with subtask ST2, with duration TIME2, then we can have a sequence with first task T, with first subtask ST1, with second task T, with second subtask ST2, with duration TIME1.
+
+Whenever there is an assignment with task T, with machine M1, with subtask ST1,
+    whenever there is an assignment with task T, with machine M2, with subtask ST2 greater than ST1,
+    whenever there is an executionTime with task T, with subtask ST1, with duration TIME1,
+    whenever there is an executionTime with task T, with subtask ST2, with duration TIME2,
+    whenever there is not a sequence with first task T, with first subtask ST1, with second task T, with second subtask ST2, with duration TIME1,
+    then we must have a sequence with first task T, with first subtask ST2, with second task T, with second subtask ST1, with duration TIME2.
+
+Whenever there is an assignment with task T1, with machine M, with subtask ST1, whenever there is an assignment with task T2 greater than T1, with machine M, with subtask ST2, whenever there is an executionTime with task T1, with subtask ST1, with duration TIME1, whenever there is an executionTime with task T2, with subtask ST2, with duration TIME2, then we can have a sequence with first task T1, with first subtask ST1, with second task T2, with second subtask ST2, with duration TIME1.
+
+Whenever there is an assignment with task T1, with machine M, with subtask ST1, whenever there is an assignment with task T2 greater than T1, with machine M, with subtask ST2, whenever there is an executionTime with task T1, with subtask ST1, with duration TIME1, whenever there is an executionTime with task T2, with subtask ST2, with duration TIME2, whenever there is not a sequence with first task T1, with first subtask ST1, with second task T2, with second subtask ST2, with duration TIME1, then we must have a sequence with first task T2, with first subtask ST2, with second task T1, with second subtask ST1, with duration TIME2.
+
+Whenever there is a sequence with first task T1, with first subtask ST1, with second task T2, with second subtask ST2, with duration TIME, then the difference between start with task T1, with subtask ST1, and start with task T2, with subtask ST2 is less than or equal to -TIME.
+
+Whenever there is a task T, whenever there is an executionTime with task T, with subtask ST, with duration TIME, then the difference between start with task T, with subtask M, and 0 is less than or equal to B, where B is equal to the difference between deadline, and TIME.
+
+Whenever there is a task T, whenever there is a subtask ST, then the difference between 0, and start with task T, with subtask ST is less than or equal to 0.

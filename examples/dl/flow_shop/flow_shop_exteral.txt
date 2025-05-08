@@ -1,0 +1,24 @@
+A task is identified by an id.
+A machine is identified by an id.
+An executionTime is identified by a task, by a machine, by a duration.
+An order is identified by a first, and by a second.
+A sequence is identified by a first task, by a first machine, by a second task, by a second machine, by a duration.
+A start is identified by a task, by a machine.
+
+deadline is a constant.
+
+Whenever there is an executionTime then we must have a task with id T.
+Whenever there is an executionTime then we must have a machine with id M.
+
+Whenever there is a task T1, whenever there is a task T2 then we can have an order with first equal to T1, with second equal to T2.
+It is prohibited that the number of first that have an order with first T, with second T2 is different from 1, whenever there is a task T2.
+
+Whenever there is a task T, whenever there is a machine M, whenever there is a machine with id M+1, whenever there is an executionTime with task T, with machine M, with duration TIME, then we must have a sequence with first task T, with first machine M, with second task T, with second machine M+1, with duration TIME.
+
+Whenever there is an order with first T1, with second S1, whenever there is a order with first T2 different from T1, with second S1+1, whenever there is a machine M, whenever there is an executionTime with task T1, with machine M, with duration TIME1, whenever there is an executionTime with task T2, with machine M, with duration TIME2, then we must have a sequence with first task T1, with first machine M, with second task T2, with second machine M, with duration TIME1.
+
+It is prohibited that the difference between start with task T1, with machine M1, and start with task T2, with machine M2 is greater than -TIME, whenever there is a sequence with first task T1, with first machine M1, with second task T2, with second machine M2, with duration TIME.
+
+It is prohibited that the difference between start with task T, with machine M, and 0 is greater than B, where B is equal to the difference between deadline, and TIME, whenever there is a task T, whenever there is an executionTime with task T, with machine M, with duration TIME.
+
+It is prohibited that the difference between 0, and start with task T, with machine M is greater than 0, whenever there is a task T, whenever there is a machine M.
