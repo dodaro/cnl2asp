@@ -25,6 +25,6 @@ Whenever there is an assignment with task T1, with machine M, with subtask ST1, 
 
 It is prohibited that the difference between start with task T1, with subtask ST1, and start with task T2, with subtask ST2 is greater than -TIME, whenever there is a sequence with first task T1, with first subtask ST1, with second task T2, with second subtask ST2, with duration TIME.
 
-It is prohibited that the difference between start with task T, with subtask M, and 0 is greater than B, whenever there is a task T, whenever there is an executionTime with task T, with subtask ST, with duration TIME, where B is equal to the difference between deadline, and TIME.
+It is prohibited that start with task T, with subtask ST is greater than B, whenever there is a task T, whenever there is an executionTime with task T, with subtask ST, with duration TIME, where B is equal to the difference between deadline, and TIME.
 
-It is prohibited that the difference between 0, and start with task T, with subtask ST is greater than 0, whenever there is a task T, whenever there is a subtask ST.
+It is prohibited that start with task T, with subtask ST is less than 0, whenever there is a task T, whenever there is a subtask ST.

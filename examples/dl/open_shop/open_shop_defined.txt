@@ -25,6 +25,6 @@ Whenever there is an assignment with task T1, with machine M, with subtask ST1, 
 
 Whenever there is a sequence with first task T1, with first subtask ST1, with second task T2, with second subtask ST2, with duration TIME, then the difference between start with task T1, with subtask ST1, and start with task T2, with subtask ST2 is less than or equal to -TIME.
 
-Whenever there is a task T, whenever there is an executionTime with task T, with subtask ST, with duration TIME, then the difference between start with task T, with subtask M, and 0 is less than or equal to B, where B is equal to the difference between deadline, and TIME.
+Whenever there is a task T, whenever there is an executionTime with task T, with subtask ST, with duration TIME, then start with task T, with subtask ST is less than or equal to B, where B is equal to the difference between deadline, and TIME.
 
-Whenever there is a task T, whenever there is a subtask ST, then the difference between 0, and start with task T, with subtask ST is less than or equal to 0.
+Whenever there is a task T, whenever there is a subtask ST, then start with task T, with subtask ST is greater than or equal to 0.

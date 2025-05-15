@@ -347,7 +347,7 @@ None, ASPValue, None]):
     def _is_variable(self, string: str) -> bool:
         if not isinstance(string, str):
             return False
-        return string.isupper() and string.isalpha()
+        return string[0].isalpha() and string[0].isupper() and not is_number(string)
 
     def is_dl_operation(self, operands: list[ASPElement], operator: Operators):
         if operator != Operators.DIFFERENCE:
@@ -360,17 +360,27 @@ None, ASPValue, None]):
                 return True
         return False
 
-    def convert_operation(self, operation: OperationComponent) -> ASPOperation | [ASPOperation]:
-        operands = []
+    def _handle_negated_operation(self, operation: OperationComponent) -> None:
         if operation.negated and operation.operator < Operators.CONJUNCTION:
             operation.operator = operators_negation[operation.operator]
             operation.negated = False
-        is_operation_on_angle = False
-        for operand in operation.operands:
-            if operand.is_angle():
-                is_operation_on_angle = True
-            operands.append(operand.convert(self))
-        if is_operation_on_angle:
+
+    def _convert_operand(self, operands: [Component]):
+        res = []
+        for operand in operands:
+            res.append(operand.convert(self))
+        return res
+
+    def _has_angle_component(self, components: [Component]):
+        for component in components:
+            if component.is_angle():
+                return True
+        return False
+
+    def convert_operation(self, operation: OperationComponent) -> ASPOperation | [ASPOperation]:
+        self._handle_negated_operation(operation)
+        operands = self._convert_operand(operation.operands)
+        if self._has_angle_component(operation.operands):
             return ASPAngleOperation(operation.operator, *operands)
         if self._is_list_of_aggregates(operands):
             return self._convert_operation_of_list_of_aggregate(operation, operands)
@@ -381,6 +391,9 @@ None, ASPValue, None]):
             return TheoryAtom('tel', [ASPTemporalOperation(operation.operator, *operands)], operation.negated)
         if self.is_dl_operation(operands, operation.operator):
             return TheoryAtom('diff', [ASPOperation(operation.operator, *operands)], operation.negated)
+        elif len(operands) == 2 and self.is_dl_operation([operands[0]], Operators.DIFFERENCE):
+            # This is the case we have a default diff logic operation, i.e. a dl atom - 0
+            operands[0] = TheoryAtom('diff', [ASPOperation(Operators.DIFFERENCE, operands[0], ASPValue(0))])
         if isinstance(operands[0], TheoryAtom) and operands[0].predicate == 'diff':
             self.process_dl_operation(operation, operands)
         operation = ASPOperation(operation.operator, *operands, negated=operation.negated)
@@ -393,15 +406,15 @@ None, ASPValue, None]):
         elif operation.operator == Operators.GREATER_THAN:
             operation.negated = not operation.negated
         elif operation.operator == Operators.GREATER_THAN_OR_EQUAL_TO:
-            operation.negated = not operation.negated
-            operands[1] = ASPOperation(Operators.SUM, operands[1], ASPValue(-1))
+            operands[0].body[0].operands[0], operands[0].body[0].operands[1] = (
+                operands[0].body[0].operands[1], operands[0].body[0].operands[0])
         elif operation.operator == Operators.EQUALITY:
             operation.operator = Operators.LESS_THAN_OR_EQUAL_TO
             self._clones.append(copy.deepcopy(self._current_proposition))
             operands[1] = ASPOperation(Operators.MULTIPLICATION,
-                               operands[1], ASPValue(-1))
-            operands[0].body[0].operands[0], operands[0].body[0].operands[1] = (operands[0].body[0].operands[1],
-                                                                          operands[0].body[0].operands[0])
+                                       operands[1], ASPValue(-1))
+            operands[0].body[0].operands[0], operands[0].body[0].operands[1] = (
+                operands[0].body[0].operands[1], operands[0].body[0].operands[0])
         elif operation.operator == Operators.INEQUALITY:
             operation.negated = not operation.negated
             operation.operator = Operators.EQUALITY

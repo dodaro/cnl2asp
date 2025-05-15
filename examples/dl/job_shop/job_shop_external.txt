@@ -18,6 +18,6 @@ Whenever there is an assignment with task T1, with machine M1, with starting tim
 
 It is prohibited that the difference between start with task T1, with machine M1, and start with task T2, with machine M2 is greater than -TIME, whenever there is a sequence with first task T1, with first machine M1, with second task T2, with second machine M2, with duration TIME.
 
-It is prohibited that the difference between start with task T, with machine M, and 0 is greater than B, where B is equal to the difference between deadline, and TIME, whenever there is a task T, whenever there is an executionTime with task T, with machine M, with duration TIME.
+It is prohibited that start with task T, with machine M is greater than B, where B is equal to the difference between deadline, and TIME, whenever there is a task T, whenever there is an executionTime with task T, with machine M, with duration TIME.
 
-It is prohibited that the difference between 0, and start with task T, with machine M is greater than 0, whenever there is a task T, whenever there is a machine M.
+It is prohibited that start with task T, with machine M is less than 0, whenever there is a task T, whenever there is a machine M.
