@@ -77,12 +77,12 @@ class ForbiddenLink:
 
 
 class ASPConverter(Converter[ASPProgram,
-                             ASPRule, ASPWeakConstraint,
-                             ASPRuleHead, (int, int),
-                             ASPConjunction, ASPConjunction,
-                             ASPAtom, ASPAggregate,
-                             ASPOperation, ASPAttribute,
-                             None, ASPValue, None]):
+ASPRule, ASPWeakConstraint,
+ASPRuleHead, (int, int),
+ASPConjunction, ASPConjunction,
+ASPAtom, ASPAggregate,
+ASPOperation, ASPAttribute,
+None, ASPValue, None]):
 
     def __init__(self):
         self._asp_encoding: ASPEncoding = ASPEncoding()
@@ -226,19 +226,21 @@ class ASPConverter(Converter[ASPProgram,
                                                                          [ASPAttribute(
                                                                              temporal_entity.get_name().removesuffix(
                                                                                  's'), ASPValue(idx)),
-                                                                          ASPAttribute('value',
-                                                                                       ASPValue(f'\"{value}\"'))]))]))
+                                                                             ASPAttribute('value',
+                                                                                          ASPValue(
+                                                                                              f'\"{value}\"'))]))]))
             self._converted_complex_entities.append(temporal_entity.get_name())
             return ASPAtom(temporal_entity.get_name(),
-                           [ASPAttribute(temporal_entity.get_name().removesuffix('s'), ASPValue(temporal_values[-1][1])),
+                           [ASPAttribute(temporal_entity.get_name().removesuffix('s'),
+                                         ASPValue(temporal_values[-1][1])),
                             ASPAttribute('value', ASPValue(f'\"{temporal_values[-1][0]}\"'))])
         return self.convert_entity(temporal_entity)
 
     def __has_single_key(self, entity: EntityComponent) -> bool:
         entity_keys = entity.get_keys()
         return len(entity_keys) == 1 and \
-               entity.get_attributes_by_name_and_origin(entity_keys[0].get_name(), entity_keys[0].origin)[
-                   0].value == Utility.ASP_NULL_VALUE
+            entity.get_attributes_by_name_and_origin(entity_keys[0].get_name(), entity_keys[0].origin)[
+                0].value == Utility.ASP_NULL_VALUE
 
     def _match_discriminant_attributes_with_body(self, discriminant: list, body: ASPConjunction):
         unmatched_discriminant_attributes = []
@@ -257,7 +259,7 @@ class ASPConverter(Converter[ASPProgram,
                     attribute_matched = True
                     atom_matched_attribute = atom_matched_attributes[0]
                     if not atom_matched_attribute.is_null():
-                        if not discriminant_value.is_null() and discriminant_value != atom_matched_attribute.value:
+                        if not discriminant_value.is_null() and discriminant_value != atom_matched_attribute.get_value():
                             continue
                         discriminant_value = atom_matched_attribute.get_value()
                     attributes_to_be_equal_discriminant_value.append(atom_matched_attribute)

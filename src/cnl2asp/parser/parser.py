@@ -588,43 +588,57 @@ class CNLTransformer(Transformer):
     def simple_aggregate(self, elem):
         discriminant = [elem[1]]
         body = [elem[1]]
-        aggregate = AggregateComponent(elem[0], discriminant, body)
-        return aggregate
-
-    def simple_aggregate_with_parameter(self, elem):
-        discriminant = [elem[1]]
-        body = [elem[2]]
-        aggregate = AggregateComponent(elem[0], discriminant, body)
-        return aggregate
-
-    def aggregate_active_clause(self, elem) -> AggregateComponent:
-        discriminant = [elem[1], elem[2]] if elem[2] else [elem[1]]
-        body = [elem[3]]
-        if elem[4]:
-            body += elem[4]
-            for entity in elem[4]:
-                self._proposition.add_relations([RelationComponent(entity, elem[3])])
         return AggregateComponent(elem[0], discriminant, body)
 
     @v_args(meta=True)
-    def aggregate_passive_clause(self, meta, elem) -> AggregateComponent:
-        discriminant = [elem[1], elem[3]] if elem[3] else [elem[1]]
-        verb: EntityComponent = elem[5]
-        if elem[2]:
+    def simple_aggregate_with_parameter(self, meta, elem):
+        body = [elem[2]]
+        if elem[1][1]:
             try:
-                verb.set_attributes_value(elem[2])
+                elem[2].set_attributes_value(elem[1][1])
+            except AttributeNotFound as e:
+                raise CompilationError(str(e), meta.line)
+        return AggregateComponent(elem[0], elem[1][0], body)
+
+    @v_args(meta=True)
+    def aggregate_active_clause(self, meta, elem) -> AggregateComponent:
+        body = [elem[2]]
+        if elem[1][1]:
+            try:
+                elem[2].set_attributes_value(elem[1][1])
+            except AttributeNotFound as e:
+                raise CompilationError(str(e), meta.line)
+        if elem[3]:
+            body += elem[3]
+            for entity in elem[3]:
+                self._proposition.add_relations([RelationComponent(entity, elem[2])])
+        return AggregateComponent(elem[0], elem[1][0], body)
+
+    @v_args(meta=True)
+    def aggregate_passive_clause(self, meta, elem) -> AggregateComponent:
+        verb: EntityComponent = elem[3]
+        if elem[1][1]:
+            try:
+                verb.set_attributes_value(elem[1][1])
             except AttributeNotFound as e:
                 raise CompilationError(str(e), meta.line)
         body = [verb]
-        AggregateComponent(elem[0], discriminant, body)
-        subject = elem[4]
+        subject = elem[2]
         self._proposition.add_requisite(subject)
         self._proposition.add_relations([RelationComponent(subject, verb)])
-        if elem[6]:
-            body += elem[6]
-            for entity in elem[6]:
+        if elem[4]:
+            body += elem[4]
+            for entity in elem[4]:
                 self._proposition.add_relations([RelationComponent(entity, verb)])
-        return AggregateComponent(elem[0], discriminant, body)
+        return AggregateComponent(elem[0], elem[1][0], body)
+
+    def aggregate_discriminant(self, elem):
+        discriminant = []
+        if elem[0]:
+            discriminant.append(elem[0])
+        if elem[2]:
+            discriminant.extend(elem[2:])
+        return discriminant, elem[1]
 
     def such_that_clause(self, elem):
         return elem[0]

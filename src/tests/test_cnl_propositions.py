@@ -280,9 +280,9 @@ class TestCnlPropositions(unittest.TestCase):
     def test_aggregate_range(self):
         self.check_input_to_output('''
                                     A top_Movie is identified by an id.
-                                    A score_Assignment is identified by an id, and by a value.
-                                    It is prohibited that the total value, for each id, that have a score_assignment with id X is between 1 and 2.''',
-                                   ':- 1 <= #sum{VL,X: score_assignment(X,VL)} <= 2.')
+                                    A score_Assignment is identified by an id, by a second, by a value.
+                                    It is prohibited that the total value, for each id, second, that have a score_assignment with id X is between 1 and 2.''',
+                                   ':- 1 <= #sum{VL,X,SCND: score_assignment(X,SCND,VL)} <= 2.')
 
     def test_whenever_clause_with_aggregate(self):
         self.check_input_to_output('''
