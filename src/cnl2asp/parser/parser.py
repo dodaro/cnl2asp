@@ -757,6 +757,7 @@ class CNLTransformer(Transformer):
         origin = self._parse_parameter_origin(name)
         if origin and not name:
             name = SignatureManager.clone_signature(parameter[-2]).get_keys()[0].get_name()
+            origin = SignatureManager.clone_signature(parameter[-2]).get_keys()[0].origin
         else:
             name = '_'.join(name)
         if not origin and SignatureManager.is_temporal_entity(name.strip()):
