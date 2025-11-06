@@ -16,6 +16,10 @@ class PropositionBuilder:
         self._original_rule: Proposition = proposition if proposition else Proposition()
         self._derived_rules: list[Proposition] = []
 
+    def add_user_info(self, user_info):
+        for proposition in self.get_propositions():
+            proposition.user_info = user_info
+
     def get_propositions(self) -> list[Proposition]:
         return [self._original_rule] + self._derived_rules
 

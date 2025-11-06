@@ -18,6 +18,14 @@ class PROPOSITION_TYPE(Enum):
     PREFERENCE = 2
 
 
+class UserInfo:
+    def __init__(self, is_optional=False, optional_atoms=None):
+        if optional_atoms is None:
+            optional_atoms = []
+        self.optional_atoms = optional_atoms
+        self.is_optional_rule = False
+
+
 class AggregateOfComponents(Component):
     def __init__(self, components: list[Component]):
         self.components = components if components else []
@@ -103,6 +111,7 @@ class Proposition(Component):
         self.requisite = requisite if requisite else RequisiteComponent([])
         self.relations = relations if relations else []
         self.defined_attributes = defined_attributes
+        self.user_info = UserInfo()
 
     def is_empty(self) -> bool:
         return len(self.new_knowledge) == 0 and len(self.requisite.components) == 0 and len(self.relations) == 0

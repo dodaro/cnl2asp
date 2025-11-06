@@ -16,8 +16,9 @@
 // Which type of clause do we expect?
 start: ((explicit_definition_proposition | implicit_definition_proposition) END_OF_LINE)* (specification)*
 
-specification: ((standard_proposition | implicit_definition_proposition) END_OF_LINE)+
-
+specification: (standard_proposition | (implicit_definition_proposition END_OF_LINE))+
+optional_rule: "(this is required due to ASP grounding)"
+optional_atom: "(" string "is required due to ASP grounding)"
 explicit_definition_proposition.1: standard_definition | temporal_concept_definition | complex_concept_definition | complex_concept_elements_definition
 _CNL_IS: "is"
 _CNL_IDENTIFIED: "identified"
@@ -28,7 +29,10 @@ _CNL_HAS: "has"
 standard_definition.1: _CNL_INDEFINITE_ARTICLE? string cnl_is_identified? [keys_list] (_CNL_COMMA _CNL_AND)? [_CNL_HAS parameter_definition (_CNL_COMMA _CNL_AND? parameter_definition)*]
 _CNL_BY: "by"
 keys_list: _CNL_BY parameter_definition (_CNL_COMMA _CNL_AND? _CNL_BY parameter_definition)*
-parameter_definition: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+
+parameter_definition: _CNL_INDEFINITE_ARTICLE? (PARAMETER_NAME)+ [parameter_domain]
+parameter_domain: _CNL_THAT " " _CNL_HAS " " _CNL_AN " " _CNL_INTEGER " " _CNL_DOMAIN
+_CNL_INTEGER: "integer"
+_CNL_DOMAIN: "domain"
 _CNL_A: "a"i
 _CNL_TEMPORAL: "temporal"
 _CNL_CONCEPT: "concept"
@@ -92,11 +96,11 @@ _CNL_ALSO: "also"
 compounded_match_tail: _CNL_AND _CNL_HAS string (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list (_CNL_AND _CNL_ALSO string (cnl_that_are_equal_to_respectively | cnl_that_is_equal_to_respectively) string_list)*
 enumerative_definition_clause: entity verb [conjunctive_object_list]
 
-standard_proposition: whenever_then_clause_proposition
+standard_proposition: (whenever_then_clause_proposition
                     | fact_proposition
                     | quantified_choice_proposition
                     | constraint_proposition
-                    | weak_constraint_proposition
+                    | weak_constraint_proposition) END_OF_LINE [optional_rule | optional_atom]
 
 whenever_then_clause_proposition: (whenever_clause _CNL_COMMA?)+ then_clause [terminal_clauses]
 _CNL_WHENEVER: "whenever"i

@@ -86,7 +86,7 @@ def is_same_origin(origin_1: AttributeOrigin, origin_2: AttributeOrigin) -> bool
 class AttributeComponent(Component):
     def __init__(self, name: str, value: ValueComponent,
                  attribute_origin: AttributeOrigin = None,
-                 operations: list[OperationComponent] = None):
+                 operations: list[OperationComponent] = None, has_integer_domain = False):
         if operations is None:
             operations = []
         self._name = NameComponent(str(name))
@@ -94,6 +94,7 @@ class AttributeComponent(Component):
         self.origin = attribute_origin
         self.value = AngleValueComponent(value) if self.is_angle() else value
         self.operations = operations
+        self.has_integer_domain = has_integer_domain
 
     def name_match(self, name: str) -> bool:
         if self._name == name:

@@ -143,7 +143,9 @@ None, ASPValue, None]):
         self._program.name = problem.name
         for proposition in problem.get_propositions():
             self._current_proposition = proposition
-            self._program.add_rule(proposition.convert(self))
+            converted_proposition = proposition.convert(self)
+            if converted_proposition:
+                self._program.add_rule(converted_proposition)
             while self._clones:
                 clone = self._clones[0]
                 self._clones.popleft()

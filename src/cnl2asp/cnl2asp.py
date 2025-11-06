@@ -10,6 +10,7 @@ from enum import Enum
 from textwrap import indent
 from typing import TextIO
 
+from cnl2asp.converter.dl_converter import DLConverter
 from cnl2asp.parser.dl_compiler import DlTransformer
 from cnl2asp.parser.telingo_compiler import TelingoTransformer
 from cnl2asp.utility.utility import Utility
@@ -77,6 +78,7 @@ class MODE(Enum):
     ASP = 0,
     TELINGO = 1
     DIFF_LOGIC = 2
+    ASP_TO_DL = 3
 
 class Cnl2asp:
     def __init__(self, cnl_input: TextIO | str, mode=MODE.ASP):
@@ -103,12 +105,18 @@ class Cnl2asp:
         return res
 
     def get_transformer(self):
-        if self.mode == MODE.ASP:
+        if self.mode == MODE.ASP or self.mode == MODE.ASP_TO_DL:
             return ASPTransformer()
         elif self.mode == MODE.TELINGO:
             return TelingoTransformer()
         elif self.mode == MODE.DIFF_LOGIC:
             return DlTransformer()
+
+    def get_converter(self):
+        if self.mode == MODE.ASP_TO_DL:
+            return DLConverter()
+        else:
+            return ASPConverter()
 
     def parse_input(self) -> Tree[Token]:
         try:
@@ -134,8 +142,8 @@ class Cnl2asp:
         SignatureManager.signatures = []
         Utility.AUTO_ENTITY_LINK = auto_link_entities
         specification: SpecificationComponent = self.get_transformer().transform(self.parse_input())
-        asp_converter: ASPConverter = ASPConverter()
-        program: ASPProgram = specification.convert(asp_converter)
+        converter = self.get_converter()
+        program: ASPProgram = specification.convert(converter)
         return str(program)
 
     def optimize(self, asp_encoding: str, input_symbols: list[Symbol] = None, output_symbols: list[Symbol] = None,
@@ -213,6 +221,8 @@ def main():
                         help='Generate a telingo encoding')
     parser.add_argument('--dl', action='store_true',
                         help='Generate a clingo dl encoding')
+    parser.add_argument('--asp-into-dl', action='store_true',
+                        help='Testing generation of dl encoding from ASP')
     parser.add_argument('-o', '--optimize', action='store_true', help='Optimize the output using ngo')
     parser.add_argument('--explain', action='store_true', help='Returns a cnl version of the best model')
     parser.add_argument('input_file')
@@ -225,6 +235,8 @@ def main():
         mode = MODE.TELINGO
     elif args.dl:
         mode = MODE.DIFF_LOGIC
+    elif args.asp_into_dl:
+        mode = MODE.ASP_TO_DL
     cnl2asp = Cnl2asp(args.input_file, mode)
 
     if args.check_syntax:

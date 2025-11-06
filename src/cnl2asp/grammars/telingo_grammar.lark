@@ -1,4 +1,4 @@
-%override specification: PROBLEM_IDENTIFIER? ((standard_proposition | implicit_definition_proposition) END_OF_LINE)+
+%override specification: PROBLEM_IDENTIFIER? (standard_proposition | (implicit_definition_proposition END_OF_LINE))+
 PROBLEM_IDENTIFIER: "The following propositions apply in the initial state:"
                     | "The following propositions always apply except in the initial state:"
                     | "The following propositions always apply:"

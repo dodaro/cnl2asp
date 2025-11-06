@@ -1,0 +1,11 @@
+1 <= {assignment(X,MD_MCHN,MD_PRCSS_TM): mode(X,MD_MCHN,MD_PRCSS_TM)} <= 1 :- operation(X,_,_).
+order(X,Y) :- operation(X,J1,_), assignment(X,_,_), operation(Y,J2,_), assignment(Y,_,_), J2 > J1.
+{choice(X,Y)} :- order(X,Y).
+choice(Y,X) :- order(X,Y), not choice(X,Y).
+&diff {0 - start(X)} <= 0 :- operation(X,_,1).
+&diff {E - start(X)} <= 0 :- choice(X,Y), &diff {E - end(X)} <= 0.
+&diff {E - start(Y)} <= 0 :- &diff {E - end(X)} <= 0, operation(X,J,N), operation(Y,J,N+1).
+&diff {S+P - end(X)} <= 0 :- &diff {S - start(X)} <= 0, assignment(X,_,P).
+makespan(K) :- &diff {K - end(X)} <= 0, operation(X,J,N), operation(X+1,J,N+1).
+makespan(K) :- makespan(K+1), K < 0.
+:~ makespan(K). [1@3,K]

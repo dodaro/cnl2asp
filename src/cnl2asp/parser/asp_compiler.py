@@ -22,7 +22,7 @@ from cnl2asp.specification.entity_component import EntityComponent, EntityType, 
     SetEntityComponent, ListEntityComponent, ComplexEntityComponent
 from cnl2asp.specification.problem import Problem
 from cnl2asp.specification.proposition import Proposition, NewKnowledgeComponent, ConditionComponent, \
-    CardinalityComponent, PreferencePropositionType, PROPOSITION_TYPE
+    CardinalityComponent, PreferencePropositionType, PROPOSITION_TYPE, UserInfo
 from cnl2asp.specification.relation_component import RelationComponent
 from cnl2asp.specification.aggregate_component import AggregateComponent, AggregateOperator
 from cnl2asp.specification.operation_component import Operators, OperationComponent
@@ -78,6 +78,9 @@ class ASPTransformer(Transformer):
         self._specification.add_problem(self._problem)
         self._problem = Problem()
 
+    def optional_rule(self, elem):
+        return True
+
     def _clear(self):
         self._proposition = PropositionBuilder()
         self._delayed_operations = []
@@ -114,10 +117,11 @@ class ASPTransformer(Transformer):
         return res
 
     def parameter_definition(self, parameter) -> list[AttributeComponent]:
-        name = parameter[:]
+        name = parameter[0:-1]
+        domain = parameter[-1]
         origin = self._parse_parameter_origin(name)
         if origin and not name:
-            keys = SignatureManager.clone_signature(parameter[-1]).get_keys()
+            keys = SignatureManager.clone_signature(parameter[-2]).get_keys()
             res = []
             for key in keys:
                 key_origin = AttributeOrigin(origin.name, key.origin)
@@ -125,7 +129,7 @@ class ASPTransformer(Transformer):
             return res
         else:
             name = '_'.join(name)
-        return [AttributeComponent(name.strip(), ValueComponent(Utility.NULL_VALUE), origin)]
+        return [AttributeComponent(name.strip(), ValueComponent(Utility.NULL_VALUE), origin, has_integer_domain=domain)]
 
     def temporal_concept_definition(self, elem):
         temporal = TemporalEntityComponent(elem[0], '', elem[2], elem[3], elem[4], elem[1])
@@ -278,6 +282,12 @@ class ASPTransformer(Transformer):
     @v_args(meta=True)
     def standard_proposition(self, meta, elem):
         try:
+            user_info = UserInfo()
+            if elem[1] == True:
+                user_info.is_optional_rule = True
+            elif elem[1] is not None:
+                user_info.optional_atoms.append(elem[1])
+            self._proposition.add_user_info(user_info)
             for command in self._delayed_operations:
                 command.execute()
             self._proposition.add_defined_attributes(self._defined_variables)
@@ -285,6 +295,9 @@ class ASPTransformer(Transformer):
             self._clear()
         except Exception as e:
             raise CompilationError(str(e), meta.line)
+
+    def optional_atom(self, elem):
+        return elem[0]
 
     def _make_new_knowledge_relations(self, proposition: Proposition, components: list[Component] = None):
         if Utility.AUTO_ENTITY_LINK:
